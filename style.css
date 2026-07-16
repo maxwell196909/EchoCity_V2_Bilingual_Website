@@ -39,3 +39,10 @@ textarea:focus{outline:2px solid rgba(185,148,85,.25);border-color:var(--gold)}.
 .wish-card h2{font-size:24px;line-height:1.35}.wish-date{color:var(--gold);font-size:13px}.reveal{opacity:0;transform:translateY(25px);transition:.7s}.reveal.visible{opacity:1;transform:none}
 @media(max-width:900px){.main-nav{position:absolute;top:76px;left:0;right:0;background:#121922;padding:20px 5vw;display:none;flex-direction:column}.main-nav.open{display:flex}.menu-toggle{display:block;margin-left:auto}.split-section{grid-template-columns:1fr}.section-photo{min-height:380px}.feature-grid,.wish-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:640px){.hero{min-height:680px}.hero-actions{flex-direction:column;align-items:stretch}.feature-grid,.wish-grid{grid-template-columns:1fr}.form-card{padding:28px 20px}footer{flex-direction:column}}
+
+/* EchoCity v1.1 cache/layout fix */
+.form-card form{display:block!important}
+.form-card label{display:block!important;width:100%!important}
+.form-card textarea{display:block!important;width:100%!important;min-height:130px!important;margin:0 0 8px!important}
+.form-card .submit-button{display:inline-flex!important;margin-top:34px!important}
+.wall-heading,.wall-status,.wish-grid{width:100%!important}
