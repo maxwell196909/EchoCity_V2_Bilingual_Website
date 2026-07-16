@@ -38,78 +38,97 @@
       <label for="companion">4. 希望谁与你同行？</label>
       <textarea id="companion"></textarea>
 
- <script>
+ <label for="firstStep">5．第一步准备做什么？</label>
+<textarea id="firstStep"></textarea>
+
+<button type="button" onclick="publishWish()">发布我的愿望</button>
+</form>
+
+<div id="message"></div>
+
+<section id="result" aria-live="polite">
+  <h2>我的愿望卡片</h2>
+  <div id="wishCard"></div>
+</section>
+</div>
+
+<script>
 const SUPABASE_URL = "https://fhckjaidiqnozhpxkavt.supabase.co";
 const SUPABASE_KEY = "sb_publishable_g--rklRl7JhuX2RsA5L-ow_wi5w9tYa";
 
 async function publishWish() {
+  const wish = document.getElementById("wish").value.trim();
+  const importance = document.getElementById("importance").value.trim();
+  const difficulty = document.getElementById("difficulty").value.trim();
+  const companion = document.getElementById("companion").value.trim();
+  const firstStep = document.getElementById("firstStep").value.trim();
 
-    const wish = document.getElementById("wish").value.trim();
-    const importance = document.getElementById("importance").value.trim();
-    const difficulty = document.getElementById("difficulty").value.trim();
-    const companion = document.getElementById("companion").value.trim();
-    const firstStep = document.getElementById("firstStep").value.trim();
+  if (!wish) {
+    alert("请填写你的愿望。");
+    return;
+  }
 
-    if (!wish) {
-        alert("请填写愿望");
-        return;
-    }
-
+  try {
     const response = await fetch(
-        SUPABASE_URL + "/rest/v1/wishes",
-        {
-            method: "POST",
-            headers: {
-                "apikey": SUPABASE_KEY,
-                "Authorization": "Bearer " + SUPABASE_KEY,
-                "Content-Type": "application/json",
-                "Prefer": "return=representation"
-            },
-            body: JSON.stringify({
-                wish: wish,
-                importance: importance,
-                difficulty: difficulty,
-                companion: companion,
-                first_step: firstStep
-            })
-        }
+      SUPABASE_URL + "/rest/v1/wishes",
+      {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + SUPABASE_KEY,
+          "Content-Type": "application/json",
+          "Prefer": "return=representation"
+        },
+        body: JSON.stringify({
+          wish: wish,
+          importance: importance,
+          difficulty: difficulty,
+          companion: companion,
+          first_step: firstStep
+        })
+      }
     );
 
-    if (!response.ok) {
-        const err = await response.text();
-        alert("发布失败：" + err);
-        return;
-    }
-
     const rows = await response.json();
+
+    if (!response.ok) {
+      console.error(rows);
+      alert("发布失败，请稍后重试。");
+      return;
+    }
 
     const item = rows[0];
 
     document.getElementById("wishCard").innerHTML = `
-        <p><b>愿望：</b>${item.wish}</p>
-        <p><b>重要性：</b>${item.importance}</p>
-        <p><b>困难：</b>${item.difficulty}</p>
-        <p><b>同行者：</b>${item.companion}</p>
-        <p><b>第一步：</b>${item.first_step}</p>
-        <p><b>发布时间：</b>${new Date(item.created_at).toLocaleString()}</p>
+      <p><strong>愿望：</strong>${escapeHtml(item.wish)}</p>
+      <p><strong>为什么重要：</strong>${escapeHtml(item.importance || "未填写")}</p>
+      <p><strong>当前困难：</strong>${escapeHtml(item.difficulty || "未填写")}</p>
+      <p><strong>希望谁同行：</strong>${escapeHtml(item.companion || "未填写")}</p>
+      <p><strong>第一步：</strong>${escapeHtml(item.first_step || "未填写")}</p>
+      <p><small>发布时间：${new Date(item.created_at).toLocaleString()}</small></p>
     `;
 
     document.getElementById("result").style.display = "block";
+    document.getElementById("result").scrollIntoView({
+      behavior: "smooth"
+    });
+
+    alert("愿望发布成功，已保存到 EchoCity 数据库。");
+
+  } catch (error) {
+    console.error(error);
+    alert("网络连接失败，请稍后重试。");
+  }
 }
-</script>     <label for="firstStep">5. 第一步准备做什么？</label>
-      <textarea id="firstStep"></textarea>
 
-      <button type="submit">发布我的愿望</button>
-    </form>
-
-    <div id="message"></div>
-
-    <section id="result" aria-live="polite">
-      <h2>我的愿望卡片</h2>
-      <div id="wishCard"></div>
-    </section>
-  </div>
-
-  
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+</script>
 </body>
 </html>
