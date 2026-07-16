@@ -46,3 +46,146 @@ textarea:focus{outline:2px solid rgba(185,148,85,.25);border-color:var(--gold)}.
 .form-card textarea{display:block!important;width:100%!important;min-height:130px!important;margin:0 0 8px!important}
 .form-card .submit-button{display:inline-flex!important;margin-top:34px!important}
 .wall-heading,.wall-status,.wish-grid{width:100%!important}
+
+/* EchoCity v1.2 — Community Wish Wall */
+.wall-page{background:
+  radial-gradient(circle at 85% 10%,rgba(185,148,85,.10),transparent 28%),
+  #f3f4f1;
+}
+.wall-shell{max-width:1280px;margin:auto;padding-top:80px}
+.wall-heading{margin-bottom:46px}
+.wall-heading h1{letter-spacing:-.04em}
+.wall-toolbar{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:24px;
+  padding:22px 0;
+  margin-bottom:24px;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.wall-toolbar strong{font-size:18px}
+.wall-toolbar .wall-status{margin:3px 0 0}
+.wall-share-link{
+  text-decoration:none;
+  font-weight:700;
+  color:#8b6a30;
+}
+.wish-grid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:24px!important;
+  align-items:start;
+}
+.community-card{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(17,24,39,.07);
+  border-radius:22px!important;
+  padding:0!important;
+  background:rgba(255,255,255,.92)!important;
+  box-shadow:
+    0 12px 30px rgba(17,24,39,.06),
+    0 2px 8px rgba(17,24,39,.03)!important;
+  transition:
+    transform .28s ease,
+    box-shadow .28s ease,
+    border-color .28s ease;
+  animation:wishCardEnter .55s ease both;
+}
+.community-card:hover{
+  transform:translateY(-7px);
+  border-color:rgba(185,148,85,.32);
+  box-shadow:
+    0 24px 54px rgba(17,24,39,.12),
+    0 5px 14px rgba(17,24,39,.05)!important;
+}
+.wish-card-top{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:24px 24px 18px;
+}
+.wish-avatar{
+  flex:0 0 46px;
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:18px;
+  font-weight:800;
+  color:#fff;
+  background:
+    linear-gradient(145deg,#c6a15d,#7d5d29);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);
+}
+.wish-meta{display:flex;flex-direction:column;line-height:1.35}
+.wish-meta strong{font-size:15px}
+.wish-meta span{font-size:13px;color:var(--muted);margin-top:3px}
+.wish-card-body{padding:0 24px 24px}
+.wish-label{
+  margin:0 0 6px;
+  font-size:11px;
+  letter-spacing:.14em;
+  color:var(--gold);
+  font-weight:800;
+}
+.community-card h2{
+  margin:0 0 23px;
+  font-size:25px!important;
+  line-height:1.38!important;
+  letter-spacing:-.02em;
+}
+.wish-detail-list{display:grid;gap:14px}
+.wish-detail-list p{
+  margin:0;
+  padding-top:14px;
+  border-top:1px solid rgba(17,24,39,.08);
+}
+.wish-detail-list strong{
+  display:block;
+  margin-bottom:4px;
+  font-size:13px;
+  color:#344054;
+}
+.wish-detail-list span{
+  display:block;
+  color:#667085;
+  font-size:15px;
+  line-height:1.65;
+}
+.wish-card-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:15px 24px;
+  border-top:1px solid rgba(17,24,39,.07);
+  background:rgba(247,247,244,.78);
+  color:#7b8493;
+  font-size:12px;
+}
+.wish-visible-badge{
+  padding:4px 9px;
+  border-radius:999px;
+  color:#6d552c;
+  background:rgba(185,148,85,.14);
+}
+@keyframes wishCardEnter{
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@media(max-width:960px){
+  .wish-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:640px){
+  .wall-shell{padding:52px 16px 90px}
+  .wall-toolbar{align-items:flex-start;flex-direction:column}
+  .wish-grid{grid-template-columns:1fr!important;gap:18px!important}
+  .community-card:hover{transform:none}
+  .wish-card-top{padding:21px 20px 16px}
+  .wish-card-body{padding:0 20px 21px}
+  .wish-card-footer{padding:14px 20px}
+}
