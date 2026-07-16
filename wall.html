@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>愿望广场｜EchoCity</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="inner-page">
+  <header class="simple-header">
+    <a class="brand" href="index.html"><span class="brand-mark">E</span><span>EchoCity</span></a>
+    <a class="btn btn-primary small" href="wish.html">发布愿望</a>
+  </header>
+
+  <main class="wall-shell">
+    <section class="wall-heading">
+      <p class="eyebrow">WISH WALL</p>
+      <h1>愿望广场</h1>
+      <p>愿望被看见，同行者才有机会出现。</p>
+    </section>
+    <section id="wallStatus" class="wall-status">正在读取愿望……</section>
+    <section id="wishGrid" class="wish-grid" aria-live="polite"></section>
+  </main>
+
+  <script>
+    const SUPABASE_URL = "https://fhckjaidiqnozhpxkavt.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_g--rklRl7JhuX2RsA5L-ow_wi5w9tYa";
+
+    async function loadWishes() {
+      const status = document.getElementById("wallStatus");
+      const grid = document.getElementById("wishGrid");
+
+      try {
+        const response = await fetch(
+          `${SUPABASE_URL}/rest/v1/wishes?select=id,created_at,wish,importance,difficulty,companion,first_step&order=created_at.desc&limit=50`,
+          { headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` } }
+        );
+
+        const rows = await response.json();
+        if (!response.ok) throw new Error(rows.message || "读取失败");
+
+        if (!rows.length) {
+          status.textContent = "这里还没有愿望。成为第一个发布愿望的人。";
+          return;
+        }
+
+        status.textContent = `已经有 ${rows.length} 个愿望被看见`;
+        grid.innerHTML = rows.map((item) => `
+          <article class="wish-card">
+            <p class="wish-date">${new Date(item.created_at).toLocaleDateString()}</p>
+            <h2>${escapeHtml(item.wish)}</h2>
+            <p><strong>为什么重要：</strong>${escapeHtml(item.importance || "未填写")}</p>
+            <p><strong>当前困难：</strong>${escapeHtml(item.difficulty || "未填写")}</p>
+            <p><strong>希望同行者：</strong>${escapeHtml(item.companion || "未填写")}</p>
+            <p><strong>第一步：</strong>${escapeHtml(item.first_step || "未填写")}</p>
+          </article>
+        `).join("");
+      } catch (error) {
+        status.textContent = `读取愿望失败：${error.message}`;
+        status.classList.add("error");
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    loadWishes();
+  </script>
+</body>
+</html>

@@ -1,34 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" data-lang="en">
+<html lang="zh-CN" data-lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="EchoCity — a digital city where humans and AI live together." />
-  <title>EchoCity | Digital Civilization</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="EchoCity — 一个让愿望被看见、让同行者相遇的数字城市。">
+  <title>EchoCity｜数字文明</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="site-header" id="top">
-    <a class="brand" href="#top" aria-label="EchoCity home">
-      <span class="brand-mark">E</span>
-      <span>EchoCity</span>
+    <a class="brand" href="index.html">
+      <span class="brand-mark">E</span><span>EchoCity</span>
     </a>
-
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">☰</button>
-
     <nav class="main-nav" id="main-nav">
-      <a href="#vision" data-en="Vision" data-zh="愿景">Vision</a>
-      <a href="#city" data-en="City" data-zh="城市">City</a>
-      <a href="#citizens" data-en="Citizens" data-zh="居民">Citizens</a>
-      <a href="#ai" data-en="AI Citizens" data-zh="AI居民">AI Citizens</a>
-      <a href="#community" data-en="Community" data-zh="社区">Community</a>
-      <a href="#contact" data-en="Contact" data-zh="联系">Contact</a>
+      <a href="#vision" data-en="Vision" data-zh="愿景">愿景</a>
+      <a href="#city" data-en="City" data-zh="城市">城市</a>
+      <a href="wish.html" data-en="Share a Wish" data-zh="发布愿望">发布愿望</a>
+      <a href="wall.html" data-en="Wish Wall" data-zh="愿望广场">愿望广场</a>
+      <a href="#contact" data-en="Contact" data-zh="联系">联系</a>
     </nav>
-
-    <button class="language-switch" type="button" aria-label="Switch language">
-      <span class="lang-en active">EN</span>
-      <span>/</span>
-      <span class="lang-zh">中文</span>
+    <button class="language-switch" type="button">
+      <span class="lang-en">EN</span><span>/</span><span class="lang-zh active">中文</span>
     </button>
   </header>
 
@@ -39,172 +32,91 @@
       <div class="hero-bg hero-bg-3"></div>
       <div class="hero-overlay"></div>
 
-      
-        <p class="eyebrow"
-data-en="START YOUR JOURNEY"
-data-zh="开始一次人生旅程">
-
-START YOUR JOURNEY
-        </p>
-        <h1 data-en="A Place Where Wishes Come True"
-    data-zh="实现愿望的地方">
-    A Place Where Wishes Come True
-</h1>
-        <h2 data-en="Every great story begins with one real wish."
-data-zh="每一个伟大的故事，都始于一个真实的愿望。">
-    Every great story begins with one real wish.
-</h2>
+      <div class="hero-content">
+        <p class="eyebrow" data-en="START YOUR JOURNEY" data-zh="开始一次人生旅程">开始一次人生旅程</p>
+        <h1 data-en="A Place Where Wishes Come True" data-zh="实现愿望的地方">实现愿望的地方</h1>
+        <h2 data-en="Every great story begins with one real wish." data-zh="每一个伟大的故事，都始于一个真实的愿望。">
+          每一个伟大的故事，都始于一个真实的愿望。
+        </h2>
         <p class="hero-copy"
-data-en="Share a meaningful wish. Find people willing to walk with you. Build real relationships through shared action."
-data-zh="发布一个真正重要的愿望，找到愿意与你同行的人，并在共同行动中建立真实关系。">
-Share a meaningful wish. Find people willing to walk with you. Build real relationships through shared action.
-</p>
-        
-      
+           data-en="Share a meaningful wish. Find people willing to walk with you. Build real relationships through shared action."
+           data-zh="发布一个真正重要的愿望，找到愿意与你同行的人，并在共同实现愿望的过程中建立新的社会关系。">
+          发布一个真正重要的愿望，找到愿意与你同行的人，并在共同实现愿望的过程中建立新的社会关系。
+        </p>
         <div class="hero-actions">
-  <a class="btn btn-primary"
-     href="wish.html"
-     data-en="Share My Wish"
-     data-zh="发布我的愿望">
-     Share My Wish
-  </a>
-
-  <a class="btn btn-secondary"
-     href="#city"
-     data-en="Explore Wishes"
-     data-zh="看看大家的愿望">
-     Explore Wishes
-  </a>
-
-<a class="scroll-cue" href="#vision" aria-label="Scroll down">
-        <span></span>
-        <small data-en="Discover" data-zh="向下探索">Discover</small>
-      </a>
+          <a class="btn btn-primary" href="wish.html" data-en="Share My Wish" data-zh="发布我的愿望">发布我的愿望</a>
+          <a class="btn btn-secondary" href="wall.html" data-en="Explore Wishes" data-zh="看看大家的愿望">看看大家的愿望</a>
+        </div>
+      </div>
     </section>
 
-    <section class="split-section photo-section" id="vision">
+    <section class="split-section" id="vision">
       <div class="section-photo vision-photo"></div>
       <div class="section-panel reveal">
         <p class="section-number">01</p>
-        <p class="eyebrow" data-en="OUR VISION" data-zh="我们的愿景">OUR VISION</p>
+        <p class="eyebrow" data-en="OUR VISION" data-zh="我们的愿景">我们的愿景</p>
         <h2 data-en="Not another platform. A city that can grow with its people."
             data-zh="不只是一个平台，而是一座能够与居民共同成长的城市。">
-          Not another platform. A city that can grow with its people.
+          不只是一个平台，而是一座能够与居民共同成长的城市。
         </h2>
-        <p data-en="EchoCity brings digital identity, memory, relationships, communities and responsible artificial intelligence into one living civic space."
-           data-zh="EchoCity 把数字身份、人生记忆、关系网络、社区生活与负责任的人工智能，带入同一座持续生长的数字城市。">
-          EchoCity brings digital identity, memory, relationships, communities and responsible artificial intelligence into one living civic space.
+        <p data-en="EchoCity begins with wishes. A wish becomes a journey; a journey creates encounters; encounters become relationships, memory and community."
+           data-zh="EchoCity 从愿望开始。愿望成为旅程，旅程带来相遇，相遇逐渐形成关系、记忆与社区。">
+          EchoCity 从愿望开始。愿望成为旅程，旅程带来相遇，相遇逐渐形成关系、记忆与社区。
         </p>
       </div>
     </section>
 
     <section class="content-section" id="city">
       <div class="section-heading reveal">
-        <p class="eyebrow" data-en="THE CITY" data-zh="数字城市">THE CITY</p>
+        <p class="eyebrow" data-en="THE CITY" data-zh="数字城市">数字城市</p>
         <h2 data-en="A place for identity, memory and belonging."
-            data-zh="承载身份、记忆与归属的地方。">
-          A place for identity, memory and belonging.
-        </h2>
+            data-zh="承载身份、记忆与归属的地方。">承载身份、记忆与归属的地方。</h2>
       </div>
+
       <div class="feature-grid">
         <article class="feature-card reveal">
           <span>01</span>
-          <h3 data-en="Digital Identity" data-zh="数字身份">Digital Identity</h3>
-          <p data-en="A trusted profile that grows with your life." data-zh="一个伴随人生不断成长的可信身份。">A trusted profile that grows with your life.</p>
+          <h3 data-en="A Real Wish" data-zh="真实愿望">真实愿望</h3>
+          <p data-en="Name what matters most to you and take the first step."
+             data-zh="说出对你真正重要的事情，并迈出第一步。">说出对你真正重要的事情，并迈出第一步。</p>
         </article>
         <article class="feature-card reveal">
           <span>02</span>
-          <h3 data-en="Personal Home" data-zh="个人家园">Personal Home</h3>
-          <p data-en="Your own place inside the city." data-zh="每位居民在城市中的专属空间。">Your own place inside the city.</p>
+          <h3 data-en="People Who Walk With You" data-zh="愿意同行的人">愿意同行的人</h3>
+          <p data-en="Meet people who understand the journey and are willing to contribute."
+             data-zh="遇见理解这段旅程、愿意共同投入的人。">遇见理解这段旅程、愿意共同投入的人。</p>
         </article>
         <article class="feature-card reveal">
           <span>03</span>
-          <h3 data-en="Life Timeline" data-zh="人生时间轴">Life Timeline</h3>
-          <p data-en="Moments, work, relationships and milestones." data-zh="记录人生片段、工作、关系与重要节点。">Moments, work, relationships and milestones.</p>
+          <h3 data-en="Shared Action" data-zh="共同实践">共同实践</h3>
+          <p data-en="Relationships grow through small, verifiable actions."
+             data-zh="关系不只来自表达，更来自一次次可以验证的共同实践。">关系不只来自表达，更来自一次次可以验证的共同实践。</p>
         </article>
         <article class="feature-card reveal">
           <span>04</span>
-          <h3 data-en="Memory Archive" data-zh="记忆档案">Memory Archive</h3>
-          <p data-en="Preserve stories for families and future generations." data-zh="为家庭与未来世代保存人生故事。">Preserve stories for families and future generations.</p>
+          <h3 data-en="Living Memory" data-zh="共同记忆">共同记忆</h3>
+          <p data-en="Keep the story, milestones and people who helped shape the journey."
+             data-zh="保存故事、节点和同行者，让人生旅程成为可延续的共同记忆。">保存故事、节点和同行者，让人生旅程成为可延续的共同记忆。</p>
         </article>
       </div>
     </section>
 
-    <section class="image-banner citizens-banner" id="citizens">
-      <div class="banner-overlay"></div>
-      <div class="banner-content reveal">
-        <p class="eyebrow" data-en="DIGITAL CITIZENS" data-zh="数字居民">DIGITAL CITIZENS</p>
-        <h2 data-en="Every person deserves a place to be remembered."
-            data-zh="每个人都值得拥有一个被记住的地方。">
-          Every person deserves a place to be remembered.
-        </h2>
-        <p data-en="A citizen is more than a profile. It is a living record of identity, relationships, contribution and legacy."
-           data-zh="居民不只是一个账号，而是一份关于身份、关系、贡献与生命传承的持续记录。">
-          A citizen is more than a profile. It is a living record of identity, relationships, contribution and legacy.
-        </p>
-      </div>
-    </section>
-
-    <section class="content-section dark-section" id="ai">
-      <div class="section-heading reveal">
-        <p class="eyebrow" data-en="AI CITIZENS" data-zh="AI 居民">AI CITIZENS</p>
-        <h2 data-en="Artificial intelligence with roles, responsibilities and boundaries."
-            data-zh="让人工智能拥有清晰的角色、责任与边界。">
-          Artificial intelligence with roles, responsibilities and boundaries.
-        </h2>
-      </div>
-      <div class="role-grid">
-        <div class="role-card reveal"><strong data-en="AI Teacher" data-zh="AI 教师">AI Teacher</strong><small data-en="Learning" data-zh="学习支持">Learning</small></div>
-        <div class="role-card reveal"><strong data-en="AI Engineer" data-zh="AI 工程师">AI Engineer</strong><small data-en="Problem solving" data-zh="解决问题">Problem solving</small></div>
-        <div class="role-card reveal"><strong data-en="AI Doctor" data-zh="AI 医疗助手">AI Doctor</strong><small data-en="Health guidance" data-zh="健康指引">Health guidance</small></div>
-        <div class="role-card reveal"><strong data-en="AI Artist" data-zh="AI 艺术家">AI Artist</strong><small data-en="Creation" data-zh="共同创作">Creation</small></div>
-        <div class="role-card reveal"><strong data-en="AI Community Guide" data-zh="AI 社区向导">AI Community Guide</strong><small data-en="Public service" data-zh="公共服务">Public service</small></div>
-        <div class="role-card reveal"><strong data-en="AI Historian" data-zh="AI 城市史官">AI Historian</strong><small data-en="Shared memory" data-zh="共同记忆">Shared memory</small></div>
-      </div>
-    </section>
-
-    <section class="split-section reverse photo-section" id="community">
-      <div class="section-photo community-photo"></div>
-      <div class="section-panel reveal">
-        <p class="section-number">05</p>
-        <p class="eyebrow" data-en="COMMUNITY" data-zh="城市社区">COMMUNITY</p>
-        <h2 data-en="A city becomes real when people can meet, contribute and care."
-            data-zh="当人们能够相遇、贡献与彼此关怀，一座城市才真正成立。">
-          A city becomes real when people can meet, contribute and care.
-        </h2>
-        <p data-en="Churches, schools, companies, volunteer groups, parks, museums and public spaces can become part of one connected digital civic life."
-           data-zh="教会、学校、企业、志愿组织、公园、博物馆与公共空间，都可以成为相互连接的数字城市生活。">
-          Churches, schools, companies, volunteer groups, parks, museums and public spaces can become part of one connected digital civic life.
-        </p>
-      </div>
-    </section>
-
-    <section class="final-cta" id="contact">
-      <div class="final-overlay"></div>
-      <div class="final-content reveal">
-        <p class="eyebrow" data-en="THE FIRST CHAPTER" data-zh="第一章">THE FIRST CHAPTER</p>
-        <h2 data-en="Build a civilization, not just another platform."
-            data-zh="建设一个文明，而不只是另一个平台。">
-          Build a civilization, not just another platform.
-        </h2>
-        <p data-en="EchoCity is beginning with a small, human-scale city — and will grow through real stories, responsible AI and shared civic life."
-           data-zh="EchoCity 将从一座小而真实的数字城市开始，通过真实人生、负责任的 AI 与共同的城市生活逐步成长。">
-          EchoCity is beginning with a small, human-scale city — and will grow through real stories, responsible AI and shared civic life.
-        </p>
-        <a class="btn btn-primary" href="mailto:contact@echocities.com" data-en="Contact EchoCity" data-zh="联系 EchoCity">Contact EchoCity</a>
-      </div>
+    <section class="cta-section">
+      <p class="eyebrow" data-en="YOUR STORY CAN BEGIN NOW" data-zh="你的故事，可以从现在开始">你的故事，可以从现在开始</p>
+      <h2 data-en="What is the one wish you do not want to leave unfinished?"
+          data-zh="你最不愿留下未完成的愿望，是什么？">你最不愿留下未完成的愿望，是什么？</h2>
+      <a class="btn btn-primary" href="wish.html" data-en="Start My Journey" data-zh="开始我的旅程">开始我的旅程</a>
     </section>
   </main>
 
-  <footer>
-    <div class="brand footer-brand"><span class="brand-mark">E</span><span>EchoCity</span></div>
-    <p data-en="A digital city where humans and AI live together."
-       data-zh="一座由真人与 AI 共同生活的数字城市。">
-      A digital city where humans and AI live together.
-    </p>
-    <small>© 2026 EchoCity</small>
+  <footer id="contact">
+    <div>
+      <strong>EchoCity</strong>
+      <p data-en="A digital city built from wishes, action and relationships."
+         data-zh="一座由愿望、行动与关系共同生长的数字城市。">一座由愿望、行动与关系共同生长的数字城市。</p>
+    </div>
+    <a href="mailto:contact@echocity.org">contact@echocity.org</a>
   </footer>
-
   <script src="script.js"></script>
 </body>
 </html>

@@ -1,60 +1,42 @@
+const nav=document.querySelector(".main-nav");
+const menuButton=document.querySelector(".menu-toggle");
+const languageButton=document.querySelector(".language-switch");
 
-const header = document.querySelector(".site-header");
-const nav = document.querySelector(".main-nav");
-const menuButton = document.querySelector(".menu-toggle");
-const languageButton = document.querySelector(".language-switch");
-const langEn = document.querySelector(".lang-en");
-const langZh = document.querySelector(".lang-zh");
-
-window.addEventListener("scroll", () => {
-  header.classList.toggle("scrolled", window.scrollY > 40);
-});
-
-menuButton.addEventListener("click", () => {
-  const open = nav.classList.toggle("open");
-  menuButton.setAttribute("aria-expanded", String(open));
-});
-
-nav.querySelectorAll("a").forEach(link => {
-  link.addEventListener("click", () => {
-    nav.classList.remove("open");
-    menuButton.setAttribute("aria-expanded", "false");
+if(menuButton&&nav){
+  menuButton.addEventListener("click",()=>{
+    const open=nav.classList.toggle("open");
+    menuButton.setAttribute("aria-expanded",String(open));
   });
-});
-
-function setLanguage(lang) {
-  document.documentElement.dataset.lang = lang;
-  document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
-  document.querySelectorAll("[data-en][data-zh]").forEach(el => {
-    el.textContent = el.dataset[lang];
-  });
-  langEn.classList.toggle("active", lang === "en");
-  langZh.classList.toggle("active", lang === "zh");
-  localStorage.setItem("echocity-language", lang);
 }
 
-languageButton.addEventListener("click", () => {
-  const current = document.documentElement.dataset.lang;
-  setLanguage(current === "en" ? "zh" : "en");
-});
+function setLanguage(lang){
+  document.documentElement.dataset.lang=lang;
+  document.documentElement.lang=lang==="zh"?"zh-CN":"en";
+  document.querySelectorAll("[data-en][data-zh]").forEach(el=>el.textContent=el.dataset[lang]);
+  document.querySelector(".lang-en")?.classList.toggle("active",lang==="en");
+  document.querySelector(".lang-zh")?.classList.toggle("active",lang==="zh");
+  localStorage.setItem("echocity-language",lang);
+}
 
-setLanguage(localStorage.getItem("echocity-language") || "en");
-
-const revealObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("visible");
-      revealObserver.unobserve(entry.target);
-    }
+if(languageButton){
+  languageButton.addEventListener("click",()=>{
+    const current=document.documentElement.dataset.lang||"zh";
+    setLanguage(current==="zh"?"en":"zh");
   });
-}, { threshold: 0.14 });
+  setLanguage(localStorage.getItem("echocity-language")||"zh");
+}
 
-document.querySelectorAll(".reveal").forEach(el => revealObserver.observe(el));
+const backgrounds=[...document.querySelectorAll(".hero-bg")];
+let bgIndex=0;
+if(backgrounds.length>1){
+  setInterval(()=>{
+    backgrounds[bgIndex].classList.remove("active");
+    bgIndex=(bgIndex+1)%backgrounds.length;
+    backgrounds[bgIndex].classList.add("active");
+  },6000);
+}
 
-const slides = [...document.querySelectorAll(".hero-bg")];
-let slideIndex = 0;
-setInterval(() => {
-  slides[slideIndex].classList.remove("active");
-  slideIndex = (slideIndex + 1) % slides.length;
-  slides[slideIndex].classList.add("active");
-}, 7000);
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add("visible")});
+},{threshold:.15});
+document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));

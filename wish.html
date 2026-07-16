@@ -2,133 +2,141 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>发布我的愿望 | EchoCity</title>
-  <style>
-    *{box-sizing:border-box}
-    body{font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f5f5;margin:0;padding:40px 20px;color:#111}
-    .container{max-width:900px;margin:auto;background:#fff;padding:40px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
-    h1{font-size:42px;margin:0 0 10px}
-    .intro{color:#666;margin-bottom:30px}
-    label{display:block;margin-top:28px;margin-bottom:8px;font-weight:700;font-size:18px}
-    textarea{width:100%;min-height:120px;padding:14px;font-size:17px;border:1px solid #ddd;border-radius:10px;resize:vertical}
-    button{margin-top:36px;background:#222;color:#fff;padding:16px 36px;font-size:18px;border:0;border-radius:10px;cursor:pointer}
-    #message{display:none;margin-top:20px;padding:12px 16px;background:#fff4d8;border-radius:8px}
-    #result{display:none;margin-top:40px;padding:30px;background:#f2f2f2;border-radius:12px}
-    .back{display:inline-block;margin-bottom:24px;color:#333;text-decoration:none}
-    @media(max-width:640px){body{padding:20px 12px}.container{padding:24px 18px}h1{font-size:34px}}
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>发布我的愿望｜EchoCity</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div class="container">
-    <a class="back" href="index.html">← 返回 EchoCity</a>
-    <h1>发布我的愿望</h1>
-    <p class="intro">每一个伟大的故事，都始于一个真实的愿望。</p>
+<body class="inner-page">
+  <header class="simple-header">
+    <a class="brand" href="index.html"><span class="brand-mark">E</span><span>EchoCity</span></a>
+    <a class="text-link" href="wall.html">愿望广场 →</a>
+  </header>
 
-    <form id="wishForm">
-      <label for="wish">1. 你的愿望是什么？</label>
-      <textarea id="wish" required></textarea>
+  <main class="form-shell">
+    <section class="form-card">
+      <p class="eyebrow">START YOUR JOURNEY</p>
+      <h1>发布我的愿望</h1>
+      <p class="intro">每一个伟大的故事，都始于一个真实的愿望。</p>
 
-      <label for="importance">2. 为什么它对你重要？</label>
-      <textarea id="importance"></textarea>
+      <form id="wishForm">
+        <label for="wish">1. 你的愿望是什么？</label>
+        <textarea id="wish" required placeholder="请写下一个对你真正重要、愿意开始行动的愿望。"></textarea>
 
-      <label for="difficulty">3. 你现在最大的困难是什么？</label>
-      <textarea id="difficulty"></textarea>
+        <label for="importance">2. 为什么它对你重要？</label>
+        <textarea id="importance" placeholder="它与你的人生、家庭、信念或未来有什么关系？"></textarea>
 
-      <label for="companion">4. 希望谁与你同行？</label>
-      <textarea id="companion"></textarea>
+        <label for="difficulty">3. 你现在最大的困难是什么？</label>
+        <textarea id="difficulty" placeholder="资金、能力、时间、信息、资源，还是缺少同行者？"></textarea>
 
- <label for="firstStep">5．第一步准备做什么？</label>
-<textarea id="firstStep"></textarea>
+        <label for="companion">4. 希望谁与你同行？</label>
+        <textarea id="companion" placeholder="你希望遇见什么样的人？"></textarea>
 
-<button type="button" onclick="publishWish()">发布我的愿望</button>
-</form>
+        <label for="firstStep">5. 第一步准备做什么？</label>
+        <textarea id="firstStep" placeholder="写下一个今天、明天或本周就能开始的小行动。"></textarea>
 
-<div id="message"></div>
+        <button id="publishButton" class="btn btn-primary submit-button" type="submit">发布我的愿望</button>
+        <p id="message" class="form-message" aria-live="polite"></p>
+      </form>
 
-<section id="result" aria-live="polite">
-  <h2>我的愿望卡片</h2>
-  <div id="wishCard"></div>
-</section>
-</div>
+      <section id="result" class="wish-result" hidden>
+        <p class="eyebrow">MY WISH CARD</p>
+        <h2>我的愿望卡片</h2>
+        <div id="wishCard"></div>
+        <div class="result-actions">
+          <a class="btn btn-secondary" href="wall.html">进入愿望广场</a>
+          <button class="btn btn-ghost" type="button" id="newWishButton">再发布一个愿望</button>
+        </div>
+      </section>
+    </section>
+  </main>
 
-<script>
-const SUPABASE_URL = "https://fhckjaidiqnozhpxkavt.supabase.co";
-const SUPABASE_KEY = "sb_publishable_g--rklRl7JhuX2RsA5L-ow_wi5w9tYa";
+  <script>
+    const SUPABASE_URL = "https://fhckjaidiqnozhpxkavt.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_g--rklRl7JhuX2RsA5L-ow_wi5w9tYa";
 
-async function publishWish() {
-  const wish = document.getElementById("wish").value.trim();
-  const importance = document.getElementById("importance").value.trim();
-  const difficulty = document.getElementById("difficulty").value.trim();
-  const companion = document.getElementById("companion").value.trim();
-  const firstStep = document.getElementById("firstStep").value.trim();
+    const form = document.getElementById("wishForm");
+    const button = document.getElementById("publishButton");
+    const message = document.getElementById("message");
+    const result = document.getElementById("result");
+    const wishCard = document.getElementById("wishCard");
 
-  if (!wish) {
-    alert("请填写你的愿望。");
-    return;
-  }
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
 
-  try {
-    const response = await fetch(
-      SUPABASE_URL + "/rest/v1/wishes",
-      {
-        method: "POST",
-        headers: {
-          "apikey": SUPABASE_KEY,
-          "Authorization": "Bearer " + SUPABASE_KEY,
-          "Content-Type": "application/json",
-          "Prefer": "return=representation"
-        },
-        body: JSON.stringify({
-          wish: wish,
-          importance: importance,
-          difficulty: difficulty,
-          companion: companion,
-          first_step: firstStep
-        })
+      const payload = {
+        wish: document.getElementById("wish").value.trim(),
+        importance: document.getElementById("importance").value.trim(),
+        difficulty: document.getElementById("difficulty").value.trim(),
+        companion: document.getElementById("companion").value.trim(),
+        first_step: document.getElementById("firstStep").value.trim()
+      };
+
+      if (!payload.wish) {
+        setMessage("请先填写你的愿望。", true);
+        return;
       }
-    );
 
-    const rows = await response.json();
+      button.disabled = true;
+      button.textContent = "正在发布……";
+      setMessage("正在把你的愿望送往 EchoCity……", false);
 
-    if (!response.ok) {
-      console.error(rows);
-      alert("发布失败，请稍后重试。");
-      return;
-    }
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/wishes`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_KEY,
+            "Authorization": `Bearer ${SUPABASE_KEY}`,
+            "Prefer": "return=representation"
+          },
+          body: JSON.stringify(payload)
+        });
 
-    const item = rows[0];
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || data.details || "数据库写入失败");
 
-    document.getElementById("wishCard").innerHTML = `
-      <p><strong>愿望：</strong>${escapeHtml(item.wish)}</p>
-      <p><strong>为什么重要：</strong>${escapeHtml(item.importance || "未填写")}</p>
-      <p><strong>当前困难：</strong>${escapeHtml(item.difficulty || "未填写")}</p>
-      <p><strong>希望谁同行：</strong>${escapeHtml(item.companion || "未填写")}</p>
-      <p><strong>第一步：</strong>${escapeHtml(item.first_step || "未填写")}</p>
-      <p><small>发布时间：${new Date(item.created_at).toLocaleString()}</small></p>
-    `;
+        const saved = Array.isArray(data) ? data[0] : data;
+        wishCard.innerHTML = `
+          <p><strong>愿望：</strong>${escapeHtml(saved.wish)}</p>
+          <p><strong>为什么重要：</strong>${escapeHtml(saved.importance || "未填写")}</p>
+          <p><strong>当前困难：</strong>${escapeHtml(saved.difficulty || "未填写")}</p>
+          <p><strong>希望谁同行：</strong>${escapeHtml(saved.companion || "未填写")}</p>
+          <p><strong>第一步：</strong>${escapeHtml(saved.first_step || "未填写")}</p>
+          <p><small>发布时间：${new Date(saved.created_at).toLocaleString()}</small></p>
+        `;
 
-    document.getElementById("result").style.display = "block";
-    document.getElementById("result").scrollIntoView({
-      behavior: "smooth"
+        result.hidden = false;
+        form.hidden = true;
+        result.scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (error) {
+        setMessage(`发布失败：${error.message}`, true);
+      } finally {
+        button.disabled = false;
+        button.textContent = "发布我的愿望";
+      }
     });
 
-    alert("愿望发布成功，已保存到 EchoCity 数据库。");
+    document.getElementById("newWishButton").addEventListener("click", () => {
+      form.reset();
+      form.hidden = false;
+      result.hidden = true;
+      message.textContent = "";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
 
-  } catch (error) {
-    console.error(error);
-    alert("网络连接失败，请稍后重试。");
-  }
-}
+    function setMessage(text, isError) {
+      message.textContent = text;
+      message.classList.toggle("error", isError);
+    }
 
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-</script>
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+  </script>
 </body>
 </html>
