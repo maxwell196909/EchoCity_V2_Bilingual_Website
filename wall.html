@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>愿望广场｜EchoCity</title>
-  <link rel="stylesheet" href="style.css?v=20260716-4">
+  <link rel="stylesheet" href="style.css?v=20260716-5">
 </head>
 <body class="inner-page wall-page">
   <header class="simple-header">
@@ -33,15 +33,49 @@
     <section id="wishGrid" class="wish-grid" aria-live="polite"></section>
   </main>
 
+  <div id="applicationModal" class="application-modal" hidden>
+    <div class="application-backdrop" data-close-modal></div>
+
+    <section class="application-dialog" role="dialog" aria-modal="true" aria-labelledby="applicationTitle">
+      <button class="modal-close" type="button" aria-label="关闭" data-close-modal>×</button>
+      <p class="eyebrow">WALK TOGETHER</p>
+      <h2 id="applicationTitle">我愿意同行</h2>
+      <p id="selectedWishText" class="selected-wish-text"></p>
+
+      <form id="applicationForm">
+        <input id="applicationWishId" type="hidden">
+
+        <label for="applicantName">你的姓名或昵称</label>
+        <input id="applicantName" type="text" required placeholder="例如：Peter">
+
+        <label for="applicantContact">联系方式</label>
+        <input id="applicantContact" type="text" required placeholder="邮箱、微信或其他联系方式">
+
+        <label for="applicantMessage">你想对愿望发起人说什么？</label>
+        <textarea id="applicantMessage" required placeholder="请说明你为什么愿意同行，以及你能提供什么帮助。"></textarea>
+
+        <button id="applicationSubmitButton" class="btn btn-primary application-submit" type="submit">
+          提交同行申请
+        </button>
+        <p id="applicationMessage" class="form-message" aria-live="polite"></p>
+      </form>
+    </section>
+  </div>
+
   <script>
     const SUPABASE_URL = "https://fhckjaidiqnozhpxkavt.supabase.co";
     const SUPABASE_KEY = "sb_publishable_g--rklRl7JhuX2RsA5L-ow_wi5w9tYa";
 
-    async function loadWishes() {
-      const status = document.getElementById("wallStatus");
-      const count = document.getElementById("wallCount");
-      const grid = document.getElementById("wishGrid");
+    const wallCount = document.getElementById("wallCount");
+    const wallStatus = document.getElementById("wallStatus");
+    const wishGrid = document.getElementById("wishGrid");
 
+    const modal = document.getElementById("applicationModal");
+    const applicationForm = document.getElementById("applicationForm");
+    const applicationMessage = document.getElementById("applicationMessage");
+    const applicationSubmitButton = document.getElementById("applicationSubmitButton");
+
+    async function loadWishes() {
       try {
         const response = await fetch(
           `${SUPABASE_URL}/rest/v1/wishes?select=id,created_at,wish,importance,difficulty,companion,first_step&order=created_at.desc&limit=60`,
@@ -56,27 +90,29 @@
         const rows = await response.json();
 
         if (!response.ok) {
-          throw new Error(rows.message || "读取失败");
+          throw new Error(rows.message || rows.details || "读取失败");
         }
 
-        if (!rows.length) {
-          count.textContent = "还没有愿望";
-          status.textContent = "成为第一个发布愿望的人。";
+        if (!Array.isArray(rows) || rows.length === 0) {
+          wallCount.textContent = "还没有愿望";
+          wallStatus.textContent = "成为第一个发布愿望的人。";
+          wishGrid.innerHTML = "";
           return;
         }
 
-        count.textContent = `已经有 ${rows.length} 个愿望被看见`;
-        status.textContent = "愿望会按照发布时间由新到旧排列。";
+        wallCount.textContent = `已经有 ${rows.length} 个愿望被看见`;
+        wallStatus.textContent = "愿望按照发布时间由新到旧排列。";
 
-        grid.innerHTML = rows.map((item, index) => {
-          const avatar = getAvatar(item.wish, index);
+        wishGrid.innerHTML = rows.map((item, index) => {
           return `
             <article class="wish-card community-card">
               <div class="wish-card-top">
-                <div class="wish-avatar" aria-hidden="true">${avatar}</div>
+                <div class="wish-avatar" aria-hidden="true">${getAvatar(item.wish, index)}</div>
                 <div class="wish-meta">
                   <strong>EchoCity 居民</strong>
-                  <span title="${formatFullTime(item.created_at)}">${formatRelativeTime(item.created_at)}</span>
+                  <span title="${escapeAttribute(formatFullTime(item.created_at))}">
+                    ${formatRelativeTime(item.created_at)}
+                  </span>
                 </div>
               </div>
 
@@ -93,7 +129,14 @@
               </div>
 
               <div class="wish-card-actions">
-                <button class="companion-button" type="button" data-wish-id="${item.id}" data-wish-text="${escapeAttribute(item.wish)}">我愿意同行</button>
+                <button
+                  class="companion-button"
+                  type="button"
+                  data-wish-id="${Number(item.id)}"
+                  data-wish-text="${escapeAttribute(item.wish)}"
+                >
+                  我愿意同行
+                </button>
               </div>
 
               <div class="wish-card-footer">
@@ -103,33 +146,128 @@
             </article>
           `;
         }).join("");
+
         bindCompanionButtons();
       } catch (error) {
-        count.textContent = "愿望读取失败";
-        status.textContent = error.message;
-        status.classList.add("error");
+        wallCount.textContent = "愿望读取失败";
+        wallStatus.textContent = error.message;
+        wallStatus.classList.add("error");
       }
+    }
+
+    function bindCompanionButtons() {
+      document.querySelectorAll(".companion-button").forEach((button) => {
+        button.addEventListener("click", () => {
+          openApplicationModal(button.dataset.wishId, button.dataset.wishText);
+        });
+      });
+    }
+
+    function openApplicationModal(wishId, wishText) {
+      applicationForm.reset();
+      applicationMessage.textContent = "";
+      applicationMessage.classList.remove("error");
+
+      document.getElementById("applicationWishId").value = wishId;
+      document.getElementById("selectedWishText").textContent = `申请同行的愿望：${wishText}`;
+
+      modal.hidden = false;
+      document.body.classList.add("modal-open");
+      setTimeout(() => document.getElementById("applicantName").focus(), 50);
+    }
+
+    function closeApplicationModal() {
+      modal.hidden = true;
+      document.body.classList.remove("modal-open");
+      applicationMessage.textContent = "";
+      applicationMessage.classList.remove("error");
+    }
+
+    document.querySelectorAll("[data-close-modal]").forEach((element) => {
+      element.addEventListener("click", closeApplicationModal);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !modal.hidden) {
+        closeApplicationModal();
+      }
+    });
+
+    applicationForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const payload = {
+        wish_id: Number(document.getElementById("applicationWishId").value),
+        name: document.getElementById("applicantName").value.trim(),
+        message: document.getElementById("applicantMessage").value.trim(),
+        contact: document.getElementById("applicantContact").value.trim()
+      };
+
+      if (!payload.wish_id || !payload.name || !payload.message || !payload.contact) {
+        showApplicationMessage("请完整填写姓名、联系方式和留言。", true);
+        return;
+      }
+
+      applicationSubmitButton.disabled = true;
+      applicationSubmitButton.textContent = "正在提交……";
+      showApplicationMessage("正在把你的同行申请送往 EchoCity……", false);
+
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/applications`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_KEY,
+            "Authorization": `Bearer ${SUPABASE_KEY}`,
+            "Prefer": "return=representation"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || data.details || "同行申请提交失败");
+        }
+
+        showApplicationMessage("提交成功。你的同行申请已经进入 EchoCity。", false);
+        applicationSubmitButton.textContent = "已提交";
+
+        setTimeout(() => {
+          closeApplicationModal();
+          applicationForm.reset();
+          applicationSubmitButton.textContent = "提交同行申请";
+        }, 1700);
+      } catch (error) {
+        showApplicationMessage(`提交失败：${error.message}`, true);
+      } finally {
+        applicationSubmitButton.disabled = false;
+      }
+    });
+
+    function showApplicationMessage(text, isError) {
+      applicationMessage.textContent = text;
+      applicationMessage.classList.toggle("error", isError);
     }
 
     function formatRelativeTime(dateString) {
       const then = new Date(dateString);
       const now = new Date();
-      const diff = now - then;
+      const diff = Math.max(0, now - then);
       const minute = 60 * 1000;
       const hour = 60 * minute;
       const day = 24 * hour;
 
       if (diff < minute) return "刚刚";
       if (diff < hour) return `${Math.floor(diff / minute)}分钟前`;
-      if (diff < day) {
-        if (then.toDateString() === now.toDateString()) {
-          return `今天 ${then.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}`;
-        }
-        return `${Math.floor(diff / hour)}小时前`;
+
+      if (then.toDateString() === now.toDateString()) {
+        return `今天 ${then.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}`;
       }
 
       const yesterday = new Date(now);
       yesterday.setDate(now.getDate() - 1);
+
       if (then.toDateString() === yesterday.toDateString()) {
         return `昨天 ${then.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}`;
       }
@@ -150,7 +288,11 @@
     function getAvatar(text, index) {
       const symbols = ["愿", "梦", "行", "光", "城", "心", "路", "新"];
       let sum = index;
-      for (const char of String(text || "")) sum += char.charCodeAt(0);
+
+      for (const char of String(text || "")) {
+        sum += char.charCodeAt(0);
+      }
+
       return symbols[sum % symbols.length];
     }
 
@@ -163,31 +305,11 @@
         .replaceAll("'", "&#039;");
     }
 
-\n    const modal = document.getElementById("applicationModal");\n    const applicationForm = document.getElementById("applicationForm");\n    const applicationMessage = document.getElementById("applicationMessage");\n    const applicationButton = document.getElementById("applicationSubmitButton");\n\n    function bindCompanionButtons() {\n      document.querySelectorAll(".companion-button").forEach((button) => {\n        button.addEventListener("click", () => {\n          applicationForm.reset();\n          document.getElementById("applicationWishId").value = button.dataset.wishId;\n          document.getElementById("selectedWishText").textContent = `申请同行的愿望：${button.dataset.wishText}`;\n          applicationMessage.textContent = "";\n          modal.hidden = false;\n          document.body.classList.add("modal-open");\n        });\n      });\n    }\n\n    document.querySelectorAll("[data-close-modal]").forEach((element) => {\n      element.addEventListener("click", () => {\n        modal.hidden = true;\n        document.body.classList.remove("modal-open");\n      });\n    });\n\n    applicationForm.addEventListener("submit", async (event) => {\n      event.preventDefault();\n      const payload = {\n        wish_id: Number(document.getElementById("applicationWishId").value),\n        name: document.getElementById("applicantName").value.trim(),\n        message: document.getElementById("applicantMessage").value.trim(),\n        contact: document.getElementById("applicantContact").value.trim()\n      };\n      applicationButton.disabled = true;\n      applicationButton.textContent = "正在提交……";\n      applicationMessage.textContent = "正在把你的同行申请送往 EchoCity……";\n      applicationMessage.classList.remove("error");\n      try {\n        const response = await fetch(`${SUPABASE_URL}/rest/v1/applications`, {\n          method: "POST",\n          headers: {\n            "Content-Type": "application/json",\n            "apikey": SUPABASE_KEY,\n            "Authorization": `Bearer ${SUPABASE_KEY}`,\n            "Prefer": "return=representation"\n          },\n          body: JSON.stringify(payload)\n        });\n        const data = await response.json();\n        if (!response.ok) throw new Error(data.message || data.details || "提交失败");\n        applicationMessage.textContent = "提交成功。你的同行申请已经进入 EchoCity。";\n        setTimeout(() => {\n          modal.hidden = true;\n          document.body.classList.remove("modal-open");\n          applicationButton.textContent = "提交同行申请";\n        }, 1600);\n      } catch (error) {\n        applicationMessage.textContent = `提交失败：${error.message}`;\n        applicationMessage.classList.add("error");\n      } finally {\n        applicationButton.disabled = false;\n      }\n    });\n\n    function escapeAttribute(value) {\n      return escapeHtml(value).replaceAll("`", "&#096;");\n    }\n
+    function escapeAttribute(value) {
+      return escapeHtml(value).replaceAll("`", "&#096;");
+    }
+
     loadWishes();
-    setInterval(loadWishes, 60000);
   </script>
-
-  <div id="applicationModal" class="application-modal" hidden>
-    <div class="application-backdrop" data-close-modal></div>
-    <section class="application-dialog" role="dialog" aria-modal="true" aria-labelledby="applicationTitle">
-      <button class="modal-close" type="button" aria-label="关闭" data-close-modal>×</button>
-      <p class="eyebrow">WALK TOGETHER</p>
-      <h2 id="applicationTitle">我愿意同行</h2>
-      <p id="selectedWishText" class="selected-wish-text"></p>
-      <form id="applicationForm">
-        <input id="applicationWishId" type="hidden">
-        <label for="applicantName">你的姓名或昵称</label>
-        <input id="applicantName" type="text" required placeholder="例如：Peter">
-        <label for="applicantContact">联系方式</label>
-        <input id="applicantContact" type="text" required placeholder="邮箱、微信或其他联系方式">
-        <label for="applicantMessage">你想对愿望发起人说什么？</label>
-        <textarea id="applicantMessage" required placeholder="请说明你为什么愿意同行，以及你能提供什么帮助。"></textarea>
-        <button id="applicationSubmitButton" class="btn btn-primary application-submit" type="submit">提交同行申请</button>
-        <p id="applicationMessage" class="form-message" aria-live="polite"></p>
-      </form>
-    </section>
-  </div>
-
 </body>
 </html>
