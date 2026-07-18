@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>我的数字身份证 | EchoCity</title>
+
+  <title>我的居民主页 | EchoCity</title>
 
   <style>
     * {
@@ -17,200 +18,189 @@
       font-family: Arial, "Microsoft YaHei", sans-serif;
       color: #ffffff;
       background:
-        linear-gradient(rgba(7, 18, 28, 0.82), rgba(7, 18, 28, 0.92)),
-        url("city-vision.jpg") center/cover fixed;
+        linear-gradient(
+          rgba(7, 18, 28, 0.8),
+          rgba(7, 18, 28, 0.94)
+        ),
+        url("city-vision.jpg") center / cover fixed;
     }
 
     .topbar {
-      height: 72px;
+      min-height: 72px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 0 7%;
-      background: rgba(8, 22, 32, 0.92);
+      justify-content: space-between;
+      padding: 14px 7%;
+      background: rgba(8, 22, 32, 0.94);
       border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     }
 
     .logo {
+      color: #f1b44c;
       font-size: 24px;
       font-weight: bold;
-      color: #f1b44c;
     }
 
-    .nav-link {
+    .top-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .top-link {
       color: #ffffff;
       text-decoration: none;
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      padding: 10px 18px;
+      padding: 10px 17px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
       border-radius: 24px;
     }
 
+    .top-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
     .page {
-      width: min(900px, 92%);
-      margin: 50px auto;
+      width: min(1180px, 92%);
+      margin: 42px auto 70px;
     }
 
-    .title {
-      text-align: center;
-      margin-bottom: 34px;
-    }
-
-    .title h1 {
-      font-size: 42px;
-      margin-bottom: 12px;
-    }
-
-    .title p {
-      color: #cfd9df;
-      line-height: 1.7;
-    }
-
-    .card {
-      position: relative;
-      overflow: hidden;
-      border-radius: 28px;
-      padding: 38px;
+    .welcome {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 26px;
+      align-items: center;
+      margin-bottom: 32px;
+      padding: 30px;
       background:
         linear-gradient(
           145deg,
-          rgba(19, 57, 76, 0.98),
-          rgba(32, 43, 66, 0.98)
+          rgba(20, 57, 75, 0.96),
+          rgba(34, 43, 66, 0.96)
         );
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.38);
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      width: 300px;
-      height: 300px;
-      border-radius: 50%;
-      right: -120px;
-      top: -140px;
-      background: rgba(241, 180, 76, 0.15);
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 30px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .card-brand {
-      color: #f1b44c;
-      font-size: 15px;
-      letter-spacing: 3px;
-    }
-
-    .card-number {
-      color: #c9d3d9;
-      font-size: 14px;
-    }
-
-    .identity-main {
-      display: grid;
-      grid-template-columns: 130px 1fr;
-      gap: 28px;
-      align-items: center;
-      position: relative;
-      z-index: 1;
-    }
-
-    .avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 26px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.3);
+    }    .avatar {
+      width: 105px;
+      height: 105px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #f1b44c;
-      color: #18303d;
-      font-size: 52px;
+      color: #17303d;
+      font-size: 44px;
       font-weight: bold;
+      background: #f1b44c;
       border: 5px solid rgba(255, 255, 255, 0.18);
+      border-radius: 50%;
     }
 
-    .name {
-      font-size: 38px;
+    .welcome h1 {
       margin-bottom: 8px;
+      font-size: 38px;
     }
 
     .role {
-      color: #c9d4da;
+      margin-bottom: 13px;
+      color: #c7d3da;
       font-size: 18px;
     }
 
-    .details {
-      margin-top: 34px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .detail {
-      background: rgba(255, 255, 255, 0.07);
-      padding: 18px;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .detail h3 {
+    .identity-number {
       color: #f1b44c;
       font-size: 14px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 26px;
+    }
+
+    .panel {
+      padding: 28px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 22px;
+      backdrop-filter: blur(12px);
+    }
+
+    .panel h2 {
+      margin-bottom: 22px;
+      color: #f1b44c;
+      font-size: 23px;
+    }
+
+    .information {
+      display: grid;
+      gap: 15px;
+    }
+
+    .info-item {
+      padding: 17px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 15px;
+    }
+
+    .info-item h3 {
       margin-bottom: 7px;
+      color: #f1b44c;
+      font-size: 14px;
     }
 
-    .detail p {
-      line-height: 1.65;
-      color: #edf2f4;
+    .info-item p {
+      color: #e8eef1;
+      line-height: 1.7;
+      overflow-wrap: anywhere;
     }
 
-    .footer {
-      margin-top: 30px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.14);
-      color: #b8c5cc;
-      font-size: 13px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .actions {
-      display: flex;
+    .menu {
+      display: grid;
       gap: 14px;
-      margin-top: 28px;
-      justify-content: center;
     }
 
-    .button {
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      padding: 13px 22px;
-      border-radius: 28px;
-      font-size: 15px;
-    }
-
-    .primary {
-      background: #f1b44c;
-      color: #182b35;
-      font-weight: bold;
-    }
-
-    .secondary {
+    .menu-card {
+      display: block;
+      padding: 19px;
       color: #ffffff;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 16px;
+      transition: 0.2s;
     }
 
-    @media (max-width: 700px) {
-      .identity-main {
+    .menu-card:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(241, 180, 76, 0.6);
+    }
+
+    .menu-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #f1b44c;
+      font-size: 17px;
+    }
+
+    .menu-card span {
+      color: #c4d0d6;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .statement {
+      margin-top: 28px;
+      padding: 22px;
+      color: #d5dfe4;
+      text-align: center;
+      line-height: 1.8;
+      background: rgba(8, 22, 32, 0.75);
+      border-radius: 18px;
+    }
+
+    @media (max-width: 800px) {
+      .welcome {
         grid-template-columns: 1fr;
         text-align: center;
       }
@@ -219,201 +209,183 @@
         margin: auto;
       }
 
-      .details {
+      .layout {
         grid-template-columns: 1fr;
       }
 
-      .card-header {
+      .topbar {
+        align-items: flex-start;
         flex-direction: column;
-        gap: 10px;
+        gap: 13px;
+      }
+
+      .welcome h1 {
+        font-size: 30px;
       }
     }
   </style>
-</head>
-
-<body>
+</head><body>
   <header class="topbar">
     <div class="logo">EchoCity</div>
-    <a class="nav-link" href=" ">返回首页</a >
+
+    <div class="top-links">
+      <a class="top-link" href=" ">
+        我的身份证
+      </a >
+
+      <a class="top-link" href="index.html">
+        返回首页
+      </a >
+    </div>
   </header>
 
   <main class="page">
-    <section class="title">
-      <h1>我的数字身份证</h1>
-      <p>
-        这是你进入 EchoCity 的身份凭证，也是你在数字文明中的第一份个人记录。
-      </p >
-    </section>
+    <section class="welcome">
+      <div class="avatar" id="avatar">E</div>
 
-    <section class="card">
-      <div class="card-header">
-        <div class="card-brand">ECHOCITY DIGITAL IDENTITY</div>
-        <div class="card-number" id="cardNumber">
-          编号：EC-000000
-        </div>
-      </div>
+      <div>
+        <h1>
+          欢迎回家，<span id="residentName">居民</span>
+        </h1>
 
-      <div class="identity-main">
-        <div class="avatar" id="avatar">E</div>
+        <p class="role" id="residentRole">
+          数字文明参与者
+        </p >
 
-        <div>
-          <h2 class="name" id="name">你的名字</h2>
-          <p class="role" id="role">数字文明参与者</p >
-        </div>
-      </div>
-
-      <div class="details">
-        <div class="detail">
-          <h3>我的使命</h3>
-          <p id="mission">尚未填写</p >
-        </div>
-
-        <div class="detail">
-          <h3>我的价值观</h3>
-          <p id="values">尚未填写</p >
-        </div>
-
-        <div class="detail">
-          <h3>我的愿望</h3>
-          <p id="wish">尚未填写</p >
-        </div>
-
-        <div class="detail">
-          <h3>所属社区</h3>
-          <p id="city">EchoCity</p >
-        </div>
-
-        <div class="detail">
-          <h3>加入时间</h3>
-          <p id="joinDate">尚未生成</p >
-        </div>
-
-        <div class="detail">
-          <h3>身份状态</h3>
-          <p>已激活</p >
-        </div>
-      </div>
-
-      <div class="footer">
-        数据文明，不仅仅是数据的输入与输出，而是服务有灵魂的人。
+        <p class="identity-number" id="identityNumber">
+          居民编号：尚未生成
+        </p >
       </div>
     </section>
 
-    <div class="actions">
-      <a class="button secondary" href="mycity.html">
-        修改身份
-      </a >
+    <section class="layout">
+      <div class="panel">
+        <h2>我的居民档案</h2>
 
-      <button
-        class="button primary"
-        type="button"
-        onclick="downloadCard()"
-      >
-        保存身份信息
-      </button>
-    </div>
-  </main>
+        <div class="information">
+          <div class="info-item">
+            <h3>我的使命</h3>
+            <p id="mission">尚未填写</p >
+          </div>
 
-  <script>
-    const savedIdentity =
-      localStorage.getItem("echoCityIdentity");
+          <div class="info-item">
+            <h3>我的价值观</h3>
+            <p id="values">尚未填写</p >
+          </div>
 
-    if (!savedIdentity) {
-      alert("还没有创建数字身份，请先填写身份信息。");
-      window.location.href = "mycity.html";
-    } else {
-      const data = JSON.parse(savedIdentity);
+          <div class="info-item">
+            <h3>我的愿望</h3>
+            <p id="wish">尚未填写</p >
+          </div>
 
-      document.getElementById("name").textContent =
-        data.name || "你的名字";
+          <div class="info-item">
+            <h3>所属社区</h3>
+            <p id="city">EchoCity</p >
+          </div>
 
-      document.getElementById("role").textContent =
-        data.role || "数字文明参与者";
+          <div class="info-item">
+            <h3>加入时间</h3>
+            <p id="joinDate">尚未生成</p >
+          </div>
+        </div>
+      </div>      <div class="panel">
+        <h2>我的数字生活</h2>
 
-      document.getElementById("mission").textContent =
-        data.mission || "尚未填写";
+        <div class="menu">
+          <a class="menu-card" href=" ">
+            <strong>我的数字身份证</strong>
+            <span>查看居民编号、身份状态和个人使命。</span>
+          </a >
 
-      document.getElementById("values").textContent =
-        data.values || "尚未填写";
+          <a class="menu-card" href="life-timeline.html">
+            <strong>我的生活时间线</strong>
+            <span>记录我在 EchoCity 中的重要事件、成长与共同记忆。</span>
+          </a >
 
-      document.getElementById("wish").textContent =
-        data.wish || "尚未填写";
+          <a class="menu-card" href="memory-archive.html">
+            <strong>我的记忆档案</strong>
+            <span>保存值得被记住的人、事情、感受与生命片段。</span>
+          </a >
 
-      document.getElementById("city").textContent =
-        data.city || "EchoCity";
+          <a class="menu-card" href="wish.html">
+            <strong>愿望广场</strong>
+            <span>写下愿望，并看见其他居民的共同愿望。</span>
+          </a >
 
-      document.getElementById("avatar").textContent =
-        data.name
-          ? data.name.charAt(0).toUpperCase()
-          : "E";
+          <a class="menu-card" href="mycity.html">
+            <strong>修改我的身份</strong>
+            <span>更新名字、身份描述、使命和价值观。</span>
+          </a >
 
-      if (!data.identityNumber) {
-        const randomNumber =
-          Math.floor(100000 + Math.random() * 900000);
+          <a class="menu-card" href="wall.html">
+            <strong>城市留言墙</strong>
+            <span>留下我在 EchoCity 的第一段生活记录。</span>
+          </a >
+        </div>
+      </div>
+    </section>
 
-        data.identityNumber =
-          "EC-2026-" + randomNumber;
-      }
+    <section class="statement">
+      我的家，不只是储存数据的空间，而是记录生命、关系、成长与共同记忆的地方。
+    </section>
+  </main>  <script>
+    function loadResidentHome() {
+      const savedIdentity =
+        localStorage.getItem("echoCityIdentity");
 
-      if (!data.joinDate) {
-        data.joinDate =
-          new Date().toLocaleDateString("zh-CN");
-      }
-
-      localStorage.setItem(
-        "echoCityIdentity",
-        JSON.stringify(data)
-      );
-
-      document.getElementById("cardNumber").textContent =
-        "编号：" + data.identityNumber;
-
-      document.getElementById("joinDate").textContent =
-        data.joinDate;
-    }
-
-    function downloadCard() {
-      const data = JSON.parse(
-        localStorage.getItem("echoCityIdentity")
-      );
-
-      if (!data) {
-        alert("没有找到数字身份信息。");
+      if (!savedIdentity) {
+        alert("还没有创建数字身份，请先建立身份。");
+        window.location.href = "mycity.html";
         return;
       }
 
-      const content =
-`EchoCity 数字身份
+      try {
+        const data = JSON.parse(savedIdentity);
 
-姓名：${data.name || ""}
-身份描述：${data.role || ""}
-使命：${data.mission || ""}
-价值观：${data.values || ""}
-愿望：${data.wish || ""}
-所属社区：${data.city || ""}
-数字编号：${data.identityNumber || ""}
-加入时间：${data.joinDate || ""}
+        document.getElementById("residentName").textContent =
+          data.name || "居民";
 
-数据文明，不仅仅是数据的输入与输出，而是服务有灵魂的人。`;
+        document.getElementById("residentRole").textContent =
+          data.role || "数字文明参与者";
 
-      const blob = new Blob(
-        [content],
-        {
-          type: "text/plain;charset=utf-8"
-        }
-      );
+        document.getElementById("mission").textContent =
+          data.mission || "尚未填写";
 
-      const link = document.createElement("a");
+        document.getElementById("values").textContent =
+          data.values || "尚未填写";
 
-      link.href = URL.createObjectURL(blob);
-      link.download = "EchoCity-数字身份.txt";
+        document.getElementById("wish").textContent =
+          data.wish || "尚未填写";
 
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+        document.getElementById("city").textContent =
+          data.city || "EchoCity";
 
-      URL.revokeObjectURL(link.href);
+        document.getElementById("joinDate").textContent =
+          data.joinDate || "尚未生成";
+
+        document.getElementById("identityNumber").textContent =
+          "居民编号：" +
+          (data.identityNumber || "尚未生成");
+
+        document.getElementById("avatar").textContent =
+          data.name
+            ? data.name.charAt(0).toUpperCase()
+            : "E";
+      } catch (error) {
+        console.error("读取居民身份失败：", error);
+
+        alert("居民身份数据出现错误，请重新建立身份。");
+
+        localStorage.removeItem("echoCityIdentity");
+
+        window.location.href = "mycity.html";
+      }
     }
+
+    window.addEventListener(
+      "DOMContentLoaded",
+      loadResidentHome
+    );
   </script>
 </body>
 </html>
