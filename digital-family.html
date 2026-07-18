@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>我的数字家庭 | My Digital Family | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+      color: #ffffff;
+      background:
+        linear-gradient(
+          rgba(7, 18, 28, 0.82),
+          rgba(7, 18, 28, 0.95)
+        ),
+        url("city-vision.jpg") center / cover fixed;
+    }
+
+    .topbar {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 7%;
+      background: rgba(8, 22, 32, 0.94);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .logo {
+      color: #f1b44c;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .top-link,
+    .language-button {
+      color: #ffffff;
+      text-decoration: none;
+      padding: 10px 17px;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 24px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .top-link:hover,
+    .language-button:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .page {
+      width: min(1160px, 92%);
+      margin: 45px auto 70px;
+    }
+
+    .hero {
+      margin-bottom: 28px;
+      padding: 34px;
+      text-align: center;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(20, 57, 75, 0.96),
+          rgba(34, 43, 66, 0.96)
+        );
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 26px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.32);
+    }
+
+    .hero h1 {
+      margin-bottom: 12px;
+      font-size: 40px;
+    }
+
+    .hero p {
+      color: #cbd7dd;
+      line-height: 1.8;
+    }
+
+    .resident-bar {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 28px;
+      padding: 20px 24px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 18px;
+    }
+
+    .avatar {
+      width: 64px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #17303d;
+      font-size: 26px;
+      font-weight: bold;
+      background: #f1b44c;
+      border-radius: 50%;
+    }
+
+    .resident-info h2 {
+      margin-bottom: 5px;
+      font-size: 24px;
+    }
+
+    .resident-info p {
+      color: #c4d0d6;
+      line-height: 1.6;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 0.82fr 1.18fr;
+      gap: 26px;
+    }
+
+    .panel {
+      padding: 27px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 22px;
+      backdrop-filter: blur(12px);
+    }
+
+    .panel h2 {
+      margin-bottom: 21px;
+      color: #f1b44c;
+      font-size: 23px;
+    }    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 13px 14px;
+      color: #ffffff;
+      font-size: 15px;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 12px;
+      outline: none;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #f1b44c;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #b8c4ca;
+    }
+
+    textarea {
+      min-height: 115px;
+      resize: vertical;
+    }
+
+    .save-button {
+      width: 100%;
+      padding: 14px;
+      color: #172b35;
+      font-size: 16px;
+      font-weight: bold;
+      background: #f1b44c;
+      border: none;
+      border-radius: 28px;
+      cursor: pointer;
+    }
+
+    .save-button:hover {
+      background: #ffd078;
+    }
+
+    .family-card {
+      padding: 26px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(20, 57, 75, 0.96),
+          rgba(34, 43, 66, 0.96)
+        );
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 22px;
+    }
+
+    .family-label {
+      margin-bottom: 18px;
+      color: #f1b44c;
+      font-size: 13px;
+      letter-spacing: 2px;
+    }
+
+    .family-name {
+      margin-bottom: 9px;
+      font-size: 34px;
+    }
+
+    .family-mission {
+      margin-bottom: 24px;
+      color: #d5dfe4;
+      line-height: 1.75;
+    }
+
+    .family-section {
+      margin-bottom: 18px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+    }
+
+    .family-section h3 {
+      margin-bottom: 8px;
+      color: #f1b44c;
+      font-size: 14px;
+    }
+
+    .family-section p {
+      color: #e7edf0;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .members {
+      display: grid;
+      gap: 12px;
+    }
+
+    .member {
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 13px;
+    }
+
+    .member strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #ffffff;
+    }
+
+    .member span {
+      color: #b8c5cc;
+      font-size: 14px;
+    }
+
+    .empty-state {
+      padding: 26px 18px;
+      color: #b8c6cc;
+      text-align: center;
+      line-height: 1.8;
+      border: 1px dashed rgba(255, 255, 255, 0.16);
+      border-radius: 15px;
+    }
+
+    .statement {
+      margin-top: 28px;
+      padding: 22px;
+      color: #d5dfe4;
+      text-align: center;
+      line-height: 1.8;
+      background: rgba(8, 22, 32, 0.76);
+      border-radius: 18px;
+    }
+
+    [data-lang="zh"] [data-en-only] {
+      display: none;
+    }
+
+    [data-lang="en"] [data-zh-only] {
+      display: none;
+    }
+
+    @media (max-width: 820px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 31px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 13px;
+      }
+
+      .resident-bar {
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head><body>
+  <header class="topbar">
+    <div class="logo">EchoCity</div>
+
+    <div class="top-actions">
+      <button
+        class="language-button"
+        type="button"
+        onclick="switchLanguage()"
+      >
+        中文 / EN
+      </button>
+
+      <a class="top-link" href=" ">
+        <span data-zh-only>返回我的家</span>
+        <span data-en-only>Back to My Home</span>
+      </a >
+
+      <a class="top-link" href="index.html">
+        <span data-zh-only>返回首页</span>
+        <span data-en-only>Back to Home</span>
+      </a >
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <h1>
+        <span data-zh-only>我的数字家庭</span>
+        <span data-en-only>My Digital Family</span>
+      </h1>
+
+      <p data-zh-only>
+        家庭是数字文明中最基本、最温暖的生活共同体。<br />
+        在这里记录家庭的名称、使命、成员与共同价值。
+      </p >
+
+      <p data-en-only>
+        Family is the most basic and warmest community in digital civilization.<br />
+        Record your family name, mission, members, and shared values here.
+      </p >
+    </section>
+
+    <section class="resident-bar">
+      <div class="avatar" id="avatar">E</div>
+
+      <div class="resident-info">
+        <h2 id="residentName">
+          EchoCity Resident
+        </h2>
+
+        <p id="residentNumber">
+          居民编号 / Resident ID：尚未生成
+        </p >
+      </div>
+    </section>
+
+    <section class="layout">
+      <div class="panel">
+        <h2>
+          <span data-zh-only>建立我的家庭</span>
+          <span data-en-only>Create My Family</span>
+        </h2>
+
+        <div class="form-group">
+          <label for="familyName">
+            <span data-zh-only>家庭名称</span>
+            <span data-en-only>Family Name</span>
+          </label>
+
+          <input
+            id="familyName"
+            type="text"
+            placeholder="例如：Maxwell Family / 麦克斯韦家庭"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="familyMission">
+            <span data-zh-only>家庭使命</span>
+            <span data-en-only>Family Mission</span>
+          </label>
+
+          <textarea
+            id="familyMission"
+            placeholder="我们希望成为怎样的家庭？What kind of family do we hope to become?"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="familyValues">
+            <span data-zh-only>家庭价值观</span>
+            <span data-en-only>Family Values</span>
+          </label>
+
+          <input
+            id="familyValues"
+            type="text"
+            placeholder="例如：爱、诚信、责任、信仰 / Love, Integrity, Responsibility, Faith"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="familyMembers">
+            <span data-zh-only>家庭成员</span>
+            <span data-en-only>Family Members</span>
+          </label>
+
+          <textarea
+            id="familyMembers"
+            placeholder="每行填写一位成员，例如：Peter - 父亲 / Peter - Father"
+          ></textarea>
+        </div>
+
+        <button
+          class="save-button"
+          type="button"
+          onclick="saveFamily()"
+        >
+          <span data-zh-only>保存我的数字家庭</span>
+          <span data-en-only>Save My Digital Family</span>
+        </button>
+      </div>
+
+      <div class="family-card">
+        <div class="family-label">
+          DIGITAL FAMILY
+        </div>
+
+        <h2 class="family-name" id="displayFamilyName">
+          EchoCity Family
+        </h2>
+
+        <p class="family-mission" id="displayFamilyMission">
+          尚未建立家庭使命。 / Family mission has not been created yet.
+        </p >
+
+        <div class="family-section">
+          <h3>
+            <span data-zh-only>家庭价值观</span>
+            <span data-en-only>Family Values</span>
+          </h3>
+
+          <p id="displayFamilyValues">
+            尚未填写 / Not provided
+          </p >
+        </div>
+
+        <div class="family-section">
+          <h3>
+            <span data-zh-only>家庭成员</span>
+            <span data-en-only>Family Members</span>
+          </h3>
+
+          <div class="members" id="displayFamilyMembers">
+            <div class="empty-state">
+              尚未添加家庭成员。<br />
+              No family members have been added yet.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="statement">
+      <span data-zh-only>
+        家庭不是数据关系的集合，而是彼此关爱、共同承担、共同成长的生命共同体。
+      </span>
+
+      <span data-en-only>
+        A family is not merely a collection of data relationships, but a living community of love, responsibility, and shared growth.
+      </span>
+    </section>
+  </main>  <script>
+    const identityKey = "echoCityIdentity";
+    const familyKey = "echoCityDigitalFamily";
+    const languageKey = "echoCityLanguage";
+
+    function getIdentity() {
+      const savedIdentity =
+        localStorage.getItem(identityKey);
+
+      if (!savedIdentity) {
+        return null;
+      }
+
+      try {
+        return JSON.parse(savedIdentity);
+      } catch (error) {
+        console.error("读取数字身份失败：", error);
+        return null;
+      }
+    }
+
+    function getFamily() {
+      const savedFamily =
+        localStorage.getItem(familyKey);
+
+      if (!savedFamily) {
+        return null;
+      }
+
+      try {
+        return JSON.parse(savedFamily);
+      } catch (error) {
+        console.error("读取数字家庭失败：", error);
+        return null;
+      }
+    }
+
+    function saveFamily() {
+      const familyName =
+        document
+          .getElementById("familyName")
+          .value
+          .trim();
+
+      const familyMission =
+        document
+          .getElementById("familyMission")
+          .value
+          .trim();
+
+      const familyValues =
+        document
+          .getElementById("familyValues")
+          .value
+          .trim();
+
+      const familyMembers =
+        document
+          .getElementById("familyMembers")
+          .value
+          .split("\n")
+          .map(function (member) {
+            return member.trim();
+          })
+          .filter(function (member) {
+            return member.length > 0;
+          });
+
+      if (!familyName) {
+        alert(
+          document.documentElement.dataset.lang === "zh"
+            ? "请填写家庭名称。"
+            : "Please enter a family name."
+        );
+
+        document.getElementById("familyName").focus();
+        return;
+      }
+
+      const familyData = {
+        familyName,
+        familyMission,
+        familyValues,
+        familyMembers,
+        createdAt:
+          new Date().toLocaleDateString("zh-CN")
+      };
+
+      localStorage.setItem(
+        familyKey,
+        JSON.stringify(familyData)
+      );
+
+      renderFamily(familyData);
+
+      alert(
+        document.documentElement.dataset.lang === "zh"
+          ? "你的数字家庭已经保存。"
+          : "Your digital family has been saved."
+      );
+    }
+
+    function renderFamily(family) {
+      document.getElementById(
+        "displayFamilyName"
+      ).textContent =
+        family.familyName || "EchoCity Family";
+
+      document.getElementById(
+        "displayFamilyMission"
+      ).textContent =
+        family.familyMission ||
+        "尚未建立家庭使命。 / Family mission has not been created yet.";
+
+      document.getElementById(
+        "displayFamilyValues"
+      ).textContent =
+        family.familyValues ||
+        "尚未填写 / Not provided";
+
+      const membersContainer =
+        document.getElementById(
+          "displayFamilyMembers"
+        );
+
+      membersContainer.innerHTML = "";
+
+      if (
+        !family.familyMembers ||
+        family.familyMembers.length === 0
+      ) {
+        membersContainer.innerHTML = `
+          <div class="empty-state">
+            尚未添加家庭成员。<br />
+            No family members have been added yet.
+          </div>
+        `;
+
+        return;
+      }
+
+      family.familyMembers.forEach(function (member) {
+        const memberCard =
+          document.createElement("div");
+
+        memberCard.className = "member";
+
+        const parts = member.split("-");
+
+        const memberName =
+          parts[0]
+            ? parts[0].trim()
+            : member;
+
+        const memberRole =
+          parts.slice(1).join("-").trim();
+
+        memberCard.innerHTML = `
+          <strong>${escapeHtml(memberName)}</strong>
+          <span>
+            ${escapeHtml(
+              memberRole ||
+              "家庭成员 / Family Member"
+            )}
+          </span>
+        `;
+
+        membersContainer.appendChild(memberCard);
+      });
+    }
+
+    function loadResident() {
+      const identity = getIdentity();
+
+      if (!identity) {
+        alert(
+          document.documentElement.dataset.lang === "zh"
+            ? "还没有创建数字身份，请先建立身份。"
+            : "No digital identity was found. Please create one first."
+        );
+
+        window.location.href = "mycity.html";
+        return false;
+      }
+
+      document.getElementById(
+        "residentName"
+      ).textContent =
+        identity.name || "EchoCity Resident";
+
+      document.getElementById(
+        "residentNumber"
+      ).textContent =
+        "居民编号 / Resident ID：" +
+        (
+          identity.identityNumber ||
+          "尚未生成 / Not generated"
+        );
+
+      document.getElementById(
+        "avatar"
+      ).textContent =
+        identity.name
+          ? identity.name.charAt(0).toUpperCase()
+          : "E";
+
+      return true;
+    }
+
+    function loadFamily() {
+      const family = getFamily();
+
+      if (!family) {
+        return;
+      }
+
+      document.getElementById(
+        "familyName"
+      ).value =
+        family.familyName || "";
+
+      document.getElementById(
+        "familyMission"
+      ).value =
+        family.familyMission || "";
+
+      document.getElementById(
+        "familyValues"
+      ).value =
+        family.familyValues || "";
+
+      document.getElementById(
+        "familyMembers"
+      ).value =
+        Array.isArray(family.familyMembers)
+          ? family.familyMembers.join("\n")
+          : "";
+
+      renderFamily(family);
+    }
+
+    function switchLanguage() {
+      const html =
+        document.documentElement;
+
+      const newLanguage =
+        html.dataset.lang === "zh"
+          ? "en"
+          : "zh";
+
+      html.dataset.lang = newLanguage;
+
+      localStorage.setItem(
+        languageKey,
+        newLanguage
+      );
+    }
+
+    function loadLanguage() {
+      const savedLanguage =
+        localStorage.getItem(languageKey);
+
+      document.documentElement.dataset.lang =
+        savedLanguage === "en"
+          ? "en"
+          : "zh";
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    window.addEventListener(
+      "DOMContentLoaded",
+      function () {
+        loadLanguage();
+
+        const residentLoaded =
+          loadResident();
+
+        if (!residentLoaded) {
+          return;
+        }
+
+        loadFamily();
+      }
+    );
+  </script>
+</body>
+</html>
