@@ -1615,11 +1615,25 @@
           </div>
         </div>
       </section>      <style>
-        .ai-operations-section {
-          padding: 42px 0;
-        }
+        
 
-        .ai-operation-grid {
+        .ai-oper.ai-operations-section {
+  position: relative;
+  overflow: hidden;
+  padding: 42px 28px;
+  border-radius: 24px;
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(6, 19, 35, 0.97) 0%,
+      rgba(6, 19, 35, 0.91) 52%,
+      rgba(6, 19, 35, 0.48) 100%
+    ),
+    url("./hero-city.jpg");
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+}ation-grid {
           display: grid;
           grid-template-columns:
             minmax(0, 1.25fr)
@@ -2135,7 +2149,105 @@
         justify-content: flex-start;
       }
     }
-  </style>  <script>
+  </style> 
+   <style>
+  /* 首页城市背景图 / Homepage city background */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background-image:
+      linear-gradient(
+        90deg,
+        rgba(5, 15, 29, 0.94) 0%,
+        rgba(5, 15, 29, 0.76) 45%,
+        rgba(5, 15, 29, 0.38) 100%
+      ),
+      url("./city-vision.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(4, 13, 25, 0.08) 0%,
+        rgba(4, 13, 25, 0.20) 65%,
+        rgba(4, 13, 25, 0.88) 100%
+      );
+  }
+
+  .hero > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (max-width: 700px) {
+    .hero {
+      background-position: 62% center;
+    }
+  }
+</style><style>
+  /* AI城市运行中心图片 / AI City Operations image */
+  .ai-operations-section {
+    position: relative;
+    overflow: hidden;
+    background-image:
+      linear-gradient(
+        90deg,
+        rgba(6, 19, 35, 0.97) 0%,
+        rgba(6, 19, 35, 0.91) 52%,
+        rgba(6, 19, 35, 0.48) 100%
+      ),
+      url("./city-ai.png");
+    background-size: cover;
+    background-position: center right;
+    background-repeat: no-repeat;
+  }
+
+  .ai-operations-section > * {
+    position: relative;
+    z-index: 2;
+  }
+</style><style>
+  /* 居民活动区域背景 / Resident activity background */
+  .city-feed-section {
+    position: relative;
+    overflow: hidden;
+    background-image:
+      linear-gradient(
+        180deg,
+        rgba(5, 17, 31, 0.94) 0%,
+        rgba(5, 17, 31, 0.88) 55%,
+        rgba(5, 17, 31, 0.96) 100%
+      ),
+      url("./lake-city.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 24px;
+    padding: 34px;
+  }
+
+  .city-feed-section > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (max-width: 700px) {
+    .city-feed-section {
+      padding: 24px 16px;
+      background-position: 55% center;
+    }
+  }
+</style>
+
+<script>
     const translations = {
       zh: {
         "page.title":
