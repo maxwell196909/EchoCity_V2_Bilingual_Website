@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>手机号登记 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --background: #07111f;
+      --panel: rgba(13, 29, 50, 0.94);
+      --panel-soft: rgba(19, 40, 68, 0.88);
+      --primary: #5d91ff;
+      --primary-hover: #76a3ff;
+      --text: #f4f7fb;
+      --text-soft: #aebed2;
+      --border: rgba(148, 177, 215, 0.2);
+      --success: #59d79d;
+      --danger: #ff8080;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.36);
+    }
+
+    body {
+      min-height: 100vh;
+      font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(
+          rgba(4, 13, 25, 0.76),
+          rgba(4, 13, 25, 0.94)
+        ),
+        url("./city-vision.jpg");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 50px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 44px;
+      height: 44px;
+      place-items: center;
+      border-radius: 14px;
+      background:
+        linear-gradient(
+          135deg,
+          #4f8cff,
+          #8166ff
+        );
+      font-size: 22px;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 19px;
+    }
+
+    .brand span {
+      display: block;
+      margin-top: 3px;
+      color: var(--text-soft);
+      font-size: 12px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .top-button {
+      padding: 10px 15px;
+      color: var(--text);
+      background: rgba(10, 24, 42, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .top-button:hover {
+      background: rgba(30, 57, 92, 0.9);
+    }    .main {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 28px;
+      align-items: stretch;
+      margin-top: 54px;
+    }
+
+    .intro-panel,
+    .register-panel {
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .intro-panel {
+      padding: 46px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(17, 42, 75, 0.94),
+          rgba(9, 24, 45, 0.9)
+        );
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 13px;
+      color: #dbe7ff;
+      background: rgba(93, 145, 255, 0.14);
+      border: 1px solid rgba(93, 145, 255, 0.32);
+      border-radius: 999px;
+      font-size: 13px;
+    }
+
+    .intro-panel h1 {
+      margin-top: 24px;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1.08;
+      letter-spacing: -1.8px;
+    }
+
+    .intro-panel h1 span {
+      display: block;
+      margin-top: 9px;
+      color: #8fb3ff;
+    }
+
+    .intro-description {
+      max-width: 650px;
+      margin-top: 24px;
+      color: var(--text-soft);
+      font-size: 17px;
+      line-height: 1.8;
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 32px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      padding: 15px 16px;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.065);
+      border-radius: 15px;
+    }
+
+    .feature-icon {
+      display: grid;
+      flex: 0 0 34px;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      background: rgba(93, 145, 255, 0.16);
+      border-radius: 10px;
+    }
+
+    .feature-item strong {
+      display: block;
+      font-size: 15px;
+    }
+
+    .feature-item p {
+      margin-top: 5px;
+      color: var(--text-soft);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .register-panel {
+      padding: 34px;
+      background: var(--panel);
+    }
+
+    .register-panel h2 {
+      font-size: 28px;
+    }
+
+    .register-subtitle {
+      margin-top: 9px;
+      color: var(--text-soft);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .progress {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 25px 0;
+    }
+
+    .progress-step {
+      height: 5px;
+      background: rgba(255, 255, 255, 0.09);
+      border-radius: 999px;
+    }
+
+    .progress-step.active {
+      background: var(--primary);
+    }
+
+    .form-group {
+      margin-top: 19px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 9px;
+      color: #e7eef9;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .input,
+    .select {
+      width: 100%;
+      min-height: 50px;
+      padding: 0 14px;
+      color: var(--text);
+      background: rgba(6, 18, 33, 0.88);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      outline: none;
+    }
+
+    .input:focus,
+    .select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(93, 145, 255, 0.13);
+    }
+
+    .select option {
+      color: #111827;
+      background: #ffffff;
+    }
+
+    .phone-row {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 10px;
+    }
+
+    .verification-row {
+      display: grid;
+      grid-template-columns: 1fr 145px;
+      gap: 10px;
+    }
+
+    .secondary-button {
+      min-height: 50px;
+      padding: 0 14px;
+      color: #dce8ff;
+      background: rgba(93, 145, 255, 0.13);
+      border: 1px solid rgba(93, 145, 255, 0.35);
+      border-radius: 13px;
+    }
+
+    .secondary-button:hover {
+      background: rgba(93, 145, 255, 0.22);
+    }    .primary-button {
+      width: 100%;
+      min-height: 52px;
+      margin-top: 24px;
+      color: #ffffff;
+      background:
+        linear-gradient(
+          135deg,
+          #4f8cff,
+          #765dff
+        );
+      border: none;
+      border-radius: 14px;
+      font-weight: 700;
+      box-shadow: 0 14px 30px rgba(79, 140, 255, 0.24);
+    }
+
+    .primary-button:hover {
+      background:
+        linear-gradient(
+          135deg,
+          #679cff,
+          #8a73ff
+        );
+    }
+
+    .alternative {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .alternative button {
+      color: #93b7ff;
+      background: transparent;
+      border: none;
+      font-weight: 700;
+    }
+
+    .agreement {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin-top: 18px;
+      color: var(--text-soft);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .agreement input {
+      margin-top: 3px;
+    }
+
+    .message {
+      display: none;
+      margin-top: 16px;
+      padding: 13px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .message.success {
+      display: block;
+      color: var(--success);
+      background: rgba(89, 215, 157, 0.1);
+      border: 1px solid rgba(89, 215, 157, 0.3);
+    }
+
+    .message.error {
+      display: block;
+      color: var(--danger);
+      background: rgba(255, 128, 128, 0.1);
+      border: 1px solid rgba(255, 128, 128, 0.3);
+    }
+
+    .ai-note {
+      margin-top: 24px;
+      padding: 16px;
+      background: rgba(93, 145, 255, 0.08);
+      border: 1px solid rgba(93, 145, 255, 0.2);
+      border-radius: 14px;
+    }
+
+    .ai-note strong {
+      display: block;
+      color: #dce8ff;
+      font-size: 14px;
+    }
+
+    .ai-note p {
+      margin-top: 7px;
+      color: var(--text-soft);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .footer {
+      margin-top: 38px;
+      color: var(--text-soft);
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 900px) {
+      .main {
+        grid-template-columns: 1fr;
+      }
+
+      .intro-panel {
+        padding: 34px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        width: min(100% - 20px, 1180px);
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .top-actions {
+        flex-direction: column;
+      }
+
+      .intro-panel,
+      .register-panel {
+        padding: 24px;
+        border-radius: 20px;
+      }
+
+      .phone-row,
+      .verification-row {
+        grid-template-columns: 1fr;
+      }
+
+      .intro-panel h1 {
+        font-size: 38px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <header class="topbar">
+      <a class="brand" href=" ">
+        <div class="brand-mark">E</div>
+
+        <div>
+          <strong>EchoCity</strong>
+
+          <span
+            data-zh="全球数字居民入口"
+            data-en="Global Digital Resident Gateway"
+          >
+            全球数字居民入口
+          </span>
+        </div>
+      </a >
+
+      <div class="top-actions">
+        <button
+          class="top-button"
+          id="languageButton"
+          type="button"
+        >
+          EN
+        </button>
+
+        <a
+          class="top-button"
+          href="./index.html"
+          data-zh="返回首页"
+          data-en="Back to Home"
+        >
+          返回首页
+        </a >
+      </div>
+    </header>        <main class="main">
+
+      <section class="intro-panel">
+        <div
+          class="eyebrow"
+          data-zh="全球数字居民登记"
+          data-en="Global Digital Resident Registration"
+        >
+          全球数字居民登记
+        </div>
+
+        <h1>
+          <span
+            data-zh="加入 EchoCity"
+            data-en="Join EchoCity"
+          >
+            加入 EchoCity
+          </span>
+
+          <span
+            data-zh="成为数字居民"
+            data-en="Become a Digital Resident"
+          >
+            成为数字居民
+          </span>
+        </h1>
+
+        <p
+          class="intro-description"
+          data-zh="EchoCity 面向全球居民开放。你可以使用国际手机号或邮箱建立数字身份，加入社区、参与活动、寻找伙伴，并与 AI 居民共同生活、共同创造。"
+          data-en="EchoCity is open to residents around the world. Use an international phone number or email to create your digital identity, join communities, take part in activities, find companions, and co-create with AI residents."
+        >
+          EchoCity 面向全球居民开放。你可以使用国际手机号或邮箱建立数字身份，加入社区、参与活动、寻找伙伴，并与 AI 居民共同生活、共同创造。
+        </p >
+
+        <div class="feature-list">
+
+          <div class="feature-item">
+            <div class="feature-icon">🌍</div>
+
+            <div>
+              <strong
+                data-zh="全球居民身份"
+                data-en="Global Resident Identity"
+              >
+                全球居民身份
+              </strong>
+
+              <p
+                data-zh="支持不同国家、地区、语言和时区的数字居民。"
+                data-en="Supports digital residents across countries, regions, languages, and time zones."
+              >
+                支持不同国家、地区、语言和时区的数字居民。
+              </p >
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon">🤝</div>
+
+            <div>
+              <strong
+                data-zh="社区与真实互动"
+                data-en="Community and Real Interaction"
+              >
+                社区与真实互动
+              </strong>
+
+              <p
+                data-zh="发起聚会、运动、学习、信仰、咨询和共同创作活动。"
+                data-en="Start gatherings, sports, learning, faith, counseling, and co-creation activities."
+              >
+                发起聚会、运动、学习、信仰、咨询和共同创作活动。
+              </p >
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon">🤖</div>
+
+            <div>
+              <strong
+                data-zh="AI 文明引擎"
+                data-en="AI Civilization Engine"
+              >
+                AI 文明引擎
+              </strong>
+
+              <p
+                data-zh="AI 理解需求、匹配伙伴、组织过程、记录成果并持续优化。"
+                data-en="AI understands needs, matches people, organizes processes, records outcomes, and keeps improving."
+              >
+                AI 理解需求、匹配伙伴、组织过程、记录成果并持续优化。
+              </p >
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="register-panel">
+        <h2
+          data-zh="创建数字居民身份"
+          data-en="Create Digital Resident Identity"
+        >
+          创建数字居民身份
+        </h2>
+
+        <p
+          class="register-subtitle"
+          data-zh="请先完成基础身份登记。当前阶段为前端演示，正式短信验证需要接入后台服务。"
+          data-en="Complete the basic identity registration first. This stage is a front-end demonstration; real SMS verification requires backend services."
+        >
+          请先完成基础身份登记。当前阶段为前端演示，正式短信验证需要接入后台服务。
+        </p >
+
+        <div class="progress">
+          <div class="progress-step active"></div>
+          <div class="progress-step"></div>
+          <div class="progress-step"></div>
+        </div>
+
+        <form id="registerForm">
+
+          <div class="form-group">
+            <label
+              class="form-label"
+              for="region"
+              data-zh="国家或地区"
+              data-en="Country or Region"
+            >
+              国家或地区
+            </label>
+
+            <select
+              class="select"
+              id="region"
+              required
+            >
+              <option value="+86">
+                中国大陆 +86
+              </option>
+
+              <option value="+1">
+                United States / Canada +1
+              </option>
+
+              <option value="+44">
+                United Kingdom +44
+              </option>
+
+              <option value="+49">
+                Deutschland +49
+              </option>
+
+              <option value="+33">
+                France +33
+              </option>
+
+              <option value="+61">
+                Australia +61
+              </option>
+
+              <option value="+81">
+                日本 +81
+              </option>
+
+              <option value="+82">
+                대한민국 +82
+              </option>
+
+              <option value="+65">
+                Singapore +65
+              </option>
+
+              <option value="+852">
+                Hong Kong +852
+              </option>
+
+              <option value="+886">
+                Taiwan +886
+              </option>
+
+              <option value="other">
+                Other Region
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label
+              class="form-label"
+              for="phone"
+              data-zh="手机号码"
+              data-en="Phone Number"
+            >
+              手机号码
+            </label>
+
+            <div class="phone-row">
+              <input
+                class="input"
+                id="countryCode"
+                type="text"
+                value="+86"
+                readonly
+              >
+
+              <input
+                class="input"
+                id="phone"
+                type="tel"
+                data-placeholder-zh="请输入手机号码"
+                data-placeholder-en="Enter phone number"
+                placeholder="请输入手机号码"
+                required
+              >
+            </div>
+          </div>          <div class="form-group">
+            <label
+              class="form-label"
+              for="verificationCode"
+              data-zh="验证码"
+              data-en="Verification Code"
+            >
+              验证码
+            </label>
+
+            <div class="verification-row">
+              <input
+                class="input"
+                id="verificationCode"
+                type="text"
+                inputmode="numeric"
+                maxlength="6"
+                data-placeholder-zh="请输入6位验证码"
+                data-placeholder-en="Enter 6-digit code"
+                placeholder="请输入6位验证码"
+                required
+              >
+
+              <button
+                class="secondary-button"
+                id="sendCodeButton"
+                type="button"
+                data-zh="获取验证码"
+                data-en="Send Code"
+              >
+                获取验证码
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label
+              class="form-label"
+              for="email"
+              data-zh="备用邮箱"
+              data-en="Backup Email"
+            >
+              备用邮箱
+            </label>
+
+            <input
+              class="input"
+              id="email"
+              type="email"
+              data-placeholder-zh="海外居民或无法接收短信时可填写"
+              data-placeholder-en="For overseas residents or users unable to receive SMS"
+              placeholder="海外居民或无法接收短信时可填写"
+            >
+          </div>
+
+          <div class="form-group">
+            <label
+              class="form-label"
+              for="preferredLanguage"
+              data-zh="首选语言"
+              data-en="Preferred Language"
+            >
+              首选语言
+            </label>
+
+            <select
+              class="select"
+              id="preferredLanguage"
+              required
+            >
+              <option value="zh">
+                中文
+              </option>
+
+              <option value="en">
+                English
+              </option>
+            </select>
+          </div>
+
+          <label class="agreement">
+            <input
+              id="agreement"
+              type="checkbox"
+              required
+            >
+
+            <span
+              data-zh="我同意 EchoCity 居民规则、隐私原则，并理解 AI 只提供理解、匹配和辅助建议，最终决定由居民本人作出。"
+              data-en="I agree to the EchoCity resident rules and privacy principles, and understand that AI provides understanding, matching, and assistance only. Final decisions remain with the resident."
+            >
+              我同意 EchoCity 居民规则、隐私原则，并理解 AI 只提供理解、匹配和辅助建议，最终决定由居民本人作出。
+            </span>
+          </label>
+
+          <button
+            class="primary-button"
+            type="submit"
+            data-zh="创建数字居民身份"
+            data-en="Create Digital Resident Identity"
+          >
+            创建数字居民身份
+          </button>
+
+          <div
+            class="message"
+            id="message"
+          ></div>
+
+          <p class="alternative">
+            <span
+              data-zh="无法使用手机号？"
+              data-en="Unable to use a phone number?"
+            >
+              无法使用手机号？
+            </span>
+
+            <button
+              id="emailRegisterButton"
+              type="button"
+              data-zh="使用邮箱登记"
+              data-en="Register with Email"
+            >
+              使用邮箱登记
+            </button>
+          </p >
+
+          <div class="ai-note">
+            <strong
+              data-zh="AI 如何参与"
+              data-en="How AI Participates"
+            >
+              AI 如何参与
+            </strong>
+
+            <p
+              data-zh="登记完成后，AI 将根据你主动提供的国家、语言、时区和兴趣，推荐合适的社区、活动与伙伴。未经许可，不会替你作出决定。"
+              data-en="After registration, AI uses the country, language, time zone, and interests you choose to provide to recommend suitable communities, activities, and people. It will not make decisions for you without permission."
+            >
+              登记完成后，AI 将根据你主动提供的国家、语言、时区和兴趣，推荐合适的社区、活动与伙伴。未经许可，不会替你作出决定。
+            </p >
+          </div>
+
+        </form>
+      </section>
+
+    </main>
+
+    <footer
+      class="footer"
+      data-zh="EchoCity · 服务有灵魂的人 · 全球数字文明共同体"
+      data-en="EchoCity · Serving People with Souls · A Global Digital Civilization Community"
+    >
+      EchoCity · 服务有灵魂的人 · 全球数字文明共同体
+    </footer>
+
+  </div>
+
+  <script>
+    const languageButton =
+      document.getElementById("languageButton");
+
+    const region =
+      document.getElementById("region");
+
+    const countryCode =
+      document.getElementById("countryCode");
+
+    const sendCodeButton =
+      document.getElementById("sendCodeButton");
+
+    const registerForm =
+      document.getElementById("registerForm");
+
+    const message =
+      document.getElementById("message");
+
+    const emailRegisterButton =
+      document.getElementById("emailRegisterButton");
+
+    let currentLanguage =
+      localStorage.getItem("echocity-language") || "zh";
+
+    function updateLanguage() {
+      document.documentElement.lang =
+        currentLanguage === "zh" ? "zh-CN" : "en";
+
+      document.querySelectorAll("[data-zh]").forEach((element) => {
+        element.textContent =
+          currentLanguage === "zh"
+            ? element.dataset.zh
+            : element.dataset.en;
+      });
+
+      document
+        .querySelectorAll("[data-placeholder-zh]")
+        .forEach((element) => {
+          element.placeholder =
+            currentLanguage === "zh"
+              ? element.dataset.placeholderZh
+              : element.dataset.placeholderEn;
+        });
+
+      languageButton.textContent =
+        currentLanguage === "zh" ? "EN" : "中文";
+
+      localStorage.setItem(
+        "echocity-language",
+        currentLanguage
+      );
+    }
+
+    languageButton.addEventListener("click", () => {
+      currentLanguage =
+        currentLanguage === "zh" ? "en" : "zh";
+
+      updateLanguage();
+    });
+
+    region.addEventListener("change", () => {
+      countryCode.value =
+        region.value === "other" ? "+" : region.value;
+    });
+
+    sendCodeButton.addEventListener("click", () => {
+      const phone =
+        document.getElementById("phone").value.trim();
+
+      const email =
+        document.getElementById("email").value.trim();
+
+      if (!phone && !email) {
+        showMessage(
+          currentLanguage === "zh"
+            ? "请先输入手机号码，或填写备用邮箱。"
+            : "Enter a phone number or backup email first.",
+          "error"
+        );
+
+        return;
+      }
+
+      showMessage(
+        currentLanguage === "zh"
+          ? "演示验证码已生成：123456。正式上线后将接入国际短信或邮箱服务。"
+          : "Demo verification code generated: 123456. International SMS or email services will be connected in production.",
+        "success"
+      );
+    });
+
+    registerForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const code =
+        document
+          .getElementById("verificationCode")
+          .value.trim();
+
+      const agreement =
+        document.getElementById("agreement").checked;
+
+      if (code !== "123456") {
+        showMessage(
+          currentLanguage === "zh"
+            ? "验证码不正确。演示验证码为 123456。"
+            : "Incorrect verification code. The demo code is 123456.",
+          "error"
+        );
+
+        return;
+      }
+
+      if (!agreement) {
+        showMessage(
+          currentLanguage === "zh"
+            ? "请先同意居民规则和隐私原则。"
+            : "Please agree to the resident rules and privacy principles.",
+          "error"
+        );
+
+        return;
+      }
+
+      const residentData = {
+        region: region.value,
+        phone:
+          document.getElementById("phone").value.trim(),
+        email:
+          document.getElementById("email").value.trim(),
+        preferredLanguage:
+          document.getElementById("preferredLanguage").value,
+        createdAt:
+          new Date().toISOString()
+      };
+
+      localStorage.setItem(
+        "echocity-resident-registration",
+        JSON.stringify(residentData)
+      );
+
+      showMessage(
+        currentLanguage === "zh"
+          ? "登记成功。数字居民基础身份已保存在当前浏览器中。"
+          : "Registration successful. Your basic digital resident identity has been saved in this browser.",
+        "success"
+      );
+    });
+
+    emailRegisterButton.addEventListener("click", () => {
+      document.getElementById("email").focus();
+
+      showMessage(
+        currentLanguage === "zh"
+          ? "请填写备用邮箱。当前演示仍使用验证码 123456。"
+          : "Enter your backup email. This demonstration still uses verification code 123456.",
+        "success"
+      );
+    });
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = "message " + type;
+    }
+
+    updateLanguage();
+  </script>
+</body>
+</html>
