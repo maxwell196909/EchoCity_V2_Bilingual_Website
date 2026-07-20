@@ -1,142 +1,2821 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-lang="zh">
+<html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="EchoCity — 一个让愿望被看见、让同行者相遇的数字城市。">
-  <title>EchoCity｜数字文明</title>
-  <link rel="stylesheet" href="style.css?v=20260716-2">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title data-i18n="page.title">
+    EchoCity｜正在运转的数字文明城市
+  </title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --background: #07111f;
+      --background-soft: #0d1b2e;
+      --panel: #10233c;
+      --panel-light: #17314f;
+      --border: rgba(255, 255, 255, 0.12);
+      --text: #f4f7fb;
+      --text-soft: #aebdd0;
+      --primary: #4f8cff;
+      --primary-hover: #6a9fff;
+      --success: #39d98a;
+      --warning: #ffbc42;
+      --danger: #ff6b6b;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family:
+        Inter,
+        "Segoe UI",
+        "Microsoft YaHei",
+        Arial,
+        sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(
+          circle at top right,
+          rgba(79, 140, 255, 0.15),
+          transparent 35%
+        ),
+        linear-gradient(
+          180deg,
+          #081321 0%,
+          #07111f 55%,
+          #050c16 100%
+        );
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      padding: 0 28px 70px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 76px;
+      padding: 14px 0;
+      background: rgba(7, 17, 31, 0.88);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      font-size: 24px;
+      background:
+        linear-gradient(
+          135deg,
+          #4f8cff,
+          #7a63ff
+        );
+      box-shadow:
+        0 10px 24px rgba(79, 140, 255, 0.3);
+    }
+
+    .brand-name {
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    .brand-caption {
+      margin-top: 2px;
+      color: var(--text-soft);
+      font-size: 13px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .language-button {
+      min-width: 105px;
+      min-height: 42px;
+      padding: 9px 17px;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .language-button:hover {
+      background: rgba(255, 255, 255, 0.11);
+      transform: translateY(-1px);
+    }
+
+    .resident-button {
+      min-height: 42px;
+      padding: 10px 18px;
+      color: #ffffff;
+      background: var(--primary);
+      border: 0;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .resident-button:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    main {
+      display: block;
+    }    .hero {
+      display: grid;
+      grid-template-columns: 1.35fr 0.65fr;
+      gap: 28px;
+      align-items: stretch;
+      padding: 54px 0 30px;
+    }
+
+    .hero-main,
+    .hero-side {
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-main {
+      position: relative;
+      overflow: hidden;
+      min-height: 430px;
+      padding: 54px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(79, 140, 255, 0.22),
+          rgba(16, 35, 60, 0.92)
+        );
+    }
+
+    .hero-main::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      bottom: -100px;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      background: rgba(88, 103, 255, 0.2);
+      filter: blur(6px);
+    }
+
+    .hero-kicker {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 24px;
+      padding: 9px 14px;
+      color: #d9e7ff;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .hero-title {
+      position: relative;
+      z-index: 1;
+      max-width: 850px;
+      font-size: clamp(40px, 5vw, 72px);
+      line-height: 1.08;
+      letter-spacing: -2px;
+    }
+
+    .hero-description {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin-top: 24px;
+      color: #c3d0df;
+      font-size: 19px;
+      line-height: 1.8;
+    }
+
+    .hero-actions {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .primary-action,
+    .secondary-action {
+      min-height: 50px;
+      padding: 14px 24px;
+      border-radius: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .primary-action {
+      color: #ffffff;
+      background: var(--primary);
+      border: 1px solid var(--primary);
+    }
+
+    .secondary-action {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+    }
+
+    .hero-side {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 28px;
+      background: rgba(16, 35, 60, 0.82);
+    }
+
+    .live-label {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--success);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .live-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 16px rgba(57, 217, 138, 0.75);
+    }
+
+    .city-clock {
+      margin-top: 24px;
+      font-size: 44px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .city-date {
+      margin-top: 5px;
+      color: var(--text-soft);
+      font-size: 15px;
+    }
+
+    .side-stat-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .side-stat {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+    }
+
+    .side-stat span {
+      color: var(--text-soft);
+      font-size: 14px;
+    }
+
+    .side-stat strong {
+      font-size: 20px;
+    }
+
+    .city-note {
+      margin-top: 24px;
+      padding: 16px;
+      color: #c7d5e6;
+      background: rgba(79, 140, 255, 0.1);
+      border: 1px solid rgba(79, 140, 255, 0.3);
+      border-radius: 15px;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 900px) {
+      .page-shell {
+        padding: 0 18px 50px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-main {
+        min-height: auto;
+        padding: 36px 26px;
+      }
+
+      .hero-title {
+        font-size: 42px;
+      }
+
+      .hero-description {
+        font-size: 17px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <header class="site-header" id="top">
-    <a class="brand" href="index.html">
-      <span class="brand-mark">E</span><span>EchoCity</span>
-    </a>
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">☰</button>
-    <nav class="main-nav" id="main-nav">
-      <a href="#vision" data-en="Vision" data-zh="愿景">愿景</a>
-      <a href="#city" data-en="City" data-zh="城市">城市</a>
-      <a href="wish.html" data-en="Share a Wish" data-zh="发布愿望">发布愿望</a>
-      <a href="wall.html" data-en="Wish Wall" data-zh="愿望广场">愿望广场</a>
-      <a href="#contact" data-en="Contact" data-zh="联系">联系</a>
-    </nav>
-    <button class="language-switch" type="button">
-      <span class="lang-en">EN</span><span>/</span><span class="lang-zh active">中文</span>
-    </button>
-  </header>
+  <div class="page-shell">
 
-  <main>
-    <section class="hero">
-      <div class="hero-bg hero-bg-1 active"></div>
-      <div class="hero-bg hero-bg-2"></div>
-      <div class="hero-bg hero-bg-3"></div>
-      <div class="hero-overlay"></div>
+    <header class="topbar">
+      <a class="brand" href=" ">
+        <div class="brand-mark">E</div>
 
-      <div class="hero-content reveal">
-        <p class="eyebrow" data-en="THE BEGINNING OF A DIGITAL CIVILIZATION" data-zh="数字文明的起点">
-          THE BEGINNING OF A DIGITAL CIVILIZATION
-        </p>
-        <h1>EchoCity</h1>
-        <h2 data-en="Digital Civilization for People with Souls"
-    data-zh="服务有灵魂人的数字文明">
-    Digital Civilization for People with Souls
-</h2>
-        <p class="hero-copy"
-   data-en="Digital civilization is not merely about data input and output. It exists to serve people with souls."
-   data-zh="数据文明，不仅仅是数据的输入与输出，而是服务有灵魂的人。">
-    Digital civilization is not merely about data input and output. It exists to serve people with souls.
-</p >
-        <div class="hero-actions">
-  <a class="btn btn-primary" href="mycity.html"
-     data-en="Create My Digital Identity"
-     data-zh="建立我的数字身份">
-     建立我的数字身份
-  </a >
-<a class="btn btn-secondary" href="personal-home.html"
+        <div>
+          <div class="brand-name">
+            EchoCity
+          </div>
 
-     data-en="Enter My Home"
+          <div
+            class="brand-caption"
+            data-i18n="brand.subtitle"
+          >
+            一座正在运转的数字文明城市
+          </div>
+        </div>
+      </a >
 
-     data-zh="进入我的家">
+      <div class="top-actions">
+        <button
+          id="languageToggle"
+          class="language-button"
+          type="button"
+        >
+          English
+        </button>
 
-    进入我的家 
-  </a >
-
-  <a class="btn btn-secondary" href="#vision"
-     data-en="Understand Digital Civilization"
-     data-zh="了解数字文明">
-     了解数字文明
-  </a >
-</div>
+        <a
+          class="resident-button"
+          href="resident-home.html"
+          data-i18n="navigation.residentHome"
+        >
+          我的住所
+        </a >
       </div>
-    </section>
+    </header>
 
-    <section class="split-section" id="vision">
-      <div class="section-photo vision-photo"></div>
-      <div class="section-panel reveal">
-        <p class="section-number">01</p>
-        <p class="eyebrow" data-en="OUR VISION" data-zh="我们的愿景">我们的愿景</p>
-        <h2 data-en="Not another platform. A city that can grow with its people."
-            data-zh="不只是一个平台，而是一座能够与居民共同成长的城市。">
-          不只是一个平台，而是一座能够与居民共同成长的城市。
-        </h2>
-        <p data-en="EchoCity begins with wishes. A wish becomes a journey; a journey creates encounters; encounters become relationships, memory and community."
-           data-zh="EchoCity 从愿望开始。愿望成为旅程，旅程带来相遇，相遇逐渐形成关系、记忆与社区。">
-          EchoCity 从愿望开始。愿望成为旅程，旅程带来相遇，相遇逐渐形成关系、记忆与社区。
-        </p>
+    <main>
+      <section class="hero">
+
+        <div class="hero-main">
+          <div class="hero-kicker">
+            <span class="live-dot"></span>
+
+            <span data-i18n="brand.subtitle">
+              一座正在运转的数字文明城市
+            </span>
+          </div>
+
+          <h1
+            class="hero-title"
+            data-i18n="brand.definition"
+          >
+            EchoCity 是一座由数字居民、AI居民共同生活的数字文明城市。
+          </h1>
+
+          <p
+            class="hero-description"
+            data-i18n="brand.description"
+          >
+            数字居民在这里生活、互动、合作、创造，共同推动城市持续运行。
+          </p >
+
+          <div class="hero-actions">
+            <a
+              class="primary-action"
+              href="city.html"
+              data-i18n="actions.enterCity"
+            >
+              进入城市
+            </a >
+
+            <a
+              class="secondary-action"
+              href="#city-status"
+              data-i18n="actions.exploreCity"
+            >
+              探索城市
+            </a >
+          </div>
+        </div>
+
+        <aside class="hero-side">
+          <div>
+            <div class="live-label">
+              <span class="live-dot"></span>
+
+              <span data-i18n="cityStatus.sectionTitle">
+                城市实时运行
+              </span>
+            </div>
+
+            <div
+              id="cityClock"
+              class="city-clock"
+            >
+              00:00
+            </div>
+
+            <div
+              id="cityDate"
+              class="city-date"
+            >
+              --
+            </div>
+          </div>
+
+          <div class="side-stat-list">
+            <div class="side-stat">
+              <span data-i18n="cityStatus.residentsOnline">
+                在线居民
+              </span>
+
+              <strong>12,486</strong>
+            </div>
+
+            <div class="side-stat">
+              <span data-i18n="cityStatus.liveInteractions">
+                正在进行的互动
+              </span>
+
+              <strong>3,842</strong>
+            </div>
+
+            <div class="side-stat">
+              <span data-i18n="cityStatus.aiAssistanceToday">
+                AI今日协助
+              </span>
+
+              <strong>9,731</strong>
+            </div>
+          </div>
+
+          <div
+            class="city-note"
+            data-i18n="aiOperations.humanDecision"
+          >
+            AI提供建议和协助，居民始终拥有最终决定权。
+          </div>
+        </aside>
+
+      </section>      <section
+        id="city-status"
+        class="city-status-section"
+      >
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">
+              LIVE CITY
+            </span>
+
+            <h2 data-i18n="cityStatus.sectionTitle">
+              城市实时运行
+            </h2>
+
+            <p data-i18n="cityStatus.sectionDescription">
+              查看数字居民、活动、项目和AI协作的实时状态。
+            </p >
+          </div>
+
+          <a
+            class="secondary-action"
+            href=" "
+            data-i18n="actions.viewMore"
+          >
+            查看更多
+          </a >
+        </div>
+
+        <div class="status-grid">
+
+          <article class="status-card">
+            <div class="status-icon">
+              👥
+            </div>
+
+            <div class="status-number">
+              12,486
+            </div>
+
+            <div
+              class="status-label"
+              data-i18n="cityStatus.residentsOnline"
+            >
+              在线居民
+            </div>
+
+            <div class="status-change positive">
+              +286
+            </div>
+          </article>
+
+          <article class="status-card">
+            <div class="status-icon">
+              🆕
+            </div>
+
+            <div class="status-number">
+              326
+            </div>
+
+            <div
+              class="status-label"
+              data-i18n="cityStatus.newResidentsToday"
+            >
+              今日新增居民
+            </div>
+
+            <div class="status-change positive">
+              +12.8%
+            </div>
+          </article>
+
+          <article class="status-card">
+            <div class="status-icon">
+              🤝
+            </div>
+
+            <div class="status-number">
+              3,842
+            </div>
+
+            <div
+              class="status-label"
+              data-i18n="cityStatus.liveInteractions"
+            >
+              正在进行的互动
+            </div>
+
+            <div class="status-change positive">
+              +517
+            </div>
+          </article>
+
+          <article class="status-card">
+            <div class="status-icon">
+              🎯
+            </div>
+
+            <div class="status-number">
+              186
+            </div>
+
+            <div
+              class="status-label"
+              data-i18n="cityStatus.activeActivities"
+            >
+              正在进行的活动
+            </div>
+
+            <div class="status-change positive">
+              +28
+            </div>
+          </article>
+
+          <article class="status-card">
+            <div class="status-icon">
+              🧩
+            </div>
+
+            <div class="status-number">
+              215
+            </div>
+
+            <div
+              class="status-label"
+              data-i18n="cityStatus.activeProjects"
+            >
+              正在协作的项目
+            </div>
+
+            <div class="status-change positive">
+              +19
+            </div>
+          </article>
+
+          <article class="status-card">
+            <div class="status-icon">
+              🤖
+            </div>
+
+            <div class="status-number">
+              9,731
+            </div>
+
+            <div
+              class="status-label"
+              data-i18n="cityStatus.aiAssistanceToday"
+            >
+              AI今日协助
+            </div>
+
+            <div class="status-change positive">
+              +1,204
+            </div>
+          </article>
+
+          <article class="status-card">
+            <div class="status-icon">
+              ❤️
+            </div>
+
+            <div class="status-number">
+              368
+            </div>
+
+            <div
+              class="status-label"
+              data-i18n="cityStatus.newRelationships"
+            >
+              今日建立的新关系
+            </div>
+
+            <div class="status-change positive">
+              +43
+            </div>
+          </article>
+
+          <article class="status-card">
+            <div class="status-icon">
+              📈
+            </div>
+
+            <div class="status-number">
+              92.6
+            </div>
+
+            <div
+              class="status-label"
+              data-i18n="cityStatus.cityActivityIndex"
+            >
+              城市活跃指数
+            </div>
+
+            <div class="status-change positive">
+              +3.4
+            </div>
+          </article>
+
+        </div>
+      </section>      <style>
+        .city-status-section {
+          padding: 34px 0;
+        }
+
+        .section-heading {
+          display: flex;
+          align-items: end;
+          justify-content: space-between;
+          gap: 24px;
+          margin-bottom: 22px;
+        }
+
+        .section-heading h2 {
+          margin-top: 7px;
+          font-size: 32px;
+          line-height: 1.2;
+        }
+
+        .section-heading p {
+          max-width: 720px;
+          margin-top: 10px;
+          color: var(--text-soft);
+          line-height: 1.7;
+        }
+
+        .section-kicker {
+          color: #7aa9ff;
+          font-size: 12px;
+          font-weight: 800;
+          letter-spacing: 1.8px;
+        }
+
+        .status-grid {
+          display: grid;
+          grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+          gap: 16px;
+        }
+
+        .status-card {
+          position: relative;
+          min-height: 180px;
+          padding: 22px;
+          background:
+            linear-gradient(
+              180deg,
+              rgba(23, 49, 79, 0.94),
+              rgba(16, 35, 60, 0.94)
+            );
+          border: 1px solid var(--border);
+          border-radius: 20px;
+          box-shadow: var(--shadow);
+          transition:
+            transform 0.2s ease,
+            border-color 0.2s ease;
+        }
+
+        .status-card:hover {
+          transform: translateY(-3px);
+          border-color: rgba(79, 140, 255, 0.45);
+        }
+
+        .status-icon {
+          font-size: 28px;
+        }
+
+        .status-number {
+          margin-top: 24px;
+          font-size: 32px;
+          font-weight: 850;
+          letter-spacing: -0.8px;
+        }
+
+        .status-label {
+          margin-top: 7px;
+          color: var(--text-soft);
+          font-size: 14px;
+        }
+
+        .status-change {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          padding: 6px 9px;
+          border-radius: 999px;
+          font-size: 12px;
+          font-weight: 800;
+        }
+
+        .status-change.positive {
+          color: var(--success);
+          background: rgba(57, 217, 138, 0.1);
+          border: 1px solid rgba(57, 217, 138, 0.24);
+        }
+
+        @media (max-width: 1100px) {
+          .status-grid {
+            grid-template-columns:
+              repeat(2, minmax(0, 1fr));
+          }
+        }
+
+        @media (max-width: 620px) {
+          .section-heading {
+            align-items: flex-start;
+            flex-direction: column;
+          }
+
+          .status-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      </style>      <section class="city-feed-section">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">
+              CITY LIFE
+            </span>
+
+            <h2 data-i18n="cityFeed.sectionTitle">
+              城市今天正在发生
+            </h2>
+
+            <p data-i18n="cityFeed.sectionDescription">
+              每一条动态，都是数字居民共同生活和城市持续运转的真实过程。
+            </p >
+          </div>
+
+          <a
+            class="secondary-action"
+            href=" "
+            data-i18n="actions.viewMore"
+          >
+            查看更多
+          </a >
+        </div>
+
+        <div class="city-feed-grid">
+
+          <article class="activity-card">
+            <div class="activity-top">
+              <div class="resident-avatar">
+                DA
+              </div>
+
+              <div>
+                <h3 data-i18n="cityFeed.basketballTitle">
+                  寻找篮球伙伴
+                </h3>
+
+                <span class="activity-time">
+                  10分钟前
+                </span>
+              </div>
+
+              <span class="activity-status live">
+                进行中
+              </span>
+            </div>
+
+            <p data-i18n="cityFeed.basketballText">
+              David 正在寻找居民参加今晚的社区篮球活动。
+            </p >
+
+            <div class="activity-meta">
+              <span>🏀</span>
+
+              <span data-i18n="cityFeed.basketballMeta">
+                还需要4位居民
+              </span>
+            </div>
+
+            <div class="activity-actions">
+              <a
+                href="activities.html"
+                data-i18n="actions.viewActivity"
+              >
+                查看活动
+              </a >
+
+              <button
+                type="button"
+                data-i18n="actions.joinActivity"
+              >
+                加入活动
+              </button>
+            </div>
+          </article>
+
+          <article class="activity-card">
+            <div class="activity-top">
+              <div class="resident-avatar purple">
+                MA
+              </div>
+
+              <div>
+                <h3 data-i18n="cityFeed.filmTitle">
+                  招募电影伙伴
+                </h3>
+
+                <span class="activity-time">
+                  18分钟前
+                </span>
+              </div>
+
+              <span class="activity-status forming">
+                组建中
+              </span>
+            </div>
+
+            <p data-i18n="cityFeed.filmText">
+              Mary 正在组建一支记录数字居民生活的社区电影团队。
+            </p >
+
+            <div class="activity-meta">
+              <span>🎬</span>
+
+              <span data-i18n="cityFeed.filmMeta">
+                正在招募演员、摄影和剪辑
+              </span>
+            </div>
+
+            <div class="activity-actions">
+              <a
+                href="film-collaboration.html"
+                data-i18n="actions.viewProject"
+              >
+                查看项目
+              </a >
+
+              <button
+                type="button"
+                data-i18n="actions.joinActivity"
+              >
+                加入活动
+              </button>
+            </div>
+          </article>
+
+          <article class="activity-card">
+            <div class="activity-top">
+              <div class="resident-avatar green">
+                GE
+              </div>
+
+              <div>
+                <h3 data-i18n="cityFeed.gatheringTitle">
+                  组织周末聚会
+                </h3>
+
+                <span class="activity-time">
+                  26分钟前
+                </span>
+              </div>
+
+              <span class="activity-status open">
+                可参加
+              </span>
+            </div>
+
+            <p data-i18n="cityFeed.gatheringText">
+              德国社区正在组织一次居民国际聚餐。
+            </p >
+
+            <div class="activity-meta">
+              <span>☕</span>
+
+              <span data-i18n="cityFeed.gatheringMeta">
+                已有38位居民参加
+              </span>
+            </div>
+
+            <div class="activity-actions">
+              <a
+                href="activities.html"
+                data-i18n="actions.viewActivity"
+              >
+                查看活动
+              </a >
+
+              <button
+                type="button"
+                data-i18n="actions.joinActivity"
+              >
+                加入活动
+              </button>
+            </div>
+          </article>
+
+          <article class="activity-card">
+            <div class="activity-top">
+              <div class="resident-avatar gold">
+                JO
+              </div>
+
+              <div>
+                <h3 data-i18n="cityFeed.faithTitle">
+                  寻找信仰同行者
+                </h3>
+
+                <span class="activity-time">
+                  35分钟前
+                </span>
+              </div>
+
+              <span class="activity-status scheduled">
+                已安排
+              </span>
+            </div>
+
+            <p data-i18n="cityFeed.faithText">
+              John 希望今晚和其他居民一起阅读并讨论圣经。
+            </p >
+
+            <div class="activity-meta">
+              <span>⛪</span>
+
+              <span data-i18n="cityFeed.faithMeta">
+                活动时间：20:00
+              </span>
+            </div>
+
+            <div class="activity-actions">
+              <a
+                href="activities.html"
+                data-i18n="actions.viewActivity"
+              >
+                查看活动
+              </a >
+
+              <button
+                type="button"
+                data-i18n="actions.joinActivity"
+              >
+                加入活动
+              </button>
+            </div>
+          </article>
+
+          <article class="activity-card">
+            <div class="activity-top">
+              <div class="resident-avatar pink">
+                SO
+              </div>
+
+              <div>
+                <h3 data-i18n="cityFeed.supportTitle">
+                  寻找陪伴与支持
+                </h3>
+
+                <span class="activity-time">
+                  42分钟前
+                </span>
+              </div>
+
+              <span class="activity-status matching">
+                匹配中
+              </span>
+            </div>
+
+            <p data-i18n="cityFeed.supportText">
+              一位居民希望找到可以散步、交流和互相支持的伙伴。
+            </p >
+
+            <div class="activity-meta">
+              <span>💛</span>
+
+              <span data-i18n="cityFeed.supportMeta">
+                AI正在匹配合适居民
+              </span>
+            </div>
+
+            <div class="activity-actions">
+              <a
+                href="activities.html"
+                data-i18n="actions.viewActivity"
+              >
+                查看活动
+              </a >
+
+              <button
+                type="button"
+                data-i18n="actions.contactResident"
+              >
+                联系居民
+              </button>
+            </div>
+          </article>
+
+          <article class="activity-card">
+            <div class="activity-top">
+              <div class="resident-avatar cyan">
+                MI
+              </div>
+
+              <div>
+                <h3 data-i18n="cityFeed.projectTitle">
+                  组建共同项目
+                </h3>
+
+                <span class="activity-time">
+                  1小时前
+                </span>
+              </div>
+
+              <span class="activity-status forming">
+                形成中
+              </span>
+            </div>
+
+            <p data-i18n="cityFeed.projectText">
+              五位工程师和两位设计师正在讨论一个社区改善项目。
+            </p >
+
+            <div class="activity-meta">
+              <span>🧩</span>
+
+              <span data-i18n="cityFeed.projectMeta">
+                项目正在形成
+              </span>
+            </div>
+
+            <div class="activity-actions">
+              <a
+                href="shared-projects.html"
+                data-i18n="actions.viewProject"
+              >
+                查看项目
+              </a >
+
+              <button
+                type="button"
+                data-i18n="actions.joinActivity"
+              >
+                加入活动
+              </button>
+            </div>
+          </article>
+
+        </div>
+      </section>      <style>
+        .city-feed-section {
+          padding: 42px 0;
+        }
+
+        .city-feed-grid {
+          display: grid;
+          grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+          gap: 18px;
+        }
+
+        .activity-card {
+          display: flex;
+          flex-direction: column;
+          min-height: 320px;
+          padding: 22px;
+          background:
+            linear-gradient(
+              180deg,
+              rgba(18, 39, 66, 0.98),
+              rgba(11, 27, 47, 0.98)
+            );
+          border: 1px solid var(--border);
+          border-radius: 21px;
+          box-shadow: var(--shadow);
+          transition:
+            transform 0.2s ease,
+            border-color 0.2s ease;
+        }
+
+        .activity-card:hover {
+          transform: translateY(-4px);
+          border-color: rgba(79, 140, 255, 0.5);
+        }
+
+        .activity-top {
+          display: grid;
+          grid-template-columns: auto 1fr auto;
+          gap: 13px;
+          align-items: center;
+        }
+
+        .resident-avatar {
+          display: grid;
+          place-items: center;
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          color: #ffffff;
+          background:
+            linear-gradient(
+              135deg,
+              #3f8cff,
+              #37c8d8
+            );
+          font-size: 14px;
+          font-weight: 850;
+        }
+
+        .resident-avatar.purple {
+          background:
+            linear-gradient(
+              135deg,
+              #7659ff,
+              #b05cff
+            );
+        }
+
+        .resident-avatar.green {
+          background:
+            linear-gradient(
+              135deg,
+              #27b976,
+              #57d6a2
+            );
+        }
+
+        .resident-avatar.gold {
+          background:
+            linear-gradient(
+              135deg,
+              #f0a52b,
+              #ffcb65
+            );
+        }
+
+        .resident-avatar.pink {
+          background:
+            linear-gradient(
+              135deg,
+              #e95a91,
+              #ff8db4
+            );
+        }
+
+        .resident-avatar.cyan {
+          background:
+            linear-gradient(
+              135deg,
+              #1eb8c9,
+              #62e2e8
+            );
+        }
+
+        .activity-top h3 {
+          font-size: 18px;
+          line-height: 1.35;
+        }
+
+        .activity-time {
+          display: block;
+          margin-top: 4px;
+          color: var(--text-soft);
+          font-size: 12px;
+        }
+
+        .activity-status {
+          padding: 6px 9px;
+          border-radius: 999px;
+          font-size: 11px;
+          font-weight: 800;
+          white-space: nowrap;
+        }
+
+        .activity-status.live,
+        .activity-status.open {
+          color: var(--success);
+          background: rgba(57, 217, 138, 0.1);
+          border: 1px solid rgba(57, 217, 138, 0.25);
+        }
+
+        .activity-status.forming,
+        .activity-status.matching {
+          color: #8eb6ff;
+          background: rgba(79, 140, 255, 0.11);
+          border: 1px solid rgba(79, 140, 255, 0.27);
+        }
+
+        .activity-status.scheduled {
+          color: var(--warning);
+          background: rgba(255, 188, 66, 0.1);
+          border: 1px solid rgba(255, 188, 66, 0.25);
+        }
+
+        .activity-card > p {
+          flex: 1;
+          margin-top: 22px;
+          color: #c6d3e2;
+          line-height: 1.75;
+        }
+
+        .activity-meta {
+          display: flex;
+          gap: 9px;
+          align-items: center;
+          margin-top: 18px;
+          padding: 12px 14px;
+          color: var(--text-soft);
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid var(--border);
+          border-radius: 13px;
+          font-size: 13px;
+        }
+
+        .activity-actions {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+          margin-top: 18px;
+        }
+
+        .activity-actions a,
+        .activity-actions button {
+          display: grid;
+          place-items: center;
+          min-height: 42px;
+          padding: 10px 12px;
+          border-radius: 11px;
+          font-weight: 750;
+          cursor: pointer;
+        }
+
+        .activity-actions a {
+          color: var(--text);
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid var(--border);
+        }
+
+        .activity-actions button {
+          color: #ffffff;
+          background: var(--primary);
+          border: 1px solid var(--primary);
+        }
+
+        @media (max-width: 1100px) {
+          .city-feed-grid {
+            grid-template-columns:
+              repeat(2, minmax(0, 1fr));
+          }
+        }
+
+        @media (max-width: 680px) {
+          .city-feed-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .activity-top {
+            grid-template-columns: auto 1fr;
+          }
+
+          .activity-status {
+            grid-column: 2;
+            justify-self: start;
+          }
+        }
+      </style>      <section class="ai-operations-section">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">
+              AI CIVILIZATION ENGINE
+            </span>
+
+            <h2 data-i18n="aiOperations.sectionTitle">
+              AI城市运行中心
+            </h2>
+
+            <p data-i18n="aiOperations.sectionDescription">
+              AI理解居民需求、连接合适的人、组织协作并记录城市过程。
+            </p >
+          </div>
+
+          <a
+            class="secondary-action"
+            href=" "
+            data-i18n="actions.viewMore"
+          >
+            查看更多
+          </a >
+        </div>
+
+        <div class="ai-operation-grid">
+
+          <article class="ai-main-panel">
+            <div class="ai-panel-heading">
+              <div class="ai-icon">
+                🤖
+              </div>
+
+              <div>
+                <h3 data-i18n="aiOperations.detectingNeeds">
+                  AI正在理解居民需求
+                </h3>
+
+                <p data-i18n="aiOperations.humanDecision">
+                  AI提供建议和协助，居民始终拥有最终决定权。
+                </p >
+              </div>
+            </div>
+
+            <div class="ai-process-list">
+
+              <div class="ai-process-item active">
+                <span class="process-number">
+                  01
+                </span>
+
+                <div>
+                  <strong data-i18n="aiOperations.detectingNeeds">
+                    AI正在理解居民需求
+                  </strong>
+
+                  <p>
+                    分析居民的目标、兴趣、时间、位置和隐私授权。
+                  </p >
+                </div>
+              </div>
+
+              <div class="ai-process-item">
+                <span class="process-number">
+                  02
+                </span>
+
+                <div>
+                  <strong data-i18n="aiOperations.matchingResidents">
+                    AI正在匹配合适居民
+                  </strong>
+
+                  <p>
+                    根据共同兴趣、可用时间、信任记录和活动需求寻找伙伴。
+                  </p >
+                </div>
+              </div>
+
+              <div class="ai-process-item">
+                <span class="process-number">
+                  03
+                </span>
+
+                <div>
+                  <strong data-i18n="aiOperations.organizingActivities">
+                    AI正在组织居民活动
+                  </strong>
+
+                  <p>
+                    协助建立活动、邀请居民、确认地点、时间和参与规则。
+                  </p >
+                </div>
+              </div>
+
+              <div class="ai-process-item">
+                <span class="process-number">
+                  04
+                </span>
+
+                <div>
+                  <strong data-i18n="aiOperations.coordinatingResources">
+                    AI正在协调城市资源
+                  </strong>
+
+                  <p>
+                    连接社区空间、设备、专业人员和共同项目所需资源。
+                  </p >
+                </div>
+              </div>
+
+              <div class="ai-process-item">
+                <span class="process-number">
+                  05
+                </span>
+
+                <div>
+                  <strong data-i18n="aiOperations.recordingProcesses">
+                    AI正在记录互动过程
+                  </strong>
+
+                  <p>
+                    在获得居民授权后，记录活动过程、关键节点和共同记忆。
+                  </p >
+                </div>
+              </div>
+
+              <div class="ai-process-item">
+                <span class="process-number">
+                  06
+                </span>
+
+                <div>
+                  <strong data-i18n="aiOperations.summarizingResults">
+                    AI正在总结共同成果
+                  </strong>
+
+                  <p>
+                    总结活动结果、居民贡献、城市影响和下一步建议。
+                  </p >
+                </div>
+              </div>
+
+            </div>
+          </article>
+
+          <div class="ai-suggestion-column">
+
+            <article class="ai-suggestion-card">
+              <div class="suggestion-top">
+                <span class="suggestion-icon">
+                  🏀
+                </span>
+
+                <span class="suggestion-badge">
+                  AI推荐
+                </span>
+              </div>
+
+              <h3 data-i18n="aiOperations.recommendationOneTitle">
+                篮球活动建议
+              </h3>
+
+              <p data-i18n="aiOperations.recommendationOneText">
+                AI发现附近有12位篮球爱好者，并建议组织今晚的篮球活动。
+              </p >
+
+              <button
+                type="button"
+                data-i18n="actions.startInteraction"
+              >
+                发起互动
+              </button>
+            </article>
+
+            <article class="ai-suggestion-card">
+              <div class="suggestion-top">
+                <span class="suggestion-icon">
+                  🎬
+                </span>
+
+                <span class="suggestion-badge">
+                  AI推荐
+                </span>
+              </div>
+
+              <h3 data-i18n="aiOperations.recommendationTwoTitle">
+                电影团队建议
+              </h3>
+
+              <p data-i18n="aiOperations.recommendationTwoText">
+                AI发现5位导演、8位演员和2位摄影师，建议成立社区电影团队。
+              </p >
+
+              <button
+                type="button"
+                data-i18n="actions.createProject"
+              >
+                发起项目
+              </button>
+            </article>
+
+            <article class="ai-suggestion-card">
+              <div class="suggestion-top">
+                <span class="suggestion-icon">
+                  ☕
+                </span>
+
+                <span class="suggestion-badge">
+                  AI推荐
+                </span>
+              </div>
+
+              <h3 data-i18n="aiOperations.recommendationThreeTitle">
+                居民陪伴建议
+              </h3>
+
+              <p data-i18n="aiOperations.recommendationThreeText">
+                AI发现部分居民近期互动较少，建议组织咖啡交流、散步和社区聚会。
+              </p >
+
+              <button
+                type="button"
+                data-i18n="actions.startInteraction"
+              >
+                发起互动
+              </button>
+            </article>
+
+          </div>
+        </div>
+      </section>      <style>
+        .ai-operations-section {
+          padding: 42px 0;
+        }
+
+        .ai-operation-grid {
+          display: grid;
+          grid-template-columns:
+            minmax(0, 1.25fr)
+            minmax(320px, 0.75fr);
+          gap: 20px;
+        }
+
+        .ai-main-panel,
+        .ai-suggestion-card {
+          background:
+            linear-gradient(
+              180deg,
+              rgba(18, 39, 66, 0.98),
+              rgba(10, 25, 44, 0.98)
+            );
+          border: 1px solid var(--border);
+          box-shadow: var(--shadow);
+        }
+
+        .ai-main-panel {
+          padding: 26px;
+          border-radius: 24px;
+        }
+
+        .ai-panel-heading {
+          display: flex;
+          gap: 16px;
+          align-items: flex-start;
+          padding-bottom: 22px;
+          border-bottom: 1px solid var(--border);
+        }
+
+        .ai-icon {
+          display: grid;
+          place-items: center;
+          width: 56px;
+          height: 56px;
+          border-radius: 17px;
+          font-size: 28px;
+          background:
+            linear-gradient(
+              135deg,
+              rgba(79, 140, 255, 0.9),
+              rgba(122, 99, 255, 0.9)
+            );
+        }
+
+        .ai-panel-heading h3 {
+          font-size: 22px;
+        }
+
+        .ai-panel-heading p {
+          margin-top: 7px;
+          color: var(--text-soft);
+          line-height: 1.6;
+        }
+
+        .ai-process-list {
+          display: grid;
+          gap: 12px;
+          margin-top: 22px;
+        }
+
+        .ai-process-item {
+          display: grid;
+          grid-template-columns: auto 1fr;
+          gap: 14px;
+          padding: 16px;
+          background: rgba(255, 255, 255, 0.035);
+          border: 1px solid var(--border);
+          border-radius: 16px;
+        }
+
+        .ai-process-item.active {
+          background: rgba(79, 140, 255, 0.1);
+          border-color: rgba(79, 140, 255, 0.38);
+        }
+
+        .process-number {
+          display: grid;
+          place-items: center;
+          width: 38px;
+          height: 38px;
+          border-radius: 11px;
+          color: #bcd1ff;
+          background: rgba(79, 140, 255, 0.14);
+          border: 1px solid rgba(79, 140, 255, 0.3);
+          font-size: 12px;
+          font-weight: 850;
+        }
+
+        .ai-process-item strong {
+          display: block;
+          font-size: 15px;
+        }
+
+        .ai-process-item p {
+          margin-top: 5px;
+          color: var(--text-soft);
+          font-size: 13px;
+          line-height: 1.6;
+        }
+
+        .ai-suggestion-column {
+          display: grid;
+          gap: 16px;
+        }
+
+        .ai-suggestion-card {
+          padding: 21px;
+          border-radius: 20px;
+        }
+
+        .suggestion-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .suggestion-icon {
+          font-size: 27px;
+        }
+
+        .suggestion-badge {
+          padding: 6px 9px;
+          color: #9ec0ff;
+          background: rgba(79, 140, 255, 0.1);
+          border: 1px solid rgba(79, 140, 255, 0.28);
+          border-radius: 999px;
+          font-size: 11px;
+          font-weight: 850;
+        }
+
+        .ai-suggestion-card h3 {
+          margin-top: 18px;
+          font-size: 18px;
+        }
+
+        .ai-suggestion-card p {
+          margin-top: 9px;
+          color: var(--text-soft);
+          line-height: 1.7;
+        }
+
+        .ai-suggestion-card button {
+          width: 100%;
+          min-height: 43px;
+          margin-top: 18px;
+          color: #ffffff;
+          background: var(--primary);
+          border: 1px solid var(--primary);
+          border-radius: 12px;
+          font-weight: 800;
+          cursor: pointer;
+        }
+
+        @media (max-width: 980px) {
+          .ai-operation-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      </style>      <section class="city-results-section">
+        <div class="section-heading">
+          <div>
+            <span
+              class="section-kicker"
+              data-i18n="results.kicker"
+            >
+              今日城市成果
+            </span>
+
+            <h2 data-i18n="results.title">
+              居民互动正在产生真实结果
+            </h2>
+
+            <p data-i18n="results.description">
+              城市不仅记录活动数量，也记录居民共同完成的过程、关系和成果。
+            </p >
+          </div>
+
+          <a
+            class="secondary-action"
+            href=" "
+            data-i18n="actions.viewResults"
+          >
+            查看城市成果
+          </a >
+        </div>
+
+        <div class="results-grid">
+
+          <article class="result-card">
+            <div class="result-icon">🏀</div>
+
+            <strong>24</strong>
+
+            <h3 data-i18n="results.completedActivities">
+              今日完成的居民活动
+            </h3>
+
+            <p data-i18n="results.completedActivitiesText">
+              包括运动、聚会、学习、信仰交流和居民陪伴活动。
+            </p >
+          </article>
+
+          <article class="result-card">
+            <div class="result-icon">🤝</div>
+
+            <strong>368</strong>
+
+            <h3 data-i18n="results.newConnections">
+              今日建立的新关系
+            </h3>
+
+            <p data-i18n="results.newConnectionsText">
+              居民通过共同兴趣、共同需要和共同项目建立连接。
+            </p >
+          </article>
+
+          <article class="result-card">
+            <div class="result-icon">🧩</div>
+
+            <strong>19</strong>
+
+            <h3 data-i18n="results.newProjects">
+              今日形成的新项目
+            </h3>
+
+            <p data-i18n="results.newProjectsText">
+              AI协助居民组建团队，但项目决定权始终属于居民。
+            </p >
+          </article>
+
+          <article class="result-card">
+            <div class="result-icon">📖</div>
+
+            <strong>146</strong>
+
+            <h3 data-i18n="results.memoriesRecorded">
+              今日形成的共同记忆
+            </h3>
+
+            <p data-i18n="results.memoriesRecordedText">
+              经居民授权后，活动过程和共同成果被保存为城市记忆。
+            </p >
+          </article>
+
+        </div>
+      </section>
+
+      <section class="city-entry-section">
+        <div>
+          <span
+            class="section-kicker"
+            data-i18n="entry.kicker"
+          >
+            城市正在等待新的居民
+          </span>
+
+          <h2 data-i18n="entry.title">
+            进入EchoCity，与数字居民和AI居民共同建设城市。
+          </h2>
+
+          <p data-i18n="entry.description">
+            在这里建立数字身份、认识居民、参加活动、发起项目，并留下属于你的数字生活记录。
+          </p >
+        </div>
+
+        <div class="entry-actions">
+          <a
+            class="primary-action"
+            href="city.html"
+            data-i18n="actions.enterCity"
+          >
+            进入城市
+          </a >
+
+          <a
+            class="secondary-action"
+            href="digital-identity.html"
+            data-i18n="actions.createIdentity"
+          >
+            建立数字身份
+          </a >
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      <div>
+        <strong>EchoCity</strong>
+
+        <p data-i18n="footer.statement">
+          数据不是文明的目的，而是文明的载体。技术不是文明的中心，而是文明的工具。
+        </p >
       </div>
-    </section>
 
-    <section class="content-section" id="city">
-      <div class="section-heading reveal">
-        <p class="eyebrow" data-en="THE CITY" data-zh="数字城市">数字城市</p>
-        <h2 data-en="A place for identity, memory and belonging."
-            data-zh="承载身份、记忆与归属的地方。">承载身份、记忆与归属的地方。</h2>
+      <div class="footer-links">
+        <a
+          href="city.html"
+          data-i18n="actions.enterCity"
+        >
+          进入城市
+        </a >
+
+        <a
+          href="digital-identity.html"
+          data-i18n="actions.createIdentity"
+        >
+          建立数字身份
+        </a >
+
+        <a
+          href="activities.html"
+          data-i18n="footer.activities"
+        >
+          居民活动
+        </a >
+
+        <a
+          href="ai-operations.html"
+          data-i18n="aiOperations.sectionTitle"
+        >
+          AI城市运行中心
+        </a >
       </div>
+    </footer>
 
-      <div class="feature-grid">
-        <article class="feature-card reveal">
-          <span>01</span>
-          <h3 data-en="A Real Wish" data-zh="真实愿望">真实愿望</h3>
-          <p data-en="Name what matters most to you and take the first step."
-             data-zh="说出对你真正重要的事情，并迈出第一步。">说出对你真正重要的事情，并迈出第一步。</p>
-        </article>
-        <article class="feature-card reveal">
-          <span>02</span>
-          <h3 data-en="People Who Walk With You" data-zh="愿意同行的人">愿意同行的人</h3>
-          <p data-en="Meet people who understand the journey and are willing to contribute."
-             data-zh="遇见理解这段旅程、愿意共同投入的人。">遇见理解这段旅程、愿意共同投入的人。</p>
-        </article>
-        <article class="feature-card reveal">
-          <span>03</span>
-          <h3 data-en="Shared Action" data-zh="共同实践">共同实践</h3>
-          <p data-en="Relationships grow through small, verifiable actions."
-             data-zh="关系不只来自表达，更来自一次次可以验证的共同实践。">关系不只来自表达，更来自一次次可以验证的共同实践。</p>
-        </article>
-        <article class="feature-card reveal">
-          <span>04</span>
-          <h3 data-en="Living Memory" data-zh="共同记忆">共同记忆</h3>
-          <p data-en="Keep the story, milestones and people who helped shape the journey."
-             data-zh="保存故事、节点和同行者，让人生旅程成为可延续的共同记忆。">保存故事、节点和同行者，让人生旅程成为可延续的共同记忆。</p>
-        </article>
-      </div>
-    </section>
+  </div>  <style>
+    .city-results-section {
+      padding: 42px 0;
+    }
 
-    <section class="cta-section">
-      <p class="eyebrow" data-en="YOUR STORY CAN BEGIN NOW" data-zh="你的故事，可以从现在开始">你的故事，可以从现在开始</p>
-      <h2 data-en="What is the one wish you do not want to leave unfinished?"
-          data-zh="你最不愿留下未完成的愿望，是什么？">你最不愿留下未完成的愿望，是什么？</h2>
-      <a class="btn btn-primary" href="wish.html" data-en="Start My Journey" data-zh="开始我的旅程">开始我的旅程</a>
-    </section>
-  </main>
+    .results-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+      gap: 17px;
+    }
 
-  <footer id="contact">
-    <div>
-      <strong>EchoCity</strong>
-      <p data-en="A digital city built from wishes, action and relationships."
-         data-zh="一座由愿望、行动与关系共同生长的数字城市。">一座由愿望、行动与关系共同生长的数字城市。</p>
-    </div>
-    <a href="mailto:contact@echocity.org">contact@echocity.org</a>
-  </footer>
-  <script src="script.js?v=20260716-2"></script>
+    .result-card {
+      min-height: 245px;
+      padding: 23px;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(18, 39, 66, 0.98),
+          rgba(10, 25, 44, 0.98)
+        );
+      border: 1px solid var(--border);
+      border-radius: 21px;
+      box-shadow: var(--shadow);
+    }
+
+    .result-icon {
+      font-size: 31px;
+    }
+
+    .result-card strong {
+      display: block;
+      margin-top: 24px;
+      font-size: 36px;
+      letter-spacing: -1px;
+    }
+
+    .result-card h3 {
+      margin-top: 8px;
+      font-size: 17px;
+      line-height: 1.4;
+    }
+
+    .result-card p {
+      margin-top: 12px;
+      color: var(--text-soft);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .city-entry-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      margin-top: 32px;
+      padding: 38px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(79, 140, 255, 0.2),
+          rgba(122, 99, 255, 0.12)
+        );
+      border: 1px solid rgba(79, 140, 255, 0.35);
+      border-radius: 25px;
+      box-shadow: var(--shadow);
+    }
+
+    .city-entry-section h2 {
+      max-width: 780px;
+      margin-top: 10px;
+      font-size: 31px;
+      line-height: 1.35;
+    }
+
+    .city-entry-section p {
+      max-width: 800px;
+      margin-top: 12px;
+      color: #c5d3e4;
+      line-height: 1.7;
+    }
+
+    .entry-actions {
+      display: flex;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 35px;
+      margin-top: 60px;
+      padding: 30px 0 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer strong {
+      font-size: 21px;
+    }
+
+    .footer p {
+      max-width: 680px;
+      margin-top: 9px;
+      color: var(--text-soft);
+      line-height: 1.7;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 17px;
+      color: #cbd8e8;
+      font-size: 14px;
+    }
+
+    .footer-links a:hover {
+      color: #ffffff;
+    }
+
+    @media (max-width: 1050px) {
+      .results-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .city-entry-section {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .brand-caption {
+        display: none;
+      }
+
+      .top-actions {
+        gap: 7px;
+      }
+
+      .language-button {
+        min-width: auto;
+      }
+
+      .resident-button {
+        padding: 10px 12px;
+      }
+
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .city-entry-section {
+        padding: 26px 21px;
+      }
+
+      .city-entry-section h2 {
+        font-size: 25px;
+      }
+
+      .entry-actions {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .entry-actions a {
+        width: 100%;
+        text-align: center;
+      }
+
+      .footer {
+        flex-direction: column;
+      }
+
+      .footer-links {
+        justify-content: flex-start;
+      }
+    }
+  </style>  <script>
+    const translations = {
+      zh: {
+        "page.title":
+          "EchoCity｜正在运转的数字文明城市",
+
+        "brand.subtitle":
+          "一座正在运转的数字文明城市",
+
+        "brand.definition":
+          "EchoCity 是一座由数字居民、AI居民共同生活的数字文明城市。",
+
+        "brand.description":
+          "数字居民在这里生活、互动、合作、创造，共同推动城市持续运行。",
+
+        "navigation.residentHome":
+          "我的住所",
+
+        "actions.enterCity":
+          "进入城市",
+
+        "actions.exploreCity":
+          "探索城市",
+
+        "actions.viewMore":
+          "查看更多",
+
+        "actions.viewActivity":
+          "查看活动",
+
+        "actions.joinActivity":
+          "加入活动",
+
+        "actions.viewProject":
+          "查看项目",
+
+        "actions.contactResident":
+          "联系居民",
+
+        "actions.startInteraction":
+          "发起互动",
+
+        "actions.createProject":
+          "发起项目",
+
+        "actions.viewResults":
+          "查看城市成果",
+
+        "actions.createIdentity":
+          "建立数字身份",
+
+        "cityStatus.sectionTitle":
+          "城市实时运行",
+
+        "cityStatus.sectionDescription":
+          "查看数字居民、活动、项目和AI协作的实时状态。",
+
+        "cityStatus.residentsOnline":
+          "在线居民",
+
+        "cityStatus.newResidentsToday":
+          "今日新增居民",
+
+        "cityStatus.liveInteractions":
+          "正在进行的互动",
+
+        "cityStatus.activeActivities":
+          "正在进行的活动",
+
+        "cityStatus.activeProjects":
+          "正在协作的项目",
+
+        "cityStatus.aiAssistanceToday":
+          "AI今日协助",
+
+        "cityStatus.newRelationships":
+          "今日建立的新关系",
+
+        "cityStatus.cityActivityIndex":
+          "城市活跃指数",
+
+        "cityFeed.sectionTitle":
+          "城市今天正在发生",
+
+        "cityFeed.sectionDescription":
+          "每一条动态，都是数字居民共同生活和城市持续运转的真实过程。",
+
+        "cityFeed.basketballTitle":
+          "寻找篮球伙伴",
+
+        "cityFeed.basketballText":
+          "David 正在寻找居民参加今晚的社区篮球活动。",
+
+        "cityFeed.basketballMeta":
+          "还需要4位居民",
+
+        "cityFeed.filmTitle":
+          "招募电影伙伴",
+
+        "cityFeed.filmText":
+          "Mary 正在组建一支记录数字居民生活的社区电影团队。",
+
+        "cityFeed.filmMeta":
+          "正在招募演员、摄影和剪辑",
+
+        "cityFeed.gatheringTitle":
+          "组织周末聚会",
+
+        "cityFeed.gatheringText":
+          "德国社区正在组织一次居民国际聚餐。",
+
+        "cityFeed.gatheringMeta":
+          "已有38位居民参加",
+
+        "cityFeed.faithTitle":
+          "寻找信仰同行者",
+
+        "cityFeed.faithText":
+          "John 希望今晚和其他居民一起阅读并讨论圣经。",
+
+        "cityFeed.faithMeta":
+          "活动时间：20:00",
+
+        "cityFeed.supportTitle":
+          "寻找陪伴与支持",
+
+        "cityFeed.supportText":
+          "一位居民希望找到可以散步、交流和互相支持的伙伴。",
+
+        "cityFeed.supportMeta":
+          "AI正在匹配合适居民",
+
+        "cityFeed.projectTitle":
+          "组建共同项目",
+
+        "cityFeed.projectText":
+          "五位工程师和两位设计师正在讨论一个社区改善项目。",
+
+        "cityFeed.projectMeta":
+          "项目正在形成",
+
+        "aiOperations.sectionTitle":
+          "AI城市运行中心",
+
+        "aiOperations.sectionDescription":
+          "AI理解居民需求、连接合适的人、组织协作并记录城市过程。",
+
+        "aiOperations.detectingNeeds":
+          "AI正在理解居民需求",
+
+        "aiOperations.matchingResidents":
+          "AI正在匹配合适居民",
+
+        "aiOperations.organizingActivities":
+          "AI正在组织居民活动",
+
+        "aiOperations.coordinatingResources":
+          "AI正在协调城市资源",
+
+        "aiOperations.recordingProcesses":
+          "AI正在记录互动过程",
+
+        "aiOperations.summarizingResults":
+          "AI正在总结共同成果",
+
+        "aiOperations.humanDecision":
+          "AI提供建议和协助，居民始终拥有最终决定权。",
+
+        "aiOperations.recommendationOneTitle":
+          "篮球活动建议",
+
+        "aiOperations.recommendationOneText":
+          "AI发现附近有12位篮球爱好者，并建议组织今晚的篮球活动。",
+
+        "aiOperations.recommendationTwoTitle":
+          "电影团队建议",
+
+        "aiOperations.recommendationTwoText":
+          "AI发现5位导演、8位演员和2位摄影师，建议成立社区电影团队。",
+
+        "aiOperations.recommendationThreeTitle":
+          "居民陪伴建议",
+
+        "aiOperations.recommendationThreeText":
+          "AI发现部分居民近期互动较少，建议组织咖啡交流、散步和社区聚会。",
+
+        "results.kicker":
+          "今日城市成果",
+
+        "results.title":
+          "居民互动正在产生真实结果",
+
+        "results.description":
+          "城市不仅记录活动数量，也记录居民共同完成的过程、关系和成果。",
+
+        "results.completedActivities":
+          "今日完成的居民活动",
+
+        "results.completedActivitiesText":
+          "包括运动、聚会、学习、信仰交流和居民陪伴活动。",
+
+        "results.newConnections":
+          "今日建立的新关系",
+
+        "results.newConnectionsText":
+          "居民通过共同兴趣、共同需要和共同项目建立连接。",
+
+        "results.newProjects":
+          "今日形成的新项目",
+
+        "results.newProjectsText":
+          "AI协助居民组建团队，但项目决定权始终属于居民。",
+
+        "results.memoriesRecorded":
+          "今日形成的共同记忆",
+
+        "results.memoriesRecordedText":
+          "经居民授权后，活动过程和共同成果被保存为城市记忆。",
+
+        "entry.kicker":
+          "城市正在等待新的居民",
+
+        "entry.title":
+          "进入EchoCity，与数字居民和AI居民共同建设城市。",
+
+        "entry.description":
+          "在这里建立数字身份、认识居民、参加活动、发起项目，并留下属于你的数字生活记录。",
+
+        "footer.statement":
+          "数据不是文明的目的，而是文明的载体。技术不是文明的中心，而是文明的工具。",
+
+        "footer.activities":
+          "居民活动",
+
+        sectionKickers: [
+          "城市实时运行",
+          "城市生活",
+          "AI文明引擎"
+        ],
+
+        activityTimes: [
+          "10分钟前",
+          "18分钟前",
+          "26分钟前",
+          "35分钟前",
+          "42分钟前",
+          "1小时前"
+        ],
+
+        activityStatuses: [
+          "进行中",
+          "组建中",
+          "可参加",
+          "已安排",
+          "匹配中",
+          "形成中"
+        ],
+
+        aiBadges: [
+          "AI推荐",
+          "AI推荐",
+          "AI推荐"
+        ],
+
+        processDescriptions: [
+          "分析居民的目标、兴趣、时间、位置和隐私授权。",
+          "根据共同兴趣、可用时间、信任记录和活动需求寻找伙伴。",
+          "协助建立活动、邀请居民、确认地点、时间和参与规则。",
+          "连接社区空间、设备、专业人员和共同项目所需资源。",
+          "在获得居民授权后，记录活动过程、关键节点和共同记忆。",
+          "总结活动结果、居民贡献、城市影响和下一步建议。"
+        ]
+      },      en: {
+        "page.title":
+          "EchoCity | A Living Digital Civilization City",
+
+        "brand.subtitle":
+          "A Living Digital Civilization City",
+
+        "brand.definition":
+          "EchoCity is a digital civilization city where Digital Residents and AI Residents live together.",
+
+        "brand.description":
+          "Digital Residents live, interact, collaborate and create here, keeping the city continuously operating.",
+
+        "navigation.residentHome":
+          "My Residence",
+
+        "actions.enterCity":
+          "Enter the City",
+
+        "actions.exploreCity":
+          "Explore the City",
+
+        "actions.viewMore":
+          "View More",
+
+        "actions.viewActivity":
+          "View Activity",
+
+        "actions.joinActivity":
+          "Join Activity",
+
+        "actions.viewProject":
+          "View Project",
+
+        "actions.contactResident":
+          "Contact Resident",
+
+        "actions.startInteraction":
+          "Start Interaction",
+
+        "actions.createProject":
+          "Create Project",
+
+        "actions.viewResults":
+          "View City Results",
+
+        "actions.createIdentity":
+          "Create Digital Identity",
+
+        "cityStatus.sectionTitle":
+          "Live City Operations",
+
+        "cityStatus.sectionDescription":
+          "View the live status of Digital Residents, activities, projects and AI collaboration.",
+
+        "cityStatus.residentsOnline":
+          "Residents Online",
+
+        "cityStatus.newResidentsToday":
+          "New Residents Today",
+
+        "cityStatus.liveInteractions":
+          "Live Interactions",
+
+        "cityStatus.activeActivities":
+          "Active Activities",
+
+        "cityStatus.activeProjects":
+          "Collaborative Projects",
+
+        "cityStatus.aiAssistanceToday":
+          "AI Assistance Today",
+
+        "cityStatus.newRelationships":
+          "New Relationships Today",
+
+        "cityStatus.cityActivityIndex":
+          "City Activity Index",
+
+        "cityFeed.sectionTitle":
+          "What Is Happening Today",
+
+        "cityFeed.sectionDescription":
+          "Every update represents a real process of residents living together and keeping the city active.",
+
+        "cityFeed.basketballTitle":
+          "Looking for Basketball Partners",
+
+        "cityFeed.basketballText":
+          "David is looking for residents to join tonight's community basketball activity.",
+
+        "cityFeed.basketballMeta":
+          "4 more residents needed",
+
+        "cityFeed.filmTitle":
+          "Recruiting Film Partners",
+
+        "cityFeed.filmText":
+          "Mary is forming a community film team to document the lives of Digital Residents.",
+
+        "cityFeed.filmMeta":
+          "Recruiting actors, camera operators and editors",
+
+        "cityFeed.gatheringTitle":
+          "Organizing a Weekend Gathering",
+
+        "cityFeed.gatheringText":
+          "The German community is organizing an international residents' dinner.",
+
+        "cityFeed.gatheringMeta":
+          "38 residents have joined",
+
+        "cityFeed.faithTitle":
+          "Looking for Faith Companions",
+
+        "cityFeed.faithText":
+          "John hopes to read and discuss the Bible with other residents tonight.",
+
+        "cityFeed.faithMeta":
+          "Activity time: 20:00",
+
+        "cityFeed.supportTitle":
+          "Looking for Companionship and Support",
+
+        "cityFeed.supportText":
+          "A resident hopes to find someone for walking, conversation and mutual support.",
+
+        "cityFeed.supportMeta":
+          "AI is matching suitable residents",
+
+        "cityFeed.projectTitle":
+          "Building a Shared Project",
+
+        "cityFeed.projectText":
+          "Five engineers and two designers are discussing a community improvement project.",
+
+        "cityFeed.projectMeta":
+          "The project is taking shape",
+
+        "aiOperations.sectionTitle":
+          "AI City Operations Center",
+
+        "aiOperations.sectionDescription":
+          "AI understands resident needs, connects suitable people, organizes collaboration and records city processes.",
+
+        "aiOperations.detectingNeeds":
+          "AI Is Understanding Resident Needs",
+
+        "aiOperations.matchingResidents":
+          "AI Is Matching Suitable Residents",
+
+        "aiOperations.organizingActivities":
+          "AI Is Organizing Resident Activities",
+
+        "aiOperations.coordinatingResources":
+          "AI Is Coordinating City Resources",
+
+        "aiOperations.recordingProcesses":
+          "AI Is Recording Interaction Processes",
+
+        "aiOperations.summarizingResults":
+          "AI Is Summarizing Shared Results",
+
+        "aiOperations.humanDecision":
+          "AI provides suggestions and assistance, while residents always retain final decision-making authority.",
+
+        "aiOperations.recommendationOneTitle":
+          "Basketball Activity Suggestion",
+
+        "aiOperations.recommendationOneText":
+          "AI found 12 basketball enthusiasts nearby and suggests organizing a basketball activity tonight.",
+
+        "aiOperations.recommendationTwoTitle":
+          "Film Team Suggestion",
+
+        "aiOperations.recommendationTwoText":
+          "AI found 5 directors, 8 actors and 2 camera operators and suggests forming a community film team.",
+
+        "aiOperations.recommendationThreeTitle":
+          "Resident Companionship Suggestion",
+
+        "aiOperations.recommendationThreeText":
+          "AI found that some residents have had fewer interactions recently and suggests coffee conversations, walks and community gatherings.",
+
+        "results.kicker":
+          "TODAY'S CITY RESULTS",
+
+        "results.title":
+          "Resident Interaction Is Producing Real Results",
+
+        "results.description":
+          "The city records not only activity numbers, but also the processes, relationships and results residents create together.",
+
+        "results.completedActivities":
+          "Resident Activities Completed Today",
+
+        "results.completedActivitiesText":
+          "Including sports, gatherings, learning, faith discussions and companionship activities.",
+
+        "results.newConnections":
+          "New Relationships Established Today",
+
+        "results.newConnectionsText":
+          "Residents connect through shared interests, shared needs and shared projects.",
+
+        "results.newProjects":
+          "New Projects Formed Today",
+
+        "results.newProjectsText":
+          "AI helps residents form teams, while project decisions always remain with residents.",
+
+        "results.memoriesRecorded":
+          "Shared Memories Created Today",
+
+        "results.memoriesRecordedText":
+          "With resident authorization, activity processes and shared results are preserved as city memories.",
+
+        "entry.kicker":
+          "THE CITY IS WAITING FOR NEW RESIDENTS",
+
+        "entry.title":
+          "Enter EchoCity and build the city together with Digital Residents and AI Residents.",
+
+        "entry.description":
+          "Create your digital identity, meet residents, join activities, start projects and preserve your digital life records.",
+
+        "footer.statement":
+          "Data is not the purpose of civilization, but its carrier. Technology is not the center of civilization, but its tool.",
+
+        "footer.activities":
+          "Resident Activities",
+
+        sectionKickers: [
+          "LIVE CITY",
+          "CITY LIFE",
+          "AI CIVILIZATION ENGINE"
+        ],
+
+        activityTimes: [
+          "10 minutes ago",
+          "18 minutes ago",
+          "26 minutes ago",
+          "35 minutes ago",
+          "42 minutes ago",
+          "1 hour ago"
+        ],
+
+        activityStatuses: [
+          "In Progress",
+          "Forming",
+          "Open",
+          "Scheduled",
+          "Matching",
+          "Developing"
+        ],
+
+        aiBadges: [
+          "AI Suggestion",
+          "AI Suggestion",
+          "AI Suggestion"
+        ],
+
+        processDescriptions: [
+          "Analyzing resident goals, interests, availability, location and privacy permissions.",
+          "Finding partners based on shared interests, available time, trust records and activity needs.",
+          "Helping create activities, invite residents and confirm locations, times and participation rules.",
+          "Connecting community spaces, equipment, professionals and resources required for shared projects.",
+          "Recording activity processes, key milestones and shared memories after resident authorization.",
+          "Summarizing activity results, resident contributions, city impact and recommended next steps."
+        ]
+      }
+    };    let currentLanguage =
+      localStorage.getItem("echoCityLanguage") || "zh";
+
+    const languageToggle =
+      document.getElementById("languageToggle");
+
+    const cityClock =
+      document.getElementById("cityClock");
+
+    const cityDate =
+      document.getElementById("cityDate");
+
+    function replaceIndexedText(selector, values) {
+      const elements =
+        document.querySelectorAll(selector);
+
+      elements.forEach((element, index) => {
+        if (values[index] !== undefined) {
+          element.textContent = values[index];
+        }
+      });
+    }
+
+    function applyLanguage(language) {
+      const dictionary =
+        translations[language];
+
+      document.documentElement.lang =
+        language === "zh"
+          ? "zh-CN"
+          : "en";
+
+      document.title =
+        dictionary["page.title"];
+
+      document
+        .querySelectorAll("[data-i18n]")
+        .forEach((element) => {
+          const key =
+            element.dataset.i18n;
+
+          if (dictionary[key]) {
+            element.textContent =
+              dictionary[key];
+          }
+        });
+
+      replaceIndexedText(
+        ".section-kicker:not([data-i18n])",
+        dictionary.sectionKickers
+      );
+
+      replaceIndexedText(
+        ".activity-time",
+        dictionary.activityTimes
+      );
+
+      replaceIndexedText(
+        ".activity-status",
+        dictionary.activityStatuses
+      );
+
+      replaceIndexedText(
+        ".suggestion-badge",
+        dictionary.aiBadges
+      );
+
+      replaceIndexedText(
+        ".ai-process-item p",
+        dictionary.processDescriptions
+      );
+
+      languageToggle.textContent =
+        language === "zh"
+          ? "English"
+          : "中文";
+
+      localStorage.setItem(
+        "echoCityLanguage",
+        language
+      );
+
+      currentLanguage =
+        language;
+
+      updateCityClock();
+    }
+
+    function updateCityClock() {
+      const now =
+        new Date();
+
+      cityClock.textContent =
+        new Intl.DateTimeFormat(
+          currentLanguage === "zh"
+            ? "zh-CN"
+            : "en-US",
+          {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false
+          }
+        ).format(now);
+
+      cityDate.textContent =
+        new Intl.DateTimeFormat(
+          currentLanguage === "zh"
+            ? "zh-CN"
+            : "en-US",
+          {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            weekday: "long"
+          }
+        ).format(now);
+    }
+
+    languageToggle.addEventListener(
+      "click",
+      () => {
+        const nextLanguage =
+          currentLanguage === "zh"
+            ? "en"
+            : "zh";
+
+        applyLanguage(nextLanguage);
+      }
+    );
+
+    applyLanguage(currentLanguage);
+
+    setInterval(
+      updateCityClock,
+      1000
+    );
+  </script>
+
 </body>
 </html>
