@@ -460,3 +460,29 @@ textarea:focus{outline:2px solid rgba(185,148,85,.25);border-color:var(--gold)}.
     display: none;
   }
 }
+.identity-entry{
+    text-align:center;
+    margin-top:20px;
+}
+
+.identity-button{
+    display:inline-block;
+    padding:12px 28px;
+    border-radius:30px;
+    text-decoration:none;
+    color:#ffffff;
+    
+    backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.35);
+background:rgba(255,255,255,.08);
+    transition:.3s;
+}.identity-button:hover{
+    transform:translateY(-2px);
+    background:rgba(255,255,255,.16);
+    border-color:rgba(255,255,255,.65);
+    box-shadow:0 10px 28px rgba(0,0,0,.28);
+}
+
+.language-en{
+    display:none;
+}
+
