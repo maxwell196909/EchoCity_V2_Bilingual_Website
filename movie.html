@@ -1,0 +1,2576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>
+    AI 共创电影工作台 | AI Co-created Movie Studio | EchoCity
+  </title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-dark: #07111f;
+      --bg-panel: rgba(13, 31, 54, 0.94);
+      --bg-soft: rgba(255, 255, 255, 0.07);
+      --border: rgba(255, 255, 255, 0.14);
+      --text-main: #f7fbff;
+      --text-soft: rgba(247, 251, 255, 0.72);
+      --blue: #55c9ff;
+      --purple: #747cff;
+      --green: #48d59a;
+      --yellow: #ffd166;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family:
+        Arial,
+        "Microsoft YaHei",
+        "PingFang SC",
+        sans-serif;
+      color: var(--text-main);
+      background:
+        linear-gradient(
+          rgba(4, 11, 22, 0.88),
+          rgba(4, 11, 22, 0.95)
+        ),
+        url("city-vision.jpg") center / cover fixed;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .movie-page {
+      width: min(1180px, 92%);
+      margin: 0 auto;
+      padding: 30px 0 70px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 26px;
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(6, 18, 34, 0.78);
+      backdrop-filter: blur(15px);
+    }
+
+    .brand {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-main);
+      text-decoration: none;
+      background: var(--bg-soft);
+    }
+
+    .hero {
+      margin-bottom: 28px;
+      padding: 34px;
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(12, 31, 56, 0.96),
+          rgba(25, 45, 78, 0.91)
+        );
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.34);
+    }
+
+    .hero-label {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      color: #a8e6ff;
+      background: rgba(85, 201, 255, 0.14);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+    }
+
+    .hero h1 {
+      margin-bottom: 14px;
+      font-size: clamp(34px, 6vw, 60px);
+      line-height: 1.1;
+    }
+
+    .hero p {
+      max-width: 900px;
+      color: var(--text-soft);
+      font-size: 17px;
+      line-height: 1.8;
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .workflow-step {
+      position: relative;
+      padding: 14px 9px;
+      border-radius: 13px;
+      background: rgba(255, 255, 255, 0.07);
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .workflow-step:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      right: -10px;
+      top: 50%;
+      color: var(--blue);
+      transform: translateY(-50%);
+    }
+
+    .studio-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 22px;
+    }
+
+    .panel {
+      padding: 26px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: var(--bg-panel);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.24);
+    }
+
+    .panel h2 {
+      margin-bottom: 7px;
+      font-size: 26px;
+    }
+
+    .panel-intro {
+      margin-bottom: 20px;
+      color: var(--text-soft);
+      line-height: 1.7;
+    }
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    .field label {
+      display: block;
+          margin-bottom: 8px;
+    font-weight: 600;
+}
+/* ========================================
+   数字人电影共创中心：页面布局优化
+   Digital Human Movie Center: Layout Enhancement
+======================================== */
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+main,
+main.container,
+.container,
+.page-container,
+.movie-container {
+  width: min(1180px, calc(100% - 40px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+section {
+  width: 100%;
+}
+
+.hero,
+.movie-hero,
+.page-hero {
+  width: min(1240px, calc(100% - 32px));
+  margin: 20px auto;
+  padding: 54px 48px;
+  border-radius: 24px;
+}
+
+.hero h1,
+.movie-hero h1,
+.page-hero h1 {
+  max-width: 900px;
+  margin-bottom: 16px;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.12;
+}
+
+.hero p,
+.movie-hero p,
+.page-hero p {
+  max-width: 900px;
+  font-size: 17px;
+  line-height: 1.8;
+}
+
+form,
+.movie-form,
+.project-form {
+  width: 100%;
+  max-width: 920px;
+  margin: 30px auto;
+  padding: 36px;
+  border-radius: 22px;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  max-width: 100%;
+  padding: 13px 15px;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+label {
+  display: block;
+  margin-top: 18px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+button,
+.button,
+.btn {
+  min-height: 44px;
+  padding: 11px 22px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.movie-content,
+.form-section,
+.creation-section,
+.project-section {
+  width: min(1180px, calc(100% - 40px));
+  margin: 24px auto;
+  padding: 36px;
+  border-radius: 22px;
+}
+
+@media (max-width: 768px) {
+  main,
+  main.container,
+  .container,
+  .page-container,
+  .movie-container,
+  .movie-content,
+  .form-section,
+  .creation-section,
+  .project-section {
+    width: calc(100% - 24px);
+  }
+
+  .hero,
+  .movie-hero,
+  .page-hero {
+    width: calc(100% - 20px);
+    padding: 34px 22px;
+  }
+
+  form,
+  .movie-form,
+  .project-form {
+    padding: 24px 18px;
+  }
+
+  .hero h1,
+  .movie-hero h1,
+  .page-hero h1 {
+    font-size: 36px;
+  }
+}
+</style>
+</head><body>
+
+  <!-- 顶部导航 / Top Navigation -->
+  <header class="topbar">
+
+    <a href=" " class="brand">
+      EchoCity · 回声城
+    </a >
+
+    <div class="top-actions">
+
+      <button id="languageButton" class="language-button">
+        English
+      </button>
+
+      <a href="communication.html" class="secondary-button">
+        <span
+          data-zh="返回居民沟通中心"
+          data-en="Back to Resident Communication Center"
+        >
+          返回居民沟通中心
+        </span>
+      </a >
+
+    </div>
+
+  </header>
+
+
+  <!-- 页面主标题 / Page Hero -->
+  <section class="hero">
+
+    <div class="hero-content">
+
+      <p
+        class="eyebrow"
+        data-zh="数字居民共同创作空间"
+        data-en="Digital Resident Co-Creation Space"
+      >
+        数字居民共同创作空间
+      </p >
+
+      <h1
+        data-zh="数字人电影共创中心"
+        data-en="Digital Human Movie Co-Creation Center"
+      >
+        数字人电影共创中心
+      </h1>
+
+      <p
+        class="hero-text"
+        data-zh="这里不是普通的电影发布页面，而是数字居民与 AI 共同发起故事、寻找伙伴、组建团队、完成创作并留下共同记忆的空间。"
+        data-en="This is not an ordinary movie publishing page. It is a space where digital residents and AI initiate stories, find partners, form teams, create together, and preserve shared memories."
+      >
+        这里不是普通的电影发布页面，而是数字居民与 AI 共同发起故事、寻找伙伴、组建团队、完成创作并留下共同记忆的空间。
+      </p >
+
+    </div>
+
+  </section>
+
+
+  <main class="page-shell">
+
+    <!-- 左侧：数字居民发起项目 / Left: Digital Resident Starts a Project -->
+    <section class="panel">
+
+      <div class="panel-heading">
+
+        <div>
+
+          <p
+            class="panel-kicker"
+            data-zh="数字居民发起"
+            data-en="Initiated by a Digital Resident"
+          >
+            数字居民发起
+          </p >
+
+          <h2
+            data-zh="创建电影共创项目"
+            data-en="Create a Movie Co-Creation Project"
+          >
+            创建电影共创项目
+          </h2>
+
+        </div>
+
+        <span
+          class="status-badge"
+          data-zh="等待居民发起"
+          data-en="Waiting for Resident Initiation"
+        >
+          等待居民发起
+        </span>
+
+      </div>
+
+
+      <div class="resident-card">
+
+        <div class="resident-avatar">
+          人
+        </div>
+
+        <div class="resident-info">
+
+          <p
+            class="resident-label"
+            data-zh="当前数字居民"
+            data-en="Current Digital Resident"
+          >
+            当前数字居民
+          </p >
+
+          <h3 id="residentName">
+            EchoCity Resident
+          </h3>
+
+          <p
+            data-zh="项目将与发起人的数字身份、兴趣、能力、时间和参与记录建立关联。"
+            data-en="The project will be connected to the initiator's digital identity, interests, abilities, availability, and participation history."
+          >
+            项目将与发起人的数字身份、兴趣、能力、时间和参与记录建立关联。
+          </p >
+
+        </div>
+
+      </div>
+
+
+      <p
+        class="panel-intro"
+        data-zh="请描述你希望完成的电影项目。AI 将理解你的真实需求，但所有匹配、邀请和最终决定都由数字居民本人确认。"
+        data-en="Describe the movie project you want to complete. AI will understand your real needs, while all matching, invitations, and final decisions remain under the digital resident's control."
+      >
+        请描述你希望完成的电影项目。AI 将理解你的真实需求，但所有匹配、邀请和最终决定都由数字居民本人确认。
+      </p >
+
+
+      <form id="movieForm">
+
+        <div class="field">
+
+          <label
+            for="movieTitle"
+            data-zh="项目名称"
+            data-en="Project Title"
+          >
+            项目名称
+          </label>
+
+          <input
+            type="text"
+            id="movieTitle"
+            data-placeholder-zh="例如：回声城的一天"
+            data-placeholder-en="Example: A Day in EchoCity"
+            placeholder="例如：回声城的一天"
+            required
+          />
+
+        </div>
+
+
+        <div class="field">
+
+          <label
+            for="movieType"
+            data-zh="电影类型"
+            data-en="Movie Type"
+          >
+            电影类型
+          </label>
+
+          <select id="movieType" required>
+
+            <option
+              value=""
+              data-zh="请选择电影类型"
+              data-en="Select a movie type"
+            >
+              请选择电影类型
+            </option>
+
+            <option
+              value="community"
+              data-zh="社区真实故事"
+              data-en="Community Real Story"
+            >
+              社区真实故事
+            </option>
+
+            <option
+              value="life"
+              data-zh="人生记忆电影"
+              data-en="Life Memory Film"
+            >
+              人生记忆电影
+            </option>
+
+            <option
+              value="faith"
+              data-zh="信仰与生命故事"
+              data-en="Faith and Life Story"
+            >
+              信仰与生命故事
+            </option>
+
+            <option
+              value="documentary"
+              data-zh="纪录片"
+              data-en="Documentary"
+            >
+              纪录片
+            </option>
+
+            <option
+              value="short"
+              data-zh="创意短片"
+              data-en="Creative Short Film"
+            >
+              创意短片
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="field">
+
+          <label
+            for="storyIdea"
+            data-zh="故事与真实需求"
+            data-en="Story and Real Need"
+          >
+            故事与真实需求
+          </label>
+
+          <textarea
+            id="storyIdea"
+            rows="6"
+            data-placeholder-zh="请说明你想讲述什么、为什么要拍、希望谁参与，以及这个故事对居民或社区有什么意义。"
+            data-placeholder-en="Explain what you want to tell, why it should be filmed, who you hope will participate, and what the story means to residents or the community."
+            placeholder="请说明你想讲述什么、为什么要拍、希望谁参与，以及这个故事对居民或社区有什么意义。"
+            required
+          ></textarea>
+
+        </div>        <div class="field">
+
+          <label
+            for="projectGoal"
+            data-zh="共同创作目标"
+            data-en="Co-Creation Goal"
+          >
+            共同创作目标
+          </label>
+
+          <textarea
+            id="projectGoal"
+            rows="4"
+            data-placeholder-zh="例如：共同完成一部能够记录真实生活、信仰、家庭或社区故事的数字电影。"
+            data-placeholder-en="Example: Create a digital film together that records real life, faith, family, or community stories."
+            placeholder="例如：共同完成一部能够记录真实生活、信仰、家庭或社区故事的数字电影。"
+          ></textarea>
+
+        </div>
+
+
+        <div class="field">
+
+          <label
+            data-zh="需要哪些数字居民参与"
+            data-en="Digital Residents Needed"
+          >
+            需要哪些数字居民参与
+          </label>
+
+          <div class="role-grid">
+
+            <label class="role-option">
+              <input type="checkbox" value="director">
+              <span
+                data-zh="导演"
+                data-en="Director"
+              >
+                导演
+              </span>
+            </label>
+
+            <label class="role-option">
+              <input type="checkbox" value="screenwriter">
+              <span
+                data-zh="编剧"
+                data-en="Screenwriter"
+              >
+                编剧
+              </span>
+            </label>
+
+            <label class="role-option">
+              <input type="checkbox" value="actor">
+              <span
+                data-zh="演员"
+                data-en="Actor"
+              >
+                演员
+              </span>
+            </label>
+
+            <label class="role-option">
+              <input type="checkbox" value="camera">
+              <span
+                data-zh="摄影"
+                data-en="Camera"
+              >
+                摄影
+              </span>
+            </label>
+
+            <label class="role-option">
+              <input type="checkbox" value="editor">
+              <span
+                data-zh="剪辑"
+                data-en="Editor"
+              >
+                剪辑
+              </span>
+            </label>
+
+            <label class="role-option">
+              <input type="checkbox" value="music">
+              <span
+                data-zh="音乐"
+                data-en="Music"
+              >
+                音乐
+              </span>
+            </label>
+
+            <label class="role-option">
+              <input type="checkbox" value="designer">
+              <span
+                data-zh="美术设计"
+                data-en="Art Designer"
+              >
+                美术设计
+              </span>
+            </label>
+
+            <label class="role-option">
+              <input type="checkbox" value="volunteer">
+              <span
+                data-zh="社区志愿者"
+                data-en="Community Volunteer"
+              >
+                社区志愿者
+              </span>
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <div class="field">
+
+          <label
+            for="expectedPeople"
+            data-zh="希望 AI 帮助寻找什么样的人"
+            data-en="Who Should AI Help You Find?"
+          >
+            希望 AI 帮助寻找什么样的人
+          </label>
+
+          <textarea
+            id="expectedPeople"
+            rows="4"
+            data-placeholder-zh="例如：有信仰、喜欢纪录片、会摄影、住在附近、周末有时间、愿意长期共同创作。"
+            data-placeholder-en="Example: People of faith, documentary lovers, photographers, nearby residents, weekend availability, long-term collaborators."
+            placeholder="例如：有信仰、喜欢纪录片、会摄影、住在附近、周末有时间、愿意长期共同创作。"
+          ></textarea>
+
+        </div>
+
+
+        <div class="field">
+
+          <label
+            for="aiExpectation"
+            data-zh="希望 AI 提供哪些帮助"
+            data-en="How Should AI Help?"
+          >
+            希望 AI 提供哪些帮助
+          </label>
+
+          <textarea
+            id="aiExpectation"
+            rows="5"
+            data-placeholder-zh="例如：理解故事、寻找导演、匹配演员、安排拍摄时间、自动整理剧本、记录全过程、生成电影档案。"
+            data-placeholder-en="Example: Understand the story, find directors, match actors, arrange schedules, organize scripts, record the whole process, and generate a movie archive."
+            placeholder="例如：理解故事、寻找导演、匹配演员、安排拍摄时间、自动整理剧本、记录全过程、生成电影档案。"
+          ></textarea>
+
+        </div>
+
+
+        <button
+          type="submit"
+          class="primary-button"
+        >
+
+          <span
+            data-zh="提交数字电影项目"
+            data-en="Submit Digital Movie Project"
+          >
+            提交数字电影项目
+          </span>
+
+        </button>
+
+      </form>
+
+    </section>    <!-- 右侧：AI 文明引擎 / Right: AI Civilization Engine -->
+    <aside class="panel ai-panel">
+
+      <div class="panel-heading">
+
+        <div>
+
+          <p
+            class="panel-kicker"
+            data-zh="AI 文明引擎"
+            data-en="AI Civilization Engine"
+          >
+            AI 文明引擎
+          </p >
+
+          <h2
+            data-zh="AI 数字电影协作助手"
+            data-en="AI Digital Movie Collaboration Assistant"
+          >
+            AI 数字电影协作助手
+          </h2>
+
+        </div>
+
+        <span class="ai-dot"></span>
+
+      </div>
+
+
+      <div class="ai-message" id="aiMessage">
+
+        <h3
+          data-zh="等待数字居民提交项目"
+          data-en="Waiting for a Digital Resident Project"
+        >
+          等待数字居民提交项目
+        </h3>
+
+        <p
+          data-zh="项目提交后，AI 将理解故事、分析参与条件、识别所需角色，并生成数字居民匹配与协作建议。"
+          data-en="After submission, AI will understand the story, analyze participation conditions, identify required roles, and generate digital resident matching and collaboration suggestions."
+        >
+          项目提交后，AI 将理解故事、分析参与条件、识别所需角色，并生成数字居民匹配与协作建议。
+        </p >
+
+      </div>
+
+
+      <div class="ai-capabilities">
+
+        <article class="capability-card">
+
+          <span class="capability-number">
+            01
+          </span>
+
+          <div>
+
+            <h3
+              data-zh="理解人的真实需求"
+              data-en="Understand Human Needs"
+            >
+              理解人的真实需求
+            </h3>
+
+            <p
+              data-zh="AI 分析发起人的故事、动机、情感、价值观和希望实现的共同目标。"
+              data-en="AI analyzes the initiator's story, motivation, emotions, values, and desired shared goals."
+            >
+              AI 分析发起人的故事、动机、情感、价值观和希望实现的共同目标。
+            </p >
+
+          </div>
+
+        </article>
+
+
+        <article class="capability-card">
+
+          <span class="capability-number">
+            02
+          </span>
+
+          <div>
+
+            <h3
+              data-zh="算法匹配数字居民"
+              data-en="Algorithmic Digital Resident Matching"
+            >
+              算法匹配数字居民
+            </h3>
+
+            <p
+              data-zh="根据居民的能力、兴趣、时间、地点、语言和参与意愿，推荐合适的合作伙伴。"
+              data-en="Recommend suitable collaborators based on residents' skills, interests, availability, location, language, and willingness to participate."
+            >
+              根据居民的能力、兴趣、时间、地点、语言和参与意愿，推荐合适的合作伙伴。
+            </p >
+
+          </div>
+
+        </article>
+
+
+        <article class="capability-card">
+
+          <span class="capability-number">
+            03
+          </span>
+
+          <div>
+
+            <h3
+              data-zh="协助组建共同创作团队"
+              data-en="Support Team Formation"
+            >
+              协助组建共同创作团队
+            </h3>
+
+            <p
+              data-zh="AI 提供角色建议、团队结构和协作方案，但邀请、接受和最终分工由居民本人确认。"
+              data-en="AI provides role suggestions, team structures, and collaboration plans, while invitations, acceptance, and final assignments are confirmed by residents."
+            >
+              AI 提供角色建议、团队结构和协作方案，但邀请、接受和最终分工由居民本人确认。
+            </p >
+
+          </div>
+
+        </article>
+
+
+        <article class="capability-card">
+
+          <span class="capability-number">
+            04
+          </span>
+
+          <div>
+
+            <h3
+              data-zh="组织过程与任务"
+              data-en="Organize Process and Tasks"
+            >
+              组织过程与任务
+            </h3>
+
+            <p
+              data-zh="生成剧本讨论、任务分工、拍摄安排、沟通节点和阶段成果清单。"
+              data-en="Generate script discussions, task assignments, filming schedules, communication milestones, and stage outcome lists."
+            >
+              生成剧本讨论、任务分工、拍摄安排、沟通节点和阶段成果清单。
+            </p >
+
+          </div>
+
+        </article>
+
+
+        <article class="capability-card">
+
+          <span class="capability-number">
+            05
+          </span>
+
+          <div>
+
+            <h3
+              data-zh="记录共同创作痕迹"
+              data-en="Record Co-Creation Traces"
+            >
+              记录共同创作痕迹
+            </h3>
+
+            <p
+              data-zh="保存讨论、决定、版本变化、居民贡献、照片、视频和制作过程。"
+              data-en="Preserve discussions, decisions, version changes, resident contributions, photos, videos, and the production process."
+            >
+              保存讨论、决定、版本变化、居民贡献、照片、视频和制作过程。
+            </p >
+
+          </div>
+
+        </article>
+
+
+        <article class="capability-card">
+
+          <span class="capability-number">
+            06
+          </span>
+
+          <div>
+
+            <h3
+              data-zh="生成共同记忆"
+              data-en="Generate Shared Memory"
+            >
+              生成共同记忆
+            </h3>
+
+            <p
+              data-zh="项目结束后，AI 总结过程、成果和每位居民的贡献，建立数字电影共同记忆档案。"
+              data-en="After completion, AI summarizes the process, outcomes, and each resident's contribution to create a shared digital movie memory archive."
+            >
+              项目结束后，AI 总结过程、成果和每位居民的贡献，建立数字电影共同记忆档案。
+            </p >
+
+          </div>
+
+        </article>
+
+      </div>
+
+
+      <div class="human-decision-box">
+
+        <h3
+          data-zh="居民拥有最终决定权"
+          data-en="Residents Retain Final Decision-Making"
+        >
+          居民拥有最终决定权
+        </h3>
+
+        <p
+          data-zh="AI 负责理解、推荐、组织、记录和总结，但不会替代居民作出邀请、参与、隐私公开和作品发布决定。"
+          data-en="AI supports understanding, recommendation, organization, recording, and summarization, but does not replace residents in decisions about invitations, participation, privacy disclosure, or publication."
+        >
+          AI 负责理解、推荐、组织、记录和总结，但不会替代居民作出邀请、参与、隐私公开和作品发布决定。
+        </p >
+
+      </div>
+
+    </aside>
+<!-- =========================================
+     数字人电影六阶段共创流程
+     Six-Stage Digital Human Movie Workflow
+========================================== -->
+
+<section class="movie-workflow-section" id="movieWorkflow">
+
+  <div class="workflow-heading">
+    <span
+      class="workflow-label"
+      data-zh="人、AI与算法共同创造"
+      data-en="Created Together by People, AI and Algorithms"
+    >
+      人、AI与算法共同创造
+    </span>
+
+    <h2
+      data-zh="电影共创的六个阶段"
+      data-en="Six Stages of Movie Co-Creation"
+    >
+      电影共创的六个阶段
+    </h2>
+
+    <p
+      data-zh="居民提出真实需求和故事，AI理解创作意图，算法匹配合适的伙伴，人机共同完成电影，并把全过程保存为数字文明记忆。"
+      data-en="Residents contribute real needs and stories, AI understands the creative intention, algorithms match suitable partners, and people and AI complete the movie together while preserving the entire process as a digital civilization memory."
+    >
+      居民提出真实需求和故事，AI理解创作意图，算法匹配合适的伙伴，人机共同完成电影，并把全过程保存为数字文明记忆。
+    </p >
+  </div>
+
+  <div class="workflow-grid">
+
+    <!-- 阶段一 / Stage One -->
+    <article class="workflow-card">
+      <div class="workflow-number">01</div>
+      <div class="workflow-icon">💡</div>
+
+      <h3
+        data-zh="故事创意"
+        data-en="Story Idea"
+      >
+        故事创意
+      </h3>
+
+      <p
+        data-zh="居民提出电影名称、主题、真实经历、社会问题或共同愿望。"
+        data-en="Residents submit a movie title, theme, real experience, social issue or shared aspiration."
+      >
+        居民提出电影名称、主题、真实经历、社会问题或共同愿望。
+      </p >
+
+      <div class="ai-role">
+        <strong
+          data-zh="AI作用："
+          data-en="AI Role:"
+        >
+          AI作用：
+        </strong>
+
+        <span
+          data-zh="理解故事主题、人物关系、情感和创作目标。"
+          data-en="Understand the story theme, character relationships, emotions and creative goals."
+        >
+          理解故事主题、人物关系、情感和创作目标。
+        </span>
+      </div>
+    </article>
+
+    <!-- 阶段二 / Stage Two -->
+    <article class="workflow-card">
+      <div class="workflow-number">02</div>
+      <div class="workflow-icon">✍️</div>
+
+      <h3
+        data-zh="AI编剧"
+        data-en="AI Screenwriting"
+      >
+        AI编剧
+      </h3>
+
+      <p
+        data-zh="AI协助生成故事大纲、人物设定、场景安排、对白和拍摄脚本。"
+        data-en="AI helps generate the story outline, character profiles, scene structure, dialogue and shooting script."
+      >
+        AI协助生成故事大纲、人物设定、场景安排、对白和拍摄脚本。
+      </p >
+
+      <div class="ai-role">
+        <strong
+          data-zh="人类决定："
+          data-en="Human Decision:"
+        >
+          人类决定：
+        </strong>
+
+        <span
+          data-zh="居民审核、修改和最终确认剧本，AI不能代替人的价值判断。"
+          data-en="Residents review, revise and approve the final script. AI does not replace human value judgment."
+        >
+          居民审核、修改和最终确认剧本，AI不能代替人的价值判断。
+        </span>
+      </div>
+    </article>
+
+    <!-- 阶段三 / Stage Three -->
+    <article class="workflow-card">
+      <div class="workflow-number">03</div>
+      <div class="workflow-icon">🤝</div>
+
+      <h3
+        data-zh="居民与团队匹配"
+        data-en="Resident and Team Matching"
+      >
+        居民与团队匹配
+      </h3>
+
+      <p
+        data-zh="招募演员、导演、摄影、剪辑、配音、音乐、服装和志愿者。"
+        data-en="Recruit actors, directors, cinematographers, editors, voice artists, musicians, costume designers and volunteers."
+      >
+        招募演员、导演、摄影、剪辑、配音、音乐、服装和志愿者。
+      </p >
+
+      <div class="ai-role">
+        <strong
+          data-zh="算法作用："
+          data-en="Algorithm Role:"
+        >
+          算法作用：
+        </strong>
+
+        <span
+          data-zh="根据技能、兴趣、时间、地点、语言和信任记录推荐合适居民。"
+          data-en="Recommend suitable residents based on skills, interests, availability, location, language and trust records."
+        >
+          根据技能、兴趣、时间、地点、语言和信任记录推荐合适居民。
+        </span>
+      </div>
+    </article>
+
+    <!-- 阶段四 / Stage Four -->
+    <article class="workflow-card">
+      <div class="workflow-number">04</div>
+      <div class="workflow-icon">🎥</div>
+
+      <h3
+        data-zh="共同拍摄与制作"
+        data-en="Collaborative Production"
+      >
+        共同拍摄与制作
+      </h3>
+
+      <p
+        data-zh="团队建立任务、安排日程、讨论场景，并上传照片、视频、录音和创作文件。"
+        data-en="The team creates tasks, arranges schedules, discusses scenes and uploads photos, videos, recordings and creative files."
+      >
+        团队建立任务、安排日程、讨论场景，并上传照片、视频、录音和创作文件。
+      </p >
+
+      <div class="ai-role">
+        <strong
+          data-zh="AI协作："
+          data-en="AI Collaboration:"
+        >
+          AI协作：
+        </strong>
+
+        <span
+          data-zh="提醒进度、整理会议内容、识别风险并生成每日制作记录。"
+          data-en="Track progress, organize meeting content, identify risks and generate daily production records."
+        >
+          提醒进度、整理会议内容、识别风险并生成每日制作记录。
+        </span>
+      </div>
+    </article>
+
+    <!-- 阶段五 / Stage Five -->
+    <article class="workflow-card">
+      <div class="workflow-number">05</div>
+      <div class="workflow-icon">✨</div>
+
+      <h3
+        data-zh="AI后期制作"
+        data-en="AI Post-Production"
+      >
+        AI后期制作
+      </h3>
+
+      <p
+        data-zh="协助完成素材整理、初步剪辑、字幕、翻译、配音、配乐和海报建议。"
+        data-en="Assist with media organization, rough editing, subtitles, translation, voice-over, music and poster suggestions."
+      >
+        协助完成素材整理、初步剪辑、字幕、翻译、配音、配乐和海报建议。
+      </p >
+
+      <div class="ai-role">
+        <strong
+          data-zh="隐私原则："
+          data-en="Privacy Principle:"
+        >
+          隐私原则：
+        </strong>
+
+        <span
+          data-zh="素材使用必须经过授权，敏感内容由居民决定是否保留和公开。"
+          data-en="Media use requires authorization, and residents decide whether sensitive content is retained or published."
+        >
+          素材使用必须经过授权，敏感内容由居民决定是否保留和公开。
+        </span>
+      </div>
+    </article>
+
+    <!-- 阶段六 / Stage Six -->
+    <article class="workflow-card">
+      <div class="workflow-number">06</div>
+      <div class="workflow-icon">🌍</div>
+
+      <h3
+        data-zh="发布与数字记忆"
+        data-en="Publishing and Digital Memory"
+      >
+        发布与数字记忆
+      </h3>
+
+      <p
+        data-zh="电影可以发布到社区，同时进入参与居民的人生时间线和记忆档案。"
+        data-en="The movie can be published to the community and added to each participating resident’s life timeline and memory archive."
+      >
+        电影可以发布到社区，同时进入参与居民的人生时间线和记忆档案。
+      </p >
+
+      <div class="ai-role">
+        <strong
+          data-zh="AI总结："
+          data-en="AI Summary:"
+        >
+          AI总结：
+        </strong>
+
+        <span
+          data-zh="记录参与者、创作过程、成果、经验和社会价值，并用于改进未来协作。"
+          data-en="Record participants, creative processes, outcomes, lessons and social value to improve future collaboration."
+        >
+          记录参与者、创作过程、成果、经验和社会价值，并用于改进未来协作。
+        </span>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="workflow-principle">
+    <div class="principle-icon">🧭</div>
+
+    <div>
+      <h3
+        data-zh="数字文明创作原则"
+        data-en="Digital Civilization Creation Principle"
+      >
+        数字文明创作原则
+      </h3>
+
+      <p
+        data-zh="AI是文明引擎和协作伙伴，但居民始终拥有最终决定权。技术服务有灵魂的人，电影记录真实的生命、关系、合作与共同成长。"
+        data-en="AI is a civilization engine and collaborative partner, but residents always retain final authority. Technology serves people with souls, while movies preserve real lives, relationships, cooperation and shared growth."
+      >
+        AI是文明引擎和协作伙伴，但居民始终拥有最终决定权。技术服务有灵魂的人，电影记录真实的生命、关系、合作与共同成长。
+      </p >
+    </div>
+  </div>
+
+</section><!-- =========================================
+     电影项目团队
+     Movie Project Team
+========================================== -->
+
+<section class="movie-team-section" id="movieTeam">
+
+  <div class="workflow-heading">
+
+    <span
+      data-zh="共同创造"
+      data-en="Co-Creation">
+      共同创造
+    </span>
+
+    <h2
+      data-zh="寻找你的电影团队"
+      data-en="Find Your Movie Team">
+      寻找你的电影团队
+    </h2>
+
+    <p
+      data-zh="一个好的电影来自一个优秀的团队。AI帮助你寻找最适合的居民，共同完成电影创作。"
+      data-en="A great movie is created by a great team. AI helps you find the most suitable residents to collaborate on your movie.">
+      一个好的电影来自一个优秀的团队。AI帮助你寻找最适合的居民，共同完成电影创作。
+    </p >
+
+  </div>
+
+  <div class="workflow-grid">
+
+    <article class="workflow-card">
+
+      <div class="workflow-icon">🎬</div>
+
+      <h3
+        data-zh="导演"
+        data-en="Director">
+        导演
+      </h3>
+
+      <p
+        data-zh="负责整体创意、镜头语言和团队组织。"
+        data-en="Responsible for creative direction, visual language and team coordination.">
+        负责整体创意、镜头语言和团队组织。
+      </p >
+
+    </article>
+
+    <article class="workflow-card">
+
+      <div class="workflow-icon">🎭</div>
+
+      <h3
+        data-zh="演员"
+        data-en="Actor">
+        演员
+      </h3>
+
+      <p
+        data-zh="真实居民或数字居民共同参与角色演绎。"
+        data-en="Real residents and digital residents perform together.">
+        真实居民或数字居民共同参与角色演绎。
+      </p >
+
+    </article>
+
+    <article class="workflow-card">
+
+      <div class="workflow-icon">📷</div>
+
+      <h3
+        data-zh="摄影"
+        data-en="Cinematographer">
+        摄影
+      </h3>
+
+      <p
+        data-zh="负责画面拍摄、灯光和镜头设计。"
+        data-en="Responsible for filming, lighting and camera composition.">
+        负责画面拍摄、灯光和镜头设计。
+      </p >
+
+    </article>
+
+    <article class="workflow-card">
+
+      <div class="workflow-icon">🎼</div>
+
+      <h3
+        data-zh="音乐"
+        data-en="Music">
+        音乐
+      </h3>
+
+      <p
+        data-zh="创作背景音乐、主题曲和环境音。"
+        data-en="Create background music, theme songs and soundscapes.">
+        创作背景音乐、主题曲和环境音。
+      </p >
+
+    </article>
+
+    <article class="workflow-card">
+
+      <div class="workflow-icon">🤖</div>
+
+      <h3
+        data-zh="AI居民"
+        data-en="AI Citizens">
+        AI居民
+      </h3>
+
+      <p
+        data-zh="AI负责脚本优化、翻译、字幕、配音、剪辑建议、风险提醒和知识支持。"
+        data-en="AI assists with script optimization, translation, subtitles, voice-over, editing suggestions, risk alerts and knowledge support.">
+        AI负责脚本优化、翻译、字幕、配音、剪辑建议、风险提醒和知识支持。
+      </p >
+
+    </article>
+
+    <article class="workflow-card">
+
+      <div class="workflow-icon">🧠</div>
+
+      <h3
+        data-zh="算法引擎"
+        data-en="Algorithm Engine">
+        算法引擎
+      </h3>
+
+      <p
+        data-zh="算法持续分析团队合作情况，推荐最优协作方式，提高电影创作效率。"
+        data-en="Algorithms continuously analyze collaboration and recommend the best teamwork approach to improve movie production efficiency.">
+        算法持续分析团队合作情况，推荐最优协作方式，提高电影创作效率。
+      </p >
+
+    </article>
+
+  </div>
+
+</section><!-- ==========================================
+电影拍摄过程
+Movie Production Process
+========================================== -->
+
+<section class="movie-production-section">
+
+<div class="workflow-heading">
+
+<span
+data-zh="全过程数字记录"
+data-en="Complete Digital Production">
+全过程数字记录
+</span>
+
+<h2
+data-zh="电影拍摄过程"
+data-en="Movie Production Process">
+电影拍摄过程
+</h2>
+
+<p
+data-zh="每一次讨论、每一次拍摄、每一个文件，都成为数字文明的重要记忆。"
+data-en="Every discussion, every shooting session and every file becomes part of Digital Civilization.">
+每一次讨论、每一次拍摄、每一个文件，都成为数字文明的重要记忆。
+</p >
+
+</div>
+
+<div class="workflow-grid">
+
+<article class="workflow-card">
+
+<div class="workflow-icon">📅</div>
+
+<h3
+data-zh="拍摄计划"
+data-en="Production Schedule">
+拍摄计划
+</h3>
+
+<p
+data-zh="建立每日拍摄计划、任务安排、地点和负责人。"
+data-en="Create daily schedules, tasks, locations and responsible members.">
+建立每日拍摄计划、任务安排、地点和负责人。
+</p >
+
+</article>
+
+<article class="workflow-card">
+
+<div class="workflow-icon">📸</div>
+
+<h3
+data-zh="上传照片"
+data-en="Upload Photos">
+上传照片
+</h3>
+
+<p
+data-zh="上传现场照片，形成拍摄日志。"
+data-en="Upload production photos to build the shooting log.">
+上传现场照片，形成拍摄日志。
+</p >
+
+</article>
+
+<article class="workflow-card">
+
+<div class="workflow-icon">🎥</div>
+
+<h3
+data-zh="上传视频"
+data-en="Upload Videos">
+上传视频
+</h3>
+
+<p
+data-zh="上传素材，AI自动分类整理。"
+data-en="Upload footage and let AI organize media automatically.">
+上传素材，AI自动分类整理。
+</p >
+
+</article>
+
+<article class="workflow-card">
+
+<div class="workflow-icon">🎤</div>
+
+<h3
+data-zh="上传录音"
+data-en="Upload Audio">
+上传录音
+</h3>
+
+<p
+data-zh="讨论、采访、对白全部形成永久记录。"
+data-en="Discussions, interviews and dialogue become permanent records.">
+讨论、采访、对白全部形成永久记录。
+</p >
+
+</article>
+
+<article class="workflow-card">
+
+<div class="workflow-icon">📄</div>
+
+<h3
+data-zh="上传文档"
+data-en="Upload Documents">
+上传文档
+</h3>
+
+<p
+data-zh="剧本、分镜、设计图、合同等统一保存。"
+data-en="Scripts, storyboards, designs and documents are stored together.">
+剧本、分镜、设计图、合同等统一保存。
+</p >
+
+</article>
+
+<article class="workflow-card">
+
+<div class="workflow-icon">🤖</div>
+
+<h3
+data-zh="AI每日总结"
+data-en="AI Daily Summary">
+AI每日总结
+</h3>
+
+<p
+data-zh="AI自动整理今天完成了什么、存在什么问题、下一步建议。"
+data-en="AI summarizes daily progress, issues and recommendations.">
+AI自动整理今天完成了什么、存在什么问题、下一步建议。
+</p >
+
+</article>
+
+</div>
+
+</section>
+
+<!-- ==========================================
+数字记忆
+Digital Memory
+========================================== -->
+
+<section class="memory-section">
+
+<div class="workflow-heading">
+
+<h2
+data-zh="数字电影记忆"
+data-en="Digital Movie Memory">
+数字电影记忆
+</h2>
+
+<p
+data-zh="电影不仅保存作品，也保存人与人的关系、合作过程、成长经历和文明价值。"
+data-en="Movies preserve not only the final work, but also relationships, collaboration, growth and civilization values.">
+电影不仅保存作品，也保存人与人的关系、合作过程、成长经历和文明价值。
+</p >
+
+</div>
+
+<div class="workflow-grid">
+
+<article class="workflow-card">
+
+<div class="workflow-icon">❤️</div>
+
+<h3
+data-zh="共同成长"
+data-en="Grow Together">
+共同成长
+</h3>
+
+<p
+data-zh="参与电影创作的人，将共同形成数字人生的一部分。"
+data-en="Everyone participating becomes part of each other's digital life journey.">
+参与电影创作的人，将共同形成数字人生的一部分。
+</p >
+
+</article>
+
+<article class="workflow-card">
+
+<div class="workflow-icon">🌎</div>
+
+<h3
+data-zh="数字文明"
+data-en="Digital Civilization">
+数字文明
+</h3>
+
+<p
+data-zh="技术记录过程，AI帮助协作，文明来源于人与人的共同创造。"
+data-en="Technology records the process, AI supports collaboration, civilization comes from people creating together.">
+技术记录过程，AI帮助协作，文明来源于人与人的共同创造。
+</p >
+
+</article>
+
+</div>
+
+</section><!-- ==========================================
+电影项目操作中心
+Movie Project Action Center
+========================================== -->
+
+<section class="movie-action-section" id="movieActionCenter">
+
+  <div class="workflow-heading">
+
+    <span
+      data-zh="让创意真正开始"
+      data-en="Turn the Idea into Action">
+      让创意真正开始
+    </span>
+
+    <h2
+      data-zh="创建电影共创项目"
+      data-en="Create a Movie Co-Creation Project">
+      创建电影共创项目
+    </h2>
+
+    <p
+      data-zh="居民提出创意，AI理解需求，算法推荐伙伴，人类最终决定项目如何实施。"
+      data-en="Residents contribute ideas, AI understands the needs, algorithms recommend partners, and people make the final decisions.">
+      居民提出创意，AI理解需求，算法推荐伙伴，人类最终决定项目如何实施。
+    </p >
+
+  </div>
+
+  <div class="workflow-grid">
+
+    <article class="workflow-card">
+
+      <div class="workflow-icon">🎬</div>
+
+      <h3
+        data-zh="项目基本信息"
+        data-en="Project Information">
+        项目基本信息
+      </h3>
+
+      <label
+        for="newMovieTitle"
+        data-zh="电影名称"
+        data-en="Movie Title">
+        电影名称
+      </label>
+
+      <input
+        id="newMovieTitle"
+        type="text"
+        data-zh-placeholder="例如：回声城的一天"
+        data-en-placeholder="Example: A Day in EchoCity"
+        placeholder="例如：回声城的一天">
+
+      <label
+        for="newMovieStory"
+        data-zh="故事简介"
+        data-en="Story Description">
+        故事简介
+      </label>
+
+      <textarea
+        id="newMovieStory"
+        data-zh-placeholder="介绍人物、故事、社会问题或共同愿望。"
+        data-en-placeholder="Describe the characters, story, social issue or shared aspiration."
+        placeholder="介绍人物、故事、社会问题或共同愿望。"></textarea>
+
+      <label
+        for="newMovieType"
+        data-zh="电影类型"
+        data-en="Movie Type">
+        电影类型
+      </label>
+
+      <select id="newMovieType">
+        <option value="life"
+          data-zh="人生故事"
+          data-en="Life Story">
+          人生故事
+        </option>
+
+        <option value="documentary"
+          data-zh="纪录片"
+          data-en="Documentary">
+          纪录片
+        </option>
+
+        <option value="community"
+          data-zh="社区故事"
+          data-en="Community Story">
+          社区故事
+        </option>
+
+        <option value="faith"
+          data-zh="信仰与生命"
+          data-en="Faith and Life">
+          信仰与生命
+        </option>
+
+        <option value="environment"
+          data-zh="环境与公益"
+          data-en="Environment and Public Good">
+          环境与公益
+        </option>
+
+        <option value="science"
+          data-zh="科幻与未来"
+          data-en="Science Fiction and Future">
+          科幻与未来
+        </option>
+      </select>
+
+      <button
+        type="button"
+        class="primary-action-button"
+        id="createMovieProjectButton"
+        data-zh="创建电影项目"
+        data-en="Create Movie Project">
+        创建电影项目
+      </button>
+
+    </article>
+
+    <article class="workflow-card">
+
+      <div class="workflow-icon">🤖</div>
+
+      <h3
+        data-zh="AI创作助手"
+        data-en="AI Creative Assistant">
+        AI创作助手
+      </h3>
+
+      <p
+        data-zh="AI将根据电影名称、故事和类型，整理创作方向、人物关系、拍摄重点和下一步建议。"
+        data-en="AI organizes the creative direction, character relationships, production priorities and next-step recommendations based on the title, story and genre.">
+        AI将根据电影名称、故事和类型，整理创作方向、人物关系、拍摄重点和下一步建议。
+      </p >
+
+      <button
+        type="button"
+        class="primary-action-button"
+        id="generateMoviePlanButton"
+        data-zh="生成AI创作建议"
+        data-en="Generate AI Creative Plan">
+        生成AI创作建议
+      </button>
+
+      <div
+        id="movieAIResult"
+        class="action-message"
+        aria-live="polite">
+      </div>
+
+    </article>
+
+    <article class="workflow-card">
+
+      <div class="workflow-icon">👥</div>
+
+      <h3
+        data-zh="AI团队推荐"
+        data-en="AI Team Recommendation">
+        AI团队推荐
+      </h3>
+
+      <p
+        data-zh="算法根据项目内容推荐需要的角色。推荐结果仅供参考，居民拥有最终邀请权。"
+        data-en="The algorithm recommends project roles according to the movie content. Recommendations are advisory, and residents retain final invitation authority.">
+        算法根据项目内容推荐需要的角色。推荐结果仅供参考，居民拥有最终邀请权。
+      </p >
+
+      <button
+        type="button"
+        class="primary-action-button"
+        id="recommendMovieTeamButton"
+        data-zh="推荐团队角色"
+        data-en="Recommend Team Roles">
+        推荐团队角色
+      </button>
+
+      <div
+        id="movieTeamResult"
+        class="action-message"
+        aria-live="polite">
+      </div>
+
+    </article>
+
+    <article class="workflow-card">
+
+      <div class="workflow-icon">📈</div>
+
+      <h3
+        data-zh="拍摄进度记录"
+        data-en="Production Progress">
+        拍摄进度记录
+      </h3>
+
+      <label
+        for="movieProgress"
+        data-zh="当前完成情况"
+        data-en="Current Progress">
+        当前完成情况
+      </label>
+
+      <textarea
+        id="movieProgress"
+        data-zh-placeholder="例如：完成故事大纲，正在招募演员，计划周末拍摄第一个场景。"
+        data-en-placeholder="Example: Story outline completed, actors are being recruited, and the first scene is planned for the weekend."
+        placeholder="例如：完成故事大纲，正在招募演员，计划周末拍摄第一个场景。"></textarea>
+
+      <button
+        type="button"
+        class="primary-action-button"
+        id="saveMovieProgressButton"
+        data-zh="保存进度"
+        data-en="Save Progress">
+        保存进度
+      </button>
+
+      <div
+        id="movieProgressResult"
+        class="action-message"
+        aria-live="polite">
+      </div>
+
+    </article>
+
+    <article class="workflow-card">
+
+      <div class="workflow-icon">🧠</div>
+
+      <h3
+        data-zh="写入数字记忆"
+        data-en="Add to Digital Memory">
+        写入数字记忆
+      </h3>
+
+      <p
+        data-zh="保存项目名称、参与过程、阶段成果和创作经验，形成居民人生时间线的一部分。"
+        data-en="Save the project title, participation process, stage results and creative experience as part of the resident’s life timeline.">
+        保存项目名称、参与过程、阶段成果和创作经验，形成居民人生时间线的一部分。
+      </p >
+
+      <button
+        type="button"
+        class="primary-action-button"
+        id="saveMovieMemoryButton"
+        data-zh="保存到数字记忆"
+        data-en="Save to Digital Memory">
+        保存到数字记忆
+      </button>
+
+      <div
+        id="movieMemoryResult"
+        class="action-message"
+        aria-live="polite">
+      </div>
+
+    </article>
+
+    <article class="workflow-card">
+
+      <div class="workflow-icon">🧭</div>
+
+      <h3
+        data-zh="文明原则"
+        data-en="Civilization Principles">
+        文明原则
+      </h3>
+
+      <p
+        data-zh="AI可以理解、建议、匹配、记录和总结，但不能代替居民作出最终决定。所有照片、视频、声音和个人经历必须获得授权后才能公开。"
+        data-en="AI may understand, advise, match, record and summarize, but it cannot replace residents’ final decisions. Photos, videos, voices and personal experiences require authorization before publication.">
+        AI可以理解、建议、匹配、记录和总结，但不能代替居民作出最终决定。所有照片、视频、声音和个人经历必须获得授权后才能公开。
+      </p >
+
+    </article>
+
+  </div>
+
+</section>
+
+<script>
+/* ==========================================
+电影项目基础功能
+Movie Project Basic Functions
+========================================== */
+
+(function () {
+
+  const titleInput = document.getElementById("newMovieTitle");
+  const storyInput = document.getElementById("newMovieStory");
+  const typeInput = document.getElementById("newMovieType");
+  const progressInput = document.getElementById("movieProgress");
+
+  const aiResult = document.getElementById("movieAIResult");
+  const teamResult = document.getElementById("movieTeamResult");
+  const progressResult = document.getElementById("movieProgressResult");
+  const memoryResult = document.getElementById("movieMemoryResult");
+
+  function getCurrentLanguage() {
+    return document.documentElement.lang === "en" ? "en" : "zh";
+  }
+
+  function getProjectData() {
+    return {
+      title: titleInput.value.trim(),
+      story: storyInput.value.trim(),
+      type: typeInput.value,
+      progress: progressInput.value.trim(),
+      updatedAt: new Date().toISOString()
+    };
+  }
+
+  function showMessage(element, zhText, enText) {
+    const language = getCurrentLanguage();
+    element.textContent = language === "en" ? enText : zhText;
+  }
+
+  document
+    .getElementById("createMovieProjectButton")
+    .addEventListener("click", function () {
+
+      const project = getProjectData();
+
+      if (!project.title || !project.story) {
+        showMessage(
+          aiResult,
+          "请先填写电影名称和故事简介。",
+          "Please enter the movie title and story description first."
+        );
+        return;
+      }
+
+      localStorage.setItem(
+        "echoCityCurrentMovieProject",
+        JSON.stringify(project)
+      );
+
+      showMessage(
+        aiResult,
+        "电影项目已经创建并保存在当前浏览器中。",
+        "The movie project has been created and saved in this browser."
+      );
+    });
+
+  document
+    .getElementById("generateMoviePlanButton")
+    .addEventListener("click", function () {
+
+      const project = getProjectData();
+
+      if (!project.title || !project.story) {
+        showMessage(
+          aiResult,
+          "请先填写电影名称和故事简介，AI才能理解创作需求。",
+          "Please enter the movie title and story description so AI can understand the creative needs."
+        );
+        return;
+      }
+
+      const zhPlan =
+        "AI创作建议：以“" + project.title +
+        "”为核心，先确定主要人物、核心冲突和希望传递的文明价值；然后形成三幕结构，安排真实居民和数字居民共同参与；拍摄前应确认隐私授权、团队职责和素材保存方式。";
+
+      const enPlan =
+        "AI Creative Plan: Build the project around \"" +
+        project.title +
+        "\". First define the main characters, central conflict and intended civilization value. Then create a three-act structure, involve real and digital residents, and confirm privacy consent, team responsibilities and media-storage rules before filming.";
+
+      showMessage(aiResult, zhPlan, enPlan);
+    });
+
+  document
+    .getElementById("recommendMovieTeamButton")
+    .addEventListener("click", function () {
+
+      const zhTeam =
+        "推荐角色：导演1名、编剧1名、演员2—4名、摄影1名、录音1名、剪辑1名、AI创作助手1名、社区协调员1名。居民最终决定邀请对象。";
+
+      const enTeam =
+        "Recommended roles: 1 director, 1 screenwriter, 2–4 actors, 1 cinematographer, 1 sound recorder, 1 editor, 1 AI creative assistant and 1 community coordinator. Residents make the final invitation decisions.";
+
+      showMessage(teamResult, zhTeam, enTeam);
+    });
+
+  document
+    .getElementById("saveMovieProgressButton")
+    .addEventListener("click", function () {
+
+      const project = getProjectData();
+
+      if (!project.progress) {
+        showMessage(
+          progressResult,
+          "请先填写当前完成情况。",
+          "Please enter the current production progress first."
+        );
+        return;
+      }
+
+      localStorage.setItem(
+        "echoCityMovieProgress",
+        JSON.stringify(project)
+      );
+
+      showMessage(
+        progressResult,
+        "拍摄进度已经保存，未来可继续更新。",
+        "Production progress has been saved and can be updated later."
+      );
+    });
+
+  document
+    .getElementById("saveMovieMemoryButton")
+    .addEventListener("click", function () {
+
+      const project = getProjectData();
+
+      if (!project.title) {
+        showMessage(
+          memoryResult,
+          "请先填写电影名称。",
+          "Please enter the movie title first."
+        );
+        return;
+      }
+
+      const memories =
+        JSON.parse(
+          localStorage.getItem("echoCityMovieMemories") || "[]"
+        );
+
+      memories.unshift({
+        ...project,
+        memoryType: "movie",
+        createdAt: new Date().toISOString()
+      });
+
+      localStorage.setItem(
+        "echoCityMovieMemories",
+        JSON.stringify(memories)
+      );
+
+      showMessage(
+        memoryResult,
+        "该电影项目已经写入数字记忆档案。",
+        "This movie project has been added to the digital memory archive."
+      );
+    });
+
+})();
+</script>
+  </main>
+
+
+  <!-- 数字电影活动闭环 / Digital Movie Activity Cycle -->
+  <section class="workflow-section">
+
+    <div class="section-heading">
+
+      <p
+        class="panel-kicker"
+        data-zh="数字文明活动闭环"
+        data-en="Digital Civilization Activity Cycle"
+      >
+        数字文明活动闭环
+      </p >
+
+      <h2
+        data-zh="从一个想法到共同记忆"
+        data-en="From an Idea to Shared Memory"
+      >
+        从一个想法到共同记忆
+      </h2>
+
+    </div>
+
+
+    <div class="workflow-grid">
+
+      <article class="workflow-card">
+        <strong>01</strong>
+        <h3 data-zh="居民发起" data-en="Resident Initiation">
+          居民发起
+        </h3>
+        <p
+          data-zh="数字居民提交故事、目标和参与需求。"
+          data-en="A digital resident submits the story, goals, and participation needs."
+        >
+          数字居民提交故事、目标和参与需求。
+        </p >
+      </article>
+
+
+      <article class="workflow-card">
+        <strong>02</strong>
+        <h3 data-zh="AI 理解" data-en="AI Understanding">
+          AI 理解
+        </h3>
+        <p
+          data-zh="AI 分析故事意义、条件、角色和协作目标。"
+          data-en="AI analyzes the story's meaning, conditions, roles, and collaboration goals."
+        >
+          AI 分析故事意义、条件、角色和协作目标。
+        </p >
+      </article>
+
+
+      <article class="workflow-card">
+        <strong>03</strong>
+        <h3 data-zh="算法匹配" data-en="Algorithmic Matching">
+          算法匹配
+        </h3>
+        <p
+          data-zh="系统推荐可能适合参与的数字居民。"
+          data-en="The system recommends digital residents who may be suitable to participate."
+        >
+          系统推荐可能适合参与的数字居民。
+        </p >
+      </article>
+
+
+      <article class="workflow-card">
+        <strong>04</strong>
+        <h3 data-zh="居民确认" data-en="Resident Confirmation">
+          居民确认
+        </h3>
+        <p
+          data-zh="居民查看推荐结果，自主接受、拒绝或调整。"
+          data-en="Residents review recommendations and independently accept, decline, or adjust them."
+        >
+          居民查看推荐结果，自主接受、拒绝或调整。
+        </p >
+      </article>
+
+
+      <article class="workflow-card">
+        <strong>05</strong>
+        <h3 data-zh="共同创作" data-en="Co-Creation">
+          共同创作
+        </h3>
+        <p
+          data-zh="团队完成讨论、分工、拍摄、剪辑和发布。"
+          data-en="The team completes discussion, role division, filming, editing, and publishing."
+        >
+          团队完成讨论、分工、拍摄、剪辑和发布。
+        </p >
+      </article>
+
+
+      <article class="workflow-card">
+        <strong>06</strong>
+        <h3 data-zh="形成记忆" data-en="Create Memory">
+          形成记忆
+        </h3>
+        <p
+          data-zh="AI 整理全过程，形成居民贡献与社区共同记忆。"
+          data-en="AI organizes the complete process into resident contribution records and shared community memory."
+        >
+          AI 整理全过程，形成居民贡献与社区共同记忆。
+        </p >
+      </article>
+
+    </div>
+
+  </section>  <!-- 项目提交结果 / Project Submission Result -->
+  <div class="result-modal" id="resultModal">
+
+    <div class="result-card">
+
+      <button
+        class="close-button"
+        id="closeModal"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+      <div class="result-icon">
+        ✓
+      </div>
+
+      <h2
+        data-zh="数字电影项目已经建立"
+        data-en="Digital Movie Project Created"
+      >
+        数字电影项目已经建立
+      </h2>
+
+      <p id="resultText">
+        AI 正在理解项目并准备数字居民匹配方案。
+      </p >
+
+      <button
+        class="primary-button"
+        id="confirmButton"
+      >
+        <span
+          data-zh="查看 AI 初步分析"
+          data-en="View AI Initial Analysis"
+        >
+          查看 AI 初步分析
+        </span>
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <footer>
+
+    <p
+      data-zh="EchoCity · 数字居民与 AI 共同生活、共同创造、共同留下记忆"
+      data-en="EchoCity · Digital residents and AI living, creating, and preserving memories together"
+    >
+      EchoCity · 数字居民与 AI 共同生活、共同创造、共同留下记忆
+    </p >
+
+  </footer>
+
+
+  <script>
+
+    const languageButton =
+      document.getElementById("languageButton");
+
+    const movieForm =
+      document.getElementById("movieForm");
+
+    const resultModal =
+      document.getElementById("resultModal");
+
+    const closeModal =
+      document.getElementById("closeModal");
+
+    const confirmButton =
+      document.getElementById("confirmButton");
+
+    const resultText =
+      document.getElementById("resultText");
+
+    const aiMessage =
+      document.getElementById("aiMessage");
+
+
+    let currentLanguage =
+      localStorage.getItem("echoCityLanguage") || "zh";
+
+
+    function changeLanguage(language) {
+
+      currentLanguage = language;
+
+      localStorage.setItem(
+        "echoCityLanguage",
+        language
+      );
+
+      document.documentElement.lang =
+        language === "zh"
+          ? "zh-CN"
+          : "en";
+
+
+      document
+        .querySelectorAll("[data-zh]")
+        .forEach((element) => {
+
+          element.textContent =
+            language === "zh"
+              ? element.dataset.zh
+              : element.dataset.en;
+
+        });
+
+
+      document
+        .querySelectorAll("[data-placeholder-zh]")
+        .forEach((element) => {
+
+          element.placeholder =
+            language === "zh"
+              ? element.dataset.placeholderZh
+              : element.dataset.placeholderEn;
+
+        });
+
+
+      languageButton.textContent =
+        language === "zh"
+          ? "English"
+          : "中文";
+
+    }
+
+
+    languageButton.addEventListener(
+      "click",
+      () => {
+
+        const nextLanguage =
+          currentLanguage === "zh"
+            ? "en"
+            : "zh";
+
+        changeLanguage(nextLanguage);
+
+      }
+    );
+
+
+    movieForm.addEventListener(
+      "submit",
+      (event) => {
+
+        event.preventDefault();
+
+
+        const movieTitle =
+          document
+            .getElementById("movieTitle")
+            .value
+            .trim();
+
+
+        const storyIdea =
+          document
+            .getElementById("storyIdea")
+            .value
+            .trim();
+
+
+        const selectedRoles =
+          Array.from(
+            document.querySelectorAll(
+              '.role-option input[type="checkbox"]:checked'
+            )
+          ).map((role) => role.value);
+
+
+        const digitalResident =
+          JSON.parse(
+            localStorage.getItem(
+              "echoCityDigitalResident"
+            )
+          ) || {
+
+            id: "resident-demo-001",
+
+            name: "EchoCity Resident",
+
+            identityType: "Digital Human"
+
+          };
+
+
+        const movieProject = {
+
+          id: Date.now(),
+
+          initiator: digitalResident,
+
+          title: movieTitle,
+
+          type:
+            document
+              .getElementById("movieType")
+              .value,
+
+          story: storyIdea,
+
+          goal:
+            document
+              .getElementById("projectGoal")
+              .value
+              .trim(),
+
+          neededRoles: selectedRoles,
+
+          expectedPeople:
+            document
+              .getElementById("expectedPeople")
+              .value
+              .trim(),
+
+          aiExpectation:
+            document
+              .getElementById("aiExpectation")
+              .value
+              .trim(),
+
+          status: "AI_UNDERSTANDING",
+
+          humanFinalDecision: true,
+
+          privacyControlledByResident: true,
+
+          activityCycle: {
+
+            initiation: "completed",
+
+            aiUnderstanding: "in_progress",
+
+            residentMatching: "pending",
+
+            residentConfirmation: "pending",
+
+            coCreation: "pending",
+
+            sharedMemory: "pending"
+
+          },
+
+          createdAt:
+            new Date().toISOString()
+
+        };
+
+
+        localStorage.setItem(
+          "echoCityMovieProject",
+          JSON.stringify(movieProject)
+        );
+
+
+        localStorage.setItem(
+          "echoCityLastActivity",
+          JSON.stringify({
+
+            activityType:
+              "DIGITAL_MOVIE_CO_CREATION",
+
+            projectId:
+              movieProject.id,
+
+            residentId:
+              digitalResident.id,
+
+            status:
+              "AI_UNDERSTANDING",
+
+            createdAt:
+              movieProject.createdAt
+
+          })
+        );
+
+
+        if (currentLanguage === "zh") {
+
+          resultText.textContent =
+            `“${movieTitle}”已经由数字居民发起。AI 正在理解故事、分析所需能力、识别参与条件，并准备数字居民匹配建议。所有邀请和参与决定仍由居民本人确认。`;
+
+
+          aiMessage.innerHTML = `
+
+            <h3>
+              AI 正在理解人的真实需求
+            </h3>
+
+            <p>
+              已识别项目“${movieTitle}”。
+              当前正在分析故事意义、创作目标、
+              所需数字居民角色、合作条件和隐私边界。
+              下一步将生成居民匹配建议，
+              由发起人自主确认。
+            </p >
+
+          `;
+
+        } else {
+
+          resultText.textContent =
+            `“${movieTitle}” has been initiated by a digital resident. AI is understanding the story, analyzing required abilities, identifying participation conditions, and preparing digital resident matching suggestions. All invitations and participation decisions remain under resident control.`;
+
+
+          aiMessage.innerHTML = `
+
+            <h3>
+              AI Is Understanding Human Needs
+            </h3>
+
+            <p>
+              Project “${movieTitle}” has been identified.
+              AI is analyzing the meaning of the story,
+              creative goals, required digital resident roles,
+              collaboration conditions, and privacy boundaries.
+              The next step is to generate resident matching suggestions
+              for the initiator to confirm.
+            </p >
+
+          `;
+
+        }
+
+
+        resultModal.classList.add("show");
+
+      }
+    );
+
+
+    closeModal.addEventListener(
+      "click",
+      () => {
+
+        resultModal.classList.remove("show");
+
+      }
+    );
+
+
+    confirmButton.addEventListener(
+      "click",
+      () => {
+
+        resultModal.classList.remove("show");
+
+        aiMessage.scrollIntoView({
+
+          behavior: "smooth",
+
+          block: "center"
+
+        });
+
+      }
+    );
+
+
+    resultModal.addEventListener(
+      "click",
+      (event) => {
+
+        if (event.target === resultModal) {
+
+          resultModal.classList.remove("show");
+
+        }
+
+      }
+    );
+
+
+    const savedResident =
+      JSON.parse(
+        localStorage.getItem(
+          "echoCityDigitalResident"
+        )
+      );
+
+
+    if (savedResident && savedResident.name) {
+
+      document.getElementById(
+        "residentName"
+      ).textContent =
+        savedResident.name;
+
+    }
+
+
+    changeLanguage(currentLanguage);
+
+  </script>
+
+</body>
+</html>
