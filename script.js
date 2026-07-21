@@ -40,3 +40,41 @@ const observer=new IntersectionObserver(entries=>{
   entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add("visible")});
 },{threshold:.15});
 document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+const languageSwitch = document.getElementById("languageSwitch");
+const contentZh = document.getElementById("contentZh");
+const contentEn = document.getElementById("contentEn");
+const languageLabel = document.getElementById("languageLabel");
+const languageTarget = document.getElementById("languageTarget");
+const wishInput = document.getElementById("wishInput");
+const scrollText = document.getElementById("scrollText");
+
+let currentLanguage = localStorage.getItem("echocityLanguage") || "zh";
+
+function updateLanguage() {
+  const isChinese = currentLanguage === "zh";
+
+  contentZh.style.display = isChinese ? "block" : "none";
+  contentEn.style.display = isChinese ? "none" : "block";
+
+  languageLabel.textContent = isChinese ? "中文" : "EN";
+  languageTarget.textContent = isChinese ? "EN" : "中文";
+
+  wishInput.placeholder = isChinese
+    ? "你好，我能帮你什么？"
+    : "Hello, how can I help you?";
+
+  scrollText.textContent = isChinese
+    ? "向下滚动"
+    : "Scroll down";
+
+  document.documentElement.lang = isChinese ? "zh-CN" : "en";
+
+  localStorage.setItem("echocityLanguage", currentLanguage);
+}
+
+languageSwitch.addEventListener("click", function () {
+  currentLanguage = currentLanguage === "zh" ? "en" : "zh";
+  updateLanguage();
+});
+
+updateLanguage();
