@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    居民主页 | EchoCity
+  </title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+      color: #ffffff;
+      background:
+        radial-gradient(
+          circle at top right,
+          #174a78 0%,
+          #0b223d 38%,
+          #071526 100%
+        );
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      padding: 28px;
+    }
+
+    .topbar {
+      max-width: 1100px;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .top-button {
+      min-height: 42px;
+      padding: 0 18px;
+      border: 1px solid
+        rgba(255, 255, 255, 0.25);
+      border-radius: 12px;
+      color: #ffffff;
+      background:
+        rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+    }
+
+    .top-button.active {
+      background: #1589ff;
+      border-color: #1589ff;
+    }
+
+    .main {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .profile-card {
+      display: grid;
+      grid-template-columns:
+        240px 1fr;
+      gap: 28px;
+      padding: 30px;
+      border: 1px solid
+        rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      background:
+        rgba(255, 255, 255, 0.07);
+      box-shadow:
+        0 24px 70px
+        rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(16px);
+    }
+
+    .profile-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .avatar {
+      width: 130px;
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      border-radius: 50%;
+      font-size: 42px;
+      font-weight: 700;
+      background:
+        linear-gradient(
+          135deg,
+          #1a8cff,
+          #7657ff
+        );
+      box-shadow:
+        0 16px 40px
+        rgba(26, 140, 255, 0.35);
+    }
+
+    .resident-name {
+      margin-bottom: 8px;
+      font-size: 30px;
+    }
+
+    .resident-location {
+      color:
+        rgba(255, 255, 255, 0.7);
+      line-height: 1.7;
+    }
+
+    .status {
+      margin-top: 14px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      color: #73f0b3;
+      background:
+        rgba(34, 197, 94, 0.14);
+    }    .profile-right {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .section-title {
+      margin-bottom: 12px;
+      font-size: 18px;
+      color:
+        rgba(255, 255, 255, 0.72);
+    }
+
+    .intro {
+      font-size: 20px;
+      line-height: 1.8;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tag {
+      padding: 9px 14px;
+      border-radius: 999px;
+      color: #d9ecff;
+      background:
+        rgba(21, 137, 255, 0.16);
+      border: 1px solid
+        rgba(21, 137, 255, 0.28);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .stat-card {
+      padding: 18px;
+      border-radius: 16px;
+      background:
+        rgba(255, 255, 255, 0.06);
+      border: 1px solid
+        rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-number {
+      margin-bottom: 6px;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      color:
+        rgba(255, 255, 255, 0.65);
+    }
+
+    .activity-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .activity-item {
+      padding: 16px;
+      border-radius: 14px;
+      background:
+        rgba(255, 255, 255, 0.05);
+      border: 1px solid
+        rgba(255, 255, 255, 0.08);
+    }
+
+    .activity-name {
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .activity-meta {
+      color:
+        rgba(255, 255, 255, 0.62);
+      font-size: 14px;
+    }
+
+    .contact-button {
+      width: 100%;
+      min-height: 52px;
+      border: 0;
+      border-radius: 15px;
+      color: #ffffff;
+      font-weight: 700;
+      background:
+        linear-gradient(
+          90deg,
+          #1589ff,
+          #4f6fff
+        );
+      cursor: pointer;
+    }
+
+    .contact-button:hover {
+      transform: translateY(-1px);
+    }
+
+    @media (
+      max-width: 760px
+    ) {
+      .page {
+        padding: 18px;
+      }
+
+      .profile-card {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        EchoCity
+      </div>
+
+      <div class="top-actions">
+        <button
+          class="top-button"
+          id="backButton"
+          type="button"
+        >
+          返回
+        </button>
+
+        <button
+          class="top-button active"
+          id="zhButton"
+          type="button"
+        >
+          中文
+        </button>
+
+        <button
+          class="top-button"
+          id="enButton"
+          type="button"
+        >
+          EN
+        </button>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="profile-card">
+        <div class="profile-left">
+          <div
+            class="avatar"
+            id="residentAvatar"
+          >
+            AN
+          </div>
+
+          <h1
+            class="resident-name"
+            id="residentName"
+          >
+            Anna
+          </h1>
+
+          <p
+            class="resident-location"
+            id="residentLocation"
+          >
+            Germany · Berlin
+          </p >
+
+          <div
+            class="status"
+            id="residentStatus"
+          >
+            在线
+          </div>
+        </div>
+
+        <div class="profile-right">
+          <section>
+            <div
+              class="section-title"
+              data-i18n="introTitle"
+            >
+              一句话介绍
+            </div>
+
+            <p
+              class="intro"
+              id="residentIntro"
+            >
+              喜欢篮球、社区活动和认识新朋友。
+            </p >
+          </section>
+
+          <section>
+            <div
+              class="section-title"
+              data-i18n="interestTitle"
+            >
+              兴趣
+            </div>
+
+            <div
+              class="tag-list"
+              id="interestList"
+            >
+              <span class="tag">
+                篮球
+              </span>
+
+              <span class="tag">
+                社区活动
+              </span>
+
+              <span class="tag">
+                咖啡聊天
+              </span>
+            </div>
+          </section>          <section>
+            <div
+              class="section-title"
+              data-i18n="statsTitle"
+            >
+              居民记录
+            </div>
+
+            <div class="stats">
+              <div class="stat-card">
+                <div
+                  class="stat-number"
+                  id="activityCount"
+                >
+                  3
+                </div>
+
+                <div
+                  class="stat-label"
+                  data-i18n="activityCountLabel"
+                >
+                  参加的活动
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div
+                  class="stat-number"
+                  id="memoryCount"
+                >
+                  2
+                </div>
+
+                <div
+                  class="stat-label"
+                  data-i18n="memoryCountLabel"
+                >
+                  共同记忆
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div
+              class="section-title"
+              data-i18n="activityTitle"
+            >
+              正在参加的活动
+            </div>
+
+            <div
+              class="activity-list"
+              id="activityList"
+            >
+              <div class="activity-item">
+                <div
+                  class="activity-name"
+                  data-i18n="activityOneName"
+                >
+                  周六下午篮球
+                </div>
+
+                <div
+                  class="activity-meta"
+                  data-i18n="activityOneMeta"
+                >
+                  河西体育馆 · 本周六
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div
+                  class="activity-name"
+                  data-i18n="activityTwoName"
+                >
+                  社区咖啡聚会
+                </div>
+
+                <div
+                  class="activity-meta"
+                  data-i18n="activityTwoMeta"
+                >
+                  社区中心 · 下周日
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <button
+            class="contact-button"
+            id="contactButton"
+            type="button"
+            data-i18n="contactButton"
+          >
+            联系居民
+          </button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/echocity-store.js"></script>
+
+  <script>
+    const translations = {
+      zh: {
+        pageTitle:
+          "居民主页 | EchoCity",
+
+        backButton:
+          "返回",
+
+        introTitle:
+          "一句话介绍",
+
+        interestTitle:
+          "兴趣",
+
+        statsTitle:
+          "居民记录",
+
+        activityCountLabel:
+          "参加的活动",
+
+        memoryCountLabel:
+          "共同记忆",
+
+        activityTitle:
+          "正在参加的活动",
+
+        activityOneName:
+          "周六下午篮球",
+
+        activityOneMeta:
+          "河西体育馆 · 本周六",
+
+        activityTwoName:
+          "社区咖啡聚会",
+
+        activityTwoMeta:
+          "社区中心 · 下周日",
+
+        contactButton:
+          "联系居民",
+
+        online:
+          "在线",
+
+        contactMessage:
+          "已经向居民发送联系请求。"
+      },
+
+      en: {
+        pageTitle:
+          "Resident Profile | EchoCity",
+
+        backButton:
+          "Back",
+
+        introTitle:
+          "Introduction",
+
+        interestTitle:
+          "Interests",
+
+        statsTitle:
+          "Resident Activity",
+
+        activityCountLabel:
+          "Activities",
+
+        memoryCountLabel:
+          "Shared Memories",
+
+        activityTitle:
+          "Current Activities",
+
+        activityOneName:
+          "Saturday Basketball",
+
+        activityOneMeta:
+          "Hexi Gym · This Saturday",
+
+        activityTwoName:
+          "Community Coffee Meetup",
+
+        activityTwoMeta:
+          "Community Center · Next Sunday",
+
+        contactButton:
+          "Contact Resident",
+
+        online:
+          "Online",
+
+        contactMessage:
+          "A contact request has been sent."
+      }
+    };    const backButton =
+      document.getElementById(
+        "backButton"
+      );
+
+    const zhButton =
+      document.getElementById(
+        "zhButton"
+      );
+
+    const enButton =
+      document.getElementById(
+        "enButton"
+      );
+
+    const residentAvatar =
+      document.getElementById(
+        "residentAvatar"
+      );
+
+    const residentName =
+      document.getElementById(
+        "residentName"
+      );
+
+    const residentLocation =
+      document.getElementById(
+        "residentLocation"
+      );
+
+    const residentStatus =
+      document.getElementById(
+        "residentStatus"
+      );
+
+    const residentIntro =
+      document.getElementById(
+        "residentIntro"
+      );
+
+    const interestList =
+      document.getElementById(
+        "interestList"
+      );
+
+    const contactButton =
+      document.getElementById(
+        "contactButton"
+      );
+
+    function getCurrentLanguage() {
+      return (
+        localStorage.getItem(
+          "echocityLanguage"
+        ) || "zh"
+      );
+    }
+
+    function getResidentFromUrl() {
+      const params =
+        new URLSearchParams(
+          window.location.search
+        );
+
+      const residentId =
+        params.get("id") ||
+        "resident_anna";
+
+      return (
+        EchoStore.residents.getById(
+          residentId
+        ) ||
+        EchoStore.residents.getById(
+          "resident_anna"
+        )
+      );
+    }
+
+    function getInitials(name) {
+      if (!name) {
+        return "EC";
+      }
+
+      const nameParts =
+        name
+          .trim()
+          .split(/\s+/)
+          .filter(Boolean);
+
+      return nameParts
+        .map((part) =>
+          part.charAt(0)
+        )
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
+    }
+
+    function translateInterest(
+      interest,
+      language
+    ) {
+      const interestTranslations = {
+        basketball: {
+          zh: "篮球",
+          en: "Basketball"
+        },
+
+        community: {
+          zh: "社区活动",
+          en: "Community"
+        },
+
+        faith: {
+          zh: "信仰交流",
+          en: "Faith"
+        },
+
+        engineering: {
+          zh: "工程",
+          en: "Engineering"
+        },
+
+        coffee: {
+          zh: "咖啡聊天",
+          en: "Coffee Chat"
+        }
+      };
+
+      const translated =
+        interestTranslations[
+          interest
+        ];
+
+      if (!translated) {
+        return interest;
+      }
+
+      return (
+        translated[language] ||
+        translated.zh
+      );
+    }
+
+    function renderResident(
+      resident,
+      language
+    ) {
+      if (!resident) {
+        return;
+      }
+
+      residentAvatar.textContent =
+        resident.initials ||
+        getInitials(
+          resident.name
+        );
+
+      residentName.textContent =
+        resident.name ||
+        "EchoCity Resident";
+
+      const country =
+        resident.country || "";
+
+      const city =
+        resident.city || "";
+
+      residentLocation.textContent =
+        [country, city]
+          .filter(Boolean)
+          .join(" · ") ||
+        (
+          language === "zh"
+            ? "地点未设置"
+            : "Location not set"
+        );
+
+      residentStatus.textContent =
+        translations[
+          language
+        ].online;
+
+      residentIntro.textContent =
+        language === "zh"
+          ? (
+              resident.introZh ||
+              "喜欢共同活动，也愿意认识新的居民。"
+            )
+          : (
+              resident.introEn ||
+              "Enjoys shared activities and meeting new residents."
+            );
+
+      const interests =
+        Array.isArray(
+          resident.interests
+        )
+          ? resident.interests
+          : [];
+
+      interestList.innerHTML = "";
+
+      interests
+        .slice(0, 5)
+        .forEach(
+          (interest) => {
+            const tag =
+              document.createElement(
+                "span"
+              );
+
+            tag.className =
+              "tag";
+
+            tag.textContent =
+              translateInterest(
+                interest,
+                language
+              );
+
+            interestList.appendChild(
+              tag
+            );
+          }
+        );
+
+      if (
+        interests.length === 0
+      ) {
+        const emptyTag =
+          document.createElement(
+            "span"
+          );
+
+        emptyTag.className =
+          "tag";
+
+        emptyTag.textContent =
+          language === "zh"
+            ? "等待发现共同兴趣"
+            : "Discovering shared interests";
+
+        interestList.appendChild(
+          emptyTag
+        );
+      }
+    }
+
+    function setLanguage(
+      language
+    ) {
+      const selectedLanguage =
+        language === "en"
+          ? "en"
+          : "zh";
+
+      localStorage.setItem(
+        "echocityLanguage",
+        selectedLanguage
+      );
+
+      document.documentElement.lang =
+        selectedLanguage === "zh"
+          ? "zh-CN"
+          : "en";
+
+      document.title =
+        translations[
+          selectedLanguage
+        ].pageTitle;
+
+      document
+        .querySelectorAll(
+          "[data-i18n]"
+        )
+        .forEach(
+          (element) => {
+            const key =
+              element.dataset.i18n;
+
+            const translatedText =
+              translations[
+                selectedLanguage
+              ][key];
+
+            if (translatedText) {
+              element.textContent =
+                translatedText;
+            }
+          }
+        );
+
+      backButton.textContent =
+        translations[
+          selectedLanguage
+        ].backButton;
+
+      zhButton.classList.toggle(
+        "active",
+        selectedLanguage === "zh"
+      );
+
+      enButton.classList.toggle(
+        "active",
+        selectedLanguage === "en"
+      );
+
+      renderResident(
+        getResidentFromUrl(),
+        selectedLanguage
+      );
+    }
+
+    backButton.addEventListener(
+      "click",
+      () => {
+        if (
+          window.history.length > 1
+        ) {
+          window.history.back();
+          return;
+        }
+
+        window.location.href =
+          "city-map.html";
+      }
+    );
+
+    zhButton.addEventListener(
+      "click",
+      () => {
+        setLanguage("zh");
+      }
+    );
+
+    enButton.addEventListener(
+      "click",
+      () => {
+        setLanguage("en");
+      }
+    );
+
+    contactButton.addEventListener(
+      "click",
+      () => {
+        const language =
+          getCurrentLanguage();
+
+        alert(
+          translations[
+            language
+          ].contactMessage
+        );
+      }
+    );
+
+    setLanguage(
+      getCurrentLanguage()
+    );
+  </script>
+</body>
+</html>

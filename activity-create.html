@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>发起共同活动 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #061321;
+      --panel: #10243a;
+      --border: rgba(150, 190, 225, 0.2);
+      --text: #f7f9ff;
+      --muted: #9eb4cc;
+      --blue: #2687ee;
+      --green: #31d39b;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(
+          circle at 75% 10%,
+          rgba(38, 135, 238, 0.2),
+          transparent 35%
+        ),
+        var(--bg);
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: auto;
+      padding: 28px 0 50px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .brand h1 {
+      font-size: 27px;
+    }
+
+    .brand p {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .top-actions a,
+    .language-button {
+      padding: 9px 13px;
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .language-button.active {
+      background: var(--blue);
+    }
+
+    .hero {
+      padding: 30px;
+      margin-bottom: 22px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background:
+        linear-gradient(
+          120deg,
+          rgba(20, 113, 198, 0.65),
+          rgba(78, 61, 163, 0.55)
+        );
+    }
+
+    .hero h2 {
+      margin-bottom: 10px;
+      font-size: clamp(26px, 4vw, 42px);
+    }
+
+    .hero p {
+      max-width: 760px;
+      color: #d8e7f7;
+      line-height: 1.8;
+    }
+  </style>
+</head><body>
+  <div class="page">
+
+    <header class="topbar">
+      <div class="brand">
+        <h1>EchoCity</h1>
+
+        <p
+          data-zh="共同活动创建中心"
+          data-en="Shared Activity Creation Center"
+        >
+          共同活动创建中心
+        </p >
+      </div>
+
+      <div class="top-actions">
+        <a
+          href=" "
+          data-zh="← 返回共同生活"
+          data-en="← Back to Shared Life"
+        >
+          ← 返回共同生活
+        </a >
+
+        <button
+          id="zhBtn"
+          class="language-button active"
+          type="button"
+        >
+          中文
+        </button>
+
+        <button
+          id="enBtn"
+          class="language-button"
+          type="button"
+        >
+          EN
+        </button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <h2
+        data-zh="你想和大家一起做什么？"
+        data-en="What would you like to do together?"
+      >
+        你想和大家一起做什么？
+      </h2>
+
+      <p
+        data-zh="选择一种共同活动。数字人 Echo 将继续帮助你匹配附近居民、推荐合适地点、组织过程并保存共同记忆。"
+        data-en="Choose a shared activity. Digital Human Echo will help match nearby residents, recommend a suitable place, organize the process and preserve the shared memory."
+      >
+        选择一种共同活动。数字人 Echo 将继续帮助你匹配附近居民、推荐合适地点、组织过程并保存共同记忆。
+      </p >
+    </section>
+
+    <section class="activity-section">
+      <div class="section-heading">
+        <div>
+          <h3
+            data-zh="选择活动类型"
+            data-en="Choose an Activity Type"
+          >
+            选择活动类型
+          </h3>
+
+          <p
+            data-zh="先选择活动，再填写时间、人数和范围。"
+            data-en="Choose an activity first, then enter the time, number of people and search range."
+          >
+            先选择活动，再填写时间、人数和范围。
+          </p >
+        </div>
+      </div>
+
+      <div class="activity-grid">
+
+        <button
+          class="activity-type active"
+          type="button"
+          data-type="basketball"
+          data-zh-title="篮球"
+          data-en-title="Basketball"
+        >
+          <span class="activity-icon">🏀</span>
+
+          <strong
+            data-zh="篮球"
+            data-en="Basketball"
+          >
+            篮球
+          </strong>
+
+          <small
+            data-zh="匹配球友、推荐球场并完成比赛记录"
+            data-en="Match players, recommend a court and record the game"
+          >
+            匹配球友、推荐球场并完成比赛记录
+          </small>
+        </button>
+
+        <button
+          class="activity-type"
+          type="button"
+          data-type="coffee"
+          data-zh-title="喝咖啡"
+          data-en-title="Coffee"
+        >
+          <span class="activity-icon">☕</span>
+
+          <strong
+            data-zh="喝咖啡"
+            data-en="Coffee"
+          >
+            喝咖啡
+          </strong>
+
+          <small
+            data-zh="寻找附近愿意聊天和交流的居民"
+            data-en="Find nearby residents who would like to talk"
+          >
+            寻找附近愿意聊天和交流的居民
+          </small>
+        </button>
+
+        <button
+          class="activity-type"
+          type="button"
+          data-type="dinner"
+          data-zh-title="共同聚餐"
+          data-en-title="Shared Dinner"
+        >
+          <span class="activity-icon">🍽️</span>
+
+          <strong
+            data-zh="共同聚餐"
+            data-en="Shared Dinner"
+          >
+            共同聚餐
+          </strong>
+
+          <small
+            data-zh="一起准备食物、分享近况并留下记忆"
+            data-en="Prepare food, share life and preserve the memory"
+          >
+            一起准备食物、分享近况并留下记忆
+          </small>
+        </button>
+
+        <button
+          class="activity-type"
+          type="button"
+          data-type="church"
+          data-zh-title="教会活动"
+          data-en-title="Church Activity"
+        >
+          <span class="activity-icon">⛪</span>
+
+          <strong
+            data-zh="教会活动"
+            data-en="Church Activity"
+          >
+            教会活动
+          </strong>
+
+          <small
+            data-zh="共同敬拜、查经、祷告与彼此关怀"
+            data-en="Worship, Bible study, prayer and mutual care"
+          >
+            共同敬拜、查经、祷告与彼此关怀
+          </small>
+        </button>
+
+        <button
+          class="activity-type"
+          type="button"
+          data-type="movie"
+          data-zh-title="共同拍电影"
+          data-en-title="Make a Movie"
+        >
+          <span class="activity-icon">🎬</span>
+
+          <strong
+            data-zh="共同拍电影"
+            data-en="Make a Movie"
+          >
+            共同拍电影
+          </strong>
+
+          <small
+            data-zh="寻找演员、编剧、摄影和共同创作者"
+            data-en="Find actors, writers, photographers and collaborators"
+          >
+            寻找演员、编剧、摄影和共同创作者
+          </small>
+        </button>
+
+        <button
+          class="activity-type"
+          type="button"
+          data-type="volunteer"
+          data-zh-title="志愿服务"
+          data-en-title="Volunteer Service"
+        >
+          <span class="activity-icon">🌱</span>
+
+          <strong
+            data-zh="志愿服务"
+            data-en="Volunteer Service"
+          >
+            志愿服务
+          </strong>
+
+          <small
+            data-zh="组织社区服务、环境行动和居民互助"
+            data-en="Organize community service, environmental action and mutual aid"
+          >
+            组织社区服务、环境行动和居民互助
+          </small>
+        </button>
+
+        <button
+          class="activity-type"
+          type="button"
+          data-type="companion"
+          data-zh-title="情感陪伴"
+          data-en-title="Companionship"
+        >
+          <span class="activity-icon">💙</span>
+
+          <strong
+            data-zh="情感陪伴"
+            data-en="Companionship"
+          >
+            情感陪伴
+          </strong>
+
+          <small
+            data-zh="寻找可以倾听、散步和相互支持的人"
+            data-en="Find someone to listen, walk and offer mutual support"
+          >
+            寻找可以倾听、散步和相互支持的人
+          </small>
+        </button>
+
+        <button
+          class="activity-type"
+          type="button"
+          data-type="counseling"
+          data-zh-title="专业咨询"
+          data-en-title="Professional Counseling"
+        >
+          <span class="activity-icon">🧠</span>
+
+          <strong
+            data-zh="专业咨询"
+            data-en="Professional Counseling"
+          >
+            专业咨询
+          </strong>
+
+          <small
+            data-zh="预约经过认证的专业人员并保护隐私"
+            data-en="Book a verified professional with privacy protection"
+          >
+            预约经过认证的专业人员并保护隐私
+          </small>
+        </button>
+
+      </div>
+    </section>    <section class="activity-form-section">
+
+      <div class="section-heading">
+        <div>
+          <h3
+            data-zh="填写活动信息"
+            data-en="Enter Activity Information"
+          >
+            填写活动信息
+          </h3>
+
+          <p
+            data-zh="数字人 Echo 将根据这些条件匹配居民和地点。"
+            data-en="Digital Human Echo will use these conditions to match residents and locations."
+          >
+            数字人 Echo 将根据这些条件匹配居民和地点。
+          </p >
+        </div>
+      </div>
+
+      <div class="activity-form">
+
+        <label class="form-field">
+          <span
+            data-zh="活动名称"
+            data-en="Activity Name"
+          >
+            活动名称
+          </span>
+
+          <input
+            id="activityTitle"
+            type="text"
+            value="周六下午篮球"
+            data-zh-placeholder="例如：周六下午篮球"
+            data-en-placeholder="Example: Saturday Afternoon Basketball"
+            placeholder="例如：周六下午篮球"
+          />
+        </label>
+
+        <label class="form-field">
+          <span
+            data-zh="活动日期"
+            data-en="Activity Date"
+          >
+            活动日期
+          </span>
+
+          <input
+            id="activityDate"
+            type="date"
+          />
+        </label>
+
+        <label class="form-field">
+          <span
+            data-zh="开始时间"
+            data-en="Start Time"
+          >
+            开始时间
+          </span>
+
+          <input
+            id="activityTime"
+            type="time"
+            value="15:00"
+          />
+        </label>
+
+        <label class="form-field">
+          <span
+            data-zh="目标人数"
+            data-en="Target Participants"
+          >
+            目标人数
+          </span>
+
+          <select id="participantCount">
+            <option value="2">2</option>
+            <option value="4">4</option>
+            <option value="6" selected>6</option>
+            <option value="8">8</option>
+            <option value="10">10</option>
+            <option value="12">12</option>
+          </select>
+        </label>
+
+        <label class="form-field">
+          <span
+            data-zh="搜索范围"
+            data-en="Search Radius"
+          >
+            搜索范围
+          </span>
+
+          <select id="searchRadius">
+            <option value="1">1 km</option>
+            <option value="3">3 km</option>
+            <option value="5" selected>5 km</option>
+            <option value="10">10 km</option>
+            <option value="20">20 km</option>
+          </select>
+        </label>
+
+        <label class="form-field full-width">
+          <span
+            data-zh="补充说明"
+            data-en="Additional Notes"
+          >
+            补充说明
+          </span>
+
+          <textarea
+            id="activityNotes"
+            rows="4"
+            data-zh-placeholder="说明活动内容、参与要求或需要准备的物品。"
+            data-en-placeholder="Describe the activity, participation requirements or items to bring."
+            placeholder="说明活动内容、参与要求或需要准备的物品。"
+          ></textarea>
+        </label>
+
+      </div>
+
+      <div class="echo-summary">
+        <div class="echo-avatar">E</div>
+
+        <div>
+          <strong
+            data-zh="数字人 Echo"
+            data-en="Digital Human Echo"
+          >
+            数字人 Echo
+          </strong>
+
+          <p
+            id="echoSummaryText"
+            data-zh="你正在发起周六下午篮球。下一步将匹配5公里内的居民，并比较适合大家的活动地点。"
+            data-en="You are creating Saturday Afternoon Basketball. Next, residents within 5 km will be matched and suitable locations will be compared."
+          >
+            你正在发起周六下午篮球。下一步将匹配5公里内的居民，并比较适合大家的活动地点。
+          </p >
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a
+          class="secondary-action"
+          href=" "
+          data-zh="取消"
+          data-en="Cancel"
+        >
+          取消
+        </a >
+
+        <button
+          id="nextStepButton"
+          class="primary-action"
+          type="button"
+          data-zh="下一步：匹配居民与地点"
+          data-en="Next: Match Residents and Locations"
+        >
+          下一步：匹配居民与地点
+        </button>
+      </div>
+
+    </section><style>
+  .activity-section,
+  .activity-form-section {
+    padding: 24px;
+    margin-bottom: 22px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: rgba(16, 36, 58, 0.92);
+  }
+
+  .section-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  .section-heading h3 {
+    margin-bottom: 7px;
+    font-size: 21px;
+  }
+
+  .section-heading p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .activity-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+
+  .activity-type {
+    min-height: 155px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 18px;
+    color: var(--text);
+    text-align: left;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.035);
+  }
+
+  .activity-type:hover {
+    border-color: var(--blue);
+    transform: translateY(-2px);
+  }
+
+  .activity-type.active {
+    border-color: var(--blue);
+    background: rgba(38, 135, 238, 0.16);
+  }
+
+  .activity-icon {
+    font-size: 32px;
+  }
+
+  .activity-type strong {
+    font-size: 16px;
+  }
+
+  .activity-type small {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+</style><style>
+  .activity-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .form-field {
+    display: grid;
+    gap: 8px;
+  }
+
+  .form-field span {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
+    width: 100%;
+    padding: 12px 13px;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.045);
+  }
+
+  .form-field input:focus,
+  .form-field select:focus,
+  .form-field textarea:focus {
+    border-color: var(--blue);
+  }
+
+  .form-field textarea {
+    resize: vertical;
+    min-height: 105px;
+  }
+
+  .form-field select option {
+    color: #111827;
+    background: white;
+  }
+
+  .full-width {
+    grid-column: 1 / -1;
+  }
+
+  .echo-summary {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 13px;
+    align-items: start;
+    padding: 16px;
+    margin-top: 18px;
+    border: 1px solid rgba(49, 211, 155, 0.3);
+    border-radius: 13px;
+    background: rgba(49, 211, 155, 0.07);
+  }
+
+  .echo-avatar {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2687ee, #725cf5);
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  .echo-summary strong {
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .echo-summary p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 11px;
+    margin-top: 18px;
+  }
+
+  .secondary-action,
+  .primary-action {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 17px;
+    border-radius: 10px;
+    text-decoration: none;
+  }
+
+  .secondary-action {
+    color: var(--text);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .primary-action {
+    color: white;
+    border: none;
+    background: var(--blue);
+    font-weight: bold;
+  }
+
+  .primary-action:hover {
+    opacity: 0.9;
+  }
+</style><style>
+  @media (max-width: 900px) {
+    .activity-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .topbar {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .top-actions {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .page {
+      width: min(100% - 20px, 1180px);
+      padding-top: 16px;
+    }
+
+    .hero,
+    .activity-section,
+    .activity-form-section {
+      padding: 18px;
+      border-radius: 16px;
+    }
+
+    .activity-grid,
+    .activity-form {
+      grid-template-columns: 1fr;
+    }
+
+    .full-width {
+      grid-column: auto;
+    }
+
+    .activity-type {
+      min-height: auto;
+    }
+
+    .form-actions {
+      flex-direction: column-reverse;
+    }
+
+    .secondary-action,
+    .primary-action {
+      width: 100%;
+    }
+
+    .top-actions a {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style><script>
+  const activityButtons =
+    document.querySelectorAll(".activity-type");
+
+  const activityTitle =
+    document.getElementById("activityTitle");
+
+  const activityDate =
+    document.getElementById("activityDate");
+
+  const activityTime =
+    document.getElementById("activityTime");
+
+  const participantCount =
+    document.getElementById("participantCount");
+
+  const searchRadius =
+    document.getElementById("searchRadius");
+
+  const activityNotes =
+    document.getElementById("activityNotes");
+
+  const echoSummaryText =
+    document.getElementById("echoSummaryText");
+
+  const nextStepButton =
+    document.getElementById("nextStepButton");
+
+  const zhBtn =
+    document.getElementById("zhBtn");
+
+  const enBtn =
+    document.getElementById("enBtn");
+
+  let selectedActivityType = "basketball";
+  let currentLanguage =
+    localStorage.getItem("echocityLanguage") || "zh";
+
+  const activityNames = {
+    basketball: {
+      zh: "篮球",
+      en: "Basketball"
+    },
+
+    coffee: {
+      zh: "喝咖啡",
+      en: "Coffee"
+    },
+
+    dinner: {
+      zh: "共同聚餐",
+      en: "Shared Dinner"
+    },
+
+    church: {
+      zh: "教会活动",
+      en: "Church Activity"
+    },
+
+    movie: {
+      zh: "共同拍电影",
+      en: "Make a Movie"
+    },
+
+    volunteer: {
+      zh: "志愿服务",
+      en: "Volunteer Service"
+    },
+
+    companion: {
+      zh: "情感陪伴",
+      en: "Companionship"
+    },
+
+    counseling: {
+      zh: "专业咨询",
+      en: "Professional Counseling"
+    }
+  };
+
+  function setDefaultDate() {
+    if (activityDate.value) {
+      return;
+    }
+
+    const today = new Date();
+    today.setDate(today.getDate() + 1);
+
+    activityDate.value =
+      today.toISOString().split("T")[0];
+  }
+
+  function updateEchoSummary() {
+    const activityName =
+      activityNames[selectedActivityType][currentLanguage];
+
+    const radius = searchRadius.value;
+    const count = participantCount.value;
+
+    if (currentLanguage === "en") {
+      echoSummaryText.textContent =
+        `You are creating ${activityName}. ` +
+        `Echo will look for up to ${count} suitable residents ` +
+        `within ${radius} km and recommend suitable locations.`;
+    } else {
+      echoSummaryText.textContent =
+        `你正在发起${activityName}。` +
+        `数字人 Echo 将在${radius}公里内，` +
+        `为你匹配最多${count}位合适的居民，` +
+        `并推荐适合大家的活动地点。`;
+    }
+  }
+
+  function setLanguage(language) {
+    currentLanguage = language;
+
+    localStorage.setItem(
+      "echocityLanguage",
+      language
+    );
+
+    document.documentElement.lang =
+      language === "en" ? "en" : "zh-CN";
+
+    document
+      .querySelectorAll("[data-zh][data-en]")
+      .forEach((element) => {
+        element.textContent =
+          language === "en"
+            ? element.dataset.en
+            : element.dataset.zh;
+      });
+
+    document
+      .querySelectorAll(
+        "[data-zh-placeholder][data-en-placeholder]"
+      )
+      .forEach((element) => {
+        element.placeholder =
+          language === "en"
+            ? element.dataset.enPlaceholder
+            : element.dataset.zhPlaceholder;
+      });
+
+    zhBtn.classList.toggle(
+      "active",
+      language === "zh"
+    );
+
+    enBtn.classList.toggle(
+      "active",
+      language === "en"
+    );
+
+    updateEchoSummary();
+  }
+
+  activityButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      activityButtons.forEach((item) => {
+        item.classList.remove("active");
+      });
+
+      button.classList.add("active");
+
+      selectedActivityType =
+        button.dataset.type;
+
+      const selectedName =
+        activityNames[selectedActivityType][currentLanguage];
+
+      if (
+        !activityTitle.value.trim() ||
+        activityTitle.dataset.autoFilled === "true"
+      ) {
+        activityTitle.value =
+          currentLanguage === "en"
+            ? `My ${selectedName} Activity`
+            : `我的${selectedName}活动`;
+
+        activityTitle.dataset.autoFilled = "true";
+      }
+
+      updateEchoSummary();
+    });
+  });
+
+  activityTitle.addEventListener("input", () => {
+    activityTitle.dataset.autoFilled = "false";
+  });
+
+  participantCount.addEventListener(
+    "change",
+    updateEchoSummary
+  );
+
+  searchRadius.addEventListener(
+    "change",
+    updateEchoSummary
+  );
+
+  zhBtn.addEventListener("click", () => {
+    setLanguage("zh");
+  });
+
+  enBtn.addEventListener("click", () => {
+    setLanguage("en");
+  });
+
+  nextStepButton.addEventListener("click", () => {
+    const title = activityTitle.value.trim();
+
+    if (!title) {
+      alert(
+        currentLanguage === "en"
+          ? "Please enter an activity name."
+          : "请输入活动名称。"
+      );
+
+      activityTitle.focus();
+      return;
+    }
+
+    if (!activityDate.value) {
+      alert(
+        currentLanguage === "en"
+          ? "Please select an activity date."
+          : "请选择活动日期。"
+      );
+
+      activityDate.focus();
+      return;
+    }
+
+    const activityData = {
+      id: `activity-${Date.now()}`,
+      type: selectedActivityType,
+      title: title,
+      date: activityDate.value,
+      time: activityTime.value,
+      participants: Number(
+        participantCount.value
+      ),
+      radius: Number(searchRadius.value),
+      notes: activityNotes.value.trim(),
+      status: "matching",
+      createdAt: new Date().toISOString()
+    };
+
+    localStorage.setItem(
+      "echocityCurrentActivity",
+      JSON.stringify(activityData)
+    );
+
+    window.location.href =
+      `city-map.html?type=${encodeURIComponent(
+        selectedActivityType
+      )}`;
+  });
+
+  setDefaultDate();
+  setLanguage(currentLanguage);
+</script>
+
+  </div>
+</script>
+
+<script>
+  document.querySelectorAll(".activity-type").forEach((button) => {
+    button.onclick = function () {
+      document.querySelectorAll(".activity-type").forEach((item) => {
+        item.classList.remove("active");
+      });
+
+      this.classList.add("active");
+    };
+  });
+</script>
+
+</div>
+</body>
+</html>

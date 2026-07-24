@@ -77,4 +77,11 @@ languageSwitch.addEventListener("click", function () {
   updateLanguage();
 });
 
-updateLanguage();
+updateLanguage();const openFormButton =
+  document.getElementById("openFormButton");
+
+if (openFormButton) {
+  openFormButton.addEventListener("click", () => {
+    window.location.href = "activity-create.html";
+  });
+}

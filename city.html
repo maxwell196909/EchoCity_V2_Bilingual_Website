@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+      color: #ffffff;
+      background:
+        linear-gradient(
+          rgba(5, 15, 35, 0.72),
+          rgba(5, 15, 35, 0.86)
+        ),
+        url("echocity-homepage.png") center / cover fixed;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .city-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      width: 100%;
+      min-height: 72px;
+      padding: 14px 6%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(5, 15, 35, 0.5);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .language-button,
+    .back-button {
+      min-height: 42px;
+      padding: 0 16px;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      border-radius: 22px;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.09);
+      transition: 0.2s ease;
+    }
+
+    .language-button:hover,
+    .back-button:hover {
+      background: rgba(255, 255, 255, 0.18);
+      transform: translateY(-1px);
+    }
+
+    .main-content {
+      width: min(1120px, 90%);
+      margin: auto;
+      padding: 54px 0 70px;
+    }
+
+    .welcome-area {
+      max-width: 760px;
+      margin-bottom: 34px;
+    }
+
+    .eyebrow {
+      margin-bottom: 12px;
+      color: #8fd3ff;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }    .welcome-area h1 {
+      margin-bottom: 16px;
+      font-size: clamp(36px, 6vw, 68px);
+      line-height: 1.08;
+      letter-spacing: -1px;
+    }
+
+    .welcome-area p {
+      max-width: 680px;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 18px;
+      line-height: 1.8;
+    }
+
+    .echo-box {
+      margin-top: 28px;
+      padding: 22px;
+      border: 1px solid rgba(143, 211, 255, 0.28);
+      border-radius: 24px;
+      background: rgba(10, 27, 55, 0.72);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.24);
+      backdrop-filter: blur(14px);
+    }
+
+    .echo-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .echo-avatar {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      border-radius: 50%;
+      color: #06152d;
+      background: linear-gradient(135deg, #8fd3ff, #ffffff);
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .echo-name {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .echo-role {
+      margin-top: 3px;
+      color: rgba(255, 255, 255, 0.62);
+      font-size: 14px;
+    }
+
+    .echo-question {
+      margin-bottom: 14px;
+      color: #ffffff;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .echo-input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .echo-input {
+      width: 100%;
+      min-height: 52px;
+      padding: 0 18px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      outline: none;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .echo-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .echo-input:focus {
+      border-color: #8fd3ff;
+      box-shadow: 0 0 0 3px rgba(143, 211, 255, 0.12);
+    }
+
+    .send-button {
+      min-width: 108px;
+      min-height: 52px;
+      padding: 0 20px;
+      border: none;
+      border-radius: 16px;
+      color: #06152d;
+      background: #8fd3ff;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .send-button:hover {
+      transform: translateY(-2px);
+      background: #b7e4ff;
+    }
+
+    .section-title {
+      margin: 38px 0 18px;
+      font-size: 22px;
+    }
+
+    .city-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .city-card {
+      min-height: 170px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 22px;
+      color: #ffffff;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.09);
+      backdrop-filter: blur(12px);
+      transition: 0.22s ease;
+    }
+
+    .city-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(143, 211, 255, 0.65);
+      background: rgba(143, 211, 255, 0.14);
+    }
+
+    .card-icon {
+      font-size: 31px;
+    }
+
+    .card-title {
+      margin-top: 18px;
+      font-size: 19px;
+      font-weight: 700;
+    }
+
+    .card-description {
+      margin-top: 8px;
+      color: rgba(255, 255, 255, 0.66);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .location-note {
+      margin-top: 22px;
+      padding: 15px 18px;
+      border-radius: 16px;
+      color: rgba(255, 255, 255, 0.72);
+      background: rgba(0, 0, 0, 0.18);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    @media (max-width: 980px) {
+      .city-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .topbar {
+        padding: 12px 4%;
+      }
+
+      .brand {
+        font-size: 24px;
+      }
+
+      .back-button {
+        display: none;
+      }
+
+      .main-content {
+        width: min(92%, 560px);
+        padding: 38px 0 50px;
+      }
+
+      .welcome-area h1 {
+        font-size: 42px;
+      }
+
+      .welcome-area p {
+        font-size: 16px;
+      }
+
+      .echo-input-row {
+        flex-direction: column;
+      }
+
+      .send-button {
+        width: 100%;
+      }
+
+      .city-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .city-card {
+        min-height: 145px;
+      }
+    }
+  </style>
+</head><body>
+  <div class="city-page">
+
+    <header class="topbar">
+      <a class="brand" href=" ">EchoCity</a >
+
+      <div class="top-actions">
+        <button
+          class="back-button"
+          type="button"
+          onclick="window.location.href='welcome.html'"
+          data-i18n="back"
+        >
+          返回
+        </button>
+
+        <button
+          class="language-button"
+          id="languageButton"
+          type="button"
+        >
+          EN
+        </button>
+      </div>
+    </header>
+
+    <main class="main-content">
+
+      <section class="welcome-area">
+        <div class="eyebrow" data-i18n="cityLabel">
+          ECHOCITY
+        </div>
+
+        <h1 data-i18n="welcomeTitle">
+          欢迎来到 EchoCity
+        </h1>
+
+        <p data-i18n="welcomeText">
+          在这里，你可以遇见数字人 Echo，发现附近的人和活动，进入社区，建立自己的数字身份，并记录真实生活。
+        </p >
+      </section>
+
+      <section class="echo-box">
+        <div class="echo-title">
+
+          <div class="echo-avatar">
+            E
+          </div>
+
+          <div>
+            <div class="echo-name" data-i18n="echoName">
+              数字人 Echo
+            </div>
+
+            <div class="echo-role" data-i18n="echoRole">
+              EchoCity 的数字生活向导
+            </div>
+          </div>
+        </div>
+
+        <div class="echo-question" data-i18n="echoQuestion">
+          你好，我能帮你什么？
+        </div>
+
+        <div class="echo-input-row">
+          <input
+            class="echo-input"
+            id="echoInput"
+            type="text"
+            placeholder="例如：我想找附近的人一起打篮球"
+            data-placeholder-zh="例如：我想找附近的人一起打篮球"
+            data-placeholder-en="For example: I want to find someone nearby to play basketball"
+          />
+
+          <button
+            class="send-button"
+            id="sendButton"
+            type="button"
+            data-i18n="send"
+          >
+            发送
+          </button>
+        </div>
+      </section>
+
+      <h2 class="section-title" data-i18n="servicesTitle">
+        你想做什么？
+      </h2>
+
+      <section class="city-grid">
+
+        <a class="city-card" href="echo.html">
+          <div>
+            <div class="card-icon">💬</div>
+            <div class="card-title" data-i18n="echoCardTitle">
+              数字人 Echo
+            </div>
+            <div class="card-description" data-i18n="echoCardText">
+              告诉 Echo 你的需要，让它帮助你连接人与生活。
+            </div>
+          </div>
+        </a >
+
+        <a class="city-card" href="nearby.html">
+          <div>
+            <div class="card-icon">📍</div>
+            <div class="card-title" data-i18n="nearbyTitle">
+              附近
+            </div>
+            <div class="card-description" data-i18n="nearbyText">
+              查看附近的人、活动、球场、教会和社区服务。
+            </div>
+          </div>
+        </a >
+
+        <a class="city-card" href="community.html">
+          <div>
+            <div class="card-icon">🏘️</div>
+            <div class="card-title" data-i18n="communityTitle">
+              社区
+            </div>
+            <div class="card-description" data-i18n="communityText">
+              发起活动、加入群体、参与真实的社区生活。
+            </div>
+          </div>
+        </a >
+
+        <a class="city-card" href="home.html">
+          <div>
+            <div class="card-icon">🏠</div>
+            <div class="card-title" data-i18n="homeTitle">
+              我的主页
+            </div>
+            <div class="card-description" data-i18n="homeText">
+              查看生活记录、关系、时间轴和数字记忆。
+            </div>
+          </div>
+        </a >
+
+        <a class="city-card" href="identity.html">
+          <div>
+            <div class="card-icon">🪪</div>
+            <div class="card-title" data-i18n="identityTitle">
+              数字身份
+            </div>
+            <div class="card-description" data-i18n="identityText">
+              建立简单、安全、真实的 EchoCity 居民身份。
+            </div>
+          </div>
+        </a >
+
+      </section>
+
+      <div class="location-note" data-i18n="locationNote">
+        定位功能需要获得你的授权。EchoCity 默认只显示大致距离，不公开家庭住址；只有双方同意后，才共享更准确的位置。
+      </div>
+
+    </main>
+  </div>  <script>
+    const translations = {
+      zh: {
+        back: "返回",
+        cityLabel: "ECHOCITY",
+        welcomeTitle: "欢迎来到 EchoCity",
+        welcomeText:
+          "在这里，你可以遇见数字人 Echo，发现附近的人和活动，进入社区，建立自己的数字身份，并记录真实生活。",
+        echoName: "数字人 Echo",
+        echoRole: "EchoCity 的数字生活向导",
+        echoQuestion: "你好，我能帮你什么？",
+        send: "发送",
+        servicesTitle: "你想做什么？",
+        echoCardTitle: "数字人 Echo",
+        echoCardText:
+          "告诉 Echo 你的需要，让它帮助你连接人与生活。",
+        nearbyTitle: "附近",
+        nearbyText:
+          "查看附近的人、活动、球场、教会和社区服务。",
+        communityTitle: "社区",
+        communityText:
+          "发起活动、加入群体、参与真实的社区生活。",
+        homeTitle: "我的主页",
+        homeText:
+          "查看生活记录、关系、时间轴和数字记忆。",
+        identityTitle: "数字身份",
+        identityText:
+          "建立简单、安全、真实的 EchoCity 居民身份。",
+        locationNote:
+          "定位功能需要获得你的授权。EchoCity 默认只显示大致距离，不公开家庭住址；只有双方同意后，才共享更准确的位置。"
+      },
+
+      en: {
+        back: "Back",
+        cityLabel: "ECHOCITY",
+        welcomeTitle: "Welcome to EchoCity",
+        welcomeText:
+          "Here you can meet Digital Human Echo, discover nearby people and activities, enter communities, build your digital identity, and record real life.",
+        echoName: "Digital Human Echo",
+        echoRole: "Your digital life guide in EchoCity",
+        echoQuestion: "Hello, how can I help you?",
+        send: "Send",
+        servicesTitle: "What would you like to do?",
+        echoCardTitle: "Digital Human Echo",
+        echoCardText:
+          "Tell Echo what you need and let it help connect you with people and daily life.",
+        nearbyTitle: "Nearby",
+        nearbyText:
+          "Discover nearby people, activities, courts, churches, and community services.",
+        communityTitle: "Community",
+        communityText:
+          "Create activities, join groups, and participate in real community life.",
+        homeTitle: "My Home",
+        homeText:
+          "View your life records, relationships, timeline, and digital memories.",
+        identityTitle: "Digital Identity",
+        identityText:
+          "Build a simple, secure, and authentic EchoCity resident identity.",
+        locationNote:
+          "Location access requires your permission. EchoCity shows only approximate distance by default and never reveals your home address. More precise locations are shared only with mutual consent."
+      }
+    };
+
+    const languageButton = document.getElementById("languageButton");
+    const echoInput = document.getElementById("echoInput");
+    const sendButton = document.getElementById("sendButton");
+
+    let currentLanguage = localStorage.getItem("echocityLanguage") || "zh";
+
+    function applyLanguage(language) {
+      currentLanguage = language;
+      localStorage.setItem("echocityLanguage", language);
+
+      document.documentElement.lang =
+        language === "zh" ? "zh-CN" : "en";
+
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        const key = element.dataset.i18n;
+
+        if (translations[language][key]) {
+          element.textContent = translations[language][key];
+        }
+      });
+
+      echoInput.placeholder =
+        language === "zh"
+          ? echoInput.dataset.placeholderZh
+          : echoInput.dataset.placeholderEn;
+
+      languageButton.textContent =
+        language === "zh" ? "EN" : "中文";
+    }
+
+    languageButton.addEventListener("click", () => {
+      const nextLanguage =
+        currentLanguage === "zh" ? "en" : "zh";
+
+      applyLanguage(nextLanguage);
+    });
+
+    sendButton.addEventListener("click", openEchoPage);
+
+    echoInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        openEchoPage();
+      }
+    });
+
+    function openEchoPage() {
+      const message = echoInput.value.trim();
+
+      if (message) {
+        localStorage.setItem("echoFirstMessage", message);
+      }
+
+      window.location.href = "echo.html";
+    }
+
+    applyLanguage(currentLanguage);
+  </script>
+</body>
+</html>

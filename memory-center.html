@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>共同记忆中心 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #061321;
+      --sidebar: #03101d;
+      --panel: #10243a;
+      --panel-soft: #162c45;
+      --border: rgba(157, 188, 219, 0.2);
+      --text: #f4f8ff;
+      --muted: #9eb4ca;
+      --blue: #2687ee;
+      --green: #2fd29b;
+      --yellow: #f4b62f;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background: var(--bg);
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    .page-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+    }
+
+    .sidebar {
+      padding: 24px 18px;
+      border-right: 1px solid var(--border);
+      background: var(--sidebar);
+    }
+
+    .brand {
+      margin-bottom: 28px;
+    }
+
+    .brand h1 {
+      font-size: 25px;
+    }
+
+    .brand p {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .resident-card {
+      padding: 17px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .resident-avatar {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2687ee, #735cf5);
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .resident-card h2 {
+      font-size: 16px;
+    }
+
+    .resident-card p {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .sidebar-menu {
+      display: grid;
+      gap: 9px;
+    }
+
+    .sidebar-menu a {
+      padding: 12px 13px;
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid transparent;
+      border-radius: 10px;
+    }
+
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+      border-color: var(--blue);
+      background: rgba(38, 135, 238, 0.16);
+    }
+
+    .main {
+      padding: 28px;
+    }
+  </style>
+</head><body>
+  <div class="page-shell">
+
+    <aside class="sidebar">
+
+      <div class="brand">
+        <h1>EchoCity</h1>
+
+        <p
+          data-zh="共同记忆中心"
+          data-en="Shared Memory Center"
+        >
+          共同记忆中心
+        </p >
+      </div>
+
+      <section class="resident-card">
+        <div class="resident-avatar">
+          MC
+        </div>
+
+        <h2>Maxwell Cheng</h2>
+
+        <p
+          data-zh="数字居民 · 共同生活记录者"
+          data-en="Digital Resident · Shared Life Recorder"
+        >
+          数字居民 · 共同生活记录者
+        </p >
+      </section>
+
+      <nav class="sidebar-menu">
+
+        <a
+          href=" "
+          data-zh="共同生活"
+          data-en="Shared Life"
+        >
+          共同生活
+        </a >
+
+        <a
+          href="activity-create.html"
+          data-zh="发起共同活动"
+          data-en="Create Shared Activity"
+        >
+          发起共同活动
+        </a >
+
+        <a
+          href="city-map.html"
+          data-zh="活动组织中心"
+          data-en="Activity Organization Center"
+        >
+          活动组织中心
+        </a >
+
+        <a
+          class="active"
+          href="memory-center.html"
+          data-zh="共同记忆"
+          data-en="Shared Memories"
+        >
+          共同记忆
+        </a >
+
+        <a
+          href="mycity.html"
+          data-zh="我的城市"
+          data-en="My City"
+        >
+          我的城市
+        </a >
+
+      </nav>
+
+    </aside>
+
+    <main class="main">
+
+      <header class="main-header">
+
+        <div>
+          <p
+            class="eyebrow"
+            data-zh="第五级 · 个人记录与成果层"
+            data-en="Level 5 · Personal Records and Outcomes"
+          >
+            第五级 · 个人记录与成果层
+          </p >
+
+          <h2
+            data-zh="我的共同记忆"
+            data-en="My Shared Memories"
+          >
+            我的共同记忆
+          </h2>
+
+          <p
+            class="header-description"
+            data-zh="这里保存你与其他居民共同经历的活动、照片、视频、文件、对话、结果和数字人 Echo 总结。"
+            data-en="This area preserves activities, photos, videos, files, conversations, outcomes and summaries created by Digital Human Echo."
+          >
+            这里保存你与其他居民共同经历的活动、照片、视频、文件、对话、结果和数字人 Echo 总结。
+          </p >
+        </div>
+
+        <div class="header-actions">
+
+          <button
+            id="zhButton"
+            class="language-button active"
+            type="button"
+          >
+            中文
+          </button>
+
+          <button
+            id="enButton"
+            class="language-button"
+            type="button"
+          >
+            EN
+          </button>
+
+        </div>
+
+      </header>
+
+      <section class="memory-summary">
+
+        <div class="summary-item">
+          <strong id="memoryCount">
+            0
+          </strong>
+
+          <span
+            data-zh="共同记忆"
+            data-en="Shared Memories"
+          >
+            共同记忆
+          </span>
+        </div>
+
+        <div class="summary-item">
+          <strong id="participantTotal">
+            0
+          </strong>
+
+          <span
+            data-zh="共同参与人次"
+            data-en="Total Participations"
+          >
+            共同参与人次
+          </span>
+        </div>
+
+        <div class="summary-item">
+          <strong id="activityDuration">
+            0
+          </strong>
+
+          <span
+            data-zh="共同活动分钟"
+            data-en="Shared Activity Minutes"
+          >
+            共同活动分钟
+          </span>
+        </div>
+
+      </section>
+
+      <section class="memory-list-section">
+
+        <div class="section-title-row">
+
+          <div>
+            <h3
+              data-zh="记忆时间线"
+              data-en="Memory Timeline"
+            >
+              记忆时间线
+            </h3>
+
+            <p
+              data-zh="最新保存的共同经历将显示在最前面。"
+              data-en="The latest shared experiences appear first."
+            >
+              最新保存的共同经历将显示在最前面。
+            </p >
+          </div>
+
+          <a
+            class="new-activity-link"
+            href="activity-create.html"
+            data-zh="＋ 发起新活动"
+            data-en="＋ Create New Activity"
+          >
+            ＋ 发起新活动
+          </a >
+
+        </div>
+
+        <div
+          id="memoryList"
+          class="memory-list"
+        >
+        </div>
+
+      </section><style>
+  .main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .eyebrow {
+    margin-bottom: 8px;
+    color: var(--green);
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .main-header h2 {
+    margin-bottom: 10px;
+    font-size: clamp(28px, 4vw, 42px);
+  }
+
+  .header-description {
+    max-width: 760px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .language-button {
+    padding: 9px 13px;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.04);
+    cursor: pointer;
+  }
+
+  .language-button.active {
+    border-color: var(--blue);
+    background: var(--blue);
+  }
+
+  .memory-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .summary-item {
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--panel);
+  }
+
+  .summary-item strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 28px;
+  }
+
+  .summary-item span {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .memory-list-section {
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--panel);
+  }
+
+  .section-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  .section-title-row h3 {
+    margin-bottom: 6px;
+    font-size: 21px;
+  }
+
+  .section-title-row p {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .new-activity-link {
+    padding: 11px 15px;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    background: var(--blue);
+    font-weight: bold;
+  }
+
+  .memory-list {
+    display: grid;
+    gap: 15px;
+  }
+
+  .memory-card {
+    display: grid;
+    grid-template-columns: 72px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 17px;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    background: var(--panel-soft);
+  }
+
+  .memory-icon {
+    width: 72px;
+    height: 72px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: rgba(38, 135, 238, 0.14);
+    font-size: 34px;
+  }
+
+  .memory-content h4 {
+    margin-bottom: 7px;
+    font-size: 17px;
+  }
+
+  .memory-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .memory-summary-text {
+    color: #d9e7f5;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .memory-status {
+    margin-top: 8px;
+    color: var(--green);
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .view-memory-button {
+    min-width: 88px;
+    padding: 10px 13px;
+    color: var(--text);
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid var(--blue);
+    border-radius: 9px;
+    background: rgba(38, 135, 238, 0.12);
+  }
+
+  .empty-state {
+    padding: 42px 20px;
+    color: var(--muted);
+    text-align: center;
+    border: 1px dashed var(--border);
+    border-radius: 14px;
+  }
+
+  .empty-state-icon {
+    margin-bottom: 12px;
+    font-size: 44px;
+  }
+
+  .empty-state h4 {
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .empty-state p {
+    margin-bottom: 16px;
+    line-height: 1.7;
+  }
+
+  .empty-state a {
+    display: inline-flex;
+    padding: 10px 14px;
+    color: white;
+    text-decoration: none;
+    border-radius: 9px;
+    background: var(--blue);
+  }
+
+  @media (max-width: 900px) {
+    .page-shell {
+      grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-menu {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .memory-summary {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 650px) {
+    .main {
+      padding: 18px;
+    }
+
+    .main-header,
+    .section-title-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .header-actions {
+      justify-content: flex-start;
+    }
+
+    .memory-card {
+      grid-template-columns: 58px 1fr;
+    }
+
+    .memory-icon {
+      width: 58px;
+      height: 58px;
+      font-size: 28px;
+    }
+
+    .view-memory-button {
+      grid-column: 1 / -1;
+      width: 100%;
+    }
+
+    .sidebar-menu {
+      grid-template-columns: 1fr;
+    }
+  }
+</style><script>
+  const memoryList = document.getElementById("memoryList");
+  const memoryCount = document.getElementById("memoryCount");
+  const participantTotal = document.getElementById("participantTotal");
+  const activityDuration = document.getElementById("activityDuration");
+
+  const zhButton = document.getElementById("zhButton");
+  const enButton = document.getElementById("enButton");
+
+  let currentLanguage =
+    localStorage.getItem("echocityLanguage") || "zh";
+
+  function getSavedMemories() {
+    const possibleKeys = [
+  "echocitySharedMemories",
+  "sharedMemories",
+  "basketballMemory",
+  "echocityBasketballMemory"
+];
+
+    let memories = [];
+
+    possibleKeys.forEach((key) => {
+      const savedValue = localStorage.getItem(key);
+
+      if (!savedValue) {
+        return;
+      }
+
+      try {
+        const parsedValue = JSON.parse(savedValue);
+
+        if (Array.isArray(parsedValue)) {
+          memories = memories.concat(parsedValue);
+        } else if (
+          parsedValue &&
+          typeof parsedValue === "object"
+        ) {
+          memories.push(parsedValue);
+        }
+      } catch (error) {
+        console.warn(
+          "Unable to read memory:",
+          key,
+          error
+        );
+      }
+    });
+
+    const uniqueMemories = [];
+    const existingIds = new Set();
+
+    memories.forEach((memory, index) => {
+      const memoryId =
+        memory.id ||
+        memory.createdAt ||
+        `${memory.titleZh || memory.titleEn || "memory"}-${index}`;
+
+      if (!existingIds.has(memoryId)) {
+        existingIds.add(memoryId);
+
+        uniqueMemories.push({
+          ...memory,
+          id: memoryId
+        });
+      }
+    });
+
+    return uniqueMemories.sort((first, second) => {
+      const firstTime =
+        new Date(first.createdAt || 0).getTime();
+
+      const secondTime =
+        new Date(second.createdAt || 0).getTime();
+
+      return secondTime - firstTime;
+    });
+  }
+
+  function getMemoryIcon(memory) {
+    const type = String(memory.type || "").toLowerCase();
+
+    if (type.includes("basketball")) {
+      return "🏀";
+    }
+
+    if (type.includes("coffee")) {
+      return "☕";
+    }
+
+    if (
+      type.includes("church") ||
+      type.includes("faith")
+    ) {
+      return "⛪";
+    }
+
+    if (
+      type.includes("movie") ||
+      type.includes("film")
+    ) {
+      return "🎬";
+    }
+
+    if (type.includes("volunteer")) {
+      return "🤝";
+    }
+
+    return "📖";
+  }
+
+  function formatDate(dateValue) {
+    if (!dateValue) {
+      return currentLanguage === "zh"
+        ? "日期未记录"
+        : "Date not recorded";
+    }
+
+    const date = new Date(dateValue);
+
+    if (Number.isNaN(date.getTime())) {
+      return String(dateValue);
+    }
+
+    return new Intl.DateTimeFormat(
+      currentLanguage === "zh"
+        ? "zh-CN"
+        : "en-US",
+      {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      }
+    ).format(date);
+  }
+
+  function getMemoryTitle(memory) {
+    if (currentLanguage === "zh") {
+      return (
+        memory.titleZh ||
+        memory.title ||
+        "共同活动"
+      );
+    }
+
+    return (
+      memory.titleEn ||
+      memory.title ||
+      "Shared Activity"
+    );
+  }
+
+  function getMemoryCourt(memory) {
+    if (currentLanguage === "zh") {
+      return (
+        memory.courtZh ||
+        memory.locationZh ||
+        memory.court ||
+        memory.location ||
+        "地点未记录"
+      );
+    }
+
+    return (
+      memory.courtEn ||
+      memory.locationEn ||
+      memory.court ||
+      memory.location ||
+      "Location not recorded"
+    );
+  }
+
+  function getMemorySummary(memory) {
+    if (currentLanguage === "zh") {
+      return (
+        memory.summaryZh ||
+        memory.echoSummaryZh ||
+        `本次共同活动共有 ${
+          Number(memory.participants) || 0
+        } 位居民参与，活动已经完成并保存为共同记忆。`
+      );
+    }
+
+    return (
+      memory.summaryEn ||
+      memory.echoSummaryEn ||
+      `This shared activity included ${
+        Number(memory.participants) || 0
+      } residents and has been preserved as a shared memory.`
+    );
+  }
+
+  function renderEmptyState() {
+    memoryList.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">📖</div>
+
+        <h4>
+          ${
+            currentLanguage === "zh"
+              ? "还没有共同记忆"
+              : "No shared memories yet"
+          }
+        </h4>
+
+        <p>
+          ${
+            currentLanguage === "zh"
+              ? "完成一次共同活动并点击“保存共同记忆”，活动记录就会出现在这里。"
+              : "Complete a shared activity and select “Save Shared Memory” to preserve it here."
+          }
+        </p >
+
+        <a href=" ">
+          ${
+            currentLanguage === "zh"
+              ? "发起第一次共同活动"
+              : "Create Your First Shared Activity"
+          }
+        </a >
+      </div>
+    `;
+  }
+
+  function renderMemories() {
+    const memories = getSavedMemories();
+
+    const totalParticipants = memories.reduce(
+      (total, memory) =>
+        total + (Number(memory.participants) || 0),
+      0
+    );
+
+    const totalDuration = memories.reduce(
+      (total, memory) =>
+        total + (Number(memory.duration) || 0),
+      0
+    );
+
+    memoryCount.textContent = memories.length;
+    participantTotal.textContent = totalParticipants;
+    activityDuration.textContent = totalDuration;
+
+    if (memories.length === 0) {
+      renderEmptyState();
+      return;
+    }
+
+    memoryList.innerHTML = memories
+      .map((memory) => {
+        const memoryForStorage =
+          encodeURIComponent(JSON.stringify(memory));
+
+        return `
+          <article class="memory-card">
+
+            <div class="memory-icon">
+              ${getMemoryIcon(memory)}
+            </div>
+
+            <div class="memory-content">
+
+              <h4>
+                ${getMemoryTitle(memory)}
+              </h4>
+
+              <div class="memory-meta">
+
+                <span>
+                  📅 ${formatDate(memory.createdAt)}
+                </span>
+
+                <span>
+                  📍 ${getMemoryCourt(memory)}
+                </span>
+
+                <span>
+                  👥 ${
+                    Number(memory.participants) || 0
+                  } ${
+                    currentLanguage === "zh"
+                      ? "人"
+                      : "participants"
+                  }
+                </span>
+
+                <span>
+                  ⏱ ${
+                    Number(memory.duration) || 0
+                  } ${
+                    currentLanguage === "zh"
+                      ? "分钟"
+                      : "minutes"
+                  }
+                </span>
+
+                ${
+                  memory.score
+                    ? `
+                      <span>
+                        🏆 ${memory.score}
+                      </span>
+                    `
+                    : ""
+                }
+
+              </div>
+
+              <p class="memory-summary-text">
+                ${getMemorySummary(memory)}
+              </p >
+
+              <p class="memory-status">
+                ${
+                  currentLanguage === "zh"
+                    ? "已保存为共同记忆"
+                    : "Preserved as a shared memory"
+                }
+              </p >
+
+            </div>
+
+            <a
+              class="view-memory-button"
+              href="memory-detail.html?memory=${memoryForStorage}"
+            >
+              ${
+                currentLanguage === "zh"
+                  ? "查看记忆"
+                  : "View Memory"
+              }
+            </a >
+
+          </article>
+        `;
+      })
+      .join("");
+  }
+
+  function setLanguage(language) {
+    currentLanguage = language;
+
+    localStorage.setItem(
+      "echocityLanguage",
+      language
+    );
+
+    document.documentElement.lang =
+      language === "zh" ? "zh-CN" : "en";
+
+    document
+      .querySelectorAll("[data-zh][data-en]")
+      .forEach((element) => {
+        element.textContent =
+          language === "zh"
+            ? element.dataset.zh
+            : element.dataset.en;
+      });
+
+    zhButton.classList.toggle(
+      "active",
+      language === "zh"
+    );
+
+    enButton.classList.toggle(
+      "active",
+      language === "en"
+    );
+
+    renderMemories();
+  }
+
+  zhButton.addEventListener("click", () => {
+    setLanguage("zh");
+  });
+
+  enButton.addEventListener("click", () => {
+    setLanguage("en");
+  });
+
+  setLanguage(currentLanguage);
+</script>
+
+    </main>
+  </div>
+</body>
+</html>
