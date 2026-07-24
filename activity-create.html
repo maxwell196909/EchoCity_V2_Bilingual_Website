@@ -1054,8 +1054,122 @@
         selectedActivityType
       )}`;
   });
+function fillActivityFromDream() {
+  const params = new URLSearchParams(
+    window.location.search
+  );
 
+  if (params.get("source") !== "dream") {
+    return;
+  }
+
+  const selectedDream = JSON.parse(
+    localStorage.getItem(
+      "echocity_selected_dream"
+    )
+  );
+
+  if (!selectedDream) {
+    return;
+  }
+
+  const titleInput =
+    document.getElementById("activityTitle") ||
+    document.querySelector(
+      'input[name="activityTitle"]'
+    ) ||
+    document.querySelector(
+      'input[name="title"]'
+    );
+
+  const descriptionInput =
+    document.getElementById(
+      "activityDescription"
+    ) ||
+    document.querySelector(
+      'textarea[name="activityDescription"]'
+    ) ||
+    document.querySelector(
+      'textarea[name="description"]'
+    );
+
+  if (
+    titleInput &&
+    !titleInput.value.trim()
+  ) {
+    titleInput.value =
+      selectedDream.title || "";
+  }
+
+  if (
+    descriptionInput &&
+    !descriptionInput.value.trim()
+  ) {
+    const intro =
+      currentLanguage === "zh"
+        ? "本活动由以下梦想转化而来："
+        : "This activity was created from the following dream:";
+
+    descriptionInput.value =
+      intro +
+      "\n\n" +
+      (selectedDream.description || "");
+  }  const categoryInput =
+    document.getElementById(
+      "activityCategory"
+    ) ||
+    document.querySelector(
+      'select[name="activityCategory"]'
+    ) ||
+    document.querySelector(
+      'select[name="category"]'
+    );
+
+  if (categoryInput) {
+    const dreamCategoryMap = {
+      community: "community",
+      creation: "creation",
+      service: "service",
+      faith: "faith",
+      personal: "other"
+    };
+
+    const targetCategory =
+      dreamCategoryMap[
+        selectedDream.category
+      ] || "other";
+
+    const matchingOption =
+      Array.from(
+        categoryInput.options
+      ).find(function (option) {
+        return (
+          option.value === targetCategory
+        );
+      });
+
+    if (matchingOption) {
+      categoryInput.value =
+        targetCategory;
+    }
+  }
+
+  localStorage.setItem(
+    "echocity_activity_source_dream",
+    JSON.stringify({
+      dreamId: selectedDream.id,
+      title: selectedDream.title,
+      description:
+        selectedDream.description,
+      category:
+        selectedDream.category,
+      createdAt:
+        new Date().toISOString()
+    })
+  );
+}
   setDefaultDate();
+  fillActivityFromDream();
   setLanguage(currentLanguage);
 </script>
 

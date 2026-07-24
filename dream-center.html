@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>我的梦想 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+      background:
+        linear-gradient(
+          rgba(5, 14, 30, 0.86),
+          rgba(5, 14, 30, 0.97)
+        ),
+        url("future-city.jpg") center / cover fixed;
+      color: #ffffff;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    .page {
+      width: min(1080px, 94%);
+      margin: 0 auto;
+      padding: 26px 0 60px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .back-button,
+    .language-button {
+      padding: 10px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .hero {
+      padding: 30px;
+      border-radius: 28px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(14, 38, 72, 0.94),
+          rgba(41, 24, 67, 0.94)
+        );
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      margin-bottom: 22px;
+    }
+
+    .hero-label {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(112, 184, 255, 0.15);
+      color: #a8d8ff;
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+
+    .hero-title {
+      font-size: clamp(34px, 6vw, 58px);
+      margin-bottom: 14px;
+    }
+
+    .hero-text {
+      max-width: 760px;
+      color: rgba(255, 255, 255, 0.72);
+      line-height: 1.8;
+    }
+
+    .dream-layout {
+      display: grid;
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(300px, 0.58fr);
+      gap: 20px;
+    }
+
+    .panel {
+      padding: 24px;
+      border-radius: 24px;
+      background: rgba(11, 25, 47, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(14px);
+    }
+
+    .panel-title {
+      font-size: 22px;
+      margin-bottom: 18px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: rgba(255, 255, 255, 0.74);
+    }    .form-input,
+    .form-textarea,
+    .form-select {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.07);
+      color: #ffffff;
+      outline: none;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+      border-color: rgba(103, 186, 255, 0.7);
+      box-shadow: 0 0 0 3px rgba(103, 186, 255, 0.12);
+    }
+
+    .form-textarea {
+      min-height: 130px;
+      resize: vertical;
+      line-height: 1.7;
+    }
+
+    .form-select option {
+      color: #111827;
+    }
+
+    .submit-button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #4db7ff, #756cff);
+      color: #ffffff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .echo-card {
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(80, 165, 255, 0.09);
+      border: 1px solid rgba(103, 186, 255, 0.18);
+      margin-bottom: 18px;
+    }
+
+    .echo-name {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .echo-text {
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.75;
+    }
+
+    .dream-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .dream-card {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .dream-card-title {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .dream-card-text {
+      color: rgba(255, 255, 255, 0.66);
+      line-height: 1.65;
+      margin-bottom: 12px;
+    }
+
+    .dream-card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .dream-insight {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(77, 183, 255, 0.08);
+      border: 1px solid rgba(103, 186, 255, 0.16);
+    }
+
+    .dream-insight-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 9px;
+      color: #b9ddff;
+    }
+
+    .dream-insight-text {
+      font-size: 13px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.68);
+    }
+
+    .dream-subsection {
+      margin-top: 14px;
+    }
+
+    .dream-subsection-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 9px;
+    }
+
+    .role-list,
+    .step-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .role-chip,
+    .step-chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .resident-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .resident-match {
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .resident-name {
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .resident-reason {
+      font-size: 12px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.62);
+    }
+
+    .dream-progress {
+      margin-top: 16px;
+    }
+
+    .progress-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .progress-track {
+      height: 9px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #4db7ff, #756cff);
+    }
+
+    .dream-action-button {
+      width: 100%;
+      margin-top: 16px;
+      padding: 12px;
+      border: none;
+      border-radius: 13px;
+      background: linear-gradient(135deg, #4db7ff, #756cff);
+      color: #ffffff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .dream-tag {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .empty-state {
+      padding: 34px 14px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.58);
+    }
+
+    @media (max-width: 780px) {
+      .dream-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .hero,
+      .panel {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="top-bar">
+      <button class="back-button" id="backButton">
+        ← 返回居民主页
+      </button>
+
+      <button class="language-button" id="languageButton">
+        EN
+      </button>
+    </div>
+
+    <section class="hero">
+      <span class="hero-label" id="heroLabel">
+        愿望与共同创造
+      </span>
+
+      <h1 class="hero-title" id="heroTitle">
+        我的梦想
+      </h1>
+
+      <p class="hero-text" id="heroText">
+        说出你真正想做的事。数字人 Echo 会理解你的愿望，帮助你找到同行者，并记录梦想实现的过程。
+      </p >
+    </section>
+
+    <div class="dream-layout">
+      <section class="panel">
+        <h2 class="panel-title" id="formTitle">
+          发布一个梦想
+        </h2>
+
+        <div class="form-group">
+          <label class="form-label" id="dreamTitleLabel" for="dreamTitle">
+            梦想名称
+          </label>
+
+          <input
+            class="form-input"
+            id="dreamTitle"
+            type="text"
+            placeholder="例如：组织一次周末环保活动"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" id="dreamDescriptionLabel" for="dreamDescription">
+            梦想说明
+          </label>
+
+          <textarea
+            class="form-textarea"
+            id="dreamDescription"
+            placeholder="告诉数字人 Echo，你希望完成什么、为什么重要、需要哪些帮助。"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" id="dreamCategoryLabel" for="dreamCategory">
+            梦想类型
+          </label>
+
+          <select class="form-select" id="dreamCategory">
+            <option value="community">社区活动</option>
+            <option value="growth">个人成长</option>
+            <option value="creation">共同创作</option>
+            <option value="service">帮助他人</option>
+            <option value="faith">信仰与关怀</option>
+            <option value="other">其他</option>
+          </select>
+        </div>
+
+        <button class="submit-button" id="submitDream">
+          发布梦想
+        </button>
+      </section>      <aside class="panel">
+        <div class="echo-card">
+          <div class="echo-name" id="echoName">
+            数字人 Echo
+          </div>
+
+          <p class="echo-text" id="echoText">
+            我会理解你的梦想内容，识别需要的资源、参与者和行动步骤，并帮助你形成可以推进的计划。
+          </p >
+        </div>
+
+        <h2 class="panel-title" id="listTitle">
+          我的梦想记录
+        </h2>
+
+        <div class="dream-list" id="dreamList"></div>
+
+        <div class="empty-state" id="emptyState">
+          <p id="emptyText">
+            还没有梦想记录。发布第一个梦想后，它会保存在这里。
+          </p >
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const translations = {
+      zh: {
+        back: "← 返回居民主页",
+        language: "EN",
+        heroLabel: "愿望与共同创造",
+        heroTitle: "我的梦想",
+        heroText:
+          "说出你真正想做的事。数字人 Echo 会理解你的愿望，帮助你找到同行者，并记录梦想实现的过程。",
+        formTitle: "发布一个梦想",
+        dreamTitleLabel: "梦想名称",
+        dreamTitlePlaceholder: "例如：组织一次周末环保活动",
+        dreamDescriptionLabel: "梦想说明",
+        dreamDescriptionPlaceholder:
+          "告诉数字人 Echo，你希望完成什么、为什么重要、需要哪些帮助。",
+        dreamCategoryLabel: "梦想类型",
+        submitDream: "发布梦想",
+        echoName: "数字人 Echo",
+        echoText:
+          "我会理解你的梦想内容，识别需要的资源、参与者和行动步骤，并帮助你形成可以推进的计划。",
+        listTitle: "我的梦想记录",
+        emptyText:
+          "还没有梦想记录。发布第一个梦想后，它会保存在这里。",
+        categoryCommunity: "社区活动",
+        categoryGrowth: "个人成长",
+        categoryCreation: "共同创作",
+        categoryService: "帮助他人",
+        categoryFaith: "信仰与关怀",
+        categoryOther: "其他",
+        statusUnderstanding: "Echo 正在理解",
+        statusPlanning: "等待形成计划",
+        created: "创建时间",
+        needTitle: "请输入梦想名称。",
+        needDescription: "请补充梦想说明。",
+        success:
+          "梦想已经保存。数字人 Echo 已开始理解并整理下一步行动。"
+      },
+
+      en: {
+        back: "← Back to Resident Profile",
+        language: "中文",
+        heroLabel: "Dreams and Co-creation",
+        heroTitle: "My Dreams",
+        heroText:
+          "Share what you truly want to achieve. Digital Human Echo will understand your dream, help find companions and record the journey toward making it real.",
+        formTitle: "Publish a Dream",
+        dreamTitleLabel: "Dream Title",
+        dreamTitlePlaceholder:
+          "For example: Organize a weekend environmental activity",
+        dreamDescriptionLabel: "Dream Description",
+        dreamDescriptionPlaceholder:
+          "Tell Digital Human Echo what you want to achieve, why it matters and what help you need.",
+        dreamCategoryLabel: "Dream Category",
+        submitDream: "Publish Dream",
+        echoName: "Digital Human Echo",
+        echoText:
+          "I will understand your dream, identify the resources, people and actions needed, and help form a practical plan.",
+        listTitle: "My Dream Records",
+        emptyText:
+          "No dream records yet. Your first published dream will be saved here.",
+        categoryCommunity: "Community Activity",
+        categoryGrowth: "Personal Growth",
+        categoryCreation: "Co-creation",
+        categoryService: "Helping Others",
+        categoryFaith: "Faith and Care",
+        categoryOther: "Other",
+        statusUnderstanding: "Echo is understanding",
+        statusPlanning: "Waiting for action plan",
+        created: "Created",
+        needTitle: "Please enter a dream title.",
+        needDescription: "Please add a dream description.",
+        success:
+          "Your dream has been saved. Digital Human Echo has started understanding it and organizing the next actions."
+      }
+    };
+
+    let currentLanguage =
+      localStorage.getItem("echocityLanguage") || "zh";
+
+    function getText(key) {
+      return translations[currentLanguage][key];
+    }
+
+    function getDreams() {
+      return (
+        JSON.parse(
+          localStorage.getItem("echocity_dreams")
+        ) || []
+      );
+    }
+
+    function saveDreams(dreams) {
+      localStorage.setItem(
+        "echocity_dreams",
+        JSON.stringify(dreams)
+      );
+    }
+
+    function getCategoryText(category) {
+      const categoryKeys = {
+        community: "categoryCommunity",
+        growth: "categoryGrowth",
+        creation: "categoryCreation",
+        service: "categoryService",
+        faith: "categoryFaith",
+        other: "categoryOther"
+      };
+    function buildDreamMatching(
+      title,
+      description,
+      category
+    ) {
+      const text =
+        (title + " " + description).toLowerCase();
+
+      const result = {
+        understanding: "",
+        neededRoles: [],
+        recommendedResidents: [],
+        actionSteps: []
+      };
+
+      if (
+        category === "community" ||
+        text.includes("篮球") ||
+        text.includes("活动") ||
+        text.includes("聚会")
+      ) {
+        result.understanding =
+          currentLanguage === "zh"
+            ? "这是一个需要多人共同参与、明确时间地点并持续组织的社区型梦想。"
+            : "This is a community dream that needs participants, a clear time and place, and continued organization.";
+
+        result.neededRoles = [
+          currentLanguage === "zh"
+            ? "活动发起人"
+            : "Activity Organizer",
+
+          currentLanguage === "zh"
+            ? "现场协调者"
+            : "On-site Coordinator",
+
+          currentLanguage === "zh"
+            ? "共同参与居民"
+            : "Participating Residents"
+        ];
+
+        result.recommendedResidents = [
+          {
+            name:
+              currentLanguage === "zh"
+                ? "林晓"
+                : "Xiao Lin",
+            reason:
+              currentLanguage === "zh"
+                ? "喜欢社区活动，并有组织周末聚会的经历。"
+                : "Enjoys community activities and has experience organizing weekend gatherings."
+          },
+
+          {
+            name:
+              currentLanguage === "zh"
+                ? "David"
+                : "David",
+            reason:
+              currentLanguage === "zh"
+                ? "愿意参加群体活动，也擅长协调时间。"
+                : "Interested in group activities and good at coordinating schedules."
+          }
+        ];
+
+        result.actionSteps = [
+          currentLanguage === "zh"
+            ? "确认活动主题和目标"
+            : "Confirm the activity theme and goal",
+
+          currentLanguage === "zh"
+            ? "确定时间、地点和参与人数"
+            : "Set the time, location and number of participants",
+
+          currentLanguage === "zh"
+            ? "邀请推荐居民加入"
+            : "Invite the recommended residents",
+
+          currentLanguage === "zh"
+            ? "创建共同活动并开始执行"
+            : "Create a shared activity and begin"
+        ];
+      } else if (
+        category === "creation" ||
+        text.includes("电影") ||
+        text.includes("视频") ||
+        text.includes("创作")
+      ) {
+        result.understanding =
+          currentLanguage === "zh"
+            ? "这是一个需要创意、分工和共同制作过程的共创型梦想。"
+            : "This is a co-creation dream that requires ideas, roles and a shared production process.";
+
+        result.neededRoles = [
+          currentLanguage === "zh"
+            ? "内容策划"
+            : "Content Planner",
+
+          currentLanguage === "zh"
+            ? "拍摄居民"
+            : "Camera Contributor",
+
+          currentLanguage === "zh"
+            ? "剪辑居民"
+            : "Video Editor",
+
+          currentLanguage === "zh"
+            ? "参与表演居民"
+            : "Participants or Performers"
+        ];
+
+        result.recommendedResidents = [
+          {
+            name:
+              currentLanguage === "zh"
+                ? "Mia"
+                : "Mia",
+            reason:
+              currentLanguage === "zh"
+                ? "喜欢摄影和短视频创作。"
+                : "Interested in photography and short-form video creation."
+          },
+
+          {
+            name:
+              currentLanguage === "zh"
+                ? "陈宇"
+                : "Yu Chen",
+            reason:
+              currentLanguage === "zh"
+                ? "有剪辑和内容整理经验。"
+                : "Has experience in editing and content organization."
+          }
+        ];
+
+        result.actionSteps = [
+          currentLanguage === "zh"
+            ? "确定作品主题"
+            : "Define the project theme",
+
+          currentLanguage === "zh"
+            ? "确定参与角色和分工"
+            : "Assign participant roles",
+
+          currentLanguage === "zh"
+            ? "建立共同创作活动"
+            : "Create a co-creation activity",
+
+          currentLanguage === "zh"
+            ? "记录制作过程并形成共同成果"
+            : "Record the process and produce a shared outcome"
+        ];
+      }      else if (
+        category === "service" ||
+        category === "faith" ||
+        text.includes("帮助") ||
+        text.includes("关怀") ||
+        text.includes("教会") ||
+        text.includes("信仰")
+      ) {
+        result.understanding =
+          currentLanguage === "zh"
+            ? "这是一个以帮助、陪伴和共同关怀为核心的服务型梦想。"
+            : "This is a service-oriented dream centered on support, companionship and shared care.";
+
+        result.neededRoles = [
+          currentLanguage === "zh"
+            ? "关怀发起人"
+            : "Care Organizer",
+
+          currentLanguage === "zh"
+            ? "志愿参与居民"
+            : "Volunteer Residents",
+
+          currentLanguage === "zh"
+            ? "沟通协调居民"
+            : "Communication Coordinator"
+        ];
+
+        result.recommendedResidents = [
+          {
+            name:
+              currentLanguage === "zh"
+                ? "Grace"
+                : "Grace",
+            reason:
+              currentLanguage === "zh"
+                ? "愿意参与关怀、陪伴和社区服务。"
+                : "Interested in care, companionship and community service."
+          },
+
+          {
+            name:
+              currentLanguage === "zh"
+                ? "张宁"
+                : "Ning Zhang",
+            reason:
+              currentLanguage === "zh"
+                ? "有志愿活动和居民沟通经验。"
+                : "Has experience in volunteering and resident communication."
+          }
+        ];
+
+        result.actionSteps = [
+          currentLanguage === "zh"
+            ? "明确需要帮助的人群和目标"
+            : "Define who needs support and the goal",
+
+          currentLanguage === "zh"
+            ? "确认参与居民和责任分工"
+            : "Confirm participants and responsibilities",
+
+          currentLanguage === "zh"
+            ? "创建关怀活动"
+            : "Create a care activity",
+
+          currentLanguage === "zh"
+            ? "记录帮助过程和实际结果"
+            : "Record the support process and outcomes"
+        ];
+      } else {
+        result.understanding =
+          currentLanguage === "zh"
+            ? "这是一个需要进一步明确目标、资源和行动步骤的个人梦想。"
+            : "This is a personal dream that needs clearer goals, resources and action steps.";
+
+        result.neededRoles = [
+          currentLanguage === "zh"
+            ? "梦想发起人"
+            : "Dream Initiator",
+
+          currentLanguage === "zh"
+            ? "同行居民"
+            : "Companion Residents"
+        ];
+
+        result.recommendedResidents = [
+          {
+            name:
+              currentLanguage === "zh"
+                ? "数字居民伙伴"
+                : "Digital Resident Partner",
+            reason:
+              currentLanguage === "zh"
+                ? "愿意了解你的想法，并与你共同明确下一步。"
+                : "Willing to understand your idea and help define the next step."
+          }
+        ];
+
+        result.actionSteps = [
+          currentLanguage === "zh"
+            ? "进一步明确梦想目标"
+            : "Clarify the dream goal",
+
+          currentLanguage === "zh"
+            ? "列出需要的资源和帮助"
+            : "List the needed resources and support",
+
+          currentLanguage === "zh"
+            ? "邀请合适居民参与"
+            : "Invite suitable residents",
+
+          currentLanguage === "zh"
+            ? "形成第一个可执行行动"
+            : "Create the first practical action"
+        ];
+      }
+
+      return result;
+    }
+      return getText(categoryKeys[category] || "categoryOther");
+    }    function applyLanguage() {
+      document.documentElement.lang =
+        currentLanguage === "zh" ? "zh-CN" : "en";
+
+      document.title =
+        currentLanguage === "zh"
+          ? "我的梦想 | EchoCity"
+          : "My Dreams | EchoCity";
+
+      document.getElementById("backButton").textContent =
+        getText("back");
+
+      document.getElementById("languageButton").textContent =
+        getText("language");
+
+      document.getElementById("heroLabel").textContent =
+        getText("heroLabel");
+
+      document.getElementById("heroTitle").textContent =
+        getText("heroTitle");
+
+      document.getElementById("heroText").textContent =
+        getText("heroText");
+
+      document.getElementById("formTitle").textContent =
+        getText("formTitle");
+
+      document.getElementById("dreamTitleLabel").textContent =
+        getText("dreamTitleLabel");
+
+      document.getElementById("dreamTitle").placeholder =
+        getText("dreamTitlePlaceholder");
+
+      document.getElementById("dreamDescriptionLabel").textContent =
+        getText("dreamDescriptionLabel");
+
+      document.getElementById("dreamDescription").placeholder =
+        getText("dreamDescriptionPlaceholder");
+
+      document.getElementById("dreamCategoryLabel").textContent =
+        getText("dreamCategoryLabel");
+
+      document.getElementById("submitDream").textContent =
+        getText("submitDream");
+
+      document.getElementById("echoName").textContent =
+        getText("echoName");
+
+      document.getElementById("echoText").textContent =
+        getText("echoText");
+
+      document.getElementById("listTitle").textContent =
+        getText("listTitle");
+
+      document.getElementById("emptyText").textContent =
+        getText("emptyText");
+
+      const categorySelect =
+        document.getElementById("dreamCategory");
+
+      categorySelect.options[0].text =
+        getText("categoryCommunity");
+
+      categorySelect.options[1].text =
+        getText("categoryGrowth");
+
+      categorySelect.options[2].text =
+        getText("categoryCreation");
+
+      categorySelect.options[3].text =
+        getText("categoryService");
+
+      categorySelect.options[4].text =
+        getText("categoryFaith");
+
+      categorySelect.options[5].text =
+        getText("categoryOther");
+
+      renderDreams();
+    }
+
+    function renderDreams() {
+      const dreams = getDreams();
+      const dreamList =
+        document.getElementById("dreamList");
+      const emptyState =
+        document.getElementById("emptyState");
+
+      dreamList.innerHTML = "";
+
+      if (dreams.length === 0) {
+        emptyState.hidden = false;
+        return;
+      }
+    document.addEventListener("click", function (event) {
+      const button =
+        event.target.closest(".dream-action-button");
+
+      if (!button) {
+        return;
+      }
+
+      const dreamId =
+        button.getAttribute("data-dream-id");
+
+      const dreams =
+        JSON.parse(
+          localStorage.getItem("echocity_dreams")
+        ) || [];
+
+      const selectedDream =
+        dreams.find(function (dream) {
+          return dream.id === dreamId;
+        });
+
+      if (!selectedDream) {
+        alert(
+          currentLanguage === "zh"
+            ? "没有找到这个梦想。"
+            : "This dream could not be found."
+        );
+
+        return;
+      }
+
+      localStorage.setItem(
+        "echocity_selected_dream",
+        JSON.stringify(selectedDream)
+      );
+
+      window.location.href =
+        "activity-create.html?source=dream";
+    });
+      emptyState.hidden = true;
+
+      dreams.forEach(function (dream) {
+        const card =
+          document.createElement("article");
+
+        card.className = "dream-card";
+
+        const createdDate =
+          new Date(dream.createdAt).toLocaleDateString(
+            currentLanguage === "zh"
+              ? "zh-CN"
+              : "en-US"
+          );
+
+                const rolesHtml =
+          Array.isArray(dream.neededRoles)
+            ? dream.neededRoles
+                .map(function (role) {
+                  return `
+                    <span class="role-chip">
+                      ${role}
+                    </span>
+                  `;
+                })
+                .join("")
+            : "";
+
+        const residentsHtml =
+          Array.isArray(dream.recommendedResidents)
+            ? dream.recommendedResidents
+                .map(function (resident) {
+                  return `
+                    <div class="resident-match">
+                      <div class="resident-name">
+                        ${resident.name}
+                      </div>
+
+                      <div class="resident-reason">
+                        ${resident.reason}
+                      </div>
+                    </div>
+                  `;
+                })
+                .join("")
+            : "";
+
+        const stepsHtml =
+          Array.isArray(dream.actionSteps)
+            ? dream.actionSteps
+                .map(function (step, stepIndex) {
+                  return `
+                    <span class="step-chip">
+                      ${stepIndex + 1}. ${step}
+                    </span>
+                  `;
+                })
+                .join("")
+            : "";
+
+        const progress =
+          Number(dream.progress) || 25;
+
+        card.innerHTML = `
+          <h3 class="dream-card-title">
+            ${dream.title}
+          </h3>
+
+          <p class="dream-card-text">
+            ${dream.description}
+          </p >
+
+          <div class="dream-card-meta">
+            <span class="dream-tag">
+              ${getCategoryText(dream.category)}
+            </span>
+
+            <span class="dream-tag">
+              ${getText("statusUnderstanding")}
+            </span>
+
+            <span class="dream-tag">
+              ${getText("statusPlanning")}
+            </span>
+
+            <span class="dream-tag">
+              ${getText("created")}：${createdDate}
+            </span>
+          </div>
+
+          <div class="dream-insight">
+            <div class="dream-insight-title">
+              ${
+                currentLanguage === "zh"
+                  ? "数字人 Echo 的理解"
+                  : "Digital Human Echo's Understanding"
+              }
+            </div>
+
+            <div class="dream-insight-text">
+              ${
+                dream.echoUnderstanding ||
+                (
+                  currentLanguage === "zh"
+                    ? "数字人 Echo 正在进一步理解这个梦想。"
+                    : "Digital Human Echo is continuing to understand this dream."
+                )
+              }
+            </div>
+          </div>
+
+          <div class="dream-subsection">
+            <div class="dream-subsection-title">
+              ${
+                currentLanguage === "zh"
+                  ? "需要的居民角色"
+                  : "Residents Needed"
+              }
+            </div>
+
+            <div class="role-list">
+              ${rolesHtml}
+            </div>
+          </div>          <div class="dream-subsection">
+            <div class="dream-subsection-title">
+              ${
+                currentLanguage === "zh"
+                  ? "推荐同行居民"
+                  : "Recommended Residents"
+              }
+            </div>
+
+            <div class="resident-list">
+              ${
+                residentsHtml ||
+                `
+                  <div class="resident-match">
+                    <div class="resident-name">
+                      ${
+                        currentLanguage === "zh"
+                          ? "正在寻找合适居民"
+                          : "Finding suitable residents"
+                      }
+                    </div>
+
+                    <div class="resident-reason">
+                      ${
+                        currentLanguage === "zh"
+                          ? "数字人 Echo 正在根据梦想内容寻找可能同行的居民。"
+                          : "Digital Human Echo is looking for residents who may join this dream."
+                      }
+                    </div>
+                  </div>
+                `
+              }
+            </div>
+          </div>
+
+          <div class="dream-subsection">
+            <div class="dream-subsection-title">
+              ${
+                currentLanguage === "zh"
+                  ? "建议行动步骤"
+                  : "Suggested Action Steps"
+              }
+            </div>
+
+            <div class="step-list">
+              ${stepsHtml}
+            </div>
+          </div>
+
+          <div class="dream-progress">
+            <div class="progress-head">
+              <span>
+                ${
+                  currentLanguage === "zh"
+                    ? "梦想进度"
+                    : "Dream Progress"
+                }
+              </span>
+
+              <span>
+                ${progress}%
+              </span>
+            </div>
+
+            <div class="progress-track">
+              <div
+                class="progress-bar"
+                style="width: ${Math.min(progress, 100)}%;"
+              ></div>
+            </div>
+          </div>
+
+          <button
+            class="dream-action-button"
+            type="button"
+            data-dream-id="${dream.id}"
+          >
+            ${
+              currentLanguage === "zh"
+                ? "创建共同活动"
+                : "Create Shared Activity"
+            }
+          </button>
+        `;
+
+        dreamList.appendChild(card);
+      });
+    }
+
+    document
+      .getElementById("backButton")
+      .addEventListener("click", function () {
+        window.location.href =
+          "resident-profile.html";
+      });
+
+    document
+      .getElementById("languageButton")
+      .addEventListener("click", function () {
+        currentLanguage =
+          currentLanguage === "zh" ? "en" : "zh";
+
+        localStorage.setItem(
+          "echocityLanguage",
+          currentLanguage
+        );
+
+        applyLanguage();
+      });
+
+    document
+      .getElementById("submitDream")
+      .addEventListener("click", function () {
+        const title =
+          document
+            .getElementById("dreamTitle")
+            .value.trim();
+
+        const description =
+          document
+            .getElementById("dreamDescription")
+            .value.trim();
+
+        const category =
+          document
+            .getElementById("dreamCategory")
+            .value;
+
+        if (!title) {
+          alert(getText("needTitle"));
+          return;
+        }
+
+        if (!description) {
+          alert(getText("needDescription"));
+          return;
+        }
+
+        const dreams = getDreams();
+
+       const matchingResult = buildDreamMatching(
+  title,
+  description,
+  category
+);
+
+const newDream = {
+  id: "dream-" + Date.now(),
+  title: title,
+  description: description,
+  category: category,
+  status: "matching",
+  createdAt: new Date().toISOString(),
+
+  echoUnderstanding: matchingResult.understanding,
+  neededRoles: matchingResult.neededRoles,
+  recommendedResidents: matchingResult.recommendedResidents,
+  actionSteps: matchingResult.actionSteps,
+  progress: 25
+};
+
+        dreams.unshift(newDream);
+        saveDreams(dreams);
+
+        document.getElementById("dreamTitle").value = "";
+        document.getElementById("dreamDescription").value = "";
+        document.getElementById("dreamCategory").value =
+          "community";
+
+        renderDreams();
+
+        alert(getText("success"));
+      });
+
+    applyLanguage();
+  </script>
+</body>
+</html>
