@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>活动房间 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+      background:
+        linear-gradient(rgba(6, 15, 31, 0.82), rgba(6, 15, 31, 0.94)),
+        url("community.jpg") center / cover fixed;
+      color: #ffffff;
+    }
+
+    .page {
+      width: min(1100px, 94%);
+      margin: 0 auto;
+      padding: 24px 0 50px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+
+    .back-button,
+    .language-button {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      padding: 10px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .room-header {
+      background: rgba(12, 25, 47, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(12px);
+    }
+
+    .room-title-row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .room-icon {
+      width: 62px;
+      height: 62px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      background: rgba(81, 171, 255, 0.18);
+    }
+
+    .room-title {
+      font-size: clamp(26px, 5vw, 40px);
+      margin-bottom: 6px;
+    }
+
+    .room-status {
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 14px;
+    }
+
+    .room-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .meta-pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 14px;
+    }
+
+    .room-layout {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 20px;
+    }
+
+    .panel {
+      background: rgba(12, 25, 47, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 22px;
+      padding: 20px;
+      backdrop-filter: blur(12px);
+    }
+
+    .panel-title {
+      font-size: 18px;
+      margin-bottom: 16px;
+    }    .member-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .member-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .member-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(81, 171, 255, 0.18);
+      font-size: 20px;
+    }
+
+    .member-name {
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .member-role {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.58);
+    }
+
+    .checkin-button {
+      width: 100%;
+      margin-top: 16px;
+      border: none;
+      border-radius: 14px;
+      padding: 13px 16px;
+      background: linear-gradient(135deg, #45b6ff, #746cff);
+      color: #ffffff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .checkin-button.done {
+      background: rgba(53, 211, 153, 0.18);
+      color: #9af0c9;
+    }
+
+    .main-room {
+      display: grid;
+      gap: 20px;
+    }
+
+    .chat-box {
+      min-height: 390px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message-list {
+      flex: 1;
+      min-height: 250px;
+      max-height: 420px;
+      overflow-y: auto;
+      display: grid;
+      gap: 12px;
+      padding-right: 4px;
+      margin-bottom: 16px;
+    }
+
+    .message {
+      max-width: 78%;
+      padding: 12px 14px;
+      border-radius: 16px;
+      line-height: 1.6;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .message.mine {
+      justify-self: end;
+      background: rgba(71, 168, 255, 0.22);
+    }
+
+    .message-name {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.58);
+      margin-bottom: 4px;
+    }
+
+    .message-time {
+      display: block;
+      margin-top: 5px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .message-form {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+    }
+
+    .message-input {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.07);
+      color: #ffffff;
+      border-radius: 14px;
+      padding: 13px 15px;
+      outline: none;
+    }
+
+    .message-input::placeholder {
+      color: rgba(255, 255, 255, 0.42);
+    }
+
+    .send-button {
+      border: none;
+      border-radius: 14px;
+      padding: 0 20px;
+      background: linear-gradient(135deg, #45b6ff, #746cff);
+      color: #ffffff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .tool-button {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      color: #ffffff;
+      border-radius: 16px;
+      padding: 16px 10px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .tool-icon {
+      display: block;
+      font-size: 24px;
+      margin-bottom: 7px;
+    }
+
+    .finish-button {
+      width: 100%;
+      margin-top: 16px;
+      border: none;
+      border-radius: 16px;
+      padding: 15px;
+      background: rgba(244, 114, 114, 0.18);
+      color: #ffb6b6;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    @media (max-width: 760px) {
+      .room-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .tool-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="top-bar">
+      <button class="back-button" id="backButton">← 返回活动详情</button>
+      <button class="language-button" id="languageButton">EN</button>
+    </div>
+
+    <section class="room-header">
+      <div class="room-title-row">
+        <div class="room-icon" id="roomIcon">🤝</div>
+
+        <div>
+          <h1 class="room-title" id="roomTitle">共同活动房间</h1>
+          <div class="room-status" id="roomStatus">活动组织中</div>
+        </div>
+      </div>
+
+      <div class="room-meta">
+        <span class="meta-pill" id="roomTime">时间待确认</span>
+        <span class="meta-pill" id="roomLocation">地点待确认</span>
+        <span class="meta-pill" id="roomParticipants">1 人参与</span>
+      </div>
+    </section>    <section class="room-layout">
+      <aside class="panel">
+        <h2 class="panel-title" id="membersTitle">活动成员</h2>
+
+        <div class="member-list" id="memberList">
+          <div class="member-item">
+            <div class="member-avatar">👤</div>
+
+            <div>
+              <div class="member-name" id="organizerMemberName">
+                EchoCity 居民
+              </div>
+
+              <div class="member-role" id="organizerMemberRole">
+                活动发起人
+              </div>
+            </div>
+          </div>
+
+          <div class="member-item">
+            <div class="member-avatar">🙂</div>
+
+            <div>
+              <div class="member-name" id="currentMemberName">
+                我
+              </div>
+
+              <div class="member-role" id="currentMemberRole">
+                参与居民
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="checkin-button" id="checkinButton">
+          活动签到
+        </button>
+      </aside>
+
+      <div class="main-room">
+        <section class="panel chat-box">
+          <h2 class="panel-title" id="chatTitle">活动沟通</h2>
+
+          <div class="message-list" id="messageList">
+            <div class="message">
+              <div class="message-name">Echo</div>
+              <div id="welcomeMessage">
+                活动房间已经建立，可以开始沟通、组织和记录活动过程。
+              </div>
+            </div>
+          </div>
+
+          <form class="message-form" id="messageForm">
+            <input
+              class="message-input"
+              id="messageInput"
+              type="text"
+              placeholder="输入活动消息"
+              autocomplete="off"
+            />
+
+            <button class="send-button" id="sendButton" type="submit">
+              发送
+            </button>
+          </form>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-title" id="toolsTitle">活动工具</h2>
+
+          <div class="tool-grid">
+            <button class="tool-button" id="photoButton" type="button">
+              <span class="tool-icon">📷</span>
+              <span id="photoText">共享照片</span>
+            </button>
+
+            <button class="tool-button" id="videoButton" type="button">
+              <span class="tool-icon">🎥</span>
+              <span id="videoText">共享视频</span>
+            </button>
+
+            <button class="tool-button" id="locationButton" type="button">
+              <span class="tool-icon">📍</span>
+              <span id="locationText">共享位置</span>
+            </button>
+
+            <button class="tool-button" id="voteButton" type="button">
+              <span class="tool-icon">🗳️</span>
+              <span id="voteText">发起投票</span>
+            </button>
+
+            <button class="tool-button" id="reminderButton" type="button">
+              <span class="tool-icon">⏰</span>
+              <span id="reminderText">活动提醒</span>
+            </button>
+
+            <button class="tool-button" id="memoryButton" type="button">
+              <span class="tool-icon">✨</span>
+              <span id="memoryText">记录瞬间</span>
+            </button>
+          </div>
+
+          <button class="finish-button" id="finishButton" type="button">
+            结束活动并形成共同记忆
+          </button>
+        </section>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const translations = {
+      zh: {
+        back: "← 返回活动详情",
+        language: "EN",
+        defaultTitle: "共同活动房间",
+        organizing: "活动组织中",
+        timePending: "时间待确认",
+        locationPending: "地点待确认",
+        participants: "人参与",
+        membersTitle: "活动成员",
+        organizerRole: "活动发起人",
+        currentName: "我",
+        currentRole: "参与居民",
+        checkin: "活动签到",
+        checkedIn: "已完成签到",
+        chatTitle: "活动沟通",
+        welcome:
+          "活动房间已经建立，可以开始沟通、组织和记录活动过程。",
+        placeholder: "输入活动消息",
+        send: "发送",
+        toolsTitle: "活动工具",
+        photo: "共享照片",
+        video: "共享视频",
+        location: "共享位置",
+        vote: "发起投票",
+        reminder: "活动提醒",
+        memory: "记录瞬间",
+        finish: "结束活动并形成共同记忆",
+        photoMessage: "照片功能将在下一阶段接入。",
+        videoMessage: "视频功能将在下一阶段接入。",
+        locationMessage: "位置功能将在下一阶段接入。",
+        voteMessage: "投票功能将在下一阶段接入。",
+        reminderMessage: "活动提醒已经记录。",
+        memoryMessage: "这个瞬间已经加入活动记录。",
+        finishMessage: "活动已结束，正在形成共同记忆。"
+      },
+
+      en: {
+        back: "← Back to Activity",
+        language: "中文",
+        defaultTitle: "Shared Activity Room",
+        organizing: "Activity in progress",
+        timePending: "Time to be confirmed",
+        locationPending: "Location to be confirmed",
+        participants: "participants",
+        membersTitle: "Members",
+        organizerRole: "Organizer",
+        currentName: "Me",
+        currentRole: "Participant",
+        checkin: "Check In",
+        checkedIn: "Checked In",
+        chatTitle: "Activity Chat",
+        welcome:
+          "The activity room is ready. Members can communicate, organize and record the activity.",
+        placeholder: "Type an activity message",
+        send: "Send",
+        toolsTitle: "Activity Tools",
+        photo: "Share Photo",
+        video: "Share Video",
+        location: "Share Location",
+        vote: "Create Vote",
+        reminder: "Reminder",
+        memory: "Record Moment",
+        finish: "Finish and Create Shared Memory",
+        photoMessage: "Photo sharing will be connected in the next stage.",
+        videoMessage: "Video sharing will be connected in the next stage.",
+        locationMessage: "Location sharing will be connected in the next stage.",
+        voteMessage: "Voting will be connected in the next stage.",
+        reminderMessage: "The activity reminder has been recorded.",
+        memoryMessage: "This moment has been added to the activity record.",
+        finishMessage: "The activity has ended. A shared memory is being created."
+      }
+    };    let currentLanguage =
+      localStorage.getItem("echocityLanguage") || "zh";
+
+    const activity =
+      JSON.parse(localStorage.getItem("echocityCurrentActivity")) ||
+      JSON.parse(localStorage.getItem("echocity_current_activity")) ||
+      JSON.parse(localStorage.getItem("echocity_selected_activity")) ||
+      {};
+
+    let checkedIn =
+      localStorage.getItem("echocity_activity_checked_in") === "true";
+
+    let messages =
+      JSON.parse(localStorage.getItem("echocity_activity_messages")) || [];
+
+    function getText(key) {
+      return translations[currentLanguage][key];
+    }
+
+    function renderRoom() {
+      document.documentElement.lang =
+        currentLanguage === "zh" ? "zh-CN" : "en";
+
+      document.getElementById("backButton").textContent =
+        getText("back");
+
+      document.getElementById("languageButton").textContent =
+        getText("language");
+
+      document.getElementById("roomIcon").textContent =
+        activity.icon || "🤝";
+
+      document.getElementById("roomTitle").textContent =
+        activity.title ||
+        activity.name ||
+        getText("defaultTitle");
+
+      document.getElementById("roomStatus").textContent =
+        getText("organizing");
+
+      document.getElementById("roomTime").textContent =
+        activity.time ||
+        activity.date ||
+        getText("timePending");
+
+      document.getElementById("roomLocation").textContent =
+        activity.location ||
+        activity.place ||
+        getText("locationPending");
+
+      const participantNumber =
+        Number(activity.participants) || 1;
+
+      document.getElementById("roomParticipants").textContent =
+        `${participantNumber} ${getText("participants")}`;
+
+      document.getElementById("membersTitle").textContent =
+        getText("membersTitle");
+
+      document.getElementById("organizerMemberName").textContent =
+        activity.organizer ||
+        activity.creator ||
+        "EchoCity Resident";
+
+      document.getElementById("organizerMemberRole").textContent =
+        getText("organizerRole");
+
+      document.getElementById("currentMemberName").textContent =
+        getText("currentName");
+
+      document.getElementById("currentMemberRole").textContent =
+        getText("currentRole");
+
+      const checkinButton =
+        document.getElementById("checkinButton");
+
+      checkinButton.textContent = checkedIn
+        ? getText("checkedIn")
+        : getText("checkin");
+
+      checkinButton.classList.toggle("done", checkedIn);
+
+      document.getElementById("chatTitle").textContent =
+        getText("chatTitle");
+
+      document.getElementById("welcomeMessage").textContent =
+        getText("welcome");
+
+      document.getElementById("messageInput").placeholder =
+        getText("placeholder");
+
+      document.getElementById("sendButton").textContent =
+        getText("send");
+
+      document.getElementById("toolsTitle").textContent =
+        getText("toolsTitle");
+
+      document.getElementById("photoText").textContent =
+        getText("photo");
+
+      document.getElementById("videoText").textContent =
+        getText("video");
+
+      document.getElementById("locationText").textContent =
+        getText("location");
+
+      document.getElementById("voteText").textContent =
+        getText("vote");
+
+      document.getElementById("reminderText").textContent =
+        getText("reminder");
+
+      document.getElementById("memoryText").textContent =
+        getText("memory");
+
+      document.getElementById("finishButton").textContent =
+        getText("finish");
+
+      renderMessages();
+    }
+
+    function renderMessages() {
+      const messageList =
+        document.getElementById("messageList");
+
+      const welcome = messageList.firstElementChild;
+
+      messageList.innerHTML = "";
+      messageList.appendChild(welcome);
+
+      messages.forEach(function (message) {
+        const item = document.createElement("div");
+        item.className =
+          message.mine ? "message mine" : "message";
+
+        item.innerHTML = `
+          <div class="message-name">
+            ${message.name}
+          </div>
+          <div>${message.text}</div>
+          <span class="message-time">
+            ${message.time}
+          </span>
+        `;
+
+        messageList.appendChild(item);
+      });
+
+      messageList.scrollTop = messageList.scrollHeight;
+    }
+
+    document
+      .getElementById("backButton")
+      .addEventListener("click", function () {
+        window.location.href = "activity-detail.html";
+      });
+
+    document
+      .getElementById("languageButton")
+      .addEventListener("click", function () {
+        currentLanguage =
+          currentLanguage === "zh" ? "en" : "zh";
+
+        localStorage.setItem(
+          "echocityLanguage",
+          currentLanguage
+        );
+
+        renderRoom();
+      });
+
+    document
+      .getElementById("checkinButton")
+      .addEventListener("click", function () {
+        checkedIn = true;
+
+        localStorage.setItem(
+          "echocity_activity_checked_in",
+          "true"
+        );
+
+        renderRoom();
+      });
+
+    document
+      .getElementById("messageForm")
+      .addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const input =
+          document.getElementById("messageInput");
+
+        const text = input.value.trim();
+
+        if (!text) {
+          return;
+        }
+
+        messages.push({
+          name:
+            currentLanguage === "zh" ? "我" : "Me",
+          text: text,
+          time: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit"
+          }),
+          mine: true
+        });
+
+        localStorage.setItem(
+          "echocity_activity_messages",
+          JSON.stringify(messages)
+        );
+
+        input.value = "";
+        renderMessages();
+      });
+
+    function showToolMessage(key) {
+      alert(getText(key));
+    }
+
+    document
+      .getElementById("photoButton")
+      .addEventListener("click", function () {
+        showToolMessage("photoMessage");
+      });
+
+    document
+      .getElementById("videoButton")
+      .addEventListener("click", function () {
+        showToolMessage("videoMessage");
+      });
+
+    document
+      .getElementById("locationButton")
+      .addEventListener("click", function () {
+        showToolMessage("locationMessage");
+      });
+
+    document
+      .getElementById("voteButton")
+      .addEventListener("click", function () {
+        showToolMessage("voteMessage");
+      });
+
+    document
+      .getElementById("reminderButton")
+      .addEventListener("click", function () {
+        showToolMessage("reminderMessage");
+      });
+
+    document
+      .getElementById("memoryButton")
+      .addEventListener("click", function () {
+        const moment = {
+          activityTitle:
+            activity.title ||
+            activity.name ||
+            getText("defaultTitle"),
+          createdAt: new Date().toISOString(),
+          note: getText("memoryMessage")
+        };
+
+        const moments =
+          JSON.parse(
+            localStorage.getItem(
+              "echocity_activity_moments"
+            )
+          ) || [];
+
+        moments.push(moment);
+
+        localStorage.setItem(
+          "echocity_activity_moments",
+          JSON.stringify(moments)
+        );
+
+        showToolMessage("memoryMessage");
+      });
+
+    document
+      .getElementById("finishButton")
+      .addEventListener("click", function () {
+        const sharedMemory = {
+          id: Date.now(),
+          title:
+            activity.title ||
+            activity.name ||
+            getText("defaultTitle"),
+          icon: activity.icon || "🤝",
+          location:
+            activity.location ||
+            activity.place ||
+            getText("locationPending"),
+          time:
+            activity.time ||
+            activity.date ||
+            new Date().toLocaleDateString(),
+          participants:
+            Number(activity.participants) || 1,
+          messages: messages,
+          moments:
+            JSON.parse(
+              localStorage.getItem(
+                "echocity_activity_moments"
+              )
+            ) || [],
+          status: "completed",
+          completedAt: new Date().toISOString()
+        };
+
+        localStorage.setItem(
+          "echocity_current_memory",
+          JSON.stringify(sharedMemory)
+        );
+
+        alert(getText("finishMessage"));
+
+        window.location.href = "memory-detail.html";
+      });
+
+    renderRoom();
+  </script>
+</body>
+</html>

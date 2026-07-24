@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>活动详情 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+      background:
+        linear-gradient(rgba(5, 14, 30, 0.76), rgba(5, 14, 30, 0.9)),
+        url("city-road.jpg") center / cover fixed;
+      color: #ffffff;
+    }
+
+    .page {
+      width: min(920px, 92%);
+      margin: 0 auto;
+      padding: 28px 0 60px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .back-button,
+    .language-button {
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      padding: 10px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .back-button:hover,
+    .language-button:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .detail-card {
+      background: rgba(10, 23, 44, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 26px;
+      padding: 30px;
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.34);
+      backdrop-filter: blur(14px);
+    }
+
+    .activity-icon {
+      width: 74px;
+      height: 74px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      font-size: 36px;
+      background: rgba(89, 182, 255, 0.16);
+      margin-bottom: 18px;
+    }
+
+    .activity-title {
+      font-size: clamp(30px, 5vw, 46px);
+      margin-bottom: 10px;
+    }
+
+    .activity-status {
+      display: inline-block;
+      padding: 7px 13px;
+      border-radius: 999px;
+      background: rgba(52, 211, 153, 0.16);
+      color: #8ff0c5;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 26px;
+    }
+
+    .info-item {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .info-label {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.62);
+      margin-bottom: 8px;
+    }
+
+    .info-value {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .description-box {
+      padding: 22px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 24px;
+    }
+
+    .description-title {
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .description-text {
+      color: rgba(255, 255, 255, 0.78);
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+
+    .organizer-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.06);
+      margin-bottom: 26px;
+    }
+
+    .organizer-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(89, 182, 255, 0.2);
+      font-size: 24px;
+    }
+
+    .organizer-name {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .organizer-role {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.62);
+    }
+
+    .action-area {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .primary-button,
+    .secondary-button {
+      flex: 1;
+      min-width: 180px;
+      border: none;
+      border-radius: 16px;
+      padding: 15px 20px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary-button {
+      background: linear-gradient(135deg, #46b5ff, #746dff);
+      color: #ffffff;
+    }
+
+    .secondary-button {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    @media (max-width: 680px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-card {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="top-bar">
+      <button class="back-button" id="backButton">← 返回</button>
+      <button class="language-button" id="languageButton">EN</button>
+    </div>    <main class="detail-card" id="detailCard">
+      <div class="activity-icon" id="activityIcon">🏀</div>
+
+      <h1 class="activity-title" id="activityTitle">
+        共同活动
+      </h1>
+
+      <div class="activity-status" id="activityStatus">
+        正在匹配居民
+      </div>
+
+      <section class="info-grid">
+        <div class="info-item">
+          <div class="info-label" id="timeLabel">活动时间</div>
+          <div class="info-value" id="activityTime">待确认</div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label" id="locationLabel">活动地点</div>
+          <div class="info-value" id="activityLocation">待确认</div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label" id="distanceLabel">活动范围</div>
+          <div class="info-value" id="activityRadius">附近居民</div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label" id="participantsLabel">参与人数</div>
+          <div class="info-value" id="activityParticipants">1 人</div>
+        </div>
+      </section>
+
+      <section class="description-box">
+        <h2 class="description-title" id="descriptionTitle">
+          活动介绍
+        </h2>
+
+        <p class="description-text" id="activityDescription">
+          发起一个共同活动，认识附近有相同愿望的居民。
+        </p >
+      </section>
+
+      <section class="organizer-box">
+        <div class="organizer-avatar">👤</div>
+
+        <div>
+          <div class="organizer-name" id="organizerName">
+            EchoCity 居民
+          </div>
+
+          <div class="organizer-role" id="organizerRole">
+            活动发起人
+          </div>
+        </div>
+      </section>
+
+      <div class="action-area">
+        <button class="secondary-button" id="contactButton">
+          联系发起人
+        </button>
+
+        <button class="primary-button" id="joinButton">
+          申请加入
+        </button>
+      </div>
+    </main>
+
+    <div class="empty-state" id="emptyState" hidden>
+      <h2 id="emptyTitle">暂时没有活动信息</h2>
+      <p id="emptyText">请先返回城市地图选择一个活动。</p >
+    </div>
+  </div>
+
+  <script>
+    const translations = {
+      zh: {
+        back: "← 返回",
+        language: "EN",
+        defaultTitle: "共同活动",
+        matching: "正在匹配居民",
+        confirmed: "活动组织中",
+        timeLabel: "活动时间",
+        locationLabel: "活动地点",
+        distanceLabel: "活动范围",
+        participantsLabel: "参与人数",
+        descriptionTitle: "活动介绍",
+        defaultDescription: "发起一个共同活动，认识附近有相同愿望的居民。",
+        organizerName: "EchoCity 居民",
+        organizerRole: "活动发起人",
+        contact: "联系发起人",
+        join: "申请加入",
+        joined: "已申请加入",
+        people: "人",
+        nearby: "附近居民",
+        pending: "待确认",
+        emptyTitle: "暂时没有活动信息",
+        emptyText: "请先返回城市地图选择一个活动。",
+        contactMessage: "已经向活动发起人发送联系请求。",
+        joinMessage: "申请成功。活动发起人将收到你的加入请求。"
+      },
+
+      en: {
+        back: "← Back",
+        language: "中文",
+        defaultTitle: "Community Activity",
+        matching: "Matching residents",
+        confirmed: "Organizing",
+        timeLabel: "Time",
+        locationLabel: "Location",
+        distanceLabel: "Activity Area",
+        participantsLabel: "Participants",
+        descriptionTitle: "About This Activity",
+        defaultDescription:
+          "Start a shared activity and meet nearby residents with similar wishes.",
+        organizerName: "EchoCity Resident",
+        organizerRole: "Activity Organizer",
+        contact: "Contact Organizer",
+        join: "Request to Join",
+        joined: "Request Sent",
+        people: "people",
+        nearby: "Nearby residents",
+        pending: "To be confirmed",
+        emptyTitle: "No activity information",
+        emptyText: "Please return to the city map and select an activity.",
+        contactMessage: "A contact request has been sent to the organizer.",
+        joinMessage:
+          "Your request has been sent. The organizer will receive it."
+      }
+    };    let currentLanguage =
+      localStorage.getItem("echocityLanguage") || "zh";
+
+    const activity =
+  JSON.parse(localStorage.getItem("echocityCurrentActivity")) ||
+  JSON.parse(localStorage.getItem("echocity_current_activity")) ||
+  JSON.parse(localStorage.getItem("echocity_selected_activity"));
+
+    const detailCard = document.getElementById("detailCard");
+    const emptyState = document.getElementById("emptyState");
+
+    function getText(key) {
+      return translations[currentLanguage][key];
+    }
+
+    function formatParticipants(value) {
+      const number = Number(value) || 1;
+
+      if (currentLanguage === "zh") {
+        return `${number} ${getText("people")}`;
+      }
+
+      return `${number} ${getText("people")}`;
+    }
+
+    function renderActivity() {
+      document.documentElement.lang =
+        currentLanguage === "zh" ? "zh-CN" : "en";
+
+      document.getElementById("backButton").textContent =
+        getText("back");
+
+      document.getElementById("languageButton").textContent =
+        getText("language");
+
+      document.getElementById("timeLabel").textContent =
+        getText("timeLabel");
+
+      document.getElementById("locationLabel").textContent =
+        getText("locationLabel");
+
+      document.getElementById("distanceLabel").textContent =
+        getText("distanceLabel");
+
+      document.getElementById("participantsLabel").textContent =
+        getText("participantsLabel");
+
+      document.getElementById("descriptionTitle").textContent =
+        getText("descriptionTitle");
+
+      document.getElementById("organizerRole").textContent =
+        getText("organizerRole");
+
+      document.getElementById("contactButton").textContent =
+        getText("contact");
+
+      document.getElementById("emptyTitle").textContent =
+        getText("emptyTitle");
+
+      document.getElementById("emptyText").textContent =
+        getText("emptyText");
+
+      if (!activity) {
+        detailCard.hidden = true;
+        emptyState.hidden = false;
+        return;
+      }
+
+      detailCard.hidden = false;
+      emptyState.hidden = true;
+
+      document.getElementById("activityIcon").textContent =
+        activity.icon || "🤝";
+
+      document.getElementById("activityTitle").textContent =
+        activity.title ||
+        activity.name ||
+        getText("defaultTitle");
+
+      document.getElementById("activityStatus").textContent =
+        activity.status === "confirmed"
+          ? getText("confirmed")
+          : getText("matching");
+
+      document.getElementById("activityTime").textContent =
+        activity.time ||
+        activity.date ||
+        getText("pending");
+
+      document.getElementById("activityLocation").textContent =
+        activity.location ||
+        activity.place ||
+        getText("pending");
+
+      document.getElementById("activityRadius").textContent =
+        activity.radius ||
+        activity.distance ||
+        getText("nearby");
+
+      document.getElementById("activityParticipants").textContent =
+        formatParticipants(activity.participants);
+
+      document.getElementById("activityDescription").textContent =
+        activity.description ||
+        activity.content ||
+        getText("defaultDescription");
+
+      document.getElementById("organizerName").textContent =
+        activity.organizer ||
+        activity.creator ||
+        getText("organizerName");
+
+      const joined =
+        localStorage.getItem("echocity_joined_activity") ===
+        String(activity.id || activity.createdAt || activity.title);
+
+      const joinButton = document.getElementById("joinButton");
+
+      joinButton.textContent = joined
+        ? getText("joined")
+        : getText("join");
+
+      joinButton.disabled = joined;
+      joinButton.style.opacity = joined ? "0.65" : "1";
+      joinButton.style.cursor = joined ? "default" : "pointer";
+    }
+
+    document
+      .getElementById("backButton")
+      .addEventListener("click", function () {
+        window.location.href = "city-map.html";
+      });
+
+    document
+      .getElementById("languageButton")
+      .addEventListener("click", function () {
+        currentLanguage =
+          currentLanguage === "zh" ? "en" : "zh";
+
+        localStorage.setItem(
+          "echocityLanguage",
+          currentLanguage
+        );
+
+        renderActivity();
+      });
+
+    document
+      .getElementById("contactButton")
+      .addEventListener("click", function () {
+        alert(getText("contactMessage"));
+      });
+
+    document
+      .getElementById("joinButton")
+      .addEventListener("click", function () {
+        if (!activity) {
+          return;
+        }
+
+        const activityKey = String(
+          activity.id ||
+          activity.createdAt ||
+          activity.title
+        );
+
+        localStorage.setItem(
+          "echocity_joined_activity",
+          activityKey
+        );
+
+        const joinedActivity = {
+          ...activity,
+          joinedAt: new Date().toISOString(),
+          joinStatus: "requested"
+        };
+
+        localStorage.setItem(
+          "echocity_joined_activity_data",
+          JSON.stringify(joinedActivity)
+        );
+
+       alert(getText("joinMessage"));
+
+window.location.href = "activity-room.html";
+      });
+
+    renderActivity();
+  </script>
+</body>
+</html>

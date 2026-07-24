@@ -274,6 +274,72 @@
         grid-template-columns: 1fr;
       }
     }
+        .digital-life-section {
+      margin-top: 22px;
+      padding: 24px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .digital-life-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .digital-life-card {
+      width: 100%;
+      min-height: 145px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #ffffff;
+      text-align: left;
+      cursor: pointer;
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .digital-life-card:hover {
+      transform: translateY(-4px);
+      background: rgba(80, 165, 255, 0.13);
+      border-color: rgba(107, 184, 255, 0.45);
+    }
+
+    .digital-life-icon {
+      display: block;
+      font-size: 30px;
+      margin-bottom: 13px;
+    }
+
+    .digital-life-name {
+      display: block;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .digital-life-description {
+      display: block;
+      font-size: 13px;
+      line-height: 1.65;
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    @media (max-width: 680px) {
+      .digital-life-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .digital-life-section {
+        padding: 18px;
+      }
+    }
   </style>
 </head>
 
@@ -426,7 +492,102 @@
               </div>
             </div>
           </section>
+<section class="digital-life-section">
+  <div
+    class="section-title"
+    data-i18n="digitalLifeTitle"
+  >
+    我的数字人生
+  </div>
 
+  <div class="digital-life-grid">
+    <button
+      class="digital-life-card"
+      type="button"
+      onclick="window.location.href='life-journey.html'"
+    >
+      <span class="digital-life-icon">🛤️</span>
+
+      <span
+        class="digital-life-name"
+        data-i18n="lifeJourney"
+      >
+        我的人生轨迹
+      </span>
+
+      <span
+        class="digital-life-description"
+        data-i18n="lifeJourneyDescription"
+      >
+        查看参与、成长与共同完成的人生记录
+      </span>
+    </button>    <button
+      class="digital-life-card"
+      type="button"
+      onclick="window.location.href='memory-detail.html'"
+    >
+      <span class="digital-life-icon">🤝</span>
+
+      <span
+        class="digital-life-name"
+        data-i18n="sharedMemory"
+      >
+        我的共同记忆
+      </span>
+
+      <span
+        class="digital-life-description"
+        data-i18n="sharedMemoryDescription"
+      >
+        查看与其他居民共同完成并长期保存的记忆
+      </span>
+    </button>
+
+    <button
+      class="digital-life-card"
+      type="button"
+      onclick="window.location.href='digital-movie.html'"
+    >
+      <span class="digital-life-icon">🎬</span>
+
+      <span
+        class="digital-life-name"
+        data-i18n="digitalMovie"
+      >
+        我的数字电影
+      </span>
+
+      <span
+        class="digital-life-description"
+        data-i18n="digitalMovieDescription"
+      >
+        把人生片段整理成一部持续成长的数字电影
+      </span>
+    </button>    <button
+      class="digital-life-card"
+      type="button"
+      onclick="window.location.href='dream-center.html'"
+    >
+      <span class="digital-life-icon">⭐</span>
+
+      <span
+        class="digital-life-name"
+        data-i18n="myDreams"
+      >
+        我的梦想
+      </span>
+
+      <span
+        class="digital-life-description"
+        data-i18n="myDreamsDescription"
+      >
+        发布愿望、寻找同行者、记录梦想实现过程
+      </span>
+    </button>
+
+  </div>
+
+</section>
           <section>
             <div
               class="section-title"
