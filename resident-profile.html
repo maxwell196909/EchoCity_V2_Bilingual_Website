@@ -648,7 +648,9 @@
   </div>
 
   <script src="js/echocity-store.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./echocity-supabase.js"></script>
+  
   <script>
     const translations = {
       zh: {
@@ -1104,6 +1106,432 @@
     setLanguage(
       getCurrentLanguage()
     );
+  async function loadCurrentResidentProfile() {
+  const supabaseClient = window.echoCitySupabase;
+
+  if (!supabaseClient) {
+    console.error("EchoCity Supabase connection is unavailable.");
+    return;
+  }
+
+  const {
+    data: { user },
+    error: userError
+  } = await supabaseClient.auth.getUser();
+
+  if (userError || !user) {
+    console.error("No authenticated resident:", userError);
+
+    window.location.href = "phone-register.html";
+    return;
+  }
+
+  const {
+    data: profile,
+    error: profileError
+  } = await supabaseClient
+    .from("profiles")
+    .select("id, display_name, avatar_url, country, city")
+    .eq("id", user.id)
+    .single();
+
+  if (profileError) {
+    console.error("Unable to load profile:", profileError);
+    return;
+  }
+
+  window.currentEchoCityUser = user;
+  window.currentEchoCityProfile = profile;
+
+  createResidentEditor(user, profile);
+}
+
+function createResidentEditor(user, profile) {
+  const oldEditor =
+    document.getElementById("echocityProfileEditor");
+
+  if (oldEditor) {
+    oldEditor.remove();
+  }
+
+  const language =
+    localStorage.getItem("echocity-language") || "zh";
+
+  const editor = document.createElement("section");
+
+  editor.id = "echocityProfileEditor";
+
+  editor.innerHTML = `
+    <style>
+      #echocityProfileEditor {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        z-index: 9999;
+
+        width: min(390px, calc(100vw - 32px));
+        padding: 22px;
+
+        border: 1px solid rgba(148, 163, 184, 0.28);
+        border-radius: 22px;
+
+        color: #f8fafc;
+        background: rgba(7, 22, 42, 0.96);
+
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.46);
+        backdrop-filter: blur(18px);
+      }
+
+      #echocityProfileEditor h3 {
+        margin: 0 0 6px;
+        font-size: 20px;
+      }
+
+      #echocityProfileEditor .profile-phone {
+        margin-bottom: 17px;
+        color: #aebed3;
+        font-size: 12px;
+      }
+
+      #echocityProfileEditor label {
+        display: block;
+        margin: 12px 0 6px;
+
+        color: #dbeafe;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      #echocityProfileEditor input {
+        width: 100%;
+        min-height: 45px;
+        padding: 0 12px;
+
+        border: 1px solid rgba(148, 163, 184, 0.28);
+        border-radius: 12px;
+        outline: none;
+
+        color: #f8fafc;
+        background: rgba(2, 12, 27, 0.82);
+      }
+
+      #echocityProfileEditor input:focus {
+        border-color: #4f8cff;
+      }
+
+      #echocityProfileEditor .profile-actions {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      #echocityProfileEditor button {
+        min-height: 45px;
+        padding: 0 16px;
+
+        border: none;
+        border-radius: 12px;
+
+        color: white;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      #saveResidentProfile {
+        background: linear-gradient(
+          90deg,
+          #2387ff,
+          #7657ff
+        );
+      }
+
+      #closeResidentEditor {
+        background: rgba(71, 85, 105, 0.75);
+      }
+
+      #residentProfileMessage {
+        min-height: 20px;
+        margin-top: 12px;
+
+        color: #bbf7d0;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      @media (max-width: 600px) {
+        #echocityProfileEditor {
+          right: 16px;
+          bottom: 16px;
+        }
+      }
+    </style>
+
+    <h3>
+      ${
+        language === "zh"
+          ? "完善数字居民资料"
+          : "Complete Resident Profile"
+      }
+    </h3>
+
+    <div class="profile-phone">
+      ${
+        language === "zh"
+          ? "登录手机号"
+          : "Signed-in phone"
+      }：
+      ${user.phone || "—"}
+    </div>
+
+    <label for="residentDisplayName">
+      ${
+        language === "zh"
+          ? "显示名称"
+          : "Display Name"
+      }
+    </label>
+
+    <input
+      id="residentDisplayName"
+      type="text"
+      value="${escapeProfileValue(profile.display_name)}"
+    />
+
+    <label for="residentCountry">
+      ${
+        language === "zh"
+          ? "国家或地区"
+          : "Country or Region"
+      }
+    </label>
+
+    <input
+      id="residentCountry"
+      type="text"
+      value="${escapeProfileValue(profile.country)}"
+    />
+
+    <label for="residentCity">
+      ${
+        language === "zh"
+          ? "城市"
+          : "City"
+      }
+    </label>
+
+    <input
+      id="residentCity"
+      type="text"
+      value="${escapeProfileValue(profile.city)}"
+    />
+
+    <label for="residentAvatarUrl">
+      ${
+        language === "zh"
+          ? "头像图片地址"
+          : "Avatar Image URL"
+      }
+    </label>
+
+    <input
+      id="residentAvatarUrl"
+      type="url"
+      value="${escapeProfileValue(profile.avatar_url)}"
+    />
+
+    <div class="profile-actions">
+      <button id="saveResidentProfile" type="button">
+        ${
+          language === "zh"
+            ? "保存居民资料"
+            : "Save Profile"
+        }
+      </button>
+
+      <button id="closeResidentEditor" type="button">
+        ${
+          language === "zh"
+            ? "关闭"
+            : "Close"
+        }
+      </button>
+    </div>
+
+    <div id="residentProfileMessage"></div>
+  `;
+
+  document.body.appendChild(editor);  const saveButton =
+    document.getElementById("saveResidentProfile");
+
+  const closeButton =
+    document.getElementById("closeResidentEditor");
+
+  const profileMessage =
+    document.getElementById("residentProfileMessage");
+
+  closeButton.addEventListener("click", () => {
+    editor.remove();
+  });
+
+  saveButton.addEventListener("click", async () => {
+    const displayName =
+      document
+        .getElementById("residentDisplayName")
+        .value
+        .trim();
+
+    const country =
+      document
+        .getElementById("residentCountry")
+        .value
+        .trim();
+
+    const city =
+      document
+        .getElementById("residentCity")
+        .value
+        .trim();
+
+    const avatarUrl =
+      document
+        .getElementById("residentAvatarUrl")
+        .value
+        .trim();
+
+    if (!displayName) {
+      profileMessage.textContent =
+        language === "zh"
+          ? "请填写显示名称。"
+          : "Please enter a display name.";
+
+      return;
+    }
+
+    saveButton.disabled = true;
+
+    profileMessage.textContent =
+      language === "zh"
+        ? "正在保存居民资料……"
+        : "Saving resident profile...";
+
+    const {
+      data: updatedProfile,
+      error: updateError
+    } = await window.echoCitySupabase
+      .from("profiles")
+      .update({
+        display_name: displayName,
+        country: country || null,
+        city: city || null,
+        avatar_url: avatarUrl || null
+      })
+      .eq("id", user.id)
+      .select()
+      .single();
+
+    saveButton.disabled = false;
+
+    if (updateError) {
+      console.error(
+        "Unable to update resident profile:",
+        updateError
+      );
+
+      profileMessage.textContent =
+        language === "zh"
+          ? "保存失败：" + updateError.message
+          : "Save failed: " + updateError.message;
+
+      return;
+    }
+
+    window.currentEchoCityProfile =
+      updatedProfile;
+
+    profileMessage.textContent =
+      language === "zh"
+        ? "居民资料已保存。"
+        : "Resident profile saved.";
+
+    updateResidentPageDisplay(
+      user,
+      updatedProfile
+    );
+  });
+}
+
+function escapeProfileValue(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
+function updateResidentPageDisplay(
+  user,
+  profile
+) {
+  const possibleNameElements = [
+    document.getElementById("residentName"),
+    document.getElementById("displayName"),
+    document.querySelector(".resident-name"),
+    document.querySelector(".profile-name")
+  ];
+
+  possibleNameElements.forEach((element) => {
+    if (element && profile.display_name) {
+      element.textContent =
+        profile.display_name;
+    }
+  });
+
+  const possibleLocationElements = [
+    document.getElementById("residentLocation"),
+    document.querySelector(".resident-location"),
+    document.querySelector(".profile-location")
+  ];
+
+  const locationText = [
+    profile.city,
+    profile.country
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  possibleLocationElements.forEach((element) => {
+    if (element && locationText) {
+      element.textContent =
+        locationText;
+    }
+  });
+
+  const possibleAvatarElements = [
+    document.getElementById("residentAvatar"),
+    document.querySelector(".resident-avatar img"),
+    document.querySelector(".profile-avatar img")
+  ];
+
+  possibleAvatarElements.forEach((element) => {
+    if (
+      element &&
+      profile.avatar_url &&
+      element.tagName === "IMG"
+    ) {
+      element.src =
+        profile.avatar_url;
+    }
+  });
+
+  console.log(
+    "EchoCity resident profile updated:",
+    user,
+    profile
+  );
+}
+
+loadCurrentResidentProfile();
   </script>
 </body>
 </html>

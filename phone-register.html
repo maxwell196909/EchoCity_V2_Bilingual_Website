@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
 
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
-  >
+  />
 
-  <title>手机号登记 | EchoCity</title>
+  <title>EchoCity Digital Resident Access</title>
 
   <style>
     * {
@@ -19,39 +18,47 @@
     }
 
     :root {
-      --background: #07111f;
-      --panel: rgba(13, 29, 50, 0.94);
-      --panel-soft: rgba(19, 40, 68, 0.88);
-      --primary: #5d91ff;
-      --primary-hover: #76a3ff;
-      --text: #f4f7fb;
-      --text-soft: #aebed2;
-      --border: rgba(148, 177, 215, 0.2);
-      --success: #59d79d;
-      --danger: #ff8080;
-      --shadow: 0 24px 60px rgba(0, 0, 0, 0.36);
+      --page-bg: #071426;
+      --panel-bg: rgba(10, 29, 54, 0.93);
+      --panel-soft: rgba(21, 49, 84, 0.76);
+      --input-bg: rgba(4, 18, 37, 0.78);
+
+      --text: #f5f8ff;
+      --muted: #b8c7dc;
+      --line: rgba(150, 179, 218, 0.23);
+
+      --blue: #3488ff;
+      --purple: #7657ff;
+      --green: #22c55e;
+      --red: #ef4444;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--page-bg);
     }
 
     body {
       min-height: 100vh;
+
       font-family:
         Arial,
         "Microsoft YaHei",
         sans-serif;
+
       color: var(--text);
+
       background:
         linear-gradient(
-          rgba(4, 13, 25, 0.76),
-          rgba(4, 13, 25, 0.94)
+          rgba(3, 12, 25, 0.78),
+          rgba(3, 12, 25, 0.9)
         ),
-        url("./city-vision.jpg");
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
+        url("hero-city.jpg") center / cover fixed;
     }
 
     button,
-    input {
+    input,
+    select {
       font: inherit;
     }
 
@@ -59,22 +66,24 @@
       cursor: pointer;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.58;
     }
 
     .page {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 24px 0 50px;
+      min-height: 100vh;
+      padding: 22px;
     }
 
     .topbar {
+      width: min(1180px, 100%);
+      margin: 0 auto 24px;
+
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 20px;
+      gap: 16px;
     }
 
     .brand {
@@ -83,32 +92,36 @@
       gap: 12px;
     }
 
-    .brand-mark {
-      display: grid;
-      width: 44px;
-      height: 44px;
-      place-items: center;
+    .brand-logo {
+      width: 46px;
+      height: 46px;
       border-radius: 14px;
+
+      display: grid;
+      place-items: center;
+
+      font-size: 24px;
+      font-weight: 800;
+
       background:
         linear-gradient(
           135deg,
-          #4f8cff,
-          #8166ff
+          var(--blue),
+          var(--purple)
         );
-      font-size: 22px;
-      font-weight: 700;
-      box-shadow: var(--shadow);
+
+      box-shadow:
+        0 12px 35px rgba(48, 117, 255, 0.3);
     }
 
-    .brand strong {
-      display: block;
-      font-size: 19px;
+    .brand-name {
+      font-size: 21px;
+      font-weight: 800;
     }
 
-    .brand span {
-      display: block;
+    .brand-subtitle {
       margin-top: 3px;
-      color: var(--text-soft);
+      color: var(--muted);
       font-size: 12px;
     }
 
@@ -119,153 +132,174 @@
     }
 
     .top-button {
-      padding: 10px 15px;
-      color: var(--text);
-      background: rgba(10, 24, 42, 0.8);
-      border: 1px solid var(--border);
+      min-height: 42px;
+      padding: 0 16px;
+
+      border: 1px solid var(--line);
       border-radius: 12px;
+
+      color: var(--text);
+      background: rgba(7, 22, 42, 0.88);
     }
 
-    .top-button:hover {
-      background: rgba(30, 57, 92, 0.9);
-    }    .main {
+    .main {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+
       display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
+      grid-template-columns:
+        minmax(0, 1.08fr)
+        minmax(380px, 0.92fr);
+
       gap: 28px;
       align-items: stretch;
-      margin-top: 54px;
     }
 
     .intro-panel,
     .register-panel {
-      border: 1px solid var(--border);
-      border-radius: 26px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+
+      background: var(--panel-bg);
+
+      box-shadow:
+        0 28px 80px rgba(0, 0, 0, 0.34);
+
+      backdrop-filter: blur(15px);
     }
 
     .intro-panel {
       padding: 46px;
-      background:
-        linear-gradient(
-          145deg,
-          rgba(17, 42, 75, 0.94),
-          rgba(9, 24, 45, 0.9)
-        );
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 13px;
-      color: #dbe7ff;
-      background: rgba(93, 145, 255, 0.14);
-      border: 1px solid rgba(93, 145, 255, 0.32);
+    .badge {
+      width: fit-content;
+      padding: 8px 14px;
+
+      border: 1px solid rgba(96, 165, 250, 0.46);
       border-radius: 999px;
+
+      color: #dceaff;
+      background: rgba(59, 130, 246, 0.13);
+
       font-size: 13px;
+      font-weight: 700;
     }
 
-    .intro-panel h1 {
-      margin-top: 24px;
-      font-size: clamp(36px, 5vw, 64px);
-      line-height: 1.08;
-      letter-spacing: -1.8px;
+    .hero-title {
+      margin-top: 28px;
+      max-width: 620px;
+
+      font-size: clamp(42px, 6vw, 72px);
+      line-height: 1.05;
+      letter-spacing: -2px;
+
+      color: #8db2ff;
     }
 
-    .intro-panel h1 span {
-      display: block;
-      margin-top: 9px;
-      color: #8fb3ff;
-    }
+    .hero-description {
+      margin-top: 26px;
+      max-width: 620px;
 
-    .intro-description {
-      max-width: 650px;
-      margin-top: 24px;
-      color: var(--text-soft);
+      color: var(--muted);
       font-size: 17px;
-      line-height: 1.8;
+      line-height: 1.85;
     }
 
     .feature-list {
+      margin-top: 34px;
+
       display: grid;
       gap: 14px;
-      margin-top: 32px;
     }
 
-    .feature-item {
+    .feature-card {
+      padding: 17px;
+
+      border: 1px solid var(--line);
+      border-radius: 18px;
+
       display: flex;
-      align-items: flex-start;
-      gap: 13px;
-      padding: 15px 16px;
-      background: rgba(255, 255, 255, 0.035);
-      border: 1px solid rgba(255, 255, 255, 0.065);
-      border-radius: 15px;
+      gap: 14px;
+
+      background: var(--panel-soft);
     }
 
     .feature-icon {
+      flex: 0 0 auto;
+
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+
       display: grid;
-      flex: 0 0 34px;
-      width: 34px;
-      height: 34px;
       place-items: center;
-      background: rgba(93, 145, 255, 0.16);
-      border-radius: 10px;
+
+      background: rgba(59, 130, 246, 0.18);
     }
 
-    .feature-item strong {
-      display: block;
-      font-size: 15px;
+    .feature-title {
+      font-weight: 800;
     }
 
-    .feature-item p {
+    .feature-text {
       margin-top: 5px;
-      color: var(--text-soft);
+
+      color: var(--muted);
       font-size: 13px;
-      line-height: 1.6;
+      line-height: 1.55;
+    }    .register-panel {
+      padding: 38px;
     }
 
-    .register-panel {
-      padding: 34px;
-      background: var(--panel);
+    .register-title {
+      font-size: 31px;
+      line-height: 1.2;
     }
 
-    .register-panel h2 {
-      font-size: 28px;
-    }
+    .register-description {
+      margin-top: 12px;
 
-    .register-subtitle {
-      margin-top: 9px;
-      color: var(--text-soft);
+      color: var(--muted);
       font-size: 14px;
       line-height: 1.7;
     }
 
-    .progress {
+    .steps {
+      margin: 26px 0 28px;
+
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
-      margin: 25px 0;
     }
 
-    .progress-step {
+    .step-line {
       height: 5px;
-      background: rgba(255, 255, 255, 0.09);
       border-radius: 999px;
+      background: rgba(150, 179, 218, 0.2);
     }
 
-    .progress-step.active {
-      background: var(--primary);
+    .step-line.active {
+      background:
+        linear-gradient(
+          90deg,
+          var(--blue),
+          var(--purple)
+        );
     }
 
     .form-group {
-      margin-top: 19px;
+      margin-bottom: 18px;
     }
 
     .form-label {
       display: block;
-      margin-bottom: 9px;
-      color: #e7eef9;
+      margin-bottom: 8px;
+
       font-size: 14px;
       font-weight: 700;
     }
@@ -273,192 +307,215 @@
     .input,
     .select {
       width: 100%;
-      min-height: 50px;
-      padding: 0 14px;
-      color: var(--text);
-      background: rgba(6, 18, 33, 0.88);
-      border: 1px solid var(--border);
-      border-radius: 13px;
+      min-height: 52px;
+      padding: 0 15px;
+
+      border: 1px solid var(--line);
+      border-radius: 14px;
       outline: none;
+
+      color: var(--text);
+      background: var(--input-bg);
     }
 
     .input:focus,
     .select:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(93, 145, 255, 0.13);
+      border-color: rgba(70, 142, 255, 0.92);
+
+      box-shadow:
+        0 0 0 3px rgba(59, 130, 246, 0.13);
     }
 
     .select option {
       color: #111827;
-      background: #ffffff;
+      background: white;
     }
 
     .phone-row {
       display: grid;
-      grid-template-columns: 160px 1fr;
+      grid-template-columns: 145px 1fr;
       gap: 10px;
     }
 
-    .verification-row {
+    .code-row {
       display: grid;
-      grid-template-columns: 1fr 145px;
+      grid-template-columns: 1fr 150px;
       gap: 10px;
     }
 
     .secondary-button {
-      min-height: 50px;
-      padding: 0 14px;
-      color: #dce8ff;
-      background: rgba(93, 145, 255, 0.13);
-      border: 1px solid rgba(93, 145, 255, 0.35);
-      border-radius: 13px;
-    }
-
-    .secondary-button:hover {
-      background: rgba(93, 145, 255, 0.22);
-    }    .primary-button {
-      width: 100%;
       min-height: 52px;
-      margin-top: 24px;
-      color: #ffffff;
-      background:
-        linear-gradient(
-          135deg,
-          #4f8cff,
-          #765dff
-        );
-      border: none;
+      padding: 0 15px;
+
+      border: 1px solid rgba(88, 151, 255, 0.55);
       border-radius: 14px;
+
+      color: var(--text);
+      background: rgba(59, 130, 246, 0.17);
+
       font-weight: 700;
-      box-shadow: 0 14px 30px rgba(79, 140, 255, 0.24);
     }
 
-    .primary-button:hover {
-      background:
-        linear-gradient(
-          135deg,
-          #679cff,
-          #8a73ff
-        );
-    }
-
-    .alternative {
-      margin-top: 18px;
-      text-align: center;
-      color: var(--text-soft);
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
-    .alternative button {
-      color: #93b7ff;
-      background: transparent;
-      border: none;
-      font-weight: 700;
+    .secondary-button:hover:not(:disabled) {
+      background: rgba(59, 130, 246, 0.27);
     }
 
     .agreement {
+      margin-top: 4px;
+
       display: flex;
       align-items: flex-start;
-      gap: 9px;
-      margin-top: 18px;
-      color: var(--text-soft);
+      gap: 10px;
+
+      color: var(--muted);
       font-size: 12px;
-      line-height: 1.6;
+      line-height: 1.55;
     }
 
     .agreement input {
       margin-top: 3px;
+      flex: 0 0 auto;
+    }
+
+    .submit-button {
+      width: 100%;
+      min-height: 54px;
+      margin-top: 20px;
+
+      border: none;
+      border-radius: 15px;
+
+      color: white;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--blue),
+          var(--purple)
+        );
+
+      font-size: 17px;
+      font-weight: 800;
+
+      box-shadow:
+        0 15px 35px rgba(64, 104, 255, 0.26);
+    }
+
+    .submit-button:hover:not(:disabled) {
+      transform: translateY(-1px);
     }
 
     .message {
       display: none;
       margin-top: 16px;
-      padding: 13px 14px;
-      border-radius: 12px;
+      padding: 13px 15px;
+
+      border-radius: 13px;
+
       font-size: 13px;
-      line-height: 1.6;
+      line-height: 1.55;
     }
 
     .message.success {
       display: block;
-      color: var(--success);
-      background: rgba(89, 215, 157, 0.1);
-      border: 1px solid rgba(89, 215, 157, 0.3);
+
+      color: #dcfce7;
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      background: rgba(34, 197, 94, 0.12);
     }
 
     .message.error {
       display: block;
-      color: var(--danger);
-      background: rgba(255, 128, 128, 0.1);
-      border: 1px solid rgba(255, 128, 128, 0.3);
+
+      color: #fee2e2;
+      border: 1px solid rgba(239, 68, 68, 0.38);
+      background: rgba(239, 68, 68, 0.12);
     }
 
-    .ai-note {
-      margin-top: 24px;
-      padding: 16px;
-      background: rgba(93, 145, 255, 0.08);
-      border: 1px solid rgba(93, 145, 255, 0.2);
-      border-radius: 14px;
+    .backup-entry {
+      margin-top: 18px;
+
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
     }
 
-    .ai-note strong {
-      display: block;
-      color: #dce8ff;
-      font-size: 14px;
-    }
+    .backup-button {
+      border: none;
+      padding: 4px;
 
-    .ai-note p {
-      margin-top: 7px;
-      color: var(--text-soft);
-      font-size: 12px;
-      line-height: 1.7;
+      color: #8db2ff;
+      background: transparent;
+
+      font-weight: 700;
     }
 
     .footer {
-      margin-top: 38px;
-      color: var(--text-soft);
+      width: min(1180px, 100%);
+      margin: 22px auto 0;
+
+      color: var(--muted);
       text-align: center;
       font-size: 12px;
-      line-height: 1.7;
     }
 
     @media (max-width: 900px) {
+      .page {
+        padding: 14px;
+      }
+
       .main {
         grid-template-columns: 1fr;
       }
 
       .intro-panel {
-        padding: 34px;
+        padding: 30px;
+      }
+
+      .register-panel {
+        padding: 28px;
+      }
+
+      .hero-title {
+        font-size: clamp(39px, 12vw, 62px);
       }
     }
 
-    @media (max-width: 600px) {
-      .page {
-        width: min(100% - 20px, 1180px);
-      }
-
+    @media (max-width: 560px) {
       .topbar {
         align-items: flex-start;
+      }
+
+      .brand-subtitle {
+        max-width: 170px;
       }
 
       .top-actions {
         flex-direction: column;
       }
 
+      .top-button {
+        min-height: 38px;
+        padding: 0 12px;
+      }
+
       .intro-panel,
       .register-panel {
-        padding: 24px;
-        border-radius: 20px;
+        border-radius: 22px;
+      }
+
+      .intro-panel,
+      .register-panel {
+        padding: 23px;
       }
 
       .phone-row,
-      .verification-row {
+      .code-row {
         grid-template-columns: 1fr;
       }
 
-      .intro-panel h1 {
-        font-size: 38px;
+      .hero-description {
+        font-size: 15px;
       }
     }
   </style>
@@ -466,169 +523,165 @@
 
 <body>
   <div class="page">
-
     <header class="topbar">
-      <a class="brand" href=" ">
-        <div class="brand-mark">E</div>
+      <div class="brand">
+        <div class="brand-logo">E</div>
 
         <div>
-          <strong>EchoCity</strong>
+          <div class="brand-name">EchoCity</div>
 
-          <span
+          <div
+            class="brand-subtitle"
             data-zh="全球数字居民入口"
             data-en="Global Digital Resident Gateway"
           >
             全球数字居民入口
-          </span>
+          </div>
         </div>
-      </a >
+      </div>
 
       <div class="top-actions">
         <button
-          class="top-button"
           id="languageButton"
+          class="top-button"
           type="button"
         >
           EN
         </button>
 
-        <a
+        <button
+          id="homeButton"
           class="top-button"
-          href="./index.html"
+          type="button"
           data-zh="返回首页"
           data-en="Back to Home"
         >
           返回首页
-        </a >
+        </button>
       </div>
-    </header>        <main class="main">
+    </header>
 
+    <main class="main">
       <section class="intro-panel">
         <div
-          class="eyebrow"
+          class="badge"
           data-zh="全球数字居民登记"
           data-en="Global Digital Resident Registration"
         >
           全球数字居民登记
         </div>
 
-        <h1>
-          <span
-            data-zh="加入 EchoCity"
-            data-en="Join EchoCity"
-          >
-            加入 EchoCity
-          </span>
-
-          <span
-            data-zh="成为数字居民"
-            data-en="Become a Digital Resident"
-          >
-            成为数字居民
-          </span>
+        <h1
+          class="hero-title"
+          data-zh="加入 EchoCity，成为数字居民"
+          data-en="Join EchoCity. Become a Digital Resident."
+        >
+          加入 EchoCity，成为数字居民
         </h1>
 
         <p
-          class="intro-description"
-          data-zh="EchoCity 面向全球居民开放。你可以使用国际手机号或邮箱建立数字身份，加入社区、参与活动、寻找伙伴，并与 AI 居民共同生活、共同创造。"
-          data-en="EchoCity is open to residents around the world. Use an international phone number or email to create your digital identity, join communities, take part in activities, find companions, and co-create with AI residents."
+          class="hero-description"
+          data-zh="EchoCity 面向全球居民开放。使用国际手机号验证身份，进入社区、参与活动、发布需求、贡献资源，并与数字人 Echo 共同协作。"
+          data-en="EchoCity is open to residents around the world. Verify your identity with an international phone number, enter communities, join activities, publish needs, contribute resources, and collaborate with digital resident Echo."
         >
-          EchoCity 面向全球居民开放。你可以使用国际手机号或邮箱建立数字身份，加入社区、参与活动、寻找伙伴，并与 AI 居民共同生活、共同创造。
+          EchoCity 面向全球居民开放。使用国际手机号验证身份，进入社区、参与活动、发布需求、贡献资源，并与数字人 Echo 共同协作。
         </p >
 
         <div class="feature-list">
-
-          <div class="feature-item">
-            <div class="feature-icon">🌍</div>
+          <article class="feature-card">
+            <div class="feature-icon">🌐</div>
 
             <div>
-              <strong
+              <div
+                class="feature-title"
                 data-zh="全球居民身份"
                 data-en="Global Resident Identity"
               >
                 全球居民身份
-              </strong>
+              </div>
 
-              <p
+              <div
+                class="feature-text"
                 data-zh="支持不同国家、地区、语言和时区的数字居民。"
                 data-en="Supports digital residents across countries, regions, languages, and time zones."
               >
                 支持不同国家、地区、语言和时区的数字居民。
-              </p >
+              </div>
             </div>
-          </div>
+          </article>
 
-          <div class="feature-item">
+          <article class="feature-card">
             <div class="feature-icon">🤝</div>
 
             <div>
-              <strong
-                data-zh="社区与真实互动"
-                data-en="Community and Real Interaction"
+              <div
+                class="feature-title"
+                data-zh="社会资源互动"
+                data-en="Social Resource Interaction"
               >
-                社区与真实互动
-              </strong>
+                社会资源互动
+              </div>
 
-              <p
-                data-zh="发起聚会、运动、学习、信仰、咨询和共同创作活动。"
-                data-en="Start gatherings, sports, learning, faith, counseling, and co-creation activities."
+              <div
+                class="feature-text"
+                data-zh="让人的需求、能力、时间、技能和组织形成真实协作。"
+                data-en="Connect needs, abilities, time, skills, and organizations through real collaboration."
               >
-                发起聚会、运动、学习、信仰、咨询和共同创作活动。
-              </p >
+                让人的需求、能力、时间、技能和组织形成真实协作。
+              </div>
             </div>
-          </div>
+          </article>
 
-          <div class="feature-item">
-            <div class="feature-icon">🤖</div>
+          <article class="feature-card">
+            <div class="feature-icon">✨</div>
 
             <div>
-              <strong
-                data-zh="AI 文明引擎"
-                data-en="AI Civilization Engine"
+              <div
+                class="feature-title"
+                data-zh="数字人 Echo"
+                data-en="Digital Resident Echo"
               >
-                AI 文明引擎
-              </strong>
+                数字人 Echo
+              </div>
 
-              <p
-                data-zh="AI 理解需求、匹配伙伴、组织过程、记录成果并持续优化。"
-                data-en="AI understands needs, matches people, organizes processes, records outcomes, and keeps improving."
+              <div
+                class="feature-text"
+                data-zh="理解需求、匹配资源、协助组织、记录过程并总结成果。"
+                data-en="Understands needs, matches resources, supports coordination, records progress, and summarizes outcomes."
               >
-                AI 理解需求、匹配伙伴、组织过程、记录成果并持续优化。
-              </p >
+                理解需求、匹配资源、协助组织、记录过程并总结成果。
+              </div>
             </div>
-          </div>
-
+          </article>
         </div>
-      </section>
-
-      <section class="register-panel">
+      </section>      <section class="register-panel">
         <h2
+          class="register-title"
           data-zh="创建数字居民身份"
-          data-en="Create Digital Resident Identity"
+          data-en="Create Your Digital Resident Identity"
         >
           创建数字居民身份
         </h2>
 
         <p
-          class="register-subtitle"
-          data-zh="请先完成基础身份登记。当前阶段为前端演示，正式短信验证需要接入后台服务。"
-          data-en="Complete the basic identity registration first. This stage is a front-end demonstration; real SMS verification requires backend services."
+          class="register-description"
+          data-zh="手机号是主要注册方式。请选择国际区号，接收真实的6位短信验证码。"
+          data-en="Phone registration is the primary access method. Select your international calling code and receive a real 6-digit SMS code."
         >
-          请先完成基础身份登记。当前阶段为前端演示，正式短信验证需要接入后台服务。
+          手机号是主要注册方式。请选择国际区号，接收真实的6位短信验证码。
         </p >
 
-        <div class="progress">
-          <div class="progress-step active"></div>
-          <div class="progress-step"></div>
-          <div class="progress-step"></div>
+        <div class="steps">
+          <div class="step-line active"></div>
+          <div class="step-line"></div>
+          <div class="step-line"></div>
         </div>
 
-        <form id="registerForm">
-
+        <form id="phoneRegisterForm">
           <div class="form-group">
             <label
               class="form-label"
-              for="region"
+              for="countryCode"
               data-zh="国家或地区"
               data-en="Country or Region"
             >
@@ -636,56 +689,116 @@
             </label>
 
             <select
+              id="countryCode"
               class="select"
-              id="region"
               required
             >
-              <option value="+86">
-                中国大陆 +86
-              </option>
-
               <option value="+1">
                 United States / Canada +1
               </option>
 
-              <option value="+44">
-                United Kingdom +44
+              <option value="+86">
+                中国大陆 +86
               </option>
 
-              <option value="+49">
-                Deutschland +49
-              </option>
-
-              <option value="+33">
-                France +33
-              </option>
-
-              <option value="+61">
-                Australia +61
-              </option>
-
-              <option value="+81">
-                日本 +81
-              </option>
-
-              <option value="+82">
-                대한민국 +82
-              </option>
-
-              <option value="+65">
-                Singapore +65
+              <option value="+886">
+                台湾地区 +886
               </option>
 
               <option value="+852">
                 Hong Kong +852
               </option>
 
-              <option value="+886">
-                Taiwan +886
+              <option value="+853">
+                Macao +853
               </option>
 
-              <option value="other">
-                Other Region
+              <option value="+44">
+                United Kingdom +44
+              </option>
+
+              <option value="+61">
+                Australia +61
+              </option>
+
+              <option value="+64">
+                New Zealand +64
+              </option>
+
+              <option value="+65">
+                Singapore +65
+              </option>
+
+              <option value="+81">
+                Japan +81
+              </option>
+
+              <option value="+82">
+                South Korea +82
+              </option>
+
+              <option value="+49">
+                Germany +49
+              </option>
+
+              <option value="+33">
+                France +33
+              </option>
+
+              <option value="+39">
+                Italy +39
+              </option>
+
+              <option value="+34">
+                Spain +34
+              </option>
+
+              <option value="+31">
+                Netherlands +31
+              </option>
+
+              <option value="+91">
+                India +91
+              </option>
+
+              <option value="+66">
+                Thailand +66
+              </option>
+
+              <option value="+60">
+                Malaysia +60
+              </option>
+
+              <option value="+63">
+                Philippines +63
+              </option>
+
+              <option value="+62">
+                Indonesia +62
+              </option>
+
+              <option value="+84">
+                Vietnam +84
+              </option>
+
+              <option value="+971">
+                United Arab Emirates +971
+              </option>
+
+              <option value="+972">
+                Israel +972
+              </option>
+
+              <option value="+27">
+                South Africa +27
+              </option>
+
+              <option value="+55">
+                Brazil +55
+              </option>
+
+              <option value="+52">
+                Mexico +52
               </option>
             </select>
           </div>
@@ -693,110 +806,70 @@
           <div class="form-group">
             <label
               class="form-label"
-              for="phone"
+              for="phoneNumber"
               data-zh="手机号码"
-              data-en="Phone Number"
+              data-en="Mobile Number"
             >
               手机号码
             </label>
 
             <div class="phone-row">
               <input
+                id="selectedCode"
                 class="input"
-                id="countryCode"
                 type="text"
-                value="+86"
+                value="+1"
                 readonly
-              >
+              />
 
               <input
+                id="phoneNumber"
                 class="input"
-                id="phone"
                 type="tel"
+                inputmode="numeric"
+                autocomplete="tel"
                 data-placeholder-zh="请输入手机号码"
-                data-placeholder-en="Enter phone number"
+                data-placeholder-en="Enter mobile number"
                 placeholder="请输入手机号码"
                 required
-              >
+              />
             </div>
-          </div>          <div class="form-group">
+          </div>
+
+          <div class="form-group">
             <label
               class="form-label"
               for="verificationCode"
-              data-zh="验证码"
-              data-en="Verification Code"
+              data-zh="短信验证码"
+              data-en="SMS Verification Code"
             >
-              验证码
+              短信验证码
             </label>
 
-            <div class="verification-row">
+            <div class="code-row">
               <input
-                class="input"
                 id="verificationCode"
+                class="input"
                 type="text"
                 inputmode="numeric"
+                autocomplete="one-time-code"
                 maxlength="6"
                 data-placeholder-zh="请输入6位验证码"
-                data-placeholder-en="Enter 6-digit code"
+                data-placeholder-en="Enter the 6-digit code"
                 placeholder="请输入6位验证码"
                 required
-              >
+              />
 
               <button
-                class="secondary-button"
                 id="sendCodeButton"
+                class="secondary-button"
                 type="button"
-                data-zh="获取验证码"
+                data-zh="发送验证码"
                 data-en="Send Code"
               >
-                获取验证码
+                发送验证码
               </button>
             </div>
-          </div>
-
-          <div class="form-group">
-            <label
-              class="form-label"
-              for="email"
-              data-zh="备用邮箱"
-              data-en="Backup Email"
-            >
-              备用邮箱
-            </label>
-
-            <input
-              class="input"
-              id="email"
-              type="email"
-              data-placeholder-zh="海外居民或无法接收短信时可填写"
-              data-placeholder-en="For overseas residents or users unable to receive SMS"
-              placeholder="海外居民或无法接收短信时可填写"
-            >
-          </div>
-
-          <div class="form-group">
-            <label
-              class="form-label"
-              for="preferredLanguage"
-              data-zh="首选语言"
-              data-en="Preferred Language"
-            >
-              首选语言
-            </label>
-
-            <select
-              class="select"
-              id="preferredLanguage"
-              required
-            >
-              <option value="zh">
-                中文
-              </option>
-
-              <option value="en">
-                English
-              </option>
-            </select>
           </div>
 
           <label class="agreement">
@@ -804,117 +877,158 @@
               id="agreement"
               type="checkbox"
               required
-            >
+            />
 
             <span
-              data-zh="我同意 EchoCity 居民规则、隐私原则，并理解 AI 只提供理解、匹配和辅助建议，最终决定由居民本人作出。"
-              data-en="I agree to the EchoCity resident rules and privacy principles, and understand that AI provides understanding, matching, and assistance only. Final decisions remain with the resident."
+              data-zh="我同意 EchoCity 居民规则和隐私原则。数字人 Echo 只提供理解、匹配和协作支持，最终决定由居民本人作出。"
+              data-en="I agree to the EchoCity resident rules and privacy principles. Digital resident Echo provides understanding, matching, and collaboration support only. Final decisions remain with the resident."
             >
-              我同意 EchoCity 居民规则、隐私原则，并理解 AI 只提供理解、匹配和辅助建议，最终决定由居民本人作出。
+              我同意 EchoCity 居民规则和隐私原则。数字人 Echo 只提供理解、匹配和协作支持，最终决定由居民本人作出。
             </span>
           </label>
 
           <button
-            class="primary-button"
+            id="verifyButton"
+            class="submit-button"
             type="submit"
-            data-zh="创建数字居民身份"
-            data-en="Create Digital Resident Identity"
+            data-zh="验证并进入 EchoCity"
+            data-en="Verify and Enter EchoCity"
           >
-            创建数字居民身份
+            验证并进入 EchoCity
           </button>
 
           <div
-            class="message"
             id="message"
+            class="message"
           ></div>
 
-          <p class="alternative">
+          <div class="backup-entry">
             <span
-              data-zh="无法使用手机号？"
+              data-zh="暂时无法使用手机号？"
               data-en="Unable to use a phone number?"
             >
-              无法使用手机号？
+              暂时无法使用手机号？
             </span>
 
             <button
-              id="emailRegisterButton"
+              id="emailAccessButton"
+              class="backup-button"
               type="button"
-              data-zh="使用邮箱登记"
-              data-en="Register with Email"
+              data-zh="使用邮箱备用入口"
+              data-en="Use Email Backup Access"
             >
-              使用邮箱登记
+              使用邮箱备用入口
             </button>
-          </p >
-
-          <div class="ai-note">
-            <strong
-              data-zh="AI 如何参与"
-              data-en="How AI Participates"
-            >
-              AI 如何参与
-            </strong>
-
-            <p
-              data-zh="登记完成后，AI 将根据你主动提供的国家、语言、时区和兴趣，推荐合适的社区、活动与伙伴。未经许可，不会替你作出决定。"
-              data-en="After registration, AI uses the country, language, time zone, and interests you choose to provide to recommend suitable communities, activities, and people. It will not make decisions for you without permission."
-            >
-              登记完成后，AI 将根据你主动提供的国家、语言、时区和兴趣，推荐合适的社区、活动与伙伴。未经许可，不会替你作出决定。
-            </p >
           </div>
-
         </form>
       </section>
-
     </main>
 
     <footer
       class="footer"
-      data-zh="EchoCity · 服务有灵魂的人 · 全球数字文明共同体"
-      data-en="EchoCity · Serving People with Souls · A Global Digital Civilization Community"
+      data-zh="EchoCity · 让社会资源以数字方式互动起来"
+      data-en="EchoCity · Enabling social resources to interact digitally"
     >
-      EchoCity · 服务有灵魂的人 · 全球数字文明共同体
+      EchoCity · 让社会资源以数字方式互动起来
     </footer>
-
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./echocity-supabase.js"></script>
 
   <script>
     const languageButton =
       document.getElementById("languageButton");
 
-    const region =
-      document.getElementById("region");
+    const homeButton =
+      document.getElementById("homeButton");
+
+    const phoneRegisterForm =
+      document.getElementById("phoneRegisterForm");
 
     const countryCode =
       document.getElementById("countryCode");
 
+    const selectedCode =
+      document.getElementById("selectedCode");
+
+    const phoneNumberInput =
+      document.getElementById("phoneNumber");
+
+    const verificationCodeInput =
+      document.getElementById("verificationCode");
+
     const sendCodeButton =
       document.getElementById("sendCodeButton");
 
-    const registerForm =
-      document.getElementById("registerForm");
+    const verifyButton =
+      document.getElementById("verifyButton");
+
+    const agreementInput =
+      document.getElementById("agreement");
+
+    const emailAccessButton =
+      document.getElementById("emailAccessButton");
 
     const message =
       document.getElementById("message");
 
-    const emailRegisterButton =
-      document.getElementById("emailRegisterButton");
-
     let currentLanguage =
       localStorage.getItem("echocity-language") || "zh";
 
-    function updateLanguage() {
-      document.documentElement.lang =
-        currentLanguage === "zh" ? "zh-CN" : "en";
+    let countdownTimer = null;
 
-      document.querySelectorAll("[data-zh]").forEach((element) => {
-        element.textContent =
-          currentLanguage === "zh"
-            ? element.dataset.zh
-            : element.dataset.en;
-      });
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = "message " + type;
+    }
+
+    function clearMessage() {
+      message.textContent = "";
+      message.className = "message";
+    }
+
+    function normalizePhoneNumber(value) {
+      return value.replace(/[^\d]/g, "");
+    }
+
+    function getInternationalPhone() {
+      const localNumber =
+        normalizePhoneNumber(phoneNumberInput.value);
+
+      if (!localNumber) {
+        return "";
+      }
+
+      return countryCode.value + localNumber;
+    }
+
+    function applyLanguage(language) {
+      currentLanguage = language;
+
+      localStorage.setItem(
+        "echocity-language",
+        currentLanguage
+      );
+
+      document.documentElement.lang =
+        currentLanguage === "zh"
+          ? "zh-CN"
+          : "en";
 
       document
-        .querySelectorAll("[data-placeholder-zh]")
+        .querySelectorAll("[data-zh][data-en]")
+        .forEach((element) => {
+          element.textContent =
+            currentLanguage === "zh"
+              ? element.dataset.zh
+              : element.dataset.en;
+        });
+
+      document
+        .querySelectorAll(
+          "[data-placeholder-zh][data-placeholder-en]"
+        )
         .forEach((element) => {
           element.placeholder =
             currentLanguage === "zh"
@@ -923,127 +1037,293 @@
         });
 
       languageButton.textContent =
-        currentLanguage === "zh" ? "EN" : "中文";
+        currentLanguage === "zh"
+          ? "EN"
+          : "中文";
+    }    function startCountdown(seconds) {
+      let remaining = seconds;
 
-      localStorage.setItem(
-        "echocity-language",
-        currentLanguage
-      );
+      clearInterval(countdownTimer);
+
+      sendCodeButton.disabled = true;
+
+      sendCodeButton.textContent =
+        currentLanguage === "zh"
+          ? remaining + "秒后重发"
+          : "Resend in " + remaining + "s";
+
+      countdownTimer = setInterval(() => {
+        remaining -= 1;
+
+        if (remaining <= 0) {
+          clearInterval(countdownTimer);
+
+          sendCodeButton.disabled = false;
+
+          sendCodeButton.textContent =
+            currentLanguage === "zh"
+              ? "发送验证码"
+              : "Send Code";
+
+          return;
+        }
+
+        sendCodeButton.textContent =
+          currentLanguage === "zh"
+            ? remaining + "秒后重发"
+            : "Resend in " + remaining + "s";
+      }, 1000);
     }
+
+    function getSupabaseClient() {
+      if (!window.echoCitySupabase) {
+        showMessage(
+          currentLanguage === "zh"
+            ? "系统连接尚未加载，请刷新页面后重试。"
+            : "The system connection has not loaded. Refresh the page and try again.",
+          "error"
+        );
+
+        return null;
+      }
+
+      return window.echoCitySupabase;
+    }
+
+    countryCode.addEventListener("change", () => {
+      selectedCode.value = countryCode.value;
+      clearMessage();
+    });
 
     languageButton.addEventListener("click", () => {
-      currentLanguage =
-        currentLanguage === "zh" ? "en" : "zh";
+      const nextLanguage =
+        currentLanguage === "zh"
+          ? "en"
+          : "zh";
 
-      updateLanguage();
+      applyLanguage(nextLanguage);
+      clearMessage();
     });
 
-    region.addEventListener("change", () => {
-      countryCode.value =
-        region.value === "other" ? "+" : region.value;
+    homeButton.addEventListener("click", () => {
+      window.location.href = "index.html";
     });
 
-    sendCodeButton.addEventListener("click", () => {
-      const phone =
-        document.getElementById("phone").value.trim();
+    sendCodeButton.addEventListener(
+      "click",
+      async () => {
+        clearMessage();
 
-      const email =
-        document.getElementById("email").value.trim();
+        const supabaseClient =
+          getSupabaseClient();
 
-      if (!phone && !email) {
+        if (!supabaseClient) {
+          return;
+        }
+
+        const internationalPhone =
+          getInternationalPhone();
+
+        if (!internationalPhone) {
+          showMessage(
+            currentLanguage === "zh"
+              ? "请输入手机号码。"
+              : "Please enter your mobile number.",
+            "error"
+          );
+
+          phoneNumberInput.focus();
+          return;
+        }
+
+        sendCodeButton.disabled = true;
+
         showMessage(
           currentLanguage === "zh"
-            ? "请先输入手机号码，或填写备用邮箱。"
-            : "Enter a phone number or backup email first.",
-          "error"
+            ? "正在发送短信验证码……"
+            : "Sending SMS verification code...",
+          "success"
         );
 
-        return;
+        try {
+          const { error } =
+            await supabaseClient.auth.signInWithOtp({
+              phone: internationalPhone,
+              options: {
+                shouldCreateUser: true
+              }
+            });
+
+          if (error) {
+            throw error;
+          }
+
+          showMessage(
+            currentLanguage === "zh"
+              ? "验证码已发送，请查看手机短信。"
+              : "The verification code has been sent. Check your SMS messages.",
+            "success"
+          );
+
+          verificationCodeInput.focus();
+
+          startCountdown(60);
+        } catch (error) {
+          console.error(
+            "EchoCity send SMS error:",
+            error
+          );
+
+          sendCodeButton.disabled = false;
+
+          showMessage(
+            currentLanguage === "zh"
+              ? "验证码发送失败：" + error.message
+              : "Failed to send the code: " + error.message,
+            "error"
+          );
+        }
       }
+    );
 
-      showMessage(
-        currentLanguage === "zh"
-          ? "演示验证码已生成：123456。正式上线后将接入国际短信或邮箱服务。"
-          : "Demo verification code generated: 123456. International SMS or email services will be connected in production.",
-        "success"
-      );
-    });
+    phoneRegisterForm.addEventListener(
+      "submit",
+      async (event) => {
+        event.preventDefault();
+        clearMessage();
 
-    registerForm.addEventListener("submit", (event) => {
-      event.preventDefault();
+        const supabaseClient =
+          getSupabaseClient();
 
-      const code =
-        document
-          .getElementById("verificationCode")
-          .value.trim();
+        if (!supabaseClient) {
+          return;
+        }
 
-      const agreement =
-        document.getElementById("agreement").checked;
+        const internationalPhone =
+          getInternationalPhone();
 
-      if (code !== "123456") {
+        const verificationCode =
+          verificationCodeInput.value
+            .replace(/[^\d]/g, "")
+            .trim();
+
+        if (!internationalPhone) {
+          showMessage(
+            currentLanguage === "zh"
+              ? "请输入手机号码。"
+              : "Please enter your mobile number.",
+            "error"
+          );
+
+          phoneNumberInput.focus();
+          return;
+        }
+
+        if (verificationCode.length !== 6) {
+          showMessage(
+            currentLanguage === "zh"
+              ? "请输入正确的6位短信验证码。"
+              : "Enter the correct 6-digit SMS verification code.",
+            "error"
+          );
+
+          verificationCodeInput.focus();
+          return;
+        }
+
+        if (!agreementInput.checked) {
+          showMessage(
+            currentLanguage === "zh"
+              ? "请先同意居民规则和隐私原则。"
+              : "Please agree to the resident rules and privacy principles.",
+            "error"
+          );
+
+          return;
+        }
+
+        verifyButton.disabled = true;
+
         showMessage(
           currentLanguage === "zh"
-            ? "验证码不正确。演示验证码为 123456。"
-            : "Incorrect verification code. The demo code is 123456.",
-          "error"
+            ? "正在验证并创建数字居民身份……"
+            : "Verifying and creating your digital resident identity...",
+          "success"
         );
 
-        return;
-      }
+        try {
+          const { data, error } =
+            await supabaseClient.auth.verifyOtp({
+              phone: internationalPhone,
+              token: verificationCode,
+              type: "sms"
+            });
 
-      if (!agreement) {
+          if (error) {
+            throw error;
+          }
+
+          if (!data.session || !data.user) {
+            throw new Error(
+              currentLanguage === "zh"
+                ? "身份验证没有完成，请重新尝试。"
+                : "Identity verification was not completed. Try again."
+            );
+          }
+
+          localStorage.setItem(
+            "echocity-resident-phone",
+            internationalPhone
+          );
+
+          localStorage.setItem(
+            "echocity-resident-id",
+            data.user.id
+          );
+
+          showMessage(
+            currentLanguage === "zh"
+              ? "验证成功，正在进入 EchoCity……"
+              : "Verification successful. Entering EchoCity...",
+            "success"
+          );
+
+          setTimeout(() => {
+            window.location.href =
+              "resident-profile.html";
+          }, 900);
+        } catch (error) {
+          console.error(
+            "EchoCity verify SMS error:",
+            error
+          );
+
+          verifyButton.disabled = false;
+
+          showMessage(
+            currentLanguage === "zh"
+              ? "验证失败：" + error.message
+              : "Verification failed: " + error.message,
+            "error"
+          );
+        }
+      }
+    );
+
+    emailAccessButton.addEventListener(
+      "click",
+      () => {
         showMessage(
           currentLanguage === "zh"
-            ? "请先同意居民规则和隐私原则。"
-            : "Please agree to the resident rules and privacy principles.",
-          "error"
+            ? "邮箱备用入口将在手机号注册测试完成后接入。"
+            : "Email backup access will be connected after phone registration testing is complete.",
+          "success"
         );
-
-        return;
       }
+    );
 
-      const residentData = {
-        region: region.value,
-        phone:
-          document.getElementById("phone").value.trim(),
-        email:
-          document.getElementById("email").value.trim(),
-        preferredLanguage:
-          document.getElementById("preferredLanguage").value,
-        createdAt:
-          new Date().toISOString()
-      };
-
-      localStorage.setItem(
-        "echocity-resident-registration",
-        JSON.stringify(residentData)
-      );
-
-      showMessage(
-        currentLanguage === "zh"
-          ? "登记成功。数字居民基础身份已保存在当前浏览器中。"
-          : "Registration successful. Your basic digital resident identity has been saved in this browser.",
-        "success"
-      );
-    });
-
-    emailRegisterButton.addEventListener("click", () => {
-      document.getElementById("email").focus();
-
-      showMessage(
-        currentLanguage === "zh"
-          ? "请填写备用邮箱。当前演示仍使用验证码 123456。"
-          : "Enter your backup email. This demonstration still uses verification code 123456.",
-        "success"
-      );
-    });
-
-    function showMessage(text, type) {
-      message.textContent = text;
-      message.className = "message " + type;
-    }
-
-    updateLanguage();
+    applyLanguage(currentLanguage);
+    selectedCode.value = countryCode.value;
   </script>
 </body>
 </html>
