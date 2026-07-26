@@ -874,7 +874,59 @@
       en: "Professional Counseling"
     }
   };
+function fillActivityFromDream() {
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
 
+  if (
+    params.get("source") !== "dream"
+  ) {
+    return;
+  }
+
+  const selectedDream =
+    JSON.parse(
+      localStorage.getItem(
+        "echocity_selected_dream"
+      ) || "null"
+    );
+
+  if (!selectedDream) {
+    return;
+  }
+
+  activityTitle.value =
+    selectedDream.title || "";
+
+  activityNotes.value =
+    selectedDream.description || "";
+
+  activityTitle.dataset.autoFilled =
+    "true";
+
+  if (
+    Array.isArray(
+      selectedDream.neededRoles
+    ) &&
+    selectedDream.neededRoles.length
+  ) {
+    const roleText =
+      selectedDream.neededRoles.join(
+        "、"
+      );
+
+    activityNotes.value +=
+      currentLanguage === "en"
+        ? "\n\nNeeded roles: " +
+          roleText
+        : "\n\n需要角色：" +
+          roleText;
+  }
+
+  updateEchoSummary();
+}
   function setDefaultDate() {
     if (activityDate.value) {
       return;
@@ -1040,7 +1092,28 @@
       ),
       radius: Number(searchRadius.value),
       notes: activityNotes.value.trim(),
+  dreamTitle:
+JSON.parse(
+    localStorage.getItem(
+        "echocity_selected_dream"
+    ) || "null"
+)?.title || "",
+
+dreamRoles:
+JSON.parse(
+    localStorage.getItem(
+        "echocity_selected_dream"
+    ) || "null"
+)?.neededRoles || [],    
       status: "matching",
+      sourceType: "dream",
+
+sourceDream:
+JSON.parse(
+    localStorage.getItem(
+        "echocity_selected_dream"
+    ) || "null"
+),
       createdAt: new Date().toISOString()
     };
 
@@ -1048,11 +1121,17 @@
       "echocityCurrentActivity",
       JSON.stringify(activityData)
     );
-
-    window.location.href =
-      `city-map.html?type=${encodeURIComponent(
-        selectedActivityType
-      )}`;
+if (
+  window.EchoStore &&
+  window.EchoStore.activities &&
+  typeof window.EchoStore.activities.create ===
+    "function"
+) {
+  window.EchoStore.activities.create(
+    activityData
+  );
+}
+    window.location.href = "activity-detail.html";
   });
 function fillActivityFromDream() {
   const params = new URLSearchParams(

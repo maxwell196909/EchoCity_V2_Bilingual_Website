@@ -445,7 +445,8 @@
       </aside>
     </div>
   </div>
-
+<script src="assets/js/echocity-store.js"></script>
+<script src="assets/js/echocity-services.js"></script>
   <script>
     const translations = {
       zh: {
@@ -530,12 +531,17 @@
     }
 
     function getDreams() {
-      return (
-        JSON.parse(
-          localStorage.getItem("echocity_dreams")
-        ) || []
-      );
-    }
+  if (
+    window.EchoStore &&
+    window.EchoStore.dreams &&
+    typeof window.EchoStore.dreams.all ===
+      "function"
+  ) {
+    return window.EchoStore.dreams.all();
+  }
+
+  return [];
+}
 
     function saveDreams(dreams) {
       localStorage.setItem(
@@ -1240,8 +1246,25 @@ const newDream = {
   progress: 25
 };
 
-        dreams.unshift(newDream);
-        saveDreams(dreams);
+        const publishResult =
+  window.EchoServices.Dream.publish(
+    newDream
+  );
+
+if (!publishResult.success) {
+  console.error(
+    "Dream publish failed:",
+    publishResult
+  );
+
+  alert(
+    getText(
+      "dreamPublishFailed"
+    )
+  );
+
+  return;
+}
 
         document.getElementById("dreamTitle").value = "";
         document.getElementById("dreamDescription").value = "";

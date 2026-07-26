@@ -10,25 +10,88 @@
   "use strict";
 
   const DATABASE_KEY = "echocity_db";
-  const DATABASE_VERSION = 1;
+  const DATABASE_VERSION = 2;
+const ECHOCITY_SCHEMA = {
 
+    residents: "Residents",
+
+    families: "Families",
+
+    dreams: "Dreams",
+
+    needs: "Needs",
+
+    resources: "Resources",
+
+    projects: "Projects",
+
+    activities: "Activities",
+
+    messages: "Messages",
+
+    moments: "Moments",
+
+    attachments: "Attachments",
+
+    places: "Places",
+
+    memories: "Memories",
+
+    journeyEvents: "JourneyEvents",
+
+    movies: "Movies",
+
+    notifications: "Notifications"
+
+};
   function createEmptyDatabase() {
     return {
       version: DATABASE_VERSION,
 
       residents: [],
+      families: [],
+
+      dreams: [],
+
+      needs: [],
+
+      resources: [],
+      projects: [],
       activities: [],
       messages: [],
+      moments: [],
       attachments: [],
       places: [],
       memories: [],
+      journeyEvents: [],
+      movies: [],
+      notifications: [],
 
       settings: {
-        language:
-          localStorage.getItem("echocityLanguage") || "zh",
+  language:
+    localStorage.getItem(
+      "echocityLanguage"
+    ) || "zh",
 
-        currentResidentId: "resident_maxwell"
-      },
+  currentResidentId:
+    "resident_maxwell",
+
+  deviceMode: "auto",
+
+  navigationMode: "responsive",
+
+  session: {
+    isSignedIn: true,
+    lastActiveAt:
+      new Date().toISOString()
+  },
+
+  mobile: {
+    bottomNavigationEnabled: true,
+    compactCardsEnabled: true,
+    touchFeedbackEnabled: true
+  }
+},
 
       metadata: {
         createdAt: new Date().toISOString(),
@@ -38,8 +101,80 @@
   }
 
   function cloneData(data) {
-    return JSON.parse(JSON.stringify(data));
+  return JSON.parse(
+    JSON.stringify(data)
+  );
+}
+
+function migrateDatabase(database) {
+  if (
+    !database ||
+    typeof database !== "object"
+  ) {
+    return createEmptyDatabase();
   }
+
+  const arrayCollections = [
+    "residents",
+    "families",
+    "dreams",
+    "needs",
+    "resources",
+    "projects",
+    "activities",
+    "messages",
+    "moments",
+    "attachments",
+    "places",
+    "memories",
+    "journeyEvents",
+    "movies",
+    "notifications"
+  ];
+
+  arrayCollections.forEach(
+    function (collectionName) {
+      if (
+        !Array.isArray(
+          database[collectionName]
+        )
+      ) {
+        database[collectionName] = [];
+      }
+    }
+  );
+
+  if (
+    !database.settings ||
+    typeof database.settings !== "object"
+  ) {
+    database.settings = {};
+  }
+
+  database.settings.language =
+    database.settings.language ||
+    localStorage.getItem(
+      "echocityLanguage"
+    ) ||
+    "zh";
+
+  database.settings.currentResidentId =
+    database.settings.currentResidentId ||
+    "resident_maxwell";
+
+  database.settings.deviceMode =
+    database.settings.deviceMode ||
+    "auto";
+
+  database.settings.navigationMode =
+    database.settings.navigationMode ||
+    "responsive";
+
+  database.version =
+    DATABASE_VERSION;
+
+  return database;
+}
 
   function generateId(prefix) {
     const timestamp = Date.now().toString(36);
@@ -80,7 +215,25 @@
       residents: Array.isArray(database.residents)
         ? database.residents
         : [],
+families: Array.isArray(database.families)
+  ? database.families
+  : [],
 
+dreams: Array.isArray(database.dreams)
+  ? database.dreams
+  : [],
+
+needs: Array.isArray(database.needs)
+  ? database.needs
+  : [],
+
+resources: Array.isArray(database.resources)
+  ? database.resources
+  : [],
+
+projects: Array.isArray(database.projects)
+  ? database.projects
+  : [],
       activities: Array.isArray(database.activities)
         ? database.activities
         : [],
@@ -88,7 +241,9 @@
       messages: Array.isArray(database.messages)
         ? database.messages
         : [],
-
+moments: Array.isArray(database.moments)
+  ? database.moments
+  : [],
       attachments: Array.isArray(database.attachments)
         ? database.attachments
         : [],
@@ -100,11 +255,33 @@
       memories: Array.isArray(database.memories)
         ? database.memories
         : [],
+journeyEvents: Array.isArray(database.journeyEvents)
+  ? database.journeyEvents
+  : [],
 
+movies: Array.isArray(database.movies)
+  ? database.movies
+  : [],
+
+notifications: Array.isArray(database.notifications)
+  ? database.notifications
+  : [],
       settings: {
-        ...emptyDatabase.settings,
-        ...(database.settings || {})
-      },
+  ...emptyDatabase.settings,
+  ...(database.settings || {}),
+
+  session: {
+    ...emptyDatabase.settings.session,
+    ...((database.settings &&
+      database.settings.session) || {})
+  },
+
+  mobile: {
+    ...emptyDatabase.settings.mobile,
+    ...((database.settings &&
+      database.settings.mobile) || {})
+  }
+},
 
       metadata: {
         ...emptyDatabase.metadata,
@@ -134,7 +311,13 @@
         );
       }
 
-      return normalizeDatabase(parsedDatabase);
+      const database =
+    normalizeDatabase(parsedDatabase);
+
+const migratedDatabase =
+    migrateDatabase(database);
+saveDatabase(migratedDatabase);
+return migratedDatabase;
     } catch (error) {
       console.warn(
         "EchoCity database could not be loaded.",
@@ -592,7 +775,11 @@
         "residents",
         "resident"
       ),
-
+dreams:
+  createCollectionApi(
+    "dreams",
+    "dream"
+  ),
     activities:
       createCollectionApi(
         "activities",
@@ -1011,10 +1198,30 @@
 
     residents: {
   ...collectionApis.residents,
+  },
 
-  simple:
-    getSimpleResidents
-},
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     activities:
       collectionApis.activities,
