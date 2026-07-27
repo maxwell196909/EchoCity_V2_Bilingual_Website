@@ -12,7 +12,24 @@
   <title data-i18n="page.title">
     EchoCity｜正在运转的数字文明城市
   </title>
+<link rel="manifest" href="./manifest.json">
 
+<meta name="theme-color" content="#1f6feb">
+
+<meta
+  name="apple-mobile-web-app-capable"
+  content="yes"
+>
+
+<meta
+  name="apple-mobile-web-app-status-bar-style"
+  content="default"
+>
+
+<meta
+  name="apple-mobile-web-app-title"
+  content="EchoCity"
+>
   <style>
     * {
       box-sizing: border-box;
@@ -3043,5 +3060,27 @@
   </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./echocity-supabase.js"></script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener(
+      "load",
+      () => {
+        navigator.serviceWorker
+          .register("./sw.js")
+          .then(() => {
+            console.log(
+              "EchoCity Service Worker registered."
+            );
+          })
+          .catch((error) => {
+            console.error(
+              "Service Worker registration failed:",
+              error
+            );
+          });
+      }
+    );
+  }
+</script>
 </body>
 </html>
