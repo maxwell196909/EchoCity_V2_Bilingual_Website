@@ -1,0 +1,2147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>任务标准确认 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #1f6feb;
+      --primary-dark: #1557b0;
+      --primary-soft: #edf5ff;
+
+      --success: #18864b;
+      --success-soft: #eaf8f0;
+
+      --warning: #9a6700;
+      --warning-soft: #fff6dc;
+
+      --danger: #b42318;
+      --danger-soft: #fff0ee;
+
+      --text: #172033;
+      --text-light: #667085;
+
+      --border: #d9e1ec;
+      --background: #f4f7fb;
+      --card: #ffffff;
+
+      --shadow:
+        0 16px 40px rgba(24, 39, 75, 0.08);
+    }
+
+    body {
+      min-height: 100vh;
+
+      background:
+        linear-gradient(
+          180deg,
+          #edf5ff 0%,
+          #f7f9fc 42%,
+          #f4f7fb 100%
+        );
+
+      color: var(--text);
+
+      font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+    }
+
+    button,
+    textarea,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(100%, 860px);
+      margin: 0 auto;
+      padding: 22px 16px 56px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 38px;
+      height: 38px;
+
+      border-radius: 13px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          #65a4ff
+        );
+
+      color: #ffffff;
+      font-weight: 900;
+
+      box-shadow:
+        0 8px 20px rgba(31, 111, 235, 0.22);
+    }
+
+    .language-button {
+      min-width: 58px;
+      min-height: 40px;
+      padding: 0 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--text);
+
+      font-weight: 800;
+    }
+
+    .hero {
+      margin-bottom: 18px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+
+      min-height: 30px;
+      padding: 0 12px;
+
+      border-radius: 999px;
+
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      margin-top: 12px;
+
+      font-size: clamp(29px, 6vw, 42px);
+      line-height: 1.15;
+      letter-spacing: -1px;
+    }
+
+    .hero p {
+      max-width: 760px;
+
+      margin-top: 10px;
+
+      color: var(--text-light);
+
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .card {
+      margin-top: 16px;
+      padding: 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      font-size: 21px;
+      line-height: 1.4;
+    }
+
+    .card-description {
+      margin-top: 7px;
+
+      color: var(--text-light);
+
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .request-summary {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 12px;
+
+      margin-top: 16px;
+    }
+
+    .summary-item {
+      padding: 13px;
+
+      border-radius: 13px;
+
+      background: #f8fafc;
+    }
+
+    .summary-label {
+      color: var(--text-light);
+
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .summary-value {
+      margin-top: 5px;
+
+      color: var(--text);
+
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .original-request {
+      margin-top: 14px;
+      padding: 14px;
+
+      border-left: 4px solid var(--primary);
+      border-radius: 12px;
+
+      background: var(--primary-soft);
+
+      color: var(--text);
+
+      font-size: 14px;
+      line-height: 1.75;
+      white-space: pre-wrap;
+    }
+
+    .standards-list {
+      display: grid;
+      gap: 16px;
+
+      margin-top: 16px;
+    }
+
+    .standard-card {
+      padding: 18px;
+
+      border: 1px solid var(--border);
+      border-radius: 16px;
+
+      background: #ffffff;
+    }
+
+    .standard-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .standard-number {
+      color: var(--primary-dark);
+
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .standard-title {
+      margin-top: 5px;
+
+      font-size: 20px;
+      line-height: 1.4;
+    }
+
+    .milestone-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 30px;
+      padding: 0 11px;
+
+      border-radius: 999px;
+
+      background: var(--warning-soft);
+      color: var(--warning);
+
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 12px;
+
+      margin-top: 15px;
+    }
+
+    .detail-item {
+      padding: 13px;
+
+      border-radius: 12px;
+
+      background: #f8fafc;
+    }
+
+    .detail-item.full {
+      grid-column: 1 / -1;
+    }
+
+    .detail-label {
+      color: var(--text-light);
+
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .detail-value {
+      margin-top: 6px;
+
+      color: var(--text);
+
+      font-size: 14px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .confirmation-box {
+      margin-top: 16px;
+      padding: 14px;
+
+      border: 1px solid #dbe7f5;
+      border-radius: 13px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #f6faff 0%,
+          #ffffff 100%
+        );
+    }
+
+    .confirmation-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .confirmation-row input {
+      width: 18px;
+      height: 18px;
+
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .confirmation-content {
+      display: grid;
+      gap: 5px;
+    }
+
+    .confirmation-title {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .confirmation-description {
+      color: var(--text-light);
+
+      font-size: 12px;
+      line-height: 1.6;
+    }    .overall-confirmation {
+      margin-top: 16px;
+      padding: 16px;
+
+      border: 1px solid var(--border);
+      border-radius: 14px;
+
+      background: #f8fafc;
+    }
+
+    .overall-confirmation h3 {
+      font-size: 17px;
+      line-height: 1.45;
+    }
+
+    .overall-confirmation p {
+      margin-top: 7px;
+
+      color: var(--text-light);
+
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .agreement-list {
+      display: grid;
+      gap: 12px;
+
+      margin-top: 14px;
+    }
+
+    .agreement-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+
+      padding: 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: #ffffff;
+    }
+
+    .agreement-item input {
+      width: 18px;
+      height: 18px;
+
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .agreement-text {
+      color: var(--text);
+
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 7px;
+
+      margin-top: 16px;
+    }
+
+    .form-label {
+      color: var(--text);
+
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .form-textarea {
+      width: 100%;
+      min-height: 110px;
+
+      padding: 12px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: #ffffff;
+      color: var(--text);
+
+      line-height: 1.65;
+      resize: vertical;
+      outline: none;
+    }
+
+    .form-textarea:focus {
+      border-color: var(--primary);
+
+      box-shadow:
+        0 0 0 3px rgba(31, 111, 235, 0.12);
+    }
+
+    .signature-notice {
+      margin-top: 16px;
+      padding: 14px;
+
+      border: 1px solid #f2d693;
+      border-radius: 13px;
+
+      background: var(--warning-soft);
+      color: #6f4c00;
+
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .status-message {
+      display: none;
+
+      margin-top: 15px;
+      padding: 13px 14px;
+
+      border-radius: 12px;
+
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .status-message.success {
+      display: block;
+
+      border: 1px solid #b9e4c8;
+
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .status-message.error {
+      display: block;
+
+      border: 1px solid #f0c0c0;
+
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .action-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+
+      margin-top: 18px;
+    }
+
+    .secondary-button,
+    .primary-button {
+      min-height: 46px;
+      padding: 0 18px;
+
+      border-radius: 12px;
+
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .secondary-button {
+      border: 1px solid var(--border);
+
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    .primary-button {
+      border: 0;
+
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .primary-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .primary-button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .empty-state {
+      display: none;
+
+      margin-top: 18px;
+      padding: 30px 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: #ffffff;
+      box-shadow: var(--shadow);
+
+      text-align: center;
+    }
+
+    .empty-state.show {
+      display: block;
+    }
+
+    .empty-state h2 {
+      font-size: 22px;
+      line-height: 1.4;
+    }
+
+    .empty-state p {
+      margin-top: 9px;
+
+      color: var(--text-light);
+
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        padding:
+          15px
+          13px
+          42px;
+      }
+
+      .request-summary,
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .standard-header {
+        flex-direction: column;
+      }
+
+      .action-row {
+        flex-direction: column-reverse;
+      }
+
+      .secondary-button,
+      .primary-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <header class="topbar">
+
+      <a
+        class="brand"
+        href=" "
+      >
+        <span class="brand-mark">E</span>
+        <span>EchoCity</span>
+      </a >
+
+      <button
+        class="language-button"
+        id="languageButton"
+        type="button"
+        onclick="toggleLanguage()"
+      >
+        EN
+      </button>
+
+    </header>
+
+    <section class="hero">
+
+      <span
+        class="hero-tag"
+        data-i18n="heroTag"
+      >
+        客户标准确认
+      </span>
+
+      <h1 data-i18n="heroTitle">
+        确认任务范围、完成标准和验收依据
+      </h1>
+
+      <p data-i18n="heroDescription">
+        请逐项查看服务任务、工作范围、完成标准、验收方法和证据要求。确认后，这些内容将作为报价、派工、中间验收和最终验收的共同依据。
+      </p >
+
+    </section>
+
+    <section
+      class="card"
+      id="requestCard"
+    >
+
+      <h2
+        class="card-title"
+        data-i18n="requestTitle"
+      >
+        客户需求信息
+      </h2>
+
+      <p
+        class="card-description"
+        data-i18n="requestDescription"
+      >
+        请先确认以下订单和原始需求是否属于本次服务。
+      </p >
+
+      <div class="request-summary">
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="requestIdLabel"
+          >
+            需求编号
+          </div>
+
+          <div
+            class="summary-value"
+            id="requestId"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="customerLabel"
+          >
+            客户
+          </div>
+
+          <div
+            class="summary-value"
+            id="customerName"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="serviceTypeLabel"
+          >
+            服务类型
+          </div>
+
+          <div
+            class="summary-value"
+            id="serviceType"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="addressLabel"
+          >
+            服务地址
+          </div>
+
+          <div
+            class="summary-value"
+            id="serviceAddress"
+          >
+            --
+          </div>
+        </div>
+
+      </div>
+
+      <div
+        class="original-request"
+        id="originalRequest"
+      >
+        --
+      </div>
+
+    </section>
+
+    <section
+      class="card"
+      id="standardsCard"
+    >
+
+      <h2
+        class="card-title"
+        data-i18n="standardsTitle"
+      >
+        服务任务与完成标准
+      </h2>
+
+      <p
+        class="card-description"
+        data-i18n="standardsDescription"
+      >
+        请逐项查看并确认。每项任务确认后，才能完成整体确认。
+      </p >
+
+      <div
+        class="standards-list"
+        id="standardsList"
+      ></div>
+
+      <div class="overall-confirmation">
+
+        <h3 data-i18n="overallTitle">
+          客户整体确认
+        </h3>
+
+        <p data-i18n="overallDescription">
+          请确认你已经理解任务范围、完成标准、中间验收要求和新增需求处理规则。
+        </p >
+
+        <div class="agreement-list">
+
+          <label class="agreement-item">
+
+            <input
+              id="agreementScope"
+              type="checkbox"
+            />
+
+            <span
+              class="agreement-text"
+              data-i18n="agreementScope"
+            >
+              我已经查看并理解本次服务的任务内容、工作范围和不包含内容。
+            </span>
+
+          </label>
+
+          <label class="agreement-item">
+
+            <input
+              id="agreementStandards"
+              type="checkbox"
+            />
+
+            <span
+              class="agreement-text"
+              data-i18n="agreementStandards"
+            >
+              我同意后续中间验收和最终验收以本页面确认的完成标准和验收方法为依据。
+            </span>
+
+          </label>
+
+          <label class="agreement-item">
+
+            <input
+              id="agreementVariation"
+              type="checkbox"
+            />
+
+            <span
+              class="agreement-text"
+              data-i18n="agreementVariation"
+            >
+              我理解后续新增要求必须另行确认，不能自动作为原任务不合格的理由。
+            </span>
+
+          </label>
+
+          <label class="agreement-item">
+
+            <input
+              id="agreementPaper"
+              type="checkbox"
+            />
+
+            <span
+              class="agreement-text"
+              data-i18n="agreementPaper"
+            >
+              我同意在关键节点对前一阶段完成情况进行评价，并签署纸面中间验收文件。
+            </span>
+
+          </label>
+
+        </div>
+
+      </div>
+
+      <div class="form-group">
+
+        <label
+          class="form-label"
+          for="customerComments"
+          data-i18n="commentsLabel"
+        >
+          客户补充意见
+        </label>
+
+        <textarea
+          class="form-textarea"
+          id="customerComments"
+          data-i18n-placeholder="commentsPlaceholder"
+          placeholder="如有需要修改、补充或进一步说明的内容，请填写在这里。"
+        ></textarea>
+
+      </div>
+
+      <div
+        class="signature-notice"
+        data-i18n="signatureNotice"
+      >
+        线上确认完成后，系统将保存确认时间和确认内容。后续还需要生成纸面《服务任务、完成标准及验收依据确认单》，由客户和服务负责人签字。
+      </div>
+
+      <div
+        class="status-message"
+        id="statusMessage"
+      ></div>
+
+      <div class="action-row">
+
+        <button
+          class="secondary-button"
+          type="button"
+          onclick="requestRevision()"
+          data-i18n="revisionButton"
+        >
+          要求修改标准
+        </button>
+
+        <button
+          class="primary-button"
+          id="confirmButton"
+          type="button"
+          onclick="confirmStandards()"
+          data-i18n="confirmButton"
+        >
+          确认任务标准
+        </button>
+
+      </div>
+
+    </section>
+
+    <section
+      class="empty-state"
+      id="emptyState"
+    >
+      <h2 data-i18n="emptyTitle">
+        没有找到待确认标准
+      </h2>
+
+      <p data-i18n="emptyDescription">
+        请先由运营人员设置任务范围、完成标准和验收依据。
+      </p >
+    </section>
+
+  </main>
+
+  <script>    const translations = {
+      zh: {
+        heroTag: "客户标准确认",
+        heroTitle:
+          "确认任务范围、完成标准和验收依据",
+        heroDescription:
+          "请逐项查看服务任务、工作范围、完成标准、验收方法和证据要求。确认后，这些内容将作为报价、派工、中间验收和最终验收的共同依据。",
+
+        requestTitle: "客户需求信息",
+        requestDescription:
+          "请先确认以下订单和原始需求是否属于本次服务。",
+
+        requestIdLabel: "需求编号",
+        customerLabel: "客户",
+        serviceTypeLabel: "服务类型",
+        addressLabel: "服务地址",
+
+        standardsTitle: "服务任务与完成标准",
+        standardsDescription:
+          "请逐项查看并确认。每项任务确认后，才能完成整体确认。",
+
+        overallTitle: "客户整体确认",
+        overallDescription:
+          "请确认你已经理解任务范围、完成标准、中间验收要求和新增需求处理规则。",
+
+        agreementScope:
+          "我已经查看并理解本次服务的任务内容、工作范围和不包含内容。",
+
+        agreementStandards:
+          "我同意后续中间验收和最终验收以本页面确认的完成标准和验收方法为依据。",
+
+        agreementVariation:
+          "我理解后续新增要求必须另行确认，不能自动作为原任务不合格的理由。",
+
+        agreementPaper:
+          "我同意在关键节点对前一阶段完成情况进行评价，并签署纸面中间验收文件。",
+
+        commentsLabel: "客户补充意见",
+        commentsPlaceholder:
+          "如有需要修改、补充或进一步说明的内容，请填写在这里。",
+
+        signatureNotice:
+          "线上确认完成后，系统将保存确认时间和确认内容。后续还需要生成纸面《服务任务、完成标准及验收依据确认单》，由客户和服务负责人签字。",
+
+        revisionButton: "要求修改标准",
+        confirmButton: "确认任务标准",
+
+        emptyTitle: "没有找到待确认标准",
+        emptyDescription:
+          "请先由运营人员设置任务范围、完成标准和验收依据。",
+
+        standardNumberLabel: "标准编号",
+        milestoneBadge: "中间验收节点",
+
+        taskNameLabel: "任务名称",
+        workScopeLabel: "工作范围",
+        excludedScopeLabel: "不包含内容",
+        completionStandardLabel: "完成标准",
+        inspectionMethodLabel: "验收方法",
+        evidenceLabel: "证据要求",
+        plannedDateLabel: "计划完成日期",
+        milestoneNameLabel: "关键节点",
+        hiddenWorkLabel: "隐蔽工程验收",
+        paperSignatureLabel: "纸面签字",
+        nextStageLockLabel: "下一阶段控制",
+
+        yesText: "是",
+        noText: "否",
+
+        confirmTaskTitle:
+          "确认本项任务标准",
+        confirmTaskDescription:
+          "我已查看本项任务的工作范围、完成标准、验收方法、证据要求和不包含内容。",
+
+        workersService: "需要人手",
+        repairService: "维修或清洁",
+        supportService: "生活帮助",
+        unknownService: "未选择服务",
+
+        notProvided: "未填写",
+
+        taskConfirmationRequired:
+          "请逐项确认全部任务标准。",
+
+        overallAgreementRequired:
+          "请勾选全部客户整体确认内容。",
+
+        confirming: "正在确认……",
+
+        confirmed:
+          "任务标准已经确认。系统已保存确认时间，下一步生成纸面签字确认文件。",
+
+        confirmError:
+          "确认失败，请检查页面内容后重试。",
+
+        revisionCommentsRequired:
+          "如需修改标准，请先在客户补充意见中说明需要修改的内容。",
+
+        revisionSubmitted:
+          "修改要求已经提交，运营人员需要重新调整任务标准。",
+
+        revisionError:
+          "提交修改要求失败，请稍后重试。"
+      },
+
+      en: {
+        heroTag: "Customer Standards Confirmation",
+        heroTitle:
+          "Confirm Task Scope, Completion Standards, and Acceptance Criteria",
+        heroDescription:
+          "Review each service task, work scope, completion standard, inspection method, and evidence requirement. These confirmed items will become the shared basis for quotation, assignment, interim acceptance, and final acceptance.",
+
+        requestTitle: "Customer Request Information",
+        requestDescription:
+          "Confirm that the following order and original request belong to this service.",
+
+        requestIdLabel: "Request ID",
+        customerLabel: "Customer",
+        serviceTypeLabel: "Service Type",
+        addressLabel: "Service Address",
+
+        standardsTitle:
+          "Service Tasks and Completion Standards",
+        standardsDescription:
+          "Review and confirm each task before completing the overall confirmation.",
+
+        overallTitle: "Overall Customer Confirmation",
+        overallDescription:
+          "Confirm that you understand the task scope, completion standards, interim acceptance requirements, and change request rules.",
+
+        agreementScope:
+          "I have reviewed and understood the service tasks, work scope, and excluded work.",
+
+        agreementStandards:
+          "I agree that interim and final acceptance will be based on the confirmed completion standards and inspection methods.",
+
+        agreementVariation:
+          "I understand that new requests must be confirmed separately and cannot automatically be treated as defects in the original work.",
+
+        agreementPaper:
+          "I agree to evaluate the previous stage at each milestone and sign a paper interim acceptance document.",
+
+        commentsLabel: "Customer Comments",
+        commentsPlaceholder:
+          "Enter any requested changes, additions, or explanations here.",
+
+        signatureNotice:
+          "After online confirmation, the system will save the confirmed content and time. A paper Service Task, Completion Standards, and Acceptance Criteria Confirmation must also be signed by the customer and service representative.",
+
+        revisionButton: "Request Changes",
+        confirmButton: "Confirm Task Standards",
+
+        emptyTitle: "No Standards Awaiting Confirmation",
+        emptyDescription:
+          "The service operator must define the task scope, completion standards, and acceptance criteria first.",
+
+        standardNumberLabel: "Standard Number",
+        milestoneBadge: "Interim Acceptance Milestone",
+
+        taskNameLabel: "Task Name",
+        workScopeLabel: "Work Scope",
+        excludedScopeLabel: "Excluded Work",
+        completionStandardLabel:
+          "Completion Standards",
+        inspectionMethodLabel:
+          "Inspection Method",
+        evidenceLabel: "Evidence Requirements",
+        plannedDateLabel:
+          "Planned Completion Date",
+        milestoneNameLabel: "Milestone",
+        hiddenWorkLabel:
+          "Hidden Work Acceptance",
+        paperSignatureLabel:
+          "Paper Signature",
+        nextStageLockLabel:
+          "Next Stage Control",
+
+        yesText: "Yes",
+        noText: "No",
+
+        confirmTaskTitle:
+          "Confirm This Task Standard",
+        confirmTaskDescription:
+          "I have reviewed the work scope, completion standards, inspection method, evidence requirements, and excluded work for this task.",
+
+        workersService: "Need Workers",
+        repairService: "Repair or Cleaning",
+        supportService: "Daily Support",
+        unknownService: "Service Not Selected",
+
+        notProvided: "Not Provided",
+
+        taskConfirmationRequired:
+          "Confirm every task standard.",
+
+        overallAgreementRequired:
+          "Select all overall customer confirmation items.",
+
+        confirming: "Confirming...",
+
+        confirmed:
+          "The task standards have been confirmed. The confirmation time has been saved, and the next step is to prepare the paper signature document.",
+
+        confirmError:
+          "The confirmation could not be saved. Check the page and try again.",
+
+        revisionCommentsRequired:
+          "Describe the required changes in the customer comments field first.",
+
+        revisionSubmitted:
+          "The requested changes have been submitted. The service operator must revise the task standards.",
+
+        revisionError:
+          "The requested changes could not be submitted. Try again later."
+      }
+    };
+
+    let currentLanguage =
+      localStorage.getItem(
+        "echocity-language"
+      ) || "zh";
+
+    let currentRequest = null;
+    let standardsDocument = null;
+    let taskConfirmations = {};
+
+    function translate(key) {
+      return (
+        translations[currentLanguage][key] ||
+        translations.zh[key] ||
+        key
+      );
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang =
+        currentLanguage === "zh"
+          ? "zh-CN"
+          : "en";
+
+      document
+        .querySelectorAll("[data-i18n]")
+        .forEach((element) => {
+          const key =
+            element.getAttribute(
+              "data-i18n"
+            );
+
+          if (
+            translations[
+              currentLanguage
+            ][key]
+          ) {
+            element.textContent =
+              translations[
+                currentLanguage
+              ][key];
+          }
+        });
+
+      document
+        .querySelectorAll(
+          "[data-i18n-placeholder]"
+        )
+        .forEach((element) => {
+          const key =
+            element.getAttribute(
+              "data-i18n-placeholder"
+            );
+
+          if (
+            translations[
+              currentLanguage
+            ][key]
+          ) {
+            element.placeholder =
+              translations[
+                currentLanguage
+              ][key];
+          }
+        });
+
+      document.getElementById(
+        "languageButton"
+      ).textContent =
+        currentLanguage === "zh"
+          ? "EN"
+          : "中文";
+
+      renderRequest();
+      renderStandards();
+    }
+
+    function toggleLanguage() {
+      currentLanguage =
+        currentLanguage === "zh"
+          ? "en"
+          : "zh";
+
+      localStorage.setItem(
+        "echocity-language",
+        currentLanguage
+      );
+
+      applyLanguage();
+    }
+
+    function loadCurrentRequest() {
+      try {
+        const storedRequest =
+          localStorage.getItem(
+            "echocity-last-request"
+          );
+
+        currentRequest =
+          storedRequest
+            ? JSON.parse(storedRequest)
+            : null;
+
+        standardsDocument =
+          currentRequest
+            ?.serviceStandards ||
+          null;
+
+      } catch (error) {
+        console.error(
+          "Failed to load standards:",
+          error
+        );
+
+        currentRequest = null;
+        standardsDocument = null;
+      }
+    }
+
+    function loadExistingConfirmations() {
+      const tasks =
+        standardsDocument?.tasks;
+
+      if (!Array.isArray(tasks)) {
+        taskConfirmations = {};
+        return;
+      }
+
+      tasks.forEach((task) => {
+        taskConfirmations[task.id] =
+          Boolean(
+            task.customerConfirmed
+          );
+      });
+    }
+
+    function getServiceName(
+      serviceType
+    ) {
+      const serviceMap = {
+        workers: "workersService",
+        repair: "repairService",
+        support: "supportService"
+      };
+
+      return translate(
+        serviceMap[serviceType] ||
+        "unknownService"
+      );
+    }
+
+    function formatDate(
+      value
+    ) {
+      if (!value) {
+        return translate(
+          "notProvided"
+        );
+      }
+
+      const date =
+        new Date(
+          value + "T00:00:00"
+        );
+
+      if (
+        Number.isNaN(
+          date.getTime()
+        )
+      ) {
+        return value;
+      }
+
+      return date.toLocaleDateString(
+        currentLanguage === "zh"
+          ? "zh-CN"
+          : "en-US",
+        {
+          year: "numeric",
+          month: "long",
+          day: "numeric"
+        }
+      );
+    }
+
+    function yesOrNo(value) {
+      return value
+        ? translate("yesText")
+        : translate("noText");
+    }
+
+    function renderRequest() {
+      const requestCard =
+        document.getElementById(
+          "requestCard"
+        );
+
+      const standardsCard =
+        document.getElementById(
+          "standardsCard"
+        );
+
+      const emptyState =
+        document.getElementById(
+          "emptyState"
+        );
+
+      const hasStandards =
+        currentRequest &&
+        standardsDocument &&
+        Array.isArray(
+          standardsDocument.tasks
+        ) &&
+        standardsDocument
+          .tasks.length > 0;
+
+      if (!hasStandards) {
+        requestCard.style.display =
+          "none";
+
+        standardsCard.style.display =
+          "none";
+
+        emptyState.classList.add(
+          "show"
+        );
+
+        return;
+      }
+
+      requestCard.style.display =
+        "block";
+
+      standardsCard.style.display =
+        "block";
+
+      emptyState.classList.remove(
+        "show"
+      );
+
+      document.getElementById(
+        "requestId"
+      ).textContent =
+        currentRequest.id || "--";
+
+      document.getElementById(
+        "customerName"
+      ).textContent =
+        currentRequest.customerName ||
+        translate("notProvided");
+
+      document.getElementById(
+        "serviceType"
+      ).textContent =
+        getServiceName(
+          currentRequest.serviceType
+        );
+
+      document.getElementById(
+        "serviceAddress"
+      ).textContent =
+        currentRequest
+          .serviceAddress ||
+        translate("notProvided");
+
+      document.getElementById(
+        "originalRequest"
+      ).textContent =
+        currentRequest.description ||
+        translate("notProvided");
+    }
+
+    function updateTaskConfirmation(
+      taskId,
+      checked
+    ) {
+      taskConfirmations[
+        taskId
+      ] = checked;
+    }
+
+    function escapeHTML(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }    function buildDetailItem(
+      labelKey,
+      value,
+      fullWidth = false
+    ) {
+      return `
+        <div class="detail-item ${
+          fullWidth ? "full" : ""
+        }">
+
+          <div class="detail-label">
+            ${escapeHTML(
+              translate(labelKey)
+            )}
+          </div>
+
+          <div class="detail-value">
+            ${escapeHTML(
+              value ||
+              translate("notProvided")
+            )}
+          </div>
+
+        </div>
+      `;
+    }
+
+    function buildStandardCard(
+      task,
+      index
+    ) {
+      const isConfirmed =
+        Boolean(
+          taskConfirmations[
+            task.id
+          ]
+        );
+
+      return `
+        <article class="standard-card">
+
+          <div class="standard-header">
+
+            <div>
+
+              <div class="standard-number">
+                ${escapeHTML(
+                  translate(
+                    "standardNumberLabel"
+                  )
+                )}：
+                ${escapeHTML(
+                  task.standardNumber ||
+                  `STD-${String(
+                    index + 1
+                  ).padStart(2, "0")}`
+                )}
+              </div>
+
+              <h3 class="standard-title">
+                ${escapeHTML(
+                  task.taskName ||
+                  translate("notProvided")
+                )}
+              </h3>
+
+            </div>
+
+            ${
+              task.isMilestone
+                ? `
+                  <span class="milestone-badge">
+                    ${escapeHTML(
+                      translate(
+                        "milestoneBadge"
+                      )
+                    )}
+                  </span>
+                `
+                : ""
+            }
+
+          </div>
+
+          <div class="detail-grid">
+
+            ${buildDetailItem(
+              "workScopeLabel",
+              task.workScope,
+              true
+            )}
+
+            ${buildDetailItem(
+              "excludedScopeLabel",
+              task.excludedScope,
+              true
+            )}
+
+            ${buildDetailItem(
+              "completionStandardLabel",
+              task.completionStandard,
+              true
+            )}
+
+            ${buildDetailItem(
+              "inspectionMethodLabel",
+              task.inspectionMethod,
+              true
+            )}
+
+            ${buildDetailItem(
+              "evidenceLabel",
+              task.evidenceRequirement,
+              true
+            )}
+
+            ${buildDetailItem(
+              "plannedDateLabel",
+              formatDate(
+                task.plannedDate
+              )
+            )}
+
+            ${buildDetailItem(
+              "milestoneNameLabel",
+              task.milestoneName
+            )}
+
+            ${buildDetailItem(
+              "hiddenWorkLabel",
+              yesOrNo(
+                task.isHiddenWork
+              )
+            )}
+
+            ${buildDetailItem(
+              "paperSignatureLabel",
+              yesOrNo(
+                task
+                  .requiresPaperSignature
+              )
+            )}
+
+            ${buildDetailItem(
+              "nextStageLockLabel",
+              yesOrNo(
+                task.lockNextStage
+              ),
+              true
+            )}
+
+          </div>
+
+          <div class="confirmation-box">
+
+            <label class="confirmation-row">
+
+              <input
+                type="checkbox"
+                ${isConfirmed
+                  ? "checked"
+                  : ""}
+                onchange="
+                  updateTaskConfirmation(
+                    '${task.id}',
+                    this.checked
+                  )
+                "
+              />
+
+              <span class="confirmation-content">
+
+                <span class="confirmation-title">
+                  ${escapeHTML(
+                    translate(
+                      "confirmTaskTitle"
+                    )
+                  )}
+                </span>
+
+                <span class="confirmation-description">
+                  ${escapeHTML(
+                    translate(
+                      "confirmTaskDescription"
+                    )
+                  )}
+                </span>
+
+              </span>
+
+            </label>
+
+          </div>
+
+        </article>
+      `;
+    }
+
+    function renderStandards() {
+      const standardsList =
+        document.getElementById(
+          "standardsList"
+        );
+
+      const tasks =
+        standardsDocument?.tasks;
+
+      if (
+        !Array.isArray(tasks) ||
+        tasks.length === 0
+      ) {
+        standardsList.innerHTML =
+          "";
+
+        return;
+      }
+
+      standardsList.innerHTML =
+        tasks
+          .map(
+            (
+              task,
+              index
+            ) =>
+              buildStandardCard(
+                task,
+                index
+              )
+          )
+          .join("");
+    }
+
+    function showStatus(
+      type,
+      message
+    ) {
+      const statusMessage =
+        document.getElementById(
+          "statusMessage"
+        );
+
+      statusMessage.className =
+        "status-message " + type;
+
+      statusMessage.textContent =
+        message;
+
+      statusMessage.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    function allTasksConfirmed() {
+      const tasks =
+        standardsDocument?.tasks;
+
+      if (
+        !Array.isArray(tasks) ||
+        tasks.length === 0
+      ) {
+        return false;
+      }
+
+      return tasks.every(
+        (task) =>
+          taskConfirmations[
+            task.id
+          ] === true
+      );
+    }
+
+    function allAgreementsChecked() {
+      const agreementIds = [
+        "agreementScope",
+        "agreementStandards",
+        "agreementVariation",
+        "agreementPaper"
+      ];
+
+      return agreementIds.every(
+        (id) =>
+          document.getElementById(
+            id
+          ).checked
+      );
+    }
+
+    function updateStandardsRecords(
+      updatedDocument
+    ) {
+      const records =
+        JSON.parse(
+          localStorage.getItem(
+            "echocity-service-standards"
+          ) || "[]"
+        );
+
+      const recordIndex =
+        records.findIndex(
+          (record) =>
+            record.requestId ===
+            updatedDocument.requestId
+        );
+
+      if (recordIndex >= 0) {
+        records[recordIndex] =
+          updatedDocument;
+      } else {
+        records.unshift(
+          updatedDocument
+        );
+      }
+
+      localStorage.setItem(
+        "echocity-service-standards",
+        JSON.stringify(records)
+      );
+
+      localStorage.setItem(
+        "echocity-last-service-standards",
+        JSON.stringify(
+          updatedDocument
+        )
+      );
+    }
+
+    function updateRequestRecords() {
+      const requests =
+        JSON.parse(
+          localStorage.getItem(
+            "echocity-service-requests"
+          ) || "[]"
+        );
+
+      const requestIndex =
+        requests.findIndex(
+          (request) =>
+            request.id ===
+            currentRequest.id
+        );
+
+      if (requestIndex >= 0) {
+        requests[requestIndex] =
+          currentRequest;
+      } else {
+        requests.unshift(
+          currentRequest
+        );
+      }
+
+      localStorage.setItem(
+        "echocity-service-requests",
+        JSON.stringify(requests)
+      );
+
+      localStorage.setItem(
+        "echocity-last-request",
+        JSON.stringify(
+          currentRequest
+        )
+      );
+    }
+
+    function createPaperDocumentRecord() {
+      const now =
+        new Date().toISOString();
+
+      return {
+        id:
+          "PAPER-STANDARD-" +
+          Date.now(),
+
+        documentNumber:
+          "ECS-CONFIRM-" +
+          String(
+            Date.now()
+          ).slice(-10),
+
+        documentTitle:
+          currentLanguage === "zh"
+            ? "服务任务、完成标准及验收依据确认单"
+            : "Service Task, Completion Standards, and Acceptance Criteria Confirmation",
+
+        requestId:
+          currentRequest.id,
+
+        standardsDocumentId:
+          standardsDocument.id,
+
+        customerName:
+          currentRequest.customerName ||
+          "",
+
+        serviceAddress:
+          currentRequest.serviceAddress ||
+          "",
+
+        status:
+          "pending_paper_signature",
+
+        customerSignature:
+          null,
+
+        serviceRepresentativeSignature:
+          null,
+
+        uploadedFile:
+          null,
+
+        createdAt: now,
+        updatedAt: now
+      };
+    }    function confirmStandards() {
+      if (
+        !currentRequest ||
+        !standardsDocument
+      ) {
+        return;
+      }
+
+      if (!allTasksConfirmed()) {
+        showStatus(
+          "error",
+          translate(
+            "taskConfirmationRequired"
+          )
+        );
+
+        return;
+      }
+
+      if (!allAgreementsChecked()) {
+        showStatus(
+          "error",
+          translate(
+            "overallAgreementRequired"
+          )
+        );
+
+        return;
+      }
+
+      const confirmButton =
+        document.getElementById(
+          "confirmButton"
+        );
+
+      confirmButton.disabled = true;
+
+      confirmButton.textContent =
+        translate("confirming");
+
+      try {
+        const now =
+          new Date().toISOString();
+
+        const comments =
+          document.getElementById(
+            "customerComments"
+          ).value.trim();
+
+        standardsDocument.tasks =
+          standardsDocument.tasks.map(
+            (task) => ({
+              ...task,
+
+              customerConfirmed:
+                true,
+
+              customerConfirmedAt:
+                now,
+
+              customerConfirmationStatus:
+                "confirmed"
+            })
+          );
+
+        standardsDocument.status =
+          "customer_confirmed";
+
+        standardsDocument.customerConfirmed =
+          true;
+
+        standardsDocument.customerConfirmedAt =
+          now;
+
+        standardsDocument.customerComments =
+          comments;
+
+        standardsDocument.customerAgreements = {
+          scopeConfirmed: true,
+          standardsConfirmed: true,
+          variationRuleConfirmed: true,
+          paperSignatureConfirmed: true
+        };
+
+        const paperDocument =
+          createPaperDocumentRecord();
+
+        standardsDocument.paperDocument =
+          paperDocument;
+
+        standardsDocument.updatedAt =
+          now;
+
+        currentRequest.serviceStandards =
+          standardsDocument;
+
+        currentRequest.paperStandardsDocument =
+          paperDocument;
+
+        currentRequest.status =
+          "standards_confirmed";
+
+        currentRequest.updatedAt =
+          now;
+
+        updateStandardsRecords(
+          standardsDocument
+        );
+
+        updateRequestRecords();
+
+        localStorage.setItem(
+          "echocity-last-paper-standard-document",
+          JSON.stringify(
+            paperDocument
+          )
+        );
+
+        const paperDocuments =
+          JSON.parse(
+            localStorage.getItem(
+              "echocity-paper-standard-documents"
+            ) || "[]"
+          );
+
+        const existingIndex =
+          paperDocuments.findIndex(
+            (document) =>
+              document.requestId ===
+              currentRequest.id
+          );
+
+        if (existingIndex >= 0) {
+          paperDocuments[
+            existingIndex
+          ] = paperDocument;
+        } else {
+          paperDocuments.unshift(
+            paperDocument
+          );
+        }
+
+        localStorage.setItem(
+          "echocity-paper-standard-documents",
+          JSON.stringify(
+            paperDocuments
+          )
+        );
+
+        showStatus(
+          "success",
+          translate("confirmed")
+        );
+
+        confirmButton.textContent =
+          translate("confirmButton");
+
+        setTimeout(() => {
+          window.location.href =
+            "service-standards-paper.html";
+        }, 1500);
+
+      } catch (error) {
+        console.error(
+          "Failed to confirm standards:",
+          error
+        );
+
+        showStatus(
+          "error",
+          translate("confirmError")
+        );
+
+        confirmButton.disabled = false;
+
+        confirmButton.textContent =
+          translate("confirmButton");
+      }
+    }
+
+    function requestRevision() {
+      if (
+        !currentRequest ||
+        !standardsDocument
+      ) {
+        return;
+      }
+
+      const comments =
+        document.getElementById(
+          "customerComments"
+        ).value.trim();
+
+      if (!comments) {
+        showStatus(
+          "error",
+          translate(
+            "revisionCommentsRequired"
+          )
+        );
+
+        return;
+      }
+
+      try {
+        const now =
+          new Date().toISOString();
+
+        standardsDocument.status =
+          "revision_requested";
+
+        standardsDocument.customerConfirmed =
+          false;
+
+        standardsDocument.revisionRequest = {
+          comments,
+          requestedAt: now,
+          status: "pending_operator_revision"
+        };
+
+        standardsDocument.updatedAt =
+          now;
+
+        currentRequest.serviceStandards =
+          standardsDocument;
+
+        currentRequest.status =
+          "standards_revision_requested";
+
+        currentRequest.updatedAt =
+          now;
+
+        updateStandardsRecords(
+          standardsDocument
+        );
+
+        updateRequestRecords();
+
+        showStatus(
+          "success",
+          translate(
+            "revisionSubmitted"
+          )
+        );
+
+        setTimeout(() => {
+          window.location.href =
+            "service-request-confirmation.html";
+        }, 1500);
+
+      } catch (error) {
+        console.error(
+          "Failed to request revision:",
+          error
+        );
+
+        showStatus(
+          "error",
+          translate(
+            "revisionError"
+          )
+        );
+      }
+    }
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        loadCurrentRequest();
+        loadExistingConfirmations();
+        applyLanguage();
+      }
+    );
+  </script>
+
+</body>
+</html>

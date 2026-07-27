@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>我的任务 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #1f6feb;
+      --primary-dark: #1557b0;
+      --primary-soft: #edf5ff;
+
+      --success: #18864b;
+      --success-soft: #eaf8f0;
+
+      --warning: #9a6700;
+      --warning-soft: #fff6dc;
+
+      --danger: #b42318;
+      --danger-soft: #fff0ee;
+
+      --text: #172033;
+      --text-light: #667085;
+
+      --border: #d9e1ec;
+      --background: #f4f7fb;
+      --card: #ffffff;
+
+      --shadow:
+        0 16px 40px rgba(24, 39, 75, 0.08);
+    }
+
+    body {
+      min-height: 100vh;
+
+      background:
+        linear-gradient(
+          180deg,
+          #edf5ff 0%,
+          #f7f9fc 40%,
+          #f4f7fb 100%
+        );
+
+      color: var(--text);
+
+      font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      padding: 20px 15px 48px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+
+      margin-bottom: 26px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 38px;
+      height: 38px;
+
+      border-radius: 13px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          #65a4ff
+        );
+
+      color: #ffffff;
+      font-weight: 900;
+
+      box-shadow:
+        0 8px 20px rgba(31, 111, 235, 0.22);
+    }
+
+    .language-button {
+      min-width: 58px;
+      height: 40px;
+
+      padding: 0 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: rgba(255, 255, 255, 0.88);
+      color: var(--text);
+
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .hero {
+      margin-bottom: 18px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+
+      min-height: 30px;
+      padding: 0 12px;
+
+      border-radius: 999px;
+
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      margin-top: 12px;
+
+      font-size: clamp(29px, 7vw, 40px);
+      line-height: 1.16;
+      letter-spacing: -1px;
+    }
+
+    .hero p {
+      margin-top: 10px;
+
+      color: var(--text-light);
+
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .login-card {
+      padding: 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .login-title {
+      font-size: 19px;
+      line-height: 1.4;
+    }
+
+    .login-description {
+      margin-top: 7px;
+
+      color: var(--text-light);
+
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .phone-row {
+      display: flex;
+      gap: 10px;
+
+      margin-top: 16px;
+    }
+
+    .phone-input {
+      flex: 1;
+      min-width: 0;
+      min-height: 48px;
+
+      padding: 0 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: #ffffff;
+      color: var(--text);
+
+      outline: none;
+    }
+
+    .phone-input:focus {
+      border-color: var(--primary);
+
+      box-shadow:
+        0 0 0 3px rgba(31, 111, 235, 0.12);
+    }
+
+    .search-button {
+      min-height: 48px;
+      padding: 0 18px;
+
+      border: 0;
+      border-radius: 12px;
+
+      background: var(--primary);
+      color: #ffffff;
+
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .search-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .task-list {
+      display: grid;
+      gap: 15px;
+
+      margin-top: 18px;
+    }
+
+    .task-card {
+      padding: 18px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .task-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .task-number {
+      color: var(--primary-dark);
+
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .task-title {
+      margin-top: 5px;
+
+      font-size: 20px;
+      line-height: 1.4;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 31px;
+      padding: 0 11px;
+
+      border-radius: 999px;
+
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .status-assigned {
+      background: var(--warning-soft);
+      color: var(--warning);
+    }
+
+    .status-accepted {
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+    }
+
+    .status-arrived {
+      background: #e8f7ff;
+      color: #146a8a;
+    }
+
+    .status-progress {
+      background: #eef0ff;
+      color: #4b4fa8;
+    }
+
+    .status-completed {
+      background: var(--success-soft);
+      color: var(--success);
+    }    .task-details {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 12px;
+
+      margin-top: 15px;
+    }
+
+    .detail-item {
+      padding: 12px;
+
+      border-radius: 12px;
+
+      background: #f8fafc;
+    }
+
+    .detail-label {
+      color: var(--text-light);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .detail-value {
+      margin-top: 5px;
+
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+
+    .task-description {
+      margin-top: 14px;
+      padding: 14px;
+
+      border-radius: 13px;
+
+      background: #f8fafc;
+      color: var(--text);
+
+      font-size: 14px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .manager-card {
+      margin-top: 14px;
+      padding: 14px;
+
+      border: 1px solid #dbe7f5;
+      border-radius: 13px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #f5f9ff 0%,
+          #ffffff 100%
+        );
+    }
+
+    .manager-title {
+      color: var(--primary-dark);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .manager-content {
+      margin-top: 6px;
+
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .task-actions {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 10px;
+
+      margin-top: 16px;
+    }
+
+    .task-button {
+      min-height: 46px;
+
+      padding: 0 14px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: #ffffff;
+      color: var(--text);
+
+      font-size: 14px;
+      font-weight: 800;
+
+      cursor: pointer;
+    }
+
+    .task-button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .task-button.primary {
+      border-color: var(--primary);
+
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .task-button.primary:hover {
+      background: var(--primary-dark);
+      color: #ffffff;
+    }
+
+    .task-button.success {
+      border-color: var(--success);
+
+      background: var(--success);
+      color: #ffffff;
+    }
+
+    .task-button.success:hover {
+      opacity: 0.92;
+    }
+
+    .task-button:disabled {
+      opacity: 0.48;
+      cursor: not-allowed;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+
+      margin-top: 16px;
+      padding-top: 14px;
+
+      border-top: 1px solid #edf1f6;
+    }
+
+    .timeline-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .timeline-dot {
+      width: 10px;
+      height: 10px;
+
+      margin-top: 5px;
+
+      border-radius: 50%;
+
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    .timeline-dot.active {
+      background: var(--primary);
+    }
+
+    .timeline-dot.done {
+      background: var(--success);
+    }
+
+    .timeline-content {
+      color: var(--text-light);
+
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .timeline-content strong {
+      color: var(--text);
+    }
+
+    .empty-state {
+      display: none;
+
+      margin-top: 18px;
+      padding: 28px 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: #ffffff;
+      box-shadow: var(--shadow);
+
+      text-align: center;
+    }
+
+    .empty-state.show {
+      display: block;
+    }
+
+    .empty-state h2 {
+      font-size: 22px;
+      line-height: 1.4;
+    }
+
+    .empty-state p {
+      max-width: 560px;
+
+      margin: 10px auto 0;
+
+      color: var(--text-light);
+
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .status-message {
+      display: none;
+
+      margin-top: 14px;
+      padding: 13px 14px;
+
+      border-radius: 12px;
+
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .status-message.success {
+      display: block;
+
+      border: 1px solid #b9e4c8;
+
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .status-message.error {
+      display: block;
+
+      border: 1px solid #f0c0c0;
+
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        padding:
+          15px
+          13px
+          40px;
+      }
+
+      .phone-row {
+        flex-direction: column;
+      }
+
+      .search-button {
+        width: 100%;
+      }
+
+      .task-header {
+        flex-direction: column;
+      }
+
+      .task-details,
+      .task-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <header class="topbar">
+
+      <a
+        class="brand"
+        href=" "
+      >
+        <span class="brand-mark">E</span>
+        <span>EchoCity</span>
+      </a >
+
+      <button
+        class="language-button"
+        id="languageButton"
+        type="button"
+        onclick="toggleLanguage()"
+      >
+        EN
+      </button>
+
+    </header>
+
+    <section class="hero">
+
+      <span
+        class="hero-tag"
+        data-i18n="heroTag"
+      >
+        工人任务中心
+      </span>
+
+      <h1 data-i18n="heroTitle">
+        我的任务
+      </h1>
+
+      <p data-i18n="heroDescription">
+        输入派工时登记的手机号码，查看任务、报酬、集合时间和工作进度。
+      </p >
+
+    </section>
+
+    <section class="login-card">
+
+      <h2
+        class="login-title"
+        data-i18n="loginTitle"
+      >
+        查询我的任务
+      </h2>
+
+      <p
+        class="login-description"
+        data-i18n="loginDescription"
+      >
+        使用派工记录中的手机号码查询。当前测试版本的数据保存在本设备浏览器中。
+      </p >
+
+      <div class="phone-row">
+
+        <input
+          class="phone-input"
+          id="workerPhoneInput"
+          type="tel"
+          data-i18n-placeholder="phonePlaceholder"
+          placeholder="请输入手机号码"
+        />
+
+        <button
+          class="search-button"
+          type="button"
+          onclick="searchTasks()"
+          data-i18n="searchButton"
+        >
+          查询任务
+        </button>
+
+      </div>
+
+      <div
+        class="status-message"
+        id="statusMessage"
+      ></div>
+
+    </section>
+
+    <section
+      class="task-list"
+      id="taskList"
+    ></section>
+
+    <section
+      class="empty-state"
+      id="emptyState"
+    >
+      <h2 data-i18n="emptyTitle">
+        没有找到任务
+      </h2>
+
+      <p data-i18n="emptyDescription">
+        请确认手机号码与派工记录一致。
+      </p >
+    </section>
+
+  </main>
+
+  <script>    const translations = {
+      zh: {
+        heroTag: "工人任务中心",
+        heroTitle: "我的任务",
+        heroDescription:
+          "输入派工时登记的手机号码，查看任务、报酬、集合时间和工作进度。",
+
+        loginTitle: "查询我的任务",
+        loginDescription:
+          "使用派工记录中的手机号码查询。当前测试版本的数据保存在本设备浏览器中。",
+
+        phonePlaceholder: "请输入手机号码",
+        searchButton: "查询任务",
+
+        emptyTitle: "没有找到任务",
+        emptyDescription:
+          "请确认手机号码与派工记录一致。",
+
+        phoneRequired:
+          "请输入派工时登记的手机号码。",
+        taskFound:
+          "已经找到你的任务。",
+
+        taskIdLabel: "任务编号",
+        requestIdLabel: "需求编号",
+
+        workersService: "需要人手",
+        repairService: "维修或清洁",
+        supportService: "生活帮助",
+        unknownService: "未选择服务",
+
+        statusAssigned: "等待接受",
+        statusAccepted: "已接受",
+        statusArrived: "已到达",
+        statusProgress: "工作进行中",
+        statusCompleted: "工作已完成",
+
+        serviceTimeLabel: "服务时间",
+        meetingTimeLabel: "集合时间",
+        addressLabel: "服务地址",
+        roleLabel: "任务角色",
+        payLabel: "任务报酬",
+        siteManagerLabel: "现场负责人",
+        managerPhoneLabel: "负责人电话",
+        taskDetailsLabel: "工作内容",
+        assignmentNotesLabel: "派工说明",
+
+        acceptButton: "接受任务",
+        arrivedButton: "我已到达",
+        startButton: "开始工作",
+        completeButton: "完成工作",
+
+        acceptedTimeLabel: "接受任务",
+        arrivedTimeLabel: "到达现场",
+        startedTimeLabel: "开始工作",
+        completedTimeLabel: "完成工作",
+
+        taskAccepted:
+          "你已经接受任务。",
+        taskArrived:
+          "已记录到达时间。",
+        taskStarted:
+          "已记录开始工作时间。",
+        taskCompleted:
+          "任务已完成，系统已经保存完成时间。",
+
+        invalidStep:
+          "请按照任务流程依次操作。",
+        confirmComplete:
+          "确定已经完成全部工作吗？",
+
+        noNotes: "没有补充说明",
+        notProvided: "未填写"
+      },
+
+      en: {
+        heroTag: "Worker Task Center",
+        heroTitle: "My Tasks",
+        heroDescription:
+          "Enter the phone number used during assignment to view your task, pay, meeting time, and work progress.",
+
+        loginTitle: "Find My Tasks",
+        loginDescription:
+          "Use the phone number recorded during assignment. This test version stores data in this browser.",
+
+        phonePlaceholder:
+          "Enter your phone number",
+        searchButton: "Find Tasks",
+
+        emptyTitle: "No Tasks Found",
+        emptyDescription:
+          "Make sure the phone number matches the assignment record.",
+
+        phoneRequired:
+          "Enter the phone number used during assignment.",
+        taskFound:
+          "Your task has been found.",
+
+        taskIdLabel: "Task ID",
+        requestIdLabel: "Request ID",
+
+        workersService: "Need Workers",
+        repairService: "Repair or Cleaning",
+        supportService: "Daily Support",
+        unknownService: "Service Not Selected",
+
+        statusAssigned: "Awaiting Acceptance",
+        statusAccepted: "Accepted",
+        statusArrived: "Arrived",
+        statusProgress: "In Progress",
+        statusCompleted: "Completed",
+
+        serviceTimeLabel: "Service Time",
+        meetingTimeLabel: "Meeting Time",
+        addressLabel: "Service Address",
+        roleLabel: "Task Role",
+        payLabel: "Task Pay",
+        siteManagerLabel: "Site Manager",
+        managerPhoneLabel: "Manager Phone",
+        taskDetailsLabel: "Task Details",
+        assignmentNotesLabel:
+          "Assignment Notes",
+
+        acceptButton: "Accept Task",
+        arrivedButton: "I Have Arrived",
+        startButton: "Start Work",
+        completeButton: "Complete Work",
+
+        acceptedTimeLabel: "Task Accepted",
+        arrivedTimeLabel: "Arrived On Site",
+        startedTimeLabel: "Work Started",
+        completedTimeLabel: "Work Completed",
+
+        taskAccepted:
+          "You accepted the task.",
+        taskArrived:
+          "Your arrival time has been recorded.",
+        taskStarted:
+          "Your work start time has been recorded.",
+        taskCompleted:
+          "The task is complete and the completion time has been saved.",
+
+        invalidStep:
+          "Complete each task step in order.",
+        confirmComplete:
+          "Are you sure all work has been completed?",
+
+        noNotes: "No additional notes",
+        notProvided: "Not provided"
+      }
+    };
+
+    let currentLanguage =
+      localStorage.getItem("echocity-language") || "zh";
+
+    let allTasks = [];
+    let visibleTasks = [];
+
+    function translate(key) {
+      return (
+        translations[currentLanguage][key] ||
+        translations.zh[key] ||
+        key
+      );
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang =
+        currentLanguage === "zh"
+          ? "zh-CN"
+          : "en";
+
+      document
+        .querySelectorAll("[data-i18n]")
+        .forEach((element) => {
+          const key =
+            element.getAttribute("data-i18n");
+
+          if (translations[currentLanguage][key]) {
+            element.textContent =
+              translations[currentLanguage][key];
+          }
+        });
+
+      document
+        .querySelectorAll("[data-i18n-placeholder]")
+        .forEach((element) => {
+          const key =
+            element.getAttribute(
+              "data-i18n-placeholder"
+            );
+
+          if (translations[currentLanguage][key]) {
+            element.placeholder =
+              translations[currentLanguage][key];
+          }
+        });
+
+      document.getElementById(
+        "languageButton"
+      ).textContent =
+        currentLanguage === "zh"
+          ? "EN"
+          : "中文";
+
+      renderTasks();
+    }
+
+    function toggleLanguage() {
+      currentLanguage =
+        currentLanguage === "zh"
+          ? "en"
+          : "zh";
+
+      localStorage.setItem(
+        "echocity-language",
+        currentLanguage
+      );
+
+      applyLanguage();
+    }
+
+    function loadTasks() {
+      try {
+        const storedTasks =
+          JSON.parse(
+            localStorage.getItem(
+              "echocity-worker-tasks"
+            ) || "[]"
+          );
+
+        allTasks =
+          Array.isArray(storedTasks)
+            ? storedTasks
+            : [];
+
+      } catch (error) {
+        console.error(
+          "Failed to load worker tasks:",
+          error
+        );
+
+        allTasks = [];
+      }
+    }
+
+    function saveTasks() {
+      localStorage.setItem(
+        "echocity-worker-tasks",
+        JSON.stringify(allTasks)
+      );
+    }
+
+    function normalizePhone(value) {
+      return String(value || "")
+        .replace(/[^0-9]/g, "");
+    }
+
+    function getServiceName(serviceType) {
+      const serviceMap = {
+        workers: "workersService",
+        repair: "repairService",
+        support: "supportService"
+      };
+
+      return translate(
+        serviceMap[serviceType] ||
+        "unknownService"
+      );
+    }
+
+    function getStatusName(status) {
+      const statusMap = {
+        assigned: "statusAssigned",
+        accepted: "statusAccepted",
+        arrived: "statusArrived",
+        in_progress: "statusProgress",
+        completed: "statusCompleted"
+      };
+
+      return translate(
+        statusMap[status] ||
+        "statusAssigned"
+      );
+    }
+
+    function getStatusClass(status) {
+      const classMap = {
+        assigned: "status-assigned",
+        accepted: "status-accepted",
+        arrived: "status-arrived",
+        in_progress: "status-progress",
+        completed: "status-completed"
+      };
+
+      return (
+        classMap[status] ||
+        "status-assigned"
+      );
+    }
+
+    function formatDateTime(
+      dateValue,
+      timeValue
+    ) {
+      if (!dateValue && !timeValue) {
+        return translate("notProvided");
+      }
+
+      let dateText =
+        dateValue || "";
+
+      if (dateValue) {
+        const date =
+          new Date(
+            dateValue + "T00:00:00"
+          );
+
+        dateText =
+          date.toLocaleDateString(
+            currentLanguage === "zh"
+              ? "zh-CN"
+              : "en-US",
+            {
+              year: "numeric",
+              month: "long",
+              day: "numeric"
+            }
+          );
+      }
+
+      return timeValue
+        ? `${dateText} ${timeValue}`
+        : dateText;
+    }
+
+    function formatMoney(value) {
+      return Number(value || 0)
+        .toLocaleString(
+          "en-US",
+          {
+            style: "currency",
+            currency: "USD"
+          }
+        );
+    }
+
+    function formatTimestamp(value) {
+      if (!value) {
+        return "--";
+      }
+
+      const date =
+        new Date(value);
+
+      if (Number.isNaN(date.getTime())) {
+        return value;
+      }
+
+      return date.toLocaleString(
+        currentLanguage === "zh"
+          ? "zh-CN"
+          : "en-US"
+      );
+    }
+
+    function escapeHTML(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }    function searchTasks() {
+      const phoneInput =
+        document.getElementById(
+          "workerPhoneInput"
+        );
+
+      const phoneValue =
+        normalizePhone(
+          phoneInput.value
+        );
+
+      if (!phoneValue) {
+        showStatus(
+          "error",
+          translate("phoneRequired")
+        );
+
+        return;
+      }
+
+      visibleTasks =
+        allTasks.filter(
+          (task) =>
+            normalizePhone(
+              task.workerPhone
+            ) === phoneValue
+        );
+
+      if (visibleTasks.length === 0) {
+        document.getElementById(
+          "taskList"
+        ).innerHTML = "";
+
+        document.getElementById(
+          "emptyState"
+        ).classList.add("show");
+
+        showStatus(
+          "error",
+          translate("emptyDescription")
+        );
+
+        return;
+      }
+
+      document.getElementById(
+        "emptyState"
+      ).classList.remove("show");
+
+      localStorage.setItem(
+        "echocity-worker-phone",
+        phoneInput.value.trim()
+      );
+
+      showStatus(
+        "success",
+        translate("taskFound")
+      );
+
+      renderTasks();
+    }
+
+    function showStatus(
+      type,
+      message
+    ) {
+      const statusMessage =
+        document.getElementById(
+          "statusMessage"
+        );
+
+      statusMessage.className =
+        "status-message " + type;
+
+      statusMessage.textContent =
+        message;
+    }
+
+    function buildTimelineItem(
+      labelKey,
+      timeValue,
+      state
+    ) {
+      return `
+        <div class="timeline-item">
+
+          <span
+            class="timeline-dot ${state}"
+          ></span>
+
+          <div class="timeline-content">
+            <strong>
+              ${escapeHTML(
+                translate(labelKey)
+              )}
+            </strong>
+
+            <br />
+
+            ${escapeHTML(
+              formatTimestamp(
+                timeValue
+              )
+            )}
+          </div>
+
+        </div>
+      `;
+    }
+
+    function buildTaskActions(task) {
+      const status =
+        task.status || "assigned";
+
+      return `
+        <div class="task-actions">
+
+          <button
+            class="task-button primary"
+            type="button"
+            onclick="
+              updateTaskStatus(
+                '${escapeHTML(task.id)}',
+                'accepted'
+              )
+            "
+            ${status !== "assigned"
+              ? "disabled"
+              : ""}
+          >
+            ${escapeHTML(
+              translate("acceptButton")
+            )}
+          </button>
+
+          <button
+            class="task-button"
+            type="button"
+            onclick="
+              updateTaskStatus(
+                '${escapeHTML(task.id)}',
+                'arrived'
+              )
+            "
+            ${status !== "accepted"
+              ? "disabled"
+              : ""}
+          >
+            ${escapeHTML(
+              translate("arrivedButton")
+            )}
+          </button>
+
+          <button
+            class="task-button"
+            type="button"
+            onclick="
+              updateTaskStatus(
+                '${escapeHTML(task.id)}',
+                'in_progress'
+              )
+            "
+            ${status !== "arrived"
+              ? "disabled"
+              : ""}
+          >
+            ${escapeHTML(
+              translate("startButton")
+            )}
+          </button>
+
+          <button
+            class="task-button success"
+            type="button"
+            onclick="
+              updateTaskStatus(
+                '${escapeHTML(task.id)}',
+                'completed'
+              )
+            "
+            ${status !== "in_progress"
+              ? "disabled"
+              : ""}
+          >
+            ${escapeHTML(
+              translate("completeButton")
+            )}
+          </button>
+
+        </div>
+      `;
+    }
+
+    function buildTaskCard(task) {
+      return `
+        <article class="task-card">
+
+          <div class="task-header">
+
+            <div>
+              <div class="task-number">
+                ${escapeHTML(
+                  translate("taskIdLabel")
+                )}：
+                ${escapeHTML(
+                  task.id || "--"
+                )}
+              </div>
+
+              <h2 class="task-title">
+                ${escapeHTML(
+                  getServiceName(
+                    task.serviceType
+                  )
+                )}
+              </h2>
+            </div>
+
+            <span
+              class="status-badge
+              ${getStatusClass(
+                task.status
+              )}"
+            >
+              ${escapeHTML(
+                getStatusName(
+                  task.status
+                )
+              )}
+            </span>
+
+          </div>
+
+          <div class="task-details">
+
+            <div class="detail-item">
+              <div class="detail-label">
+                ${escapeHTML(
+                  translate(
+                    "serviceTimeLabel"
+                  )
+                )}
+              </div>
+
+              <div class="detail-value">
+                ${escapeHTML(
+                  formatDateTime(
+                    task.serviceDate,
+                    task.serviceTime
+                  )
+                )}
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">
+                ${escapeHTML(
+                  translate(
+                    "meetingTimeLabel"
+                  )
+                )}
+              </div>
+
+              <div class="detail-value">
+                ${escapeHTML(
+                  formatDateTime(
+                    task.meetingDate,
+                    task.meetingTime
+                  )
+                )}
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">
+                ${escapeHTML(
+                  translate(
+                    "addressLabel"
+                  )
+                )}
+              </div>
+
+              <div class="detail-value">
+                ${escapeHTML(
+                  task.address ||
+                  translate("notProvided")
+                )}
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">
+                ${escapeHTML(
+                  translate(
+                    "roleLabel"
+                  )
+                )}
+              </div>
+
+              <div class="detail-value">
+                ${escapeHTML(
+                  task.role ||
+                  translate("notProvided")
+                )}
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">
+                ${escapeHTML(
+                  translate(
+                    "payLabel"
+                  )
+                )}
+              </div>
+
+              <div class="detail-value">
+                ${escapeHTML(
+                  formatMoney(task.pay)
+                )}
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">
+                ${escapeHTML(
+                  translate(
+                    "requestIdLabel"
+                  )
+                )}
+              </div>
+
+              <div class="detail-value">
+                ${escapeHTML(
+                  task.requestId || "--"
+                )}
+              </div>
+            </div>
+
+          </div>
+
+          <div class="task-description">
+            <strong>
+              ${escapeHTML(
+                translate(
+                  "taskDetailsLabel"
+                )
+              )}：
+            </strong>
+
+            <br />
+
+            ${escapeHTML(
+              task.description ||
+              translate("notProvided")
+            )}
+          </div>
+
+          <div class="manager-card">
+            <div class="manager-title">
+              ${escapeHTML(
+                translate(
+                  "siteManagerLabel"
+                )
+              )}
+            </div>
+
+            <div class="manager-content">
+              ${escapeHTML(
+                task.siteManager ||
+                translate("notProvided")
+              )}
+              ·
+              ${escapeHTML(
+                task.siteManagerPhone ||
+                translate("notProvided")
+              )}
+            </div>
+          </div>
+
+          <div class="task-description">
+            <strong>
+              ${escapeHTML(
+                translate(
+                  "assignmentNotesLabel"
+                )
+              )}：
+            </strong>
+
+            <br />
+
+            ${escapeHTML(
+              task.notes ||
+              translate("noNotes")
+            )}
+          </div>
+
+          ${buildTaskActions(task)}
+
+          <div class="timeline">
+
+            ${buildTimelineItem(
+              "acceptedTimeLabel",
+              task.acceptedAt,
+              task.acceptedAt
+                ? "done"
+                : ""
+            )}
+
+            ${buildTimelineItem(
+              "arrivedTimeLabel",
+              task.arrivedAt,
+              task.arrivedAt
+                ? "done"
+                : ""
+            )}
+
+            ${buildTimelineItem(
+              "startedTimeLabel",
+              task.startedAt,
+              task.startedAt
+                ? "done"
+                : ""
+            )}
+
+            ${buildTimelineItem(
+              "completedTimeLabel",
+              task.completedAt,
+              task.completedAt
+                ? "done"
+                : ""
+            )}
+
+          </div>
+
+        </article>
+      `;
+    }
+
+    function renderTasks() {
+      const taskList =
+        document.getElementById(
+          "taskList"
+        );
+
+      if (visibleTasks.length === 0) {
+        taskList.innerHTML = "";
+        return;
+      }
+
+      taskList.innerHTML =
+        visibleTasks
+          .map(buildTaskCard)
+          .join("");
+    }
+
+    function updateTaskStatus(
+      taskId,
+      nextStatus
+    ) {
+      const task =
+        allTasks.find(
+          (item) =>
+            item.id === taskId
+        );
+
+      if (!task) {
+        return;
+      }
+
+      const validTransitions = {
+        assigned: "accepted",
+        accepted: "arrived",
+        arrived: "in_progress",
+        in_progress: "completed"
+      };
+
+      if (
+        validTransitions[
+          task.status
+        ] !== nextStatus
+      ) {
+        showStatus(
+          "error",
+          translate("invalidStep")
+        );
+
+        return;
+      }
+
+      if (
+        nextStatus === "completed"
+      ) {
+        const confirmed =
+          window.confirm(
+            translate(
+              "confirmComplete"
+            )
+          );
+
+        if (!confirmed) {
+          return;
+        }
+      }
+
+      const now =
+        new Date().toISOString();
+
+      task.status =
+        nextStatus;
+
+      if (
+        nextStatus === "accepted"
+      ) {
+        task.acceptedAt = now;
+
+        showStatus(
+          "success",
+          translate("taskAccepted")
+        );
+      }
+
+      if (
+        nextStatus === "arrived"
+      ) {
+        task.arrivedAt = now;
+
+        showStatus(
+          "success",
+          translate("taskArrived")
+        );
+      }
+
+      if (
+        nextStatus === "in_progress"
+      ) {
+        task.startedAt = now;
+
+        showStatus(
+          "success",
+          translate("taskStarted")
+        );
+      }
+
+      if (
+        nextStatus === "completed"
+      ) {
+        task.completedAt = now;
+
+        showStatus(
+          "success",
+          translate("taskCompleted")
+        );
+      }
+
+      task.updatedAt = now;
+
+      saveTasks();
+
+      visibleTasks =
+        visibleTasks.map(
+          (item) =>
+            item.id === task.id
+              ? task
+              : item
+        );
+
+      syncRequestStatus(
+        task.requestId
+      );
+
+      renderTasks();
+    }
+
+    function syncRequestStatus(
+      requestId
+    ) {
+      const requests =
+        JSON.parse(
+          localStorage.getItem(
+            "echocity-service-requests"
+          ) || "[]"
+        );
+
+      const request =
+        requests.find(
+          (item) =>
+            item.id === requestId
+        );
+
+      if (!request) {
+        return;
+      }
+
+      const relatedTasks =
+        allTasks.filter(
+          (task) =>
+            task.requestId === requestId
+        );
+
+      const allCompleted =
+        relatedTasks.length > 0 &&
+        relatedTasks.every(
+          (task) =>
+            task.status === "completed"
+        );
+
+      const anyInProgress =
+        relatedTasks.some(
+          (task) =>
+            task.status ===
+              "in_progress" ||
+            task.status ===
+              "arrived"
+        );
+
+      if (allCompleted) {
+        request.status =
+          "completed";
+      } else if (anyInProgress) {
+        request.status =
+          "in_progress";
+      } else {
+        request.status =
+          "assigned";
+      }
+
+      request.updatedAt =
+        new Date().toISOString();
+
+      localStorage.setItem(
+        "echocity-service-requests",
+        JSON.stringify(requests)
+      );
+
+      const latestRequest =
+        JSON.parse(
+          localStorage.getItem(
+            "echocity-last-request"
+          ) || "null"
+        );
+
+      if (
+        latestRequest &&
+        latestRequest.id === requestId
+      ) {
+        Object.assign(
+          latestRequest,
+          request
+        );
+
+        localStorage.setItem(
+          "echocity-last-request",
+          JSON.stringify(
+            latestRequest
+          )
+        );
+      }
+    }
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        loadTasks();
+
+        const storedPhone =
+          localStorage.getItem(
+            "echocity-worker-phone"
+          );
+
+        if (storedPhone) {
+          document.getElementById(
+            "workerPhoneInput"
+          ).value =
+            storedPhone;
+
+          const normalizedPhone =
+            normalizePhone(
+              storedPhone
+            );
+
+          visibleTasks =
+            allTasks.filter(
+              (task) =>
+                normalizePhone(
+                  task.workerPhone
+                ) ===
+                normalizedPhone
+            );
+        }
+
+        applyLanguage();
+      }
+    );
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,2679 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>中间验收单 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #1f6feb;
+      --primary-dark: #1557b0;
+      --primary-soft: #edf5ff;
+
+      --success: #18864b;
+      --success-soft: #eaf8f0;
+
+      --warning: #9a6700;
+      --warning-soft: #fff6dc;
+
+      --danger: #b42318;
+      --danger-soft: #fff0ee;
+
+      --text: #172033;
+      --text-light: #667085;
+
+      --border: #d9e1ec;
+      --background: #f4f7fb;
+      --card: #ffffff;
+
+      --shadow:
+        0 16px 40px rgba(24, 39, 75, 0.08);
+    }
+
+    body {
+      min-height: 100vh;
+
+      background:
+        linear-gradient(
+          180deg,
+          #edf5ff 0%,
+          #f7f9fc 42%,
+          #f4f7fb 100%
+        );
+
+      color: var(--text);
+
+      font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(100%, 900px);
+      margin: 0 auto;
+      padding: 20px 15px 52px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 38px;
+      height: 38px;
+
+      border-radius: 13px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          #65a4ff
+        );
+
+      color: #ffffff;
+      font-weight: 900;
+
+      box-shadow:
+        0 8px 20px rgba(31, 111, 235, 0.22);
+    }
+
+    .language-button {
+      min-width: 58px;
+      min-height: 40px;
+      padding: 0 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--text);
+
+      font-weight: 800;
+    }
+
+    .hero {
+      margin-bottom: 18px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+
+      min-height: 30px;
+      padding: 0 12px;
+
+      border-radius: 999px;
+
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      margin-top: 12px;
+
+      font-size: clamp(29px, 7vw, 42px);
+      line-height: 1.15;
+      letter-spacing: -1px;
+    }
+
+    .hero p {
+      max-width: 780px;
+
+      margin-top: 10px;
+
+      color: var(--text-light);
+
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .card {
+      margin-top: 16px;
+      padding: 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      font-size: 21px;
+      line-height: 1.4;
+    }
+
+    .card-description {
+      margin-top: 7px;
+
+      color: var(--text-light);
+
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 10px;
+
+      margin-top: 16px;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 0;
+      min-height: 48px;
+
+      padding: 0 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: #ffffff;
+      color: var(--text);
+
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+
+      box-shadow:
+        0 0 0 3px rgba(31, 111, 235, 0.12);
+    }
+
+    .search-button {
+      min-height: 48px;
+      padding: 0 18px;
+
+      border: 0;
+      border-radius: 12px;
+
+      background: var(--primary);
+      color: #ffffff;
+
+      font-weight: 800;
+    }
+
+    .search-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .paper-card {
+      overflow: hidden;
+
+      border: 1px solid var(--border);
+      border-radius: 17px;
+
+      background: #ffffff;
+    }
+
+    .paper-header {
+      padding: 20px;
+
+      border-bottom: 1px solid var(--border);
+
+      background:
+        linear-gradient(
+          180deg,
+          #fbfcfe 0%,
+          #f7f9fc 100%
+        );
+
+      text-align: center;
+    }
+
+    .paper-title {
+      font-size: 25px;
+      line-height: 1.4;
+    }
+
+    .paper-number {
+      margin-top: 7px;
+
+      color: var(--text-light);
+
+      font-size: 13px;
+    }
+
+    .paper-body {
+      padding: 20px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .info-item {
+      padding: 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: #f8fafc;
+    }
+
+    .info-item.full {
+      grid-column: 1 / -1;
+    }
+
+    .info-label {
+      color: var(--text-light);
+
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .info-value {
+      margin-top: 6px;
+
+      color: var(--text);
+
+      font-size: 14px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .section {
+      margin-top: 16px;
+      padding: 16px;
+
+      border: 1px solid var(--border);
+      border-radius: 14px;
+
+      background: #ffffff;
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .section-description {
+      margin-top: 6px;
+
+      color: var(--text-light);
+
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 12px;
+
+      margin-top: 14px;
+    }
+
+    .result-item {
+      padding: 13px;
+
+      border-radius: 12px;
+
+      background: #f8fafc;
+    }
+
+    .result-item.full {
+      grid-column: 1 / -1;
+    }
+
+    .result-label {
+      color: var(--text-light);
+
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .result-value {
+      margin-top: 6px;
+
+      color: var(--text);
+
+      font-size: 14px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }    .signature-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 12px;
+
+      margin-top: 14px;
+    }
+
+    .signature-box {
+      padding: 14px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: #f8fafc;
+    }
+
+    .signature-title {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .signature-description {
+      margin-top: 6px;
+
+      color: var(--text-light);
+
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+
+      margin-top: 12px;
+    }
+
+    .checkbox-row input {
+      width: 18px;
+      height: 18px;
+
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .upload-box {
+      margin-top: 14px;
+      padding: 16px;
+
+      border: 2px dashed var(--border);
+      border-radius: 13px;
+
+      background: #fafbfd;
+    }
+
+    .file-input {
+      width: 100%;
+    }
+
+    .file-summary {
+      margin-top: 12px;
+      padding: 11px;
+
+      border: 1px solid var(--border);
+      border-radius: 10px;
+
+      background: #ffffff;
+
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .notice-box {
+      margin-top: 15px;
+      padding: 14px;
+
+      border: 1px solid #f2d693;
+      border-radius: 13px;
+
+      background: var(--warning-soft);
+      color: #6f4c00;
+
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .status-message {
+      display: none;
+
+      margin-top: 15px;
+      padding: 13px 14px;
+
+      border-radius: 12px;
+
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .status-message.success {
+      display: block;
+
+      border: 1px solid #b9e4c8;
+
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .status-message.error {
+      display: block;
+
+      border: 1px solid #f0c0c0;
+
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .action-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+
+      margin-top: 18px;
+    }
+
+    .secondary-button,
+    .primary-button {
+      min-height: 46px;
+      padding: 0 18px;
+
+      border-radius: 12px;
+
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .secondary-button {
+      border: 1px solid var(--border);
+
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    .primary-button {
+      border: 0;
+
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .primary-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .primary-button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .empty-state {
+      display: none;
+
+      margin-top: 18px;
+      padding: 30px 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: #ffffff;
+      box-shadow: var(--shadow);
+
+      text-align: center;
+    }
+
+    .empty-state.show {
+      display: block;
+    }
+
+    .empty-state h2 {
+      font-size: 22px;
+      line-height: 1.4;
+    }
+
+    .empty-state p {
+      margin-top: 9px;
+
+      color: var(--text-light);
+
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        padding: 15px 13px 42px;
+      }
+
+      .search-row {
+        flex-direction: column;
+      }
+
+      .search-button {
+        width: 100%;
+      }
+
+      .info-grid,
+      .result-grid,
+      .signature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .action-row {
+        flex-direction: column-reverse;
+      }
+
+      .secondary-button,
+      .primary-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <header class="topbar">
+
+      <a
+        class="brand"
+        href=" "
+      >
+        <span class="brand-mark">E</span>
+        <span>EchoCity</span>
+      </a >
+
+      <button
+        class="language-button"
+        id="languageButton"
+        type="button"
+        onclick="toggleLanguage()"
+      >
+        EN
+      </button>
+
+    </header>
+
+    <section class="hero">
+
+      <span
+        class="hero-tag"
+        data-i18n="heroTag"
+      >
+        中间验收纸面文件
+      </span>
+
+      <h1 data-i18n="heroTitle">
+        生成并上传中间验收单
+      </h1>
+
+      <p data-i18n="heroDescription">
+        客户完成阶段评价后，客户与工人应核对中间验收内容，完成纸面签字，并上传已签署文件。
+      </p >
+
+    </section>
+
+    <section class="card">
+
+      <h2
+        class="card-title"
+        data-i18n="searchTitle"
+      >
+        查询等待纸面签字的阶段
+      </h2>
+
+      <p
+        class="card-description"
+        data-i18n="searchDescription"
+      >
+        输入客户手机号，查询已经完成客户评价并等待纸面中间验收单的阶段。
+      </p >
+
+      <div class="search-row">
+
+        <input
+          class="search-input"
+          id="customerPhoneInput"
+          type="tel"
+          data-i18n-placeholder="phonePlaceholder"
+          placeholder="请输入客户手机号码"
+        />
+
+        <button
+          class="search-button"
+          type="button"
+          onclick="searchPaperMilestone()"
+          data-i18n="searchButton"
+        >
+          查询中间验收单
+        </button>
+
+      </div>
+
+      <div
+        class="status-message"
+        id="statusMessage"
+      ></div>
+
+    </section>
+
+    <section
+      class="card"
+      id="paperSection"
+      style="display: none;"
+    >
+
+      <article class="paper-card">
+
+        <div class="paper-header">
+
+          <h2
+            class="paper-title"
+            data-i18n="paperTitle"
+          >
+            EchoCity 服务阶段中间验收单
+          </h2>
+
+          <div
+            class="paper-number"
+            id="paperNumber"
+          >
+            --
+          </div>
+
+        </div>
+
+        <div class="paper-body">
+
+          <div class="info-grid">
+
+            <div class="info-item">
+
+              <div
+                class="info-label"
+                data-i18n="requestIdLabel"
+              >
+                服务需求编号
+              </div>
+
+              <div
+                class="info-value"
+                id="requestId"
+              >
+                --
+              </div>
+
+            </div>
+
+            <div class="info-item">
+
+              <div
+                class="info-label"
+                data-i18n="milestoneSequenceLabel"
+              >
+                阶段序号
+              </div>
+
+              <div
+                class="info-value"
+                id="milestoneSequence"
+              >
+                --
+              </div>
+
+            </div>
+
+            <div class="info-item">
+
+              <div
+                class="info-label"
+                data-i18n="customerNameLabel"
+              >
+                客户
+              </div>
+
+              <div
+                class="info-value"
+                id="customerName"
+              >
+                --
+              </div>
+
+            </div>
+
+            <div class="info-item">
+
+              <div
+                class="info-label"
+                data-i18n="workerNameLabel"
+              >
+                工人
+              </div>
+
+              <div
+                class="info-value"
+                id="workerName"
+              >
+                --
+              </div>
+
+            </div>
+
+            <div class="info-item full">
+
+              <div
+                class="info-label"
+                data-i18n="milestoneNameLabel"
+              >
+                阶段名称
+              </div>
+
+              <div
+                class="info-value"
+                id="milestoneName"
+              >
+                --
+              </div>
+
+            </div>
+
+            <div class="info-item full">
+
+              <div
+                class="info-label"
+                data-i18n="workScopeLabel"
+              >
+                本阶段工作范围
+              </div>
+
+              <div
+                class="info-value"
+                id="workScope"
+              >
+                --
+              </div>
+
+            </div>
+
+            <div class="info-item full">
+
+              <div
+                class="info-label"
+                data-i18n="completionStandardLabel"
+              >
+                本阶段完成标准
+              </div>
+
+              <div
+                class="info-value"
+                id="completionStandard"
+              >
+                --
+              </div>
+
+            </div>
+
+          </div>          <section class="section">
+
+            <h3
+              class="section-title"
+              data-i18n="workerResultTitle"
+            >
+              工人提交的阶段成果
+            </h3>
+
+            <p
+              class="section-description"
+              data-i18n="workerResultDescription"
+            >
+              以下内容来自工人已经提交的阶段成果记录。
+            </p >
+
+            <div class="result-grid">
+
+              <div class="result-item full">
+
+                <div
+                  class="result-label"
+                  data-i18n="actualCompletionLabel"
+                >
+                  实际完成情况
+                </div>
+
+                <div
+                  class="result-value"
+                  id="actualCompletion"
+                >
+                  --
+                </div>
+
+              </div>
+
+              <div class="result-item">
+
+                <div
+                  class="result-label"
+                  data-i18n="actualHoursLabel"
+                >
+                  实际工时
+                </div>
+
+                <div
+                  class="result-value"
+                  id="actualHours"
+                >
+                  --
+                </div>
+
+              </div>
+
+              <div class="result-item">
+
+                <div
+                  class="result-label"
+                  data-i18n="completionTimeLabel"
+                >
+                  阶段完成时间
+                </div>
+
+                <div
+                  class="result-value"
+                  id="completionTime"
+                >
+                  --
+                </div>
+
+              </div>
+
+              <div class="result-item full">
+
+                <div
+                  class="result-label"
+                  data-i18n="materialsUsedLabel"
+                >
+                  使用材料
+                </div>
+
+                <div
+                  class="result-value"
+                  id="materialsUsed"
+                >
+                  --
+                </div>
+
+              </div>
+
+              <div class="result-item full">
+
+                <div
+                  class="result-label"
+                  data-i18n="remainingIssuesLabel"
+                >
+                  遗留问题
+                </div>
+
+                <div
+                  class="result-value"
+                  id="remainingIssues"
+                >
+                  --
+                </div>
+
+              </div>
+
+            </div>
+
+          </section>
+
+          <section class="section">
+
+            <h3
+              class="section-title"
+              data-i18n="customerEvaluationTitle"
+            >
+              客户阶段评价
+            </h3>
+
+            <p
+              class="section-description"
+              data-i18n="customerEvaluationDescription"
+            >
+              以下内容来自客户已经提交的阶段评价记录。
+            </p >
+
+            <div class="result-grid">
+
+              <div class="result-item">
+
+                <div
+                  class="result-label"
+                  data-i18n="completionResultLabel"
+                >
+                  阶段完成结果
+                </div>
+
+                <div
+                  class="result-value"
+                  id="completionResult"
+                >
+                  --
+                </div>
+
+              </div>
+
+              <div class="result-item">
+
+                <div
+                  class="result-label"
+                  data-i18n="standardComplianceLabel"
+                >
+                  是否符合确认标准
+                </div>
+
+                <div
+                  class="result-value"
+                  id="standardCompliance"
+                >
+                  --
+                </div>
+
+              </div>
+
+              <div class="result-item">
+
+                <div
+                  class="result-label"
+                  data-i18n="customerRatingLabel"
+                >
+                  客户评分
+                </div>
+
+                <div
+                  class="result-value"
+                  id="customerRating"
+                >
+                  --
+                </div>
+
+              </div>
+
+              <div class="result-item">
+
+                <div
+                  class="result-label"
+                  data-i18n="damageFoundLabel"
+                >
+                  是否发现财产损坏
+                </div>
+
+                <div
+                  class="result-value"
+                  id="damageFound"
+                >
+                  --
+                </div>
+
+              </div>
+
+              <div class="result-item">
+
+                <div
+                  class="result-label"
+                  data-i18n="extraChargeFoundLabel"
+                >
+                  是否存在未确认新增收费
+                </div>
+
+                <div
+                  class="result-value"
+                  id="extraChargeFound"
+                >
+                  --
+                </div>
+
+              </div>
+
+              <div class="result-item full">
+
+                <div
+                  class="result-label"
+                  data-i18n="customerCommentsLabel"
+                >
+                  客户评价意见
+                </div>
+
+                <div
+                  class="result-value"
+                  id="customerComments"
+                >
+                  --
+                </div>
+
+              </div>
+
+              <div class="result-item full">
+
+                <div
+                  class="result-label"
+                  data-i18n="issueDetailsLabel"
+                >
+                  损坏、收费或其他问题说明
+                </div>
+
+                <div
+                  class="result-value"
+                  id="issueDetails"
+                >
+                  --
+                </div>
+
+              </div>
+
+            </div>
+
+          </section>
+
+          <section class="section">
+
+            <h3
+              class="section-title"
+              data-i18n="signatureTitle"
+            >
+              客户与工人纸面签字确认
+            </h3>
+
+            <p
+              class="section-description"
+              data-i18n="signatureDescription"
+            >
+              客户与工人应核对以上内容，在纸面中间验收单上签字后，再上传已签署文件。
+            </p >
+
+            <div class="signature-grid">
+
+              <div class="signature-box">
+
+                <div
+                  class="signature-title"
+                  data-i18n="customerSignatureTitle"
+                >
+                  客户签字确认
+                </div>
+
+                <div
+                  class="signature-description"
+                  data-i18n="customerSignatureDescription"
+                >
+                  客户确认已经核对工作成果、评价结论和遗留事项。
+                </div>
+
+                <label class="checkbox-row">
+
+                  <input
+                    id="customerSigned"
+                    type="checkbox"
+                  />
+
+                  <span
+                    data-i18n="customerSignedLabel"
+                  >
+                    客户已在纸面验收单上签字
+                  </span>
+
+                </label>
+
+              </div>
+
+              <div class="signature-box">
+
+                <div
+                  class="signature-title"
+                  data-i18n="workerSignatureTitle"
+                >
+                  工人签字确认
+                </div>
+
+                <div
+                  class="signature-description"
+                  data-i18n="workerSignatureDescription"
+                >
+                  工人确认提交记录、工时、材料和现场情况真实。
+                </div>
+
+                <label class="checkbox-row">
+
+                  <input
+                    id="workerSigned"
+                    type="checkbox"
+                  />
+
+                  <span
+                    data-i18n="workerSignedLabel"
+                  >
+                    工人已在纸面验收单上签字
+                  </span>
+
+                </label>
+
+              </div>
+
+            </div>
+
+            <div class="upload-box">
+
+              <label
+                class="section-title"
+                for="paperFile"
+                data-i18n="uploadTitle"
+              >
+                上传已签署的中间验收单
+              </label>
+
+              <p
+                class="section-description"
+                data-i18n="uploadDescription"
+              >
+                支持上传图片或PDF文件。当前版本记录文件名称和基本信息。
+              </p >
+
+              <input
+                class="file-input"
+                id="paperFile"
+                type="file"
+                accept="image/*,.pdf"
+                onchange="handlePaperFile(event)"
+              />
+
+              <div
+                class="file-summary"
+                id="fileSummary"
+              >
+                尚未选择文件
+              </div>
+
+            </div>
+
+            <div
+              class="notice-box"
+              data-i18n="paperNotice"
+            >
+              文件提交后，本阶段将进入运营审核。下一阶段在运营审核通过前继续锁定。
+            </div>
+
+            <div class="action-row">
+
+              <button
+                class="secondary-button"
+                type="button"
+                onclick="clearPaperForm()"
+                data-i18n="clearButton"
+              >
+                清空文件
+              </button>
+
+              <button
+                class="primary-button"
+                id="submitButton"
+                type="button"
+                onclick="submitPaperDocument()"
+                data-i18n="submitButton"
+              >
+                提交纸面验收单
+              </button>
+
+            </div>
+
+          </section>
+
+        </div>
+
+      </article>
+
+    </section>
+
+    <section
+      class="empty-state"
+      id="emptyState"
+    >
+
+      <h2 data-i18n="emptyTitle">
+        没有等待纸面签字的阶段
+      </h2>
+
+      <p data-i18n="emptyDescription">
+        请确认客户手机号正确，并确认客户已经完成阶段评价。
+      </p >
+
+    </section>
+
+  </main>
+
+  <script>    const translations = {
+      zh: {
+        heroTag:
+          "中间验收纸面文件",
+
+        heroTitle:
+          "生成并上传中间验收单",
+
+        heroDescription:
+          "客户完成阶段评价后，客户与工人应核对中间验收内容，完成纸面签字，并上传已签署文件。",
+
+        searchTitle:
+          "查询等待纸面签字的阶段",
+
+        searchDescription:
+          "输入客户手机号，查询已经完成客户评价并等待纸面中间验收单的阶段。",
+
+        phonePlaceholder:
+          "请输入客户手机号码",
+
+        searchButton:
+          "查询中间验收单",
+
+        paperTitle:
+          "EchoCity 服务阶段中间验收单",
+
+        requestIdLabel:
+          "服务需求编号",
+
+        milestoneSequenceLabel:
+          "阶段序号",
+
+        customerNameLabel:
+          "客户",
+
+        workerNameLabel:
+          "工人",
+
+        milestoneNameLabel:
+          "阶段名称",
+
+        workScopeLabel:
+          "本阶段工作范围",
+
+        completionStandardLabel:
+          "本阶段完成标准",
+
+        workerResultTitle:
+          "工人提交的阶段成果",
+
+        workerResultDescription:
+          "以下内容来自工人已经提交的阶段成果记录。",
+
+        actualCompletionLabel:
+          "实际完成情况",
+
+        actualHoursLabel:
+          "实际工时",
+
+        completionTimeLabel:
+          "阶段完成时间",
+
+        materialsUsedLabel:
+          "使用材料",
+
+        remainingIssuesLabel:
+          "遗留问题",
+
+        customerEvaluationTitle:
+          "客户阶段评价",
+
+        customerEvaluationDescription:
+          "以下内容来自客户已经提交的阶段评价记录。",
+
+        completionResultLabel:
+          "阶段完成结果",
+
+        standardComplianceLabel:
+          "是否符合确认标准",
+
+        customerRatingLabel:
+          "客户评分",
+
+        damageFoundLabel:
+          "是否发现财产损坏",
+
+        extraChargeFoundLabel:
+          "是否存在未确认新增收费",
+
+        customerCommentsLabel:
+          "客户评价意见",
+
+        issueDetailsLabel:
+          "损坏、收费或其他问题说明",
+
+        signatureTitle:
+          "客户与工人纸面签字确认",
+
+        signatureDescription:
+          "客户与工人应核对以上内容，在纸面中间验收单上签字后，再上传已签署文件。",
+
+        customerSignatureTitle:
+          "客户签字确认",
+
+        customerSignatureDescription:
+          "客户确认已经核对工作成果、评价结论和遗留事项。",
+
+        customerSignedLabel:
+          "客户已在纸面验收单上签字",
+
+        workerSignatureTitle:
+          "工人签字确认",
+
+        workerSignatureDescription:
+          "工人确认提交记录、工时、材料和现场情况真实。",
+
+        workerSignedLabel:
+          "工人已在纸面验收单上签字",
+
+        uploadTitle:
+          "上传已签署的中间验收单",
+
+        uploadDescription:
+          "支持上传图片或PDF文件。当前版本记录文件名称和基本信息。",
+
+        paperNotice:
+          "文件提交后，本阶段将进入运营审核。下一阶段在运营审核通过前继续锁定。",
+
+        clearButton:
+          "清空文件",
+
+        submitButton:
+          "提交纸面验收单",
+
+        emptyTitle:
+          "没有等待纸面签字的阶段",
+
+        emptyDescription:
+          "请确认客户手机号正确，并确认客户已经完成阶段评价。",
+
+        phoneRequired:
+          "请输入客户手机号码。",
+
+        requestNotFound:
+          "没有找到当前服务订单。",
+
+        customerNotMatched:
+          "该手机号与当前订单客户不一致。",
+
+        milestoneNotFound:
+          "当前没有等待纸面签字的阶段。",
+
+        milestoneFound:
+          "已经找到等待纸面签字的阶段，请核对内容并上传文件。",
+
+        customerSignatureRequired:
+          "请确认客户已经在纸面验收单上签字。",
+
+        workerSignatureRequired:
+          "请确认工人已经在纸面验收单上签字。",
+
+        fileRequired:
+          "请选择已签署的中间验收单文件。",
+
+        submitSuccess:
+          "纸面中间验收单已经提交，本阶段进入运营审核。",
+
+        noFile:
+          "尚未选择文件",
+
+        fileNameLabel:
+          "文件名称",
+
+        fileSizeLabel:
+          "文件大小",
+
+        fileTypeLabel:
+          "文件类型",
+
+        hoursUnit:
+          "小时",
+
+        ratingUnit:
+          "分",
+
+        yesText:
+          "是",
+
+        noText:
+          "否",
+
+        resultApproved:
+          "符合标准，同意通过",
+
+        resultConditional:
+          "基本完成，有遗留事项",
+
+        resultRework:
+          "不符合标准，要求整改",
+
+        resultDisputed:
+          "存在争议，需要人工处理",
+
+        complianceYes:
+          "符合",
+
+        compliancePartly:
+          "部分符合",
+
+        complianceNo:
+          "不符合",
+
+        defaultCustomer:
+          "当前客户",
+
+        defaultWorker:
+          "当前工人",
+
+        notProvided:
+          "未填写"
+      },
+
+      en: {
+        heroTag:
+          "Interim Acceptance Paper Document",
+
+        heroTitle:
+          "Generate and Upload the Interim Acceptance Form",
+
+        heroDescription:
+          "After the customer completes the stage evaluation, the customer and worker should review the interim acceptance details, sign the paper form, and upload the signed document.",
+
+        searchTitle:
+          "Find a Stage Awaiting Paper Signatures",
+
+        searchDescription:
+          "Enter the customer phone number to find a stage that has completed customer evaluation and is awaiting the paper interim acceptance form.",
+
+        phonePlaceholder:
+          "Enter customer phone number",
+
+        searchButton:
+          "Find Interim Acceptance Form",
+
+        paperTitle:
+          "EchoCity Service Stage Interim Acceptance Form",
+
+        requestIdLabel:
+          "Service Request ID",
+
+        milestoneSequenceLabel:
+          "Stage Number",
+
+        customerNameLabel:
+          "Customer",
+
+        workerNameLabel:
+          "Worker",
+
+        milestoneNameLabel:
+          "Stage Name",
+
+        workScopeLabel:
+          "Stage Work Scope",
+
+        completionStandardLabel:
+          "Stage Completion Standards",
+
+        workerResultTitle:
+          "Worker-Submitted Stage Results",
+
+        workerResultDescription:
+          "The following information comes from the worker’s submitted stage result record.",
+
+        actualCompletionLabel:
+          "Actual Work Completed",
+
+        actualHoursLabel:
+          "Actual Labor Hours",
+
+        completionTimeLabel:
+          "Stage Completion Time",
+
+        materialsUsedLabel:
+          "Materials Used",
+
+        remainingIssuesLabel:
+          "Remaining Issues",
+
+        customerEvaluationTitle:
+          "Customer Stage Evaluation",
+
+        customerEvaluationDescription:
+          "The following information comes from the customer’s submitted stage evaluation record.",
+
+        completionResultLabel:
+          "Stage Completion Result",
+
+        standardComplianceLabel:
+          "Compliance with Confirmed Standards",
+
+        customerRatingLabel:
+          "Customer Rating",
+
+        damageFoundLabel:
+          "Property Damage Found",
+
+        extraChargeFoundLabel:
+          "Unconfirmed Additional Charge Found",
+
+        customerCommentsLabel:
+          "Customer Evaluation Comments",
+
+        issueDetailsLabel:
+          "Damage, Charge, or Other Issue Details",
+
+        signatureTitle:
+          "Customer and Worker Paper Signature Confirmation",
+
+        signatureDescription:
+          "The customer and worker should review the information above, sign the paper interim acceptance form, and upload the signed document.",
+
+        customerSignatureTitle:
+          "Customer Signature Confirmation",
+
+        customerSignatureDescription:
+          "The customer confirms review of the work results, evaluation conclusion, and remaining items.",
+
+        customerSignedLabel:
+          "The customer signed the paper acceptance form",
+
+        workerSignatureTitle:
+          "Worker Signature Confirmation",
+
+        workerSignatureDescription:
+          "The worker confirms that the submission, labor hours, materials, and site information are accurate.",
+
+        workerSignedLabel:
+          "The worker signed the paper acceptance form",
+
+        uploadTitle:
+          "Upload the Signed Interim Acceptance Form",
+
+        uploadDescription:
+          "Image and PDF files are supported. This version records the file name and basic information.",
+
+        paperNotice:
+          "After submission, this stage will enter operations review. The next stage remains locked until operations approval.",
+
+        clearButton:
+          "Clear File",
+
+        submitButton:
+          "Submit Paper Acceptance Form",
+
+        emptyTitle:
+          "No Stage Awaiting Paper Signatures",
+
+        emptyDescription:
+          "Confirm the customer phone number and make sure the customer has completed the stage evaluation.",
+
+        phoneRequired:
+          "Enter the customer phone number.",
+
+        requestNotFound:
+          "No current service order was found.",
+
+        customerNotMatched:
+          "This phone number does not match the customer on the current order.",
+
+        milestoneNotFound:
+          "There is no stage currently awaiting paper signatures.",
+
+        milestoneFound:
+          "A stage awaiting paper signatures was found. Review the details and upload the signed document.",
+
+        customerSignatureRequired:
+          "Confirm that the customer signed the paper acceptance form.",
+
+        workerSignatureRequired:
+          "Confirm that the worker signed the paper acceptance form.",
+
+        fileRequired:
+          "Select the signed interim acceptance form file.",
+
+        submitSuccess:
+          "The paper interim acceptance form was submitted. This stage is now awaiting operations review.",
+
+        noFile:
+          "No file selected",
+
+        fileNameLabel:
+          "File Name",
+
+        fileSizeLabel:
+          "File Size",
+
+        fileTypeLabel:
+          "File Type",
+
+        hoursUnit:
+          "hours",
+
+        ratingUnit:
+          "points",
+
+        yesText:
+          "Yes",
+
+        noText:
+          "No",
+
+        resultApproved:
+          "Meets Standards — Approved",
+
+        resultConditional:
+          "Mostly Complete — Remaining Items",
+
+        resultRework:
+          "Does Not Meet Standards — Rework Required",
+
+        resultDisputed:
+          "Disputed — Manual Handling Required",
+
+        complianceYes:
+          "Compliant",
+
+        compliancePartly:
+          "Partly Compliant",
+
+        complianceNo:
+          "Not Compliant",
+
+        defaultCustomer:
+          "Current Customer",
+
+        defaultWorker:
+          "Current Worker",
+
+        notProvided:
+          "Not Provided"
+      }
+    };
+
+    let currentLanguage =
+      localStorage.getItem(
+        "echocity-language"
+      ) || "zh";
+
+    let currentRequest = null;
+    let currentMilestone = null;
+    let selectedPaperFile = null;
+
+    function translate(key) {
+      return (
+        translations[currentLanguage][key] ||
+        translations.zh[key] ||
+        key
+      );
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang =
+        currentLanguage === "zh"
+          ? "zh-CN"
+          : "en";
+
+      document
+        .querySelectorAll(
+          "[data-i18n]"
+        )
+        .forEach((element) => {
+          const key =
+            element.getAttribute(
+              "data-i18n"
+            );
+
+          if (
+            translations[
+              currentLanguage
+            ][key]
+          ) {
+            element.textContent =
+              translations[
+                currentLanguage
+              ][key];
+          }
+        });
+
+      document
+        .querySelectorAll(
+          "[data-i18n-placeholder]"
+        )
+        .forEach((element) => {
+          const key =
+            element.getAttribute(
+              "data-i18n-placeholder"
+            );
+
+          if (
+            translations[
+              currentLanguage
+            ][key]
+          ) {
+            element.placeholder =
+              translations[
+                currentLanguage
+              ][key];
+          }
+        });
+
+      document.getElementById(
+        "languageButton"
+      ).textContent =
+        currentLanguage === "zh"
+          ? "EN"
+          : "中文";
+
+      if (currentMilestone) {
+        renderPaper();
+      }
+
+      renderFileSummary();
+    }
+
+    function toggleLanguage() {
+      currentLanguage =
+        currentLanguage === "zh"
+          ? "en"
+          : "zh";
+
+      localStorage.setItem(
+        "echocity-language",
+        currentLanguage
+      );
+
+      applyLanguage();
+    }    function loadCurrentRequest() {
+      try {
+        const storedRequest =
+          localStorage.getItem(
+            "echocity-last-request"
+          );
+
+        currentRequest =
+          storedRequest
+            ? JSON.parse(storedRequest)
+            : null;
+
+      } catch (error) {
+        console.error(
+          "Failed to load request:",
+          error
+        );
+
+        currentRequest = null;
+      }
+    }
+
+    function normalizePhone(value) {
+      return String(value || "")
+        .replace(/\s+/g, "")
+        .replace(/-/g, "")
+        .replace(/\(/g, "")
+        .replace(/\)/g, "");
+    }
+
+    function getCustomerPhone() {
+      return normalizePhone(
+        currentRequest
+          ?.customerPhone ||
+
+        currentRequest
+          ?.customer
+          ?.phone ||
+
+        currentRequest
+          ?.contactPhone ||
+
+        ""
+      );
+    }
+
+    function getPaperMilestone() {
+      if (
+        !currentRequest ||
+        !Array.isArray(
+          currentRequest.milestones
+        )
+      ) {
+        return null;
+      }
+
+      return (
+        currentRequest.milestones.find(
+          (milestone) =>
+            milestone.status ===
+            "paper_pending"
+        ) || null
+      );
+    }
+
+    function showStatus(
+      type,
+      message
+    ) {
+      const statusMessage =
+        document.getElementById(
+          "statusMessage"
+        );
+
+      statusMessage.className =
+        "status-message " + type;
+
+      statusMessage.textContent =
+        message;
+    }
+
+    function hideStatus() {
+      const statusMessage =
+        document.getElementById(
+          "statusMessage"
+        );
+
+      statusMessage.className =
+        "status-message";
+
+      statusMessage.textContent =
+        "";
+    }
+
+    function showEmptyState() {
+      document.getElementById(
+        "paperSection"
+      ).style.display =
+        "none";
+
+      document.getElementById(
+        "emptyState"
+      ).classList.add(
+        "show"
+      );
+    }
+
+    function hideEmptyState() {
+      document.getElementById(
+        "emptyState"
+      ).classList.remove(
+        "show"
+      );
+    }
+
+    function searchPaperMilestone() {
+      hideStatus();
+
+      const phoneInput =
+        document.getElementById(
+          "customerPhoneInput"
+        );
+
+      const enteredPhone =
+        normalizePhone(
+          phoneInput.value
+        );
+
+      if (!enteredPhone) {
+        showStatus(
+          "error",
+          translate(
+            "phoneRequired"
+          )
+        );
+
+        showEmptyState();
+        return;
+      }
+
+      loadCurrentRequest();
+
+      if (!currentRequest) {
+        showStatus(
+          "error",
+          translate(
+            "requestNotFound"
+          )
+        );
+
+        showEmptyState();
+        return;
+      }
+
+      const customerPhone =
+        getCustomerPhone();
+
+      if (
+        customerPhone &&
+        enteredPhone !==
+          customerPhone
+      ) {
+        showStatus(
+          "error",
+          translate(
+            "customerNotMatched"
+          )
+        );
+
+        showEmptyState();
+        return;
+      }
+
+      currentMilestone =
+        getPaperMilestone();
+
+      if (!currentMilestone) {
+        showStatus(
+          "error",
+          translate(
+            "milestoneNotFound"
+          )
+        );
+
+        showEmptyState();
+        return;
+      }
+
+      hideEmptyState();
+
+      document.getElementById(
+        "paperSection"
+      ).style.display =
+        "block";
+
+      renderPaper();
+
+      showStatus(
+        "success",
+        translate(
+          "milestoneFound"
+        )
+      );
+    }
+
+    function getCustomerName() {
+      return (
+        currentRequest
+          ?.customerName ||
+
+        currentRequest
+          ?.customer
+          ?.name ||
+
+        translate(
+          "defaultCustomer"
+        )
+      );
+    }
+
+    function getWorkerName() {
+      return (
+        currentRequest
+          ?.assignment
+          ?.workerName ||
+
+        currentRequest
+          ?.assignedWorker
+          ?.name ||
+
+        currentRequest
+          ?.workerName ||
+
+        translate(
+          "defaultWorker"
+        )
+      );
+    }
+
+    function formatDateTime(value) {
+      if (!value) {
+        return translate(
+          "notProvided"
+        );
+      }
+
+      const date =
+        new Date(value);
+
+      if (
+        Number.isNaN(
+          date.getTime()
+        )
+      ) {
+        return value;
+      }
+
+      return date.toLocaleString(
+        currentLanguage === "zh"
+          ? "zh-CN"
+          : "en-US"
+      );
+    }
+
+    function yesOrNo(value) {
+      return value
+        ? translate("yesText")
+        : translate("noText");
+    }
+
+    function getResultText(value) {
+      const resultMap = {
+        approved:
+          "resultApproved",
+
+        conditional:
+          "resultConditional",
+
+        rework:
+          "resultRework",
+
+        disputed:
+          "resultDisputed"
+      };
+
+      return translate(
+        resultMap[value] ||
+        "notProvided"
+      );
+    }
+
+    function getComplianceText(value) {
+      const complianceMap = {
+        yes:
+          "complianceYes",
+
+        partly:
+          "compliancePartly",
+
+        no:
+          "complianceNo"
+      };
+
+      return translate(
+        complianceMap[value] ||
+        "notProvided"
+      );
+    }
+
+    function buildPaperNumber() {
+      if (
+        currentMilestone
+          ?.paperDocument
+          ?.documentNumber
+      ) {
+        return currentMilestone
+          .paperDocument
+          .documentNumber;
+      }
+
+      const requestPart =
+        String(
+          currentRequest?.id ||
+          "REQUEST"
+        )
+          .replace(
+            /[^a-zA-Z0-9]/g,
+            ""
+          )
+          .slice(-8)
+          .toUpperCase();
+
+      const sequence =
+        String(
+          currentMilestone
+            ?.sequence || 1
+        ).padStart(2, "0");
+
+      return (
+        "EC-INTERIM-" +
+        requestPart +
+        "-" +
+        sequence
+      );
+    }
+
+    function renderPaper() {
+      if (!currentMilestone) {
+        return;
+      }
+
+      const workerSubmission =
+        currentMilestone
+          .workerSubmission || {};
+
+      const customerEvaluation =
+        currentMilestone
+          .customerEvaluation || {};
+
+      document.getElementById(
+        "paperNumber"
+      ).textContent =
+        buildPaperNumber();
+
+      document.getElementById(
+        "requestId"
+      ).textContent =
+        currentRequest.id ||
+        translate(
+          "notProvided"
+        );
+
+      document.getElementById(
+        "milestoneSequence"
+      ).textContent =
+        currentLanguage === "zh"
+          ? `第${currentMilestone.sequence}阶段`
+          : `Stage ${currentMilestone.sequence}`;
+
+      document.getElementById(
+        "customerName"
+      ).textContent =
+        getCustomerName();
+
+      document.getElementById(
+        "workerName"
+      ).textContent =
+        getWorkerName();
+
+      document.getElementById(
+        "milestoneName"
+      ).textContent =
+        currentMilestone
+          .milestoneName ||
+        currentMilestone
+          .taskName ||
+        translate(
+          "notProvided"
+        );
+
+      document.getElementById(
+        "workScope"
+      ).textContent =
+        currentMilestone
+          .workScope ||
+        translate(
+          "notProvided"
+        );
+
+      document.getElementById(
+        "completionStandard"
+      ).textContent =
+        currentMilestone
+          .completionStandard ||
+        translate(
+          "notProvided"
+        );
+
+      document.getElementById(
+        "actualCompletion"
+      ).textContent =
+        workerSubmission
+          .completionStatement ||
+        translate(
+          "notProvided"
+        );
+
+      document.getElementById(
+        "actualHours"
+      ).textContent =
+        workerSubmission.actualHours
+          ? `${workerSubmission.actualHours} ${translate(
+              "hoursUnit"
+            )}`
+          : translate(
+              "notProvided"
+            );
+
+      document.getElementById(
+        "completionTime"
+      ).textContent =
+        formatDateTime(
+          workerSubmission
+            .completionTime
+        );
+
+      document.getElementById(
+        "materialsUsed"
+      ).textContent =
+        workerSubmission
+          .materialsUsed ||
+        translate(
+          "notProvided"
+        );
+
+      document.getElementById(
+        "remainingIssues"
+      ).textContent =
+        workerSubmission
+          .remainingIssues ||
+        translate(
+          "notProvided"
+        );
+
+      document.getElementById(
+        "completionResult"
+      ).textContent =
+        getResultText(
+          customerEvaluation
+            .completionResult
+        );
+
+      document.getElementById(
+        "standardCompliance"
+      ).textContent =
+        getComplianceText(
+          customerEvaluation
+            .standardCompliance
+        );
+
+      document.getElementById(
+        "customerRating"
+      ).textContent =
+        customerEvaluation.rating
+          ? `${customerEvaluation.rating} ${translate(
+              "ratingUnit"
+            )}`
+          : translate(
+              "notProvided"
+            );
+
+      document.getElementById(
+        "damageFound"
+      ).textContent =
+        yesOrNo(
+          customerEvaluation
+            .damageFound
+        );
+
+      document.getElementById(
+        "extraChargeFound"
+      ).textContent =
+        yesOrNo(
+          customerEvaluation
+            .extraChargeFound
+        );
+
+      document.getElementById(
+        "customerComments"
+      ).textContent =
+        customerEvaluation
+          .customerComments ||
+        translate(
+          "notProvided"
+        );
+
+      document.getElementById(
+        "issueDetails"
+      ).textContent =
+        customerEvaluation
+          .issueDetails ||
+        translate(
+          "notProvided"
+        );
+    }    function formatFileSize(bytes) {
+      if (!bytes) {
+        return "0 KB";
+      }
+
+      const kilobytes =
+        bytes / 1024;
+
+      if (kilobytes < 1024) {
+        return (
+          kilobytes.toFixed(1) +
+          " KB"
+        );
+      }
+
+      return (
+        (
+          kilobytes / 1024
+        ).toFixed(1) +
+        " MB"
+      );
+    }
+
+    function handlePaperFile(event) {
+      const file =
+        event.target.files?.[0];
+
+      selectedPaperFile =
+        file
+          ? {
+              name: file.name,
+              type:
+                file.type ||
+                "unknown",
+              size: file.size,
+              lastModified:
+                file.lastModified
+            }
+          : null;
+
+      renderFileSummary();
+    }
+
+    function renderFileSummary() {
+      const fileSummary =
+        document.getElementById(
+          "fileSummary"
+        );
+
+      if (!fileSummary) {
+        return;
+      }
+
+      if (!selectedPaperFile) {
+        fileSummary.textContent =
+          translate("noFile");
+
+        return;
+      }
+
+      fileSummary.innerHTML = `
+        <strong>
+          ${translate(
+            "fileNameLabel"
+          )}:
+        </strong>
+        ${selectedPaperFile.name}
+
+        <br />
+
+        <strong>
+          ${translate(
+            "fileSizeLabel"
+          )}:
+        </strong>
+        ${formatFileSize(
+          selectedPaperFile.size
+        )}
+
+        <br />
+
+        <strong>
+          ${translate(
+            "fileTypeLabel"
+          )}:
+        </strong>
+        ${selectedPaperFile.type}
+      `;
+    }
+
+    function clearPaperForm() {
+      document.getElementById(
+        "customerSigned"
+      ).checked =
+        false;
+
+      document.getElementById(
+        "workerSigned"
+      ).checked =
+        false;
+
+      document.getElementById(
+        "paperFile"
+      ).value =
+        "";
+
+      selectedPaperFile = null;
+
+      renderFileSummary();
+      hideStatus();
+    }
+
+    function saveCurrentRequest() {
+      if (!currentRequest) {
+        return;
+      }
+
+      currentRequest.updatedAt =
+        new Date().toISOString();
+
+      const requests =
+        JSON.parse(
+          localStorage.getItem(
+            "echocity-service-requests"
+          ) || "[]"
+        );
+
+      const requestIndex =
+        requests.findIndex(
+          (request) =>
+            request.id ===
+            currentRequest.id
+        );
+
+      if (requestIndex >= 0) {
+        requests[requestIndex] =
+          currentRequest;
+      } else {
+        requests.unshift(
+          currentRequest
+        );
+      }
+
+      localStorage.setItem(
+        "echocity-service-requests",
+        JSON.stringify(requests)
+      );
+
+      localStorage.setItem(
+        "echocity-last-request",
+        JSON.stringify(
+          currentRequest
+        )
+      );
+
+      localStorage.setItem(
+        "echocity-last-milestones",
+        JSON.stringify(
+          currentRequest.milestones ||
+          []
+        )
+      );
+    }
+
+    function submitPaperDocument() {
+      if (
+        !currentRequest ||
+        !currentMilestone
+      ) {
+        showStatus(
+          "error",
+          translate(
+            "milestoneNotFound"
+          )
+        );
+
+        return;
+      }
+
+      const customerSigned =
+        document.getElementById(
+          "customerSigned"
+        ).checked;
+
+      const workerSigned =
+        document.getElementById(
+          "workerSigned"
+        ).checked;
+
+      if (!customerSigned) {
+        showStatus(
+          "error",
+          translate(
+            "customerSignatureRequired"
+          )
+        );
+
+        return;
+      }
+
+      if (!workerSigned) {
+        showStatus(
+          "error",
+          translate(
+            "workerSignatureRequired"
+          )
+        );
+
+        return;
+      }
+
+      if (!selectedPaperFile) {
+        showStatus(
+          "error",
+          translate(
+            "fileRequired"
+          )
+        );
+
+        return;
+      }
+
+      const now =
+        new Date().toISOString();
+
+      currentMilestone.paperDocument = {
+        id:
+          "INTERIM-PAPER-" +
+          Date.now(),
+
+        documentNumber:
+          buildPaperNumber(),
+
+        requestId:
+          currentRequest.id,
+
+        milestoneId:
+          currentMilestone.id,
+
+        fileName:
+          selectedPaperFile.name,
+
+        fileType:
+          selectedPaperFile.type,
+
+        fileSize:
+          selectedPaperFile.size,
+
+        lastModified:
+          selectedPaperFile
+            .lastModified,
+
+        uploadedAt:
+          now,
+
+        signedByCustomer:
+          true,
+
+        signedByWorker:
+          true,
+
+        status:
+          "uploaded"
+      };
+
+      currentMilestone.status =
+        "operation_review";
+
+      currentMilestone.updatedAt =
+        now;
+
+      currentRequest.status =
+        "milestone_review";
+
+      currentRequest.milestones =
+        currentRequest.milestones.map(
+          (milestone) =>
+            milestone.id ===
+            currentMilestone.id
+              ? currentMilestone
+              : milestone
+        );
+
+      saveCurrentRequest();
+
+      document.getElementById(
+        "submitButton"
+      ).disabled =
+        true;
+
+      showStatus(
+        "success",
+        translate(
+          "submitSuccess"
+        )
+      );
+
+      document.getElementById(
+        "paperSection"
+      ).style.display =
+        "none";
+
+      document.getElementById(
+        "emptyState"
+      ).classList.add(
+        "show"
+      );
+    }
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        loadCurrentRequest();
+        applyLanguage();
+        renderFileSummary();
+      }
+    );
+  </script>
+
+</body>
+</html>

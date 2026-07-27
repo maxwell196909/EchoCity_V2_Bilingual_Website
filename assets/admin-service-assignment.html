@@ -1,0 +1,2247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>服务派工 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #1f6feb;
+      --primary-dark: #1557b0;
+      --primary-soft: #edf5ff;
+
+      --success: #18864b;
+      --success-soft: #eaf8f0;
+
+      --warning: #9a6700;
+      --warning-soft: #fff6dc;
+
+      --danger: #b42318;
+      --danger-soft: #fff0ee;
+
+      --text: #172033;
+      --text-light: #667085;
+
+      --border: #d9e1ec;
+      --background: #f4f7fb;
+      --card: #ffffff;
+
+      --shadow:
+        0 16px 40px rgba(24, 39, 75, 0.08);
+    }
+
+    body {
+      min-height: 100vh;
+
+      background:
+        linear-gradient(
+          180deg,
+          #edf5ff 0%,
+          #f7f9fc 40%,
+          #f4f7fb 100%
+        );
+
+      color: var(--text);
+
+      font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(100%, 980px);
+      margin: 0 auto;
+      padding: 22px 18px 50px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+
+      margin-bottom: 28px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 38px;
+      height: 38px;
+
+      border-radius: 13px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          #65a4ff
+        );
+
+      color: #ffffff;
+      font-weight: 900;
+
+      box-shadow:
+        0 8px 20px rgba(31, 111, 235, 0.22);
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .topbar-button {
+      min-height: 40px;
+      padding: 0 14px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: rgba(255, 255, 255, 0.88);
+      color: var(--text);
+
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .topbar-button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .hero {
+      margin-bottom: 20px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+
+      min-height: 30px;
+      padding: 0 12px;
+
+      border-radius: 999px;
+
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      margin-top: 12px;
+
+      font-size: clamp(29px, 6vw, 42px);
+      line-height: 1.16;
+      letter-spacing: -1px;
+    }
+
+    .hero p {
+      max-width: 760px;
+
+      margin-top: 10px;
+
+      color: var(--text-light);
+
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .request-card {
+      padding: 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .request-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+
+      margin-bottom: 16px;
+    }
+
+    .request-title {
+      font-size: 20px;
+      line-height: 1.4;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 32px;
+      padding: 0 12px;
+
+      border-radius: 999px;
+
+      background: var(--success-soft);
+      color: var(--success);
+
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .request-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .request-item {
+      padding: 13px;
+
+      border-radius: 12px;
+
+      background: #f8fafc;
+    }
+
+    .request-label {
+      color: var(--text-light);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .request-value {
+      margin-top: 5px;
+
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+
+    .request-description {
+      margin-top: 14px;
+      padding: 14px;
+
+      border-radius: 13px;
+
+      background: #f8fafc;
+      color: var(--text);
+
+      font-size: 14px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .assignment-card {
+      margin-top: 18px;
+      padding: 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .assignment-title {
+      font-size: 20px;
+      line-height: 1.4;
+    }
+
+    .assignment-description {
+      margin-top: 6px;
+
+      color: var(--text-light);
+
+      font-size: 14px;
+      line-height: 1.65;
+    }    .assignment-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 14px;
+
+      margin-top: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .form-help {
+      color: var(--text-light);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: #ffffff;
+      color: var(--text);
+
+      font-family: inherit;
+      font-size: 15px;
+
+      outline: none;
+
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .form-input,
+    .form-select {
+      min-height: 48px;
+      padding: 0 13px;
+    }
+
+    .form-textarea {
+      min-height: 110px;
+      padding: 13px;
+
+      resize: vertical;
+      line-height: 1.65;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--primary);
+
+      box-shadow:
+        0 0 0 3px rgba(31, 111, 235, 0.12);
+    }
+
+    .worker-list {
+      display: grid;
+      gap: 12px;
+
+      margin-top: 18px;
+    }
+
+    .worker-card {
+      padding: 16px;
+
+      border: 1px solid var(--border);
+      border-radius: 15px;
+
+      background: #fbfcfe;
+    }
+
+    .worker-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+
+      margin-bottom: 13px;
+    }
+
+    .worker-card-title {
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .remove-worker-button {
+      min-height: 34px;
+      padding: 0 11px;
+
+      border: 1px solid #f0c0c0;
+      border-radius: 10px;
+
+      background: var(--danger-soft);
+      color: var(--danger);
+
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .remove-worker-button:hover {
+      border-color: var(--danger);
+    }
+
+    .worker-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .add-worker-button {
+      width: 100%;
+      min-height: 46px;
+
+      margin-top: 14px;
+
+      border: 1px dashed var(--primary);
+      border-radius: 13px;
+
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+
+      font-size: 14px;
+      font-weight: 800;
+
+      cursor: pointer;
+    }
+
+    .add-worker-button:hover {
+      background: #e1efff;
+    }
+
+    .summary-panel {
+      display: grid;
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+      gap: 12px;
+
+      margin-top: 18px;
+    }
+
+    .summary-panel-item {
+      padding: 14px;
+
+      border: 1px solid #dbe7f5;
+      border-radius: 13px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #f5f9ff 0%,
+          #ffffff 100%
+        );
+    }
+
+    .summary-panel-label {
+      color: var(--text-light);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .summary-panel-value {
+      margin-top: 6px;
+
+      color: var(--primary-dark);
+      font-size: 21px;
+      font-weight: 900;
+    }
+
+    .safety-note {
+      margin-top: 18px;
+      padding: 15px;
+
+      border: 1px solid #f1d99f;
+      border-radius: 14px;
+
+      background: var(--warning-soft);
+      color: #6d4b00;
+
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 12px;
+
+      margin-top: 20px;
+    }
+
+    .primary-button,
+    .secondary-button {
+      min-height: 50px;
+      padding: 0 18px;
+
+      border-radius: 14px;
+
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 800;
+
+      cursor: pointer;
+    }
+
+    .primary-button {
+      flex: 1;
+
+      border: 0;
+
+      background: var(--primary);
+      color: #ffffff;
+
+      box-shadow:
+        0 10px 24px rgba(31, 111, 235, 0.2);
+    }
+
+    .primary-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .secondary-button {
+      border: 1px solid var(--border);
+
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    .secondary-button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .status-message {
+      display: none;
+
+      margin-top: 16px;
+      padding: 13px 14px;
+
+      border-radius: 12px;
+
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .status-message.success {
+      display: block;
+
+      border: 1px solid #b9e4c8;
+
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .status-message.error {
+      display: block;
+
+      border: 1px solid #f0c0c0;
+
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .empty-state {
+      display: none;
+
+      margin-top: 20px;
+      padding: 28px 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: #ffffff;
+      box-shadow: var(--shadow);
+
+      text-align: center;
+    }
+
+    .empty-state.show {
+      display: block;
+    }
+
+    .empty-state h2 {
+      font-size: 22px;
+      line-height: 1.4;
+    }
+
+    .empty-state p {
+      max-width: 560px;
+
+      margin: 10px auto 0;
+
+      color: var(--text-light);
+
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        padding:
+          15px
+          13px
+          40px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .topbar-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .request-grid,
+      .assignment-grid,
+      .worker-grid,
+      .summary-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full-width {
+        grid-column: auto;
+      }
+
+      .action-row {
+        flex-direction: column;
+      }
+
+      .primary-button,
+      .secondary-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <header class="topbar">
+
+      <a
+        class="brand"
+        href=" "
+      >
+        <span class="brand-mark">E</span>
+        <span>EchoCity</span>
+      </a >
+
+      <div class="topbar-actions">
+
+        <button
+          class="topbar-button"
+          type="button"
+          onclick="goBackToRequests()"
+          data-i18n="backButton"
+        >
+          返回需求管理
+        </button>
+
+        <button
+          class="topbar-button"
+          id="languageButton"
+          type="button"
+          onclick="toggleLanguage()"
+        >
+          EN
+        </button>
+
+      </div>
+
+    </header>
+
+    <section class="hero">
+
+      <span
+        class="hero-tag"
+        data-i18n="heroTag"
+      >
+        运营派工
+      </span>
+
+      <h1 data-i18n="heroTitle">
+        创建服务派工
+      </h1>
+
+      <p data-i18n="heroDescription">
+        为客户已确认的订单安排工作人员、集合时间、现场负责人和任务报酬。
+      </p >
+
+    </section>
+
+    <section
+      class="request-card"
+      id="requestCard"
+    >
+
+      <div class="request-header">
+
+        <h2
+          class="request-title"
+          data-i18n="requestTitle"
+        >
+          已确认订单
+        </h2>
+
+        <span
+          class="status-badge"
+          data-i18n="confirmedStatus"
+        >
+          客户已确认
+        </span>
+
+      </div>
+
+      <div class="request-grid">
+
+        <div class="request-item">
+          <div
+            class="request-label"
+            data-i18n="requestIdLabel"
+          >
+            需求编号
+          </div>
+
+          <div
+            class="request-value"
+            id="requestId"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="request-item">
+          <div
+            class="request-label"
+            data-i18n="serviceTypeLabel"
+          >
+            服务类型
+          </div>
+
+          <div
+            class="request-value"
+            id="serviceType"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="request-item">
+          <div
+            class="request-label"
+            data-i18n="customerLabel"
+          >
+            客户
+          </div>
+
+          <div
+            class="request-value"
+            id="customerName"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="request-item">
+          <div
+            class="request-label"
+            data-i18n="contactLabel"
+          >
+            联系方式
+          </div>
+
+          <div
+            class="request-value"
+            id="customerContact"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="request-item">
+          <div
+            class="request-label"
+            data-i18n="serviceTimeLabel"
+          >
+            服务时间
+          </div>
+
+          <div
+            class="request-value"
+            id="serviceTime"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="request-item">
+          <div
+            class="request-label"
+            data-i18n="serviceAddressLabel"
+          >
+            服务地址
+          </div>
+
+          <div
+            class="request-value"
+            id="serviceAddress"
+          >
+            --
+          </div>
+        </div>
+
+      </div>
+
+      <div
+        class="request-description"
+        id="requestDescription"
+      >
+        --
+      </div>
+
+    </section>
+
+    <section
+      class="assignment-card"
+      id="assignmentCard"
+    >
+
+      <h2
+        class="assignment-title"
+        data-i18n="assignmentTitle"
+      >
+        派工安排
+      </h2>
+
+      <p
+        class="assignment-description"
+        data-i18n="assignmentDescription"
+      >
+        填写集合时间、现场负责人和工作人员。保存后，订单状态会更新为“已派工”。
+      </p >
+
+      <div class="assignment-grid">
+
+        <div class="form-group">
+          <label
+            class="form-label"
+            for="meetingDate"
+            data-i18n="meetingDateLabel"
+          >
+            集合日期
+          </label>
+
+          <input
+            class="form-input"
+            id="meetingDate"
+            type="date"
+          />
+        </div>
+
+        <div class="form-group">
+          <label
+            class="form-label"
+            for="meetingTime"
+            data-i18n="meetingTimeLabel"
+          >
+            集合时间
+          </label>
+
+          <input
+            class="form-input"
+            id="meetingTime"
+            type="time"
+          />
+        </div>
+
+        <div class="form-group">
+          <label
+            class="form-label"
+            for="siteManager"
+            data-i18n="siteManagerLabel"
+          >
+            现场负责人
+          </label>
+
+          <input
+            class="form-input"
+            id="siteManager"
+            type="text"
+            data-i18n-placeholder="siteManagerPlaceholder"
+            placeholder="请输入现场负责人姓名"
+          />
+        </div>
+
+        <div class="form-group">
+          <label
+            class="form-label"
+            for="siteManagerPhone"
+            data-i18n="siteManagerPhoneLabel"
+          >
+            负责人电话
+          </label>
+
+          <input
+            class="form-input"
+            id="siteManagerPhone"
+            type="tel"
+            data-i18n-placeholder="siteManagerPhonePlaceholder"
+            placeholder="请输入负责人电话"
+          />
+        </div>
+
+        <div class="form-group full-width">
+          <label
+            class="form-label"
+            for="assignmentNotes"
+            data-i18n="assignmentNotesLabel"
+          >
+            派工说明
+          </label>
+
+          <textarea
+            class="form-textarea"
+            id="assignmentNotes"
+            data-i18n-placeholder="assignmentNotesPlaceholder"
+            placeholder="例如：提前15分钟到场，自带手套，现场有楼梯和重物。"
+          ></textarea>
+        </div>
+
+      </div>
+
+      <div
+        class="worker-list"
+        id="workerList"
+      ></div>
+
+      <button
+        class="add-worker-button"
+        type="button"
+        onclick="addWorkerCard()"
+        data-i18n="addWorkerButton"
+      >
+        + 添加工作人员
+      </button>      <div class="summary-panel">
+
+        <div class="summary-panel-item">
+          <div
+            class="summary-panel-label"
+            data-i18n="workerCountLabel"
+          >
+            已安排人数
+          </div>
+
+          <div
+            class="summary-panel-value"
+            id="assignedWorkerCount"
+          >
+            0
+          </div>
+        </div>
+
+        <div class="summary-panel-item">
+          <div
+            class="summary-panel-label"
+            data-i18n="totalPayLabel"
+          >
+            工人报酬合计
+          </div>
+
+          <div
+            class="summary-panel-value"
+            id="totalWorkerPay"
+          >
+            $0.00
+          </div>
+        </div>
+
+        <div class="summary-panel-item">
+          <div
+            class="summary-panel-label"
+            data-i18n="requiredWorkerLabel"
+          >
+            客户需要人数
+          </div>
+
+          <div
+            class="summary-panel-value"
+            id="requiredWorkerCount"
+          >
+            --
+          </div>
+        </div>
+
+      </div>
+
+      <div
+        class="safety-note"
+        data-i18n="safetyNote"
+      >
+        派工前必须确认工作人员身份、联系方式、任务范围和安全要求。
+        涉及持证工程、医疗护理或其他高风险事项时，不得派普通工作人员。
+      </div>
+
+      <div class="action-row">
+
+        <button
+          class="secondary-button"
+          type="button"
+          onclick="goBackToRequests()"
+          data-i18n="cancelButton"
+        >
+          取消
+        </button>
+
+        <button
+          class="primary-button"
+          id="saveAssignmentButton"
+          type="button"
+          onclick="saveAssignment()"
+          data-i18n="saveAssignmentButton"
+        >
+          保存正式派工
+        </button>
+
+      </div>
+
+      <div
+        class="status-message"
+        id="statusMessage"
+      ></div>
+
+    </section>
+
+    <section
+      class="empty-state"
+      id="emptyState"
+    >
+      <h2 data-i18n="emptyTitle">
+        没有找到可派工订单
+      </h2>
+
+      <p data-i18n="emptyDescription">
+        请先从服务需求管理页面选择一条客户已确认的订单。
+      </p >
+
+      <div class="action-row">
+        <button
+          class="primary-button"
+          type="button"
+          onclick="goBackToRequests()"
+          data-i18n="backToRequestsButton"
+        >
+          返回需求管理
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const translations = {
+      zh: {
+        backButton: "返回需求管理",
+
+        heroTag: "运营派工",
+        heroTitle: "创建服务派工",
+        heroDescription:
+          "为客户已确认的订单安排工作人员、集合时间、现场负责人和任务报酬。",
+
+        requestTitle: "已确认订单",
+        confirmedStatus: "客户已确认",
+
+        requestIdLabel: "需求编号",
+        serviceTypeLabel: "服务类型",
+        customerLabel: "客户",
+        contactLabel: "联系方式",
+        serviceTimeLabel: "服务时间",
+        serviceAddressLabel: "服务地址",
+
+        workersService: "需要人手",
+        repairService: "维修或清洁",
+        supportService: "生活帮助",
+        unknownService: "未选择",
+
+        assignmentTitle: "派工安排",
+        assignmentDescription:
+          "填写集合时间、现场负责人和工作人员。保存后，订单状态会更新为“已派工”。",
+
+        meetingDateLabel: "集合日期",
+        meetingTimeLabel: "集合时间",
+        siteManagerLabel: "现场负责人",
+        siteManagerPlaceholder:
+          "请输入现场负责人姓名",
+        siteManagerPhoneLabel: "负责人电话",
+        siteManagerPhonePlaceholder:
+          "请输入负责人电话",
+
+        assignmentNotesLabel: "派工说明",
+        assignmentNotesPlaceholder:
+          "例如：提前15分钟到场，自带手套，现场有楼梯和重物。",
+
+        addWorkerButton: "+ 添加工作人员",
+        workerTitle: "工作人员",
+        removeWorkerButton: "删除",
+
+        workerNameLabel: "姓名",
+        workerNamePlaceholder:
+          "请输入工作人员姓名",
+
+        workerPhoneLabel: "电话",
+        workerPhonePlaceholder:
+          "请输入工作人员电话",
+
+        workerRoleLabel: "任务角色",
+        workerRolePlaceholder:
+          "例如：搬运、清洁、现场辅助",
+
+        workerPayLabel: "任务报酬",
+        workerPayPlaceholder: "请输入金额",
+
+        workerCountLabel: "已安排人数",
+        totalPayLabel: "工人报酬合计",
+        requiredWorkerLabel: "客户需要人数",
+
+        safetyNote:
+          "派工前必须确认工作人员身份、联系方式、任务范围和安全要求。涉及持证工程、医疗护理或其他高风险事项时，不得派普通工作人员。",
+
+        cancelButton: "取消",
+        saveAssignmentButton: "保存正式派工",
+        savingAssignment: "正在保存派工……",
+
+        emptyTitle: "没有找到可派工订单",
+        emptyDescription:
+          "请先从服务需求管理页面选择一条客户已确认的订单。",
+        backToRequestsButton: "返回需求管理",
+
+        meetingDateError:
+          "请选择集合日期。",
+        meetingTimeError:
+          "请选择集合时间。",
+        managerError:
+          "请填写现场负责人姓名。",
+        managerPhoneError:
+          "请填写现场负责人电话。",
+        workerError:
+          "至少需要添加一名工作人员。",
+        workerInfoError:
+          "请完整填写每位工作人员的姓名、电话和任务角色。",
+        workerPayError:
+          "工作人员报酬不能小于0。",
+
+        assignmentSaved:
+          "派工已经保存，订单状态已更新为“已派工”。",
+        assignmentSaveError:
+          "派工保存失败，请稍后重试。",
+
+        notProvided: "未填写"
+      },
+
+      en: {
+        backButton: "Back to Requests",
+
+        heroTag: "Operations Assignment",
+        heroTitle: "Create Service Assignment",
+        heroDescription:
+          "Assign workers, meeting time, site manager, and task compensation for a customer-confirmed order.",
+
+        requestTitle: "Confirmed Order",
+        confirmedStatus: "Confirmed by Customer",
+
+        requestIdLabel: "Request ID",
+        serviceTypeLabel: "Service Type",
+        customerLabel: "Customer",
+        contactLabel: "Contact",
+        serviceTimeLabel: "Service Time",
+        serviceAddressLabel: "Service Address",
+
+        workersService: "Need Workers",
+        repairService: "Repair or Cleaning",
+        supportService: "Daily Support",
+        unknownService: "Not Selected",
+
+        assignmentTitle: "Assignment Details",
+        assignmentDescription:
+          "Enter the meeting time, site manager, and workers. Saving will update the order status to “Assigned.”",
+
+        meetingDateLabel: "Meeting Date",
+        meetingTimeLabel: "Meeting Time",
+        siteManagerLabel: "Site Manager",
+        siteManagerPlaceholder:
+          "Enter the site manager's name",
+        siteManagerPhoneLabel:
+          "Manager Phone",
+        siteManagerPhonePlaceholder:
+          "Enter the manager's phone number",
+
+        assignmentNotesLabel:
+          "Assignment Notes",
+        assignmentNotesPlaceholder:
+          "Example: Arrive 15 minutes early, bring gloves, and note that the site has stairs and heavy items.",
+
+        addWorkerButton: "+ Add Worker",
+        workerTitle: "Worker",
+        removeWorkerButton: "Remove",
+
+        workerNameLabel: "Name",
+        workerNamePlaceholder:
+          "Enter worker name",
+
+        workerPhoneLabel: "Phone",
+        workerPhonePlaceholder:
+          "Enter worker phone number",
+
+        workerRoleLabel: "Task Role",
+        workerRolePlaceholder:
+          "Example: moving, cleaning, or site support",
+
+        workerPayLabel: "Task Pay",
+        workerPayPlaceholder:
+          "Enter amount",
+
+        workerCountLabel: "Assigned Workers",
+        totalPayLabel: "Total Worker Pay",
+        requiredWorkerLabel:
+          "Workers Requested",
+
+        safetyNote:
+          "Before assignment, confirm worker identity, contact details, task scope, and safety requirements. General workers must not be assigned to licensed, medical, or other high-risk work.",
+
+        cancelButton: "Cancel",
+        saveAssignmentButton:
+          "Save Formal Assignment",
+        savingAssignment:
+          "Saving assignment…",
+
+        emptyTitle:
+          "No Order Available for Assignment",
+        emptyDescription:
+          "Select a customer-confirmed order from the service request management page.",
+        backToRequestsButton:
+          "Back to Requests",
+
+        meetingDateError:
+          "Please select the meeting date.",
+        meetingTimeError:
+          "Please select the meeting time.",
+        managerError:
+          "Please enter the site manager's name.",
+        managerPhoneError:
+          "Please enter the site manager's phone number.",
+        workerError:
+          "Add at least one worker.",
+        workerInfoError:
+          "Complete the name, phone, and task role for every worker.",
+        workerPayError:
+          "Worker pay cannot be negative.",
+
+        assignmentSaved:
+          "The assignment has been saved and the order status is now “Assigned.”",
+        assignmentSaveError:
+          "The assignment could not be saved. Please try again.",
+
+        notProvided: "Not provided"
+      }
+    };    let currentLanguage =
+      localStorage.getItem("echocity-language") || "zh";
+
+    let currentRequest = null;
+    let workers = [];
+
+    function translate(key) {
+      return (
+        translations[currentLanguage][key] ||
+        translations.zh[key] ||
+        key
+      );
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang =
+        currentLanguage === "zh"
+          ? "zh-CN"
+          : "en";
+
+      document
+        .querySelectorAll("[data-i18n]")
+        .forEach((element) => {
+          const key =
+            element.getAttribute("data-i18n");
+
+          if (translations[currentLanguage][key]) {
+            element.textContent =
+              translations[currentLanguage][key];
+          }
+        });
+
+      document
+        .querySelectorAll("[data-i18n-placeholder]")
+        .forEach((element) => {
+          const key =
+            element.getAttribute(
+              "data-i18n-placeholder"
+            );
+
+          if (translations[currentLanguage][key]) {
+            element.placeholder =
+              translations[currentLanguage][key];
+          }
+        });
+
+      document.getElementById(
+        "languageButton"
+      ).textContent =
+        currentLanguage === "zh"
+          ? "EN"
+          : "中文";
+
+      renderRequest();
+      renderWorkers();
+    }
+
+    function toggleLanguage() {
+      currentLanguage =
+        currentLanguage === "zh"
+          ? "en"
+          : "zh";
+
+      localStorage.setItem(
+        "echocity-language",
+        currentLanguage
+      );
+
+      applyLanguage();
+    }
+
+    function loadCurrentRequest() {
+      try {
+        const storedRequest =
+          localStorage.getItem(
+            "echocity-last-request"
+          );
+
+        currentRequest =
+          storedRequest
+            ? JSON.parse(storedRequest)
+            : null;
+
+      } catch (error) {
+        console.error(
+          "Failed to load current request:",
+          error
+        );
+
+        currentRequest = null;
+      }
+    }
+
+    function getServiceName(serviceType) {
+      const serviceMap = {
+        workers: "workersService",
+        repair: "repairService",
+        support: "supportService"
+      };
+
+      return translate(
+        serviceMap[serviceType] ||
+        "unknownService"
+      );
+    }
+
+    function formatDateTime(
+      serviceDate,
+      serviceTime
+    ) {
+      if (!serviceDate && !serviceTime) {
+        return translate("notProvided");
+      }
+
+      let dateText =
+        serviceDate || "";
+
+      if (serviceDate) {
+        const date =
+          new Date(
+            serviceDate + "T00:00:00"
+          );
+
+        dateText =
+          date.toLocaleDateString(
+            currentLanguage === "zh"
+              ? "zh-CN"
+              : "en-US",
+            {
+              year: "numeric",
+              month: "long",
+              day: "numeric"
+            }
+          );
+      }
+
+      return serviceTime
+        ? `${dateText} ${serviceTime}`
+        : dateText;
+    }
+
+    function formatContact(request) {
+      const items = [];
+
+      if (request.customerPhone) {
+        items.push(
+          request.customerPhone
+        );
+      }
+
+      if (request.customerEmail) {
+        items.push(
+          request.customerEmail
+        );
+      }
+
+      return items.length
+        ? items.join(" · ")
+        : translate("notProvided");
+    }
+
+    function renderRequest() {
+      const requestCard =
+        document.getElementById(
+          "requestCard"
+        );
+
+      const assignmentCard =
+        document.getElementById(
+          "assignmentCard"
+        );
+
+      const emptyState =
+        document.getElementById(
+          "emptyState"
+        );
+
+      if (!currentRequest) {
+        requestCard.style.display =
+          "none";
+
+        assignmentCard.style.display =
+          "none";
+
+        emptyState.classList.add(
+          "show"
+        );
+
+        return;
+      }
+
+      requestCard.style.display =
+        "block";
+
+      assignmentCard.style.display =
+        "block";
+
+      emptyState.classList.remove(
+        "show"
+      );
+
+      document.getElementById(
+        "requestId"
+      ).textContent =
+        currentRequest.id || "--";
+
+      document.getElementById(
+        "serviceType"
+      ).textContent =
+        getServiceName(
+          currentRequest.serviceType
+        );
+
+      document.getElementById(
+        "customerName"
+      ).textContent =
+        currentRequest.customerName ||
+        translate("notProvided");
+
+      document.getElementById(
+        "customerContact"
+      ).textContent =
+        formatContact(
+          currentRequest
+        );
+
+      document.getElementById(
+        "serviceTime"
+      ).textContent =
+        formatDateTime(
+          currentRequest.serviceDate,
+          currentRequest.serviceTime
+        );
+
+      document.getElementById(
+        "serviceAddress"
+      ).textContent =
+        currentRequest.serviceAddress ||
+        translate("notProvided");
+
+      document.getElementById(
+        "requestDescription"
+      ).textContent =
+        currentRequest.description ||
+        translate("notProvided");
+
+      document.getElementById(
+        "requiredWorkerCount"
+      ).textContent =
+        currentRequest.workerCount === "5plus"
+          ? translate("fivePlusWorkers")
+          : (
+              currentRequest.workerCount ||
+              "--"
+            );
+    }
+
+    function createWorker() {
+      return {
+        id:
+          "WORKER-" +
+          Date.now() +
+          "-" +
+          Math.random()
+            .toString(16)
+            .slice(2),
+
+        name: "",
+        phone: "",
+        role: "",
+        pay: 0
+      };
+    }
+
+    function addWorkerCard() {
+      workers.push(
+        createWorker()
+      );
+
+      renderWorkers();
+    }
+
+    function removeWorker(
+      workerId
+    ) {
+      workers =
+        workers.filter(
+          (worker) =>
+            worker.id !== workerId
+        );
+
+      renderWorkers();
+    }
+
+    function updateWorkerField(
+      workerId,
+      field,
+      value
+    ) {
+      const worker =
+        workers.find(
+          (item) =>
+            item.id === workerId
+        );
+
+      if (!worker) {
+        return;
+      }
+
+      if (field === "pay") {
+        worker[field] =
+          Number(value || 0);
+      } else {
+        worker[field] =
+          value;
+      }
+
+      updateWorkerSummary();
+    }
+
+    function escapeAttribute(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function buildWorkerCard(
+      worker,
+      index
+    ) {
+      return `
+        <article class="worker-card">
+
+          <div class="worker-card-header">
+
+            <div class="worker-card-title">
+              ${translate("workerTitle")}
+              ${index + 1}
+            </div>
+
+            <button
+              class="remove-worker-button"
+              type="button"
+              onclick="
+                removeWorker(
+                  '${worker.id}'
+                )
+              "
+            >
+              ${translate(
+                "removeWorkerButton"
+              )}
+            </button>
+
+          </div>
+
+          <div class="worker-grid">
+
+            <div class="form-group">
+              <label class="form-label">
+                ${translate(
+                  "workerNameLabel"
+                )}
+              </label>
+
+              <input
+                class="form-input"
+                type="text"
+                value="${escapeAttribute(
+                  worker.name
+                )}"
+                placeholder="${escapeAttribute(
+                  translate(
+                    "workerNamePlaceholder"
+                  )
+                )}"
+                oninput="
+                  updateWorkerField(
+                    '${worker.id}',
+                    'name',
+                    this.value
+                  )
+                "
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">
+                ${translate(
+                  "workerPhoneLabel"
+                )}
+              </label>
+
+              <input
+                class="form-input"
+                type="tel"
+                value="${escapeAttribute(
+                  worker.phone
+                )}"
+                placeholder="${escapeAttribute(
+                  translate(
+                    "workerPhonePlaceholder"
+                  )
+                )}"
+                oninput="
+                  updateWorkerField(
+                    '${worker.id}',
+                    'phone',
+                    this.value
+                  )
+                "
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">
+                ${translate(
+                  "workerRoleLabel"
+                )}
+              </label>
+
+              <input
+                class="form-input"
+                type="text"
+                value="${escapeAttribute(
+                  worker.role
+                )}"
+                placeholder="${escapeAttribute(
+                  translate(
+                    "workerRolePlaceholder"
+                  )
+                )}"
+                oninput="
+                  updateWorkerField(
+                    '${worker.id}',
+                    'role',
+                    this.value
+                  )
+                "
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">
+                ${translate(
+                  "workerPayLabel"
+                )}
+              </label>
+
+              <input
+                class="form-input"
+                type="number"
+                min="0"
+                step="0.01"
+                value="${Number(
+                  worker.pay || 0
+                )}"
+                placeholder="${escapeAttribute(
+                  translate(
+                    "workerPayPlaceholder"
+                  )
+                )}"
+                oninput="
+                  updateWorkerField(
+                    '${worker.id}',
+                    'pay',
+                    this.value
+                  )
+                "
+              />
+            </div>
+
+          </div>
+
+        </article>
+      `;
+    }    function renderWorkers() {
+      const workerList =
+        document.getElementById(
+          "workerList"
+        );
+
+      workerList.innerHTML =
+        workers
+          .map(
+            (
+              worker,
+              index
+            ) =>
+              buildWorkerCard(
+                worker,
+                index
+              )
+          )
+          .join("");
+
+      updateWorkerSummary();
+    }
+
+    function updateWorkerSummary() {
+      const totalPay =
+        workers.reduce(
+          (
+            total,
+            worker
+          ) =>
+            total +
+            Number(
+              worker.pay || 0
+            ),
+          0
+        );
+
+      document.getElementById(
+        "assignedWorkerCount"
+      ).textContent =
+        workers.length;
+
+      document.getElementById(
+        "totalWorkerPay"
+      ).textContent =
+        totalPay.toLocaleString(
+          "en-US",
+          {
+            style: "currency",
+            currency: "USD"
+          }
+        );
+    }
+
+    function showStatus(
+      type,
+      message
+    ) {
+      const statusMessage =
+        document.getElementById(
+          "statusMessage"
+        );
+
+      statusMessage.className =
+        "status-message " + type;
+
+      statusMessage.textContent =
+        message;
+
+      statusMessage.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    function validateAssignment() {
+      const meetingDate =
+        document.getElementById(
+          "meetingDate"
+        ).value;
+
+      const meetingTime =
+        document.getElementById(
+          "meetingTime"
+        ).value;
+
+      const siteManager =
+        document.getElementById(
+          "siteManager"
+        ).value.trim();
+
+      const siteManagerPhone =
+        document.getElementById(
+          "siteManagerPhone"
+        ).value.trim();
+
+      if (!meetingDate) {
+        showStatus(
+          "error",
+          translate("meetingDateError")
+        );
+
+        return false;
+      }
+
+      if (!meetingTime) {
+        showStatus(
+          "error",
+          translate("meetingTimeError")
+        );
+
+        return false;
+      }
+
+      if (!siteManager) {
+        showStatus(
+          "error",
+          translate("managerError")
+        );
+
+        return false;
+      }
+
+      if (!siteManagerPhone) {
+        showStatus(
+          "error",
+          translate("managerPhoneError")
+        );
+
+        return false;
+      }
+
+      if (workers.length === 0) {
+        showStatus(
+          "error",
+          translate("workerError")
+        );
+
+        return false;
+      }
+
+      const incompleteWorker =
+        workers.some(
+          (worker) =>
+            !worker.name.trim() ||
+            !worker.phone.trim() ||
+            !worker.role.trim()
+        );
+
+      if (incompleteWorker) {
+        showStatus(
+          "error",
+          translate("workerInfoError")
+        );
+
+        return false;
+      }
+
+      const invalidPay =
+        workers.some(
+          (worker) =>
+            Number(worker.pay) < 0
+        );
+
+      if (invalidPay) {
+        showStatus(
+          "error",
+          translate("workerPayError")
+        );
+
+        return false;
+      }
+
+      return true;
+    }
+
+    function buildAssignmentData() {
+      return {
+        id:
+          "ASSIGN-" +
+          Date.now(),
+
+        requestId:
+          currentRequest.id,
+
+        meetingDate:
+          document.getElementById(
+            "meetingDate"
+          ).value,
+
+        meetingTime:
+          document.getElementById(
+            "meetingTime"
+          ).value,
+
+        siteManager:
+          document.getElementById(
+            "siteManager"
+          ).value.trim(),
+
+        siteManagerPhone:
+          document.getElementById(
+            "siteManagerPhone"
+          ).value.trim(),
+
+        notes:
+          document.getElementById(
+            "assignmentNotes"
+          ).value.trim(),
+
+        workers:
+          workers.map(
+            (worker) => ({
+              id: worker.id,
+              name: worker.name.trim(),
+              phone: worker.phone.trim(),
+              role: worker.role.trim(),
+              pay: Number(
+                worker.pay || 0
+              ),
+              status: "assigned"
+            })
+          ),
+
+        totalWorkerPay:
+          workers.reduce(
+            (
+              total,
+              worker
+            ) =>
+              total +
+              Number(
+                worker.pay || 0
+              ),
+            0
+          ),
+
+        status: "assigned",
+
+        createdAt:
+          new Date().toISOString()
+      };
+    }
+
+    function updateRequestStorage(
+      assignmentData
+    ) {
+      const requests =
+        JSON.parse(
+          localStorage.getItem(
+            "echocity-service-requests"
+          ) || "[]"
+        );
+
+      const requestIndex =
+        requests.findIndex(
+          (item) =>
+            item.id ===
+            currentRequest.id
+        );
+
+      currentRequest.status =
+        "assigned";
+
+      currentRequest.assignment =
+        assignmentData;
+
+      currentRequest.updatedAt =
+        new Date().toISOString();
+
+      if (requestIndex >= 0) {
+        requests[requestIndex] =
+          currentRequest;
+      } else {
+        requests.unshift(
+          currentRequest
+        );
+      }
+
+      localStorage.setItem(
+        "echocity-service-requests",
+        JSON.stringify(requests)
+      );
+
+      localStorage.setItem(
+        "echocity-last-request",
+        JSON.stringify(
+          currentRequest
+        )
+      );
+
+      localStorage.setItem(
+        "echocity-last-assignment",
+        JSON.stringify(
+          assignmentData
+        )
+      );
+
+      const taskRecords =
+        JSON.parse(
+          localStorage.getItem(
+            "echocity-worker-tasks"
+          ) || "[]"
+        );
+
+      assignmentData.workers.forEach(
+        (worker) => {
+          taskRecords.unshift({
+            id:
+              "TASK-" +
+              Date.now() +
+              "-" +
+              worker.id,
+
+            requestId:
+              currentRequest.id,
+
+            assignmentId:
+              assignmentData.id,
+
+            workerId:
+              worker.id,
+
+            workerName:
+              worker.name,
+
+            workerPhone:
+              worker.phone,
+
+            role:
+              worker.role,
+
+            pay:
+              worker.pay,
+
+            serviceType:
+              currentRequest.serviceType,
+
+            serviceDate:
+              currentRequest.serviceDate,
+
+            serviceTime:
+              currentRequest.serviceTime,
+
+            meetingDate:
+              assignmentData.meetingDate,
+
+            meetingTime:
+              assignmentData.meetingTime,
+
+            address:
+              currentRequest.serviceAddress,
+
+            description:
+              currentRequest.description,
+
+            siteManager:
+              assignmentData.siteManager,
+
+            siteManagerPhone:
+              assignmentData.siteManagerPhone,
+
+            notes:
+              assignmentData.notes,
+
+            status: "assigned",
+
+            createdAt:
+              new Date().toISOString()
+          });
+        }
+      );
+
+      localStorage.setItem(
+        "echocity-worker-tasks",
+        JSON.stringify(
+          taskRecords
+        )
+      );
+    }
+
+    async function saveAssignment() {
+      if (!currentRequest) {
+        return;
+      }
+
+      if (!validateAssignment()) {
+        return;
+      }
+
+      const saveButton =
+        document.getElementById(
+          "saveAssignmentButton"
+        );
+
+      saveButton.disabled = true;
+
+      saveButton.textContent =
+        translate(
+          "savingAssignment"
+        );
+
+      try {
+        const assignmentData =
+          buildAssignmentData();
+
+        updateRequestStorage(
+          assignmentData
+        );
+
+        showStatus(
+          "success",
+          translate(
+            "assignmentSaved"
+          )
+        );
+
+        setTimeout(() => {
+          window.location.href =
+            "admin-service-requests.html";
+        }, 1200);
+
+      } catch (error) {
+        console.error(
+          "Failed to save assignment:",
+          error
+        );
+
+        showStatus(
+          "error",
+          translate(
+            "assignmentSaveError"
+          )
+        );
+
+        saveButton.disabled = false;
+
+        saveButton.textContent =
+          translate(
+            "saveAssignmentButton"
+          );
+      }
+    }
+
+    function setDefaultValues() {
+      if (!currentRequest) {
+        return;
+      }
+
+      document.getElementById(
+        "meetingDate"
+      ).value =
+        currentRequest.serviceDate ||
+        "";
+
+      document.getElementById(
+        "meetingTime"
+      ).value =
+        currentRequest.serviceTime ||
+        "";
+
+      if (workers.length === 0) {
+        addWorkerCard();
+      }
+    }
+
+    function goBackToRequests() {
+      window.location.href =
+        "admin-service-requests.html";
+    }
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        loadCurrentRequest();
+        setDefaultValues();
+        applyLanguage();
+      }
+    );
+  </script>
+
+</body>
+</html>

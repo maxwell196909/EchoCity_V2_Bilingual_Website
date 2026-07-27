@@ -1,0 +1,2604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>提交阶段成果 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #1f6feb;
+      --primary-dark: #1557b0;
+      --primary-soft: #edf5ff;
+
+      --success: #18864b;
+      --success-soft: #eaf8f0;
+
+      --warning: #9a6700;
+      --warning-soft: #fff6dc;
+
+      --danger: #b42318;
+      --danger-soft: #fff0ee;
+
+      --purple: #6941c6;
+      --purple-soft: #f1edff;
+
+      --text: #172033;
+      --text-light: #667085;
+
+      --border: #d9e1ec;
+      --background: #f4f7fb;
+      --card: #ffffff;
+
+      --shadow:
+        0 16px 40px rgba(24, 39, 75, 0.08);
+    }
+
+    body {
+      min-height: 100vh;
+
+      background:
+        linear-gradient(
+          180deg,
+          #edf5ff 0%,
+          #f7f9fc 42%,
+          #f4f7fb 100%
+        );
+
+      color: var(--text);
+
+      font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(100%, 860px);
+      margin: 0 auto;
+      padding: 20px 15px 52px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 38px;
+      height: 38px;
+
+      border-radius: 13px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          #65a4ff
+        );
+
+      color: #ffffff;
+      font-weight: 900;
+
+      box-shadow:
+        0 8px 20px rgba(31, 111, 235, 0.22);
+    }
+
+    .language-button {
+      min-width: 58px;
+      min-height: 40px;
+      padding: 0 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--text);
+
+      font-weight: 800;
+    }
+
+    .hero {
+      margin-bottom: 18px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+
+      min-height: 30px;
+      padding: 0 12px;
+
+      border-radius: 999px;
+
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      margin-top: 12px;
+
+      font-size: clamp(29px, 7vw, 42px);
+      line-height: 1.15;
+      letter-spacing: -1px;
+    }
+
+    .hero p {
+      max-width: 760px;
+
+      margin-top: 10px;
+
+      color: var(--text-light);
+
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .card {
+      margin-top: 16px;
+      padding: 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      font-size: 21px;
+      line-height: 1.4;
+    }
+
+    .card-description {
+      margin-top: 7px;
+
+      color: var(--text-light);
+
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .phone-row {
+      display: flex;
+      gap: 10px;
+
+      margin-top: 16px;
+    }
+
+    .phone-input {
+      flex: 1;
+      min-width: 0;
+      min-height: 48px;
+
+      padding: 0 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: #ffffff;
+      color: var(--text);
+
+      outline: none;
+    }
+
+    .phone-input:focus {
+      border-color: var(--primary);
+
+      box-shadow:
+        0 0 0 3px rgba(31, 111, 235, 0.12);
+    }
+
+    .search-button {
+      min-height: 48px;
+      padding: 0 18px;
+
+      border: 0;
+      border-radius: 12px;
+
+      background: var(--primary);
+      color: #ffffff;
+
+      font-weight: 800;
+    }
+
+    .search-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .milestone-card {
+      overflow: hidden;
+
+      border: 1px solid var(--border);
+      border-radius: 17px;
+
+      background: #ffffff;
+    }
+
+    .milestone-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+
+      padding: 17px;
+
+      border-bottom: 1px solid var(--border);
+
+      background:
+        linear-gradient(
+          180deg,
+          #fbfcfe 0%,
+          #f7f9fc 100%
+        );
+    }
+
+    .milestone-sequence {
+      color: var(--primary-dark);
+
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .milestone-title {
+      margin-top: 5px;
+
+      font-size: 21px;
+      line-height: 1.4;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 31px;
+      padding: 0 11px;
+
+      border-radius: 999px;
+
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .milestone-body {
+      padding: 17px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .detail-item {
+      padding: 13px;
+
+      border-radius: 12px;
+
+      background: #f8fafc;
+    }
+
+    .detail-item.full {
+      grid-column: 1 / -1;
+    }
+
+    .detail-label {
+      color: var(--text-light);
+
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .detail-value {
+      margin-top: 6px;
+
+      color: var(--text);
+
+      font-size: 14px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }    .submission-section {
+      margin-top: 16px;
+      padding: 16px;
+
+      border: 1px solid #dbe7f5;
+      border-radius: 14px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #f6faff 0%,
+          #ffffff 100%
+        );
+    }
+
+    .submission-title {
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .submission-description {
+      margin-top: 6px;
+
+      color: var(--text-light);
+
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 13px;
+
+      margin-top: 15px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 7px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      color: var(--text);
+
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+      width: 100%;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: #ffffff;
+      color: var(--text);
+
+      outline: none;
+    }
+
+    .form-input,
+    .form-select {
+      min-height: 46px;
+      padding: 0 12px;
+    }
+
+    .form-textarea {
+      min-height: 105px;
+      padding: 12px;
+
+      line-height: 1.65;
+      resize: vertical;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+      border-color: var(--primary);
+
+      box-shadow:
+        0 0 0 3px rgba(31, 111, 235, 0.12);
+    }
+
+    .file-box {
+      padding: 15px;
+
+      border: 2px dashed var(--border);
+      border-radius: 13px;
+
+      background: #fafbfd;
+    }
+
+    .file-input {
+      width: 100%;
+    }
+
+    .file-list {
+      display: grid;
+      gap: 8px;
+
+      margin-top: 12px;
+    }
+
+    .file-item {
+      padding: 10px;
+
+      border: 1px solid var(--border);
+      border-radius: 10px;
+
+      background: #ffffff;
+
+      color: var(--text);
+
+      font-size: 12px;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+
+    .checkbox-list {
+      display: grid;
+      gap: 11px;
+
+      margin-top: 14px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+
+      padding: 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: #ffffff;
+    }
+
+    .checkbox-item input {
+      width: 18px;
+      height: 18px;
+
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .checkbox-content {
+      display: grid;
+      gap: 4px;
+    }
+
+    .checkbox-title {
+      color: var(--text);
+
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    .checkbox-description {
+      color: var(--text-light);
+
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .warning-box {
+      margin-top: 15px;
+      padding: 14px;
+
+      border: 1px solid #f2d693;
+      border-radius: 13px;
+
+      background: var(--warning-soft);
+      color: #6f4c00;
+
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .status-message {
+      display: none;
+
+      margin-top: 15px;
+      padding: 13px 14px;
+
+      border-radius: 12px;
+
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .status-message.success {
+      display: block;
+
+      border: 1px solid #b9e4c8;
+
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .status-message.error {
+      display: block;
+
+      border: 1px solid #f0c0c0;
+
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .action-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+
+      margin-top: 18px;
+    }
+
+    .secondary-button,
+    .primary-button {
+      min-height: 46px;
+      padding: 0 18px;
+
+      border-radius: 12px;
+
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .secondary-button {
+      border: 1px solid var(--border);
+
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    .primary-button {
+      border: 0;
+
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .primary-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .primary-button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .empty-state {
+      display: none;
+
+      margin-top: 18px;
+      padding: 30px 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: #ffffff;
+      box-shadow: var(--shadow);
+
+      text-align: center;
+    }
+
+    .empty-state.show {
+      display: block;
+    }
+
+    .empty-state h2 {
+      font-size: 22px;
+      line-height: 1.4;
+    }
+
+    .empty-state p {
+      margin-top: 9px;
+
+      color: var(--text-light);
+
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        padding:
+          15px
+          13px
+          42px;
+      }
+
+      .phone-row {
+        flex-direction: column;
+      }
+
+      .search-button {
+        width: 100%;
+      }
+
+      .milestone-header {
+        flex-direction: column;
+      }
+
+      .detail-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .action-row {
+        flex-direction: column-reverse;
+      }
+
+      .secondary-button,
+      .primary-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <header class="topbar">
+
+      <a
+        class="brand"
+        href=" "
+      >
+        <span class="brand-mark">E</span>
+        <span>EchoCity</span>
+      </a >
+
+      <button
+        class="language-button"
+        id="languageButton"
+        type="button"
+        onclick="toggleLanguage()"
+      >
+        EN
+      </button>
+
+    </header>
+
+    <section class="hero">
+
+      <span
+        class="hero-tag"
+        data-i18n="heroTag"
+      >
+        工人阶段成果提交
+      </span>
+
+      <h1 data-i18n="heroTitle">
+        提交当前阶段完成情况
+      </h1>
+
+      <p data-i18n="heroDescription">
+        工人只能提交当前已经开放的阶段。请按照客户确认的任务范围、完成标准、验收方法和证据要求如实填写。
+      </p >
+
+    </section>
+
+    <section class="card">
+
+      <h2
+        class="card-title"
+        data-i18n="searchTitle"
+      >
+        查询当前阶段任务
+      </h2>
+
+      <p
+        class="card-description"
+        data-i18n="searchDescription"
+      >
+        输入派工时登记的工人手机号，查询当前允许提交的阶段任务。
+      </p >
+
+      <div class="phone-row">
+
+        <input
+          class="phone-input"
+          id="workerPhoneInput"
+          type="tel"
+          data-i18n-placeholder="phonePlaceholder"
+          placeholder="请输入工人手机号码"
+        />
+
+        <button
+          class="search-button"
+          type="button"
+          onclick="searchOpenMilestone()"
+          data-i18n="searchButton"
+        >
+          查询当前阶段
+        </button>
+
+      </div>
+
+      <div
+        class="status-message"
+        id="statusMessage"
+      ></div>
+
+    </section>
+
+    <section
+      class="card"
+      id="milestoneSection"
+      style="display: none;"
+    >
+
+      <article class="milestone-card">
+
+        <div class="milestone-header">
+
+          <div>
+            <div
+              class="milestone-sequence"
+              id="milestoneSequence"
+            >
+              --
+            </div>
+
+            <h2
+              class="milestone-title"
+              id="milestoneTitle"
+            >
+              --
+            </h2>
+          </div>
+
+          <span
+            class="status-badge"
+            data-i18n="statusOpen"
+          >
+            当前阶段已开放
+          </span>
+
+        </div>
+
+        <div class="milestone-body">
+
+          <div class="detail-grid">
+
+            <div class="detail-item full">
+              <div
+                class="detail-label"
+                data-i18n="workScopeLabel"
+              >
+                本阶段工作范围
+              </div>
+
+              <div
+                class="detail-value"
+                id="workScope"
+              >
+                --
+              </div>
+            </div>
+
+            <div class="detail-item full">
+              <div
+                class="detail-label"
+                data-i18n="completionStandardLabel"
+              >
+                完成标准
+              </div>
+
+              <div
+                class="detail-value"
+                id="completionStandard"
+              >
+                --
+              </div>
+            </div>
+
+            <div class="detail-item full">
+              <div
+                class="detail-label"
+                data-i18n="inspectionMethodLabel"
+              >
+                验收方法
+              </div>
+
+              <div
+                class="detail-value"
+                id="inspectionMethod"
+              >
+                --
+              </div>
+            </div>
+
+            <div class="detail-item full">
+              <div
+                class="detail-label"
+                data-i18n="evidenceRequirementLabel"
+              >
+                证据要求
+              </div>
+
+              <div
+                class="detail-value"
+                id="evidenceRequirement"
+              >
+                --
+              </div>
+            </div>
+
+          </div>          <section class="submission-section">
+
+            <h3
+              class="submission-title"
+              data-i18n="submissionTitle"
+            >
+              填写阶段成果
+            </h3>
+
+            <p
+              class="submission-description"
+              data-i18n="submissionDescription"
+            >
+              请如实记录本阶段实际完成情况、工时、材料、遗留问题、异常和增项。
+            </p >
+
+            <div class="form-grid">
+
+              <div class="form-group full">
+
+                <label
+                  class="form-label"
+                  for="completionStatement"
+                  data-i18n="completionStatementLabel"
+                >
+                  实际完成情况
+                </label>
+
+                <textarea
+                  class="form-textarea"
+                  id="completionStatement"
+                  data-i18n-placeholder="completionStatementPlaceholder"
+                  placeholder="逐项说明已经完成的工作。"
+                ></textarea>
+
+              </div>
+
+              <div class="form-group">
+
+                <label
+                  class="form-label"
+                  for="actualHours"
+                  data-i18n="actualHoursLabel"
+                >
+                  实际工时
+                </label>
+
+                <input
+                  class="form-input"
+                  id="actualHours"
+                  type="number"
+                  min="0"
+                  step="0.5"
+                  data-i18n-placeholder="actualHoursPlaceholder"
+                  placeholder="例如：4"
+                />
+
+              </div>
+
+              <div class="form-group">
+
+                <label
+                  class="form-label"
+                  for="completionTime"
+                  data-i18n="completionTimeLabel"
+                >
+                  阶段完成时间
+                </label>
+
+                <input
+                  class="form-input"
+                  id="completionTime"
+                  type="datetime-local"
+                />
+
+              </div>
+
+              <div class="form-group full">
+
+                <label
+                  class="form-label"
+                  for="materialsUsed"
+                  data-i18n="materialsUsedLabel"
+                >
+                  使用材料
+                </label>
+
+                <textarea
+                  class="form-textarea"
+                  id="materialsUsed"
+                  data-i18n-placeholder="materialsUsedPlaceholder"
+                  placeholder="填写材料名称、数量和使用位置；没有使用材料可填写“无”。"
+                ></textarea>
+
+              </div>
+
+              <div class="form-group full">
+
+                <label
+                  class="form-label"
+                  for="remainingIssues"
+                  data-i18n="remainingIssuesLabel"
+                >
+                  遗留问题
+                </label>
+
+                <textarea
+                  class="form-textarea"
+                  id="remainingIssues"
+                  data-i18n-placeholder="remainingIssuesPlaceholder"
+                  placeholder="如有未完成事项、质量问题或需要后续处理的内容，请详细说明。"
+                ></textarea>
+
+              </div>
+
+              <div class="form-group">
+
+                <label
+                  class="form-label"
+                  for="variationStatus"
+                  data-i18n="variationStatusLabel"
+                >
+                  是否存在新增要求
+                </label>
+
+                <select
+                  class="form-select"
+                  id="variationStatus"
+                >
+                  <option
+                    value="no"
+                    data-i18n="noOption"
+                  >
+                    否
+                  </option>
+
+                  <option
+                    value="yes"
+                    data-i18n="yesOption"
+                  >
+                    是
+                  </option>
+                </select>
+
+              </div>
+
+              <div class="form-group">
+
+                <label
+                  class="form-label"
+                  for="incidentStatus"
+                  data-i18n="incidentStatusLabel"
+                >
+                  是否发生异常或损坏
+                </label>
+
+                <select
+                  class="form-select"
+                  id="incidentStatus"
+                >
+                  <option
+                    value="no"
+                    data-i18n="noOption"
+                  >
+                    否
+                  </option>
+
+                  <option
+                    value="yes"
+                    data-i18n="yesOption"
+                  >
+                    是
+                  </option>
+                </select>
+
+              </div>
+
+              <div class="form-group full">
+
+                <label
+                  class="form-label"
+                  for="exceptionDetails"
+                  data-i18n="exceptionDetailsLabel"
+                >
+                  增项、异常或损坏说明
+                </label>
+
+                <textarea
+                  class="form-textarea"
+                  id="exceptionDetails"
+                  data-i18n-placeholder="exceptionDetailsPlaceholder"
+                  placeholder="如存在新增要求、现场异常或财产损坏，请说明发生时间、位置、原因和处理情况。"
+                ></textarea>
+
+              </div>
+
+              <div class="form-group full">
+
+                <label
+                  class="form-label"
+                  for="evidenceFiles"
+                  data-i18n="evidenceFilesLabel"
+                >
+                  上传阶段证据
+                </label>
+
+                <div class="file-box">
+
+                  <input
+                    class="file-input"
+                    id="evidenceFiles"
+                    type="file"
+                    accept="image/*,video/*,.pdf"
+                    multiple
+                    onchange="handleEvidenceFiles(event)"
+                  />
+
+                  <div
+                    class="file-list"
+                    id="fileList"
+                  ></div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="checkbox-list">
+
+              <label class="checkbox-item">
+
+                <input
+                  id="confirmTruth"
+                  type="checkbox"
+                />
+
+                <span class="checkbox-content">
+
+                  <span
+                    class="checkbox-title"
+                    data-i18n="confirmTruthTitle"
+                  >
+                    我确认填写内容真实
+                  </span>
+
+                  <span
+                    class="checkbox-description"
+                    data-i18n="confirmTruthDescription"
+                  >
+                    我确认实际完成情况、工时、材料、遗留问题和证据与现场真实情况一致。
+                  </span>
+
+                </span>
+
+              </label>
+
+              <label class="checkbox-item">
+
+                <input
+                  id="confirmStandard"
+                  type="checkbox"
+                />
+
+                <span class="checkbox-content">
+
+                  <span
+                    class="checkbox-title"
+                    data-i18n="confirmStandardTitle"
+                  >
+                    我已对照客户确认标准
+                  </span>
+
+                  <span
+                    class="checkbox-description"
+                    data-i18n="confirmStandardDescription"
+                  >
+                    我已按照客户确认的工作范围、完成标准和验收方法检查本阶段成果。
+                  </span>
+
+                </span>
+
+              </label>
+
+              <label class="checkbox-item">
+
+                <input
+                  id="confirmNoUnauthorizedWork"
+                  type="checkbox"
+                />
+
+                <span class="checkbox-content">
+
+                  <span
+                    class="checkbox-title"
+                    data-i18n="confirmNoUnauthorizedTitle"
+                  >
+                    我未擅自实施未经批准的增项
+                  </span>
+
+                  <span
+                    class="checkbox-description"
+                    data-i18n="confirmNoUnauthorizedDescription"
+                  >
+                    客户新增要求已经报告，未确认的新增工作没有被作为原任务实施。
+                  </span>
+
+                </span>
+
+              </label>
+
+            </div>
+
+            <div
+              class="warning-box"
+              data-i18n="submissionNotice"
+            >
+              提交后，本阶段将进入客户评价。下一阶段在客户评价、纸面签字和运营审核完成前继续锁定。
+            </div>
+
+            <div class="action-row">
+
+              <button
+                class="secondary-button"
+                type="button"
+                onclick="clearSubmissionForm()"
+                data-i18n="clearButton"
+              >
+                清空填写
+              </button>
+
+              <button
+                class="primary-button"
+                id="submitButton"
+                type="button"
+                onclick="submitMilestoneResult()"
+                data-i18n="submitButton"
+              >
+                提交阶段成果
+              </button>
+
+            </div>
+
+          </section>
+
+        </div>
+
+      </article>
+
+    </section>
+
+    <section
+      class="empty-state"
+      id="emptyState"
+    >
+      <h2 data-i18n="emptyTitle">
+        没有可提交的阶段
+      </h2>
+
+      <p data-i18n="emptyDescription">
+        请确认手机号正确，并确认运营人员已经开放当前阶段。
+      </p >
+    </section>
+
+  </main>
+
+  <script>    const translations = {
+      zh: {
+        heroTag: "工人阶段成果提交",
+        heroTitle: "提交当前阶段完成情况",
+
+        heroDescription:
+          "工人只能提交当前已经开放的阶段。请按照客户确认的任务范围、完成标准、验收方法和证据要求如实填写。",
+
+        searchTitle: "查询当前阶段任务",
+
+        searchDescription:
+          "输入派工时登记的工人手机号，查询当前允许提交的阶段任务。",
+
+        phonePlaceholder:
+          "请输入工人手机号码",
+
+        searchButton:
+          "查询当前阶段",
+
+        statusOpen:
+          "当前阶段已开放",
+
+        workScopeLabel:
+          "本阶段工作范围",
+
+        completionStandardLabel:
+          "完成标准",
+
+        inspectionMethodLabel:
+          "验收方法",
+
+        evidenceRequirementLabel:
+          "证据要求",
+
+        submissionTitle:
+          "填写阶段成果",
+
+        submissionDescription:
+          "请如实记录本阶段实际完成情况、工时、材料、遗留问题、异常和增项。",
+
+        completionStatementLabel:
+          "实际完成情况",
+
+        completionStatementPlaceholder:
+          "逐项说明已经完成的工作。",
+
+        actualHoursLabel:
+          "实际工时",
+
+        actualHoursPlaceholder:
+          "例如：4",
+
+        completionTimeLabel:
+          "阶段完成时间",
+
+        materialsUsedLabel:
+          "使用材料",
+
+        materialsUsedPlaceholder:
+          "填写材料名称、数量和使用位置；没有使用材料可填写“无”。",
+
+        remainingIssuesLabel:
+          "遗留问题",
+
+        remainingIssuesPlaceholder:
+          "如有未完成事项、质量问题或需要后续处理的内容，请详细说明。",
+
+        variationStatusLabel:
+          "是否存在新增要求",
+
+        incidentStatusLabel:
+          "是否发生异常或损坏",
+
+        noOption:
+          "否",
+
+        yesOption:
+          "是",
+
+        exceptionDetailsLabel:
+          "增项、异常或损坏说明",
+
+        exceptionDetailsPlaceholder:
+          "如存在新增要求、现场异常或财产损坏，请说明发生时间、位置、原因和处理情况。",
+
+        evidenceFilesLabel:
+          "上传阶段证据",
+
+        confirmTruthTitle:
+          "我确认填写内容真实",
+
+        confirmTruthDescription:
+          "我确认实际完成情况、工时、材料、遗留问题和证据与现场真实情况一致。",
+
+        confirmStandardTitle:
+          "我已对照客户确认标准",
+
+        confirmStandardDescription:
+          "我已按照客户确认的工作范围、完成标准和验收方法检查本阶段成果。",
+
+        confirmNoUnauthorizedTitle:
+          "我未擅自实施未经批准的增项",
+
+        confirmNoUnauthorizedDescription:
+          "客户新增要求已经报告，未确认的新增工作没有被作为原任务实施。",
+
+        submissionNotice:
+          "提交后，本阶段将进入客户评价。下一阶段在客户评价、纸面签字和运营审核完成前继续锁定。",
+
+        clearButton:
+          "清空填写",
+
+        submitButton:
+          "提交阶段成果",
+
+        emptyTitle:
+          "没有可提交的阶段",
+
+        emptyDescription:
+          "请确认手机号正确，并确认运营人员已经开放当前阶段。",
+
+        milestoneSequence:
+          "第",
+
+        milestoneUnit:
+          "阶段",
+
+        phoneRequired:
+          "请输入工人手机号码。",
+
+        requestNotFound:
+          "没有找到当前服务订单。",
+
+        workerNotMatched:
+          "该手机号与当前派工人员不一致。",
+
+        milestoneNotFound:
+          "当前没有已经开放、可由工人提交的阶段。",
+
+        milestoneFound:
+          "已经找到当前开放阶段，请填写阶段成果。",
+
+        completionRequired:
+          "请填写实际完成情况。",
+
+        actualHoursRequired:
+          "请填写实际工时。",
+
+        completionTimeRequired:
+          "请选择阶段完成时间。",
+
+        materialsRequired:
+          "请填写材料使用情况，没有使用材料可填写“无”。",
+
+        exceptionRequired:
+          "存在新增要求、异常或损坏时，必须填写详细说明。",
+
+        evidenceRequired:
+          "请至少选择一个阶段证据文件。",
+
+        confirmationRequired:
+          "请完成全部真实性和标准确认。",
+
+        submitSuccess:
+          "阶段成果已经提交，当前节点进入客户评价。下一阶段继续锁定。",
+
+        fileCount:
+          "文件数量",
+
+        fileSize:
+          "文件大小",
+
+        noFiles:
+          "尚未选择文件",
+
+        defaultWorker:
+          "当前工人",
+
+        notProvided:
+          "未填写"
+      },
+
+      en: {
+        heroTag:
+          "Worker Milestone Submission",
+
+        heroTitle:
+          "Submit Current Stage Results",
+
+        heroDescription:
+          "Workers may submit only the currently open stage. Complete the form according to the customer-confirmed scope, standards, inspection method, and evidence requirements.",
+
+        searchTitle:
+          "Find Current Stage Task",
+
+        searchDescription:
+          "Enter the worker phone number registered during assignment to find the stage currently available for submission.",
+
+        phonePlaceholder:
+          "Enter worker phone number",
+
+        searchButton:
+          "Find Current Stage",
+
+        statusOpen:
+          "Current Stage Open",
+
+        workScopeLabel:
+          "Stage Work Scope",
+
+        completionStandardLabel:
+          "Completion Standards",
+
+        inspectionMethodLabel:
+          "Inspection Method",
+
+        evidenceRequirementLabel:
+          "Evidence Requirements",
+
+        submissionTitle:
+          "Enter Stage Results",
+
+        submissionDescription:
+          "Record the completed work, labor hours, materials, remaining issues, incidents, and additional requests accurately.",
+
+        completionStatementLabel:
+          "Actual Work Completed",
+
+        completionStatementPlaceholder:
+          "Describe each completed work item.",
+
+        actualHoursLabel:
+          "Actual Labor Hours",
+
+        actualHoursPlaceholder:
+          "Example: 4",
+
+        completionTimeLabel:
+          "Stage Completion Time",
+
+        materialsUsedLabel:
+          "Materials Used",
+
+        materialsUsedPlaceholder:
+          "Enter material names, quantities, and locations. Enter “None” when no materials were used.",
+
+        remainingIssuesLabel:
+          "Remaining Issues",
+
+        remainingIssuesPlaceholder:
+          "Describe incomplete work, quality issues, or items requiring follow-up.",
+
+        variationStatusLabel:
+          "Any Additional Request",
+
+        incidentStatusLabel:
+          "Any Incident or Damage",
+
+        noOption:
+          "No",
+
+        yesOption:
+          "Yes",
+
+        exceptionDetailsLabel:
+          "Additional Request, Incident, or Damage Details",
+
+        exceptionDetailsPlaceholder:
+          "Describe the time, location, cause, and response for any additional request, incident, or property damage.",
+
+        evidenceFilesLabel:
+          "Upload Stage Evidence",
+
+        confirmTruthTitle:
+          "I confirm the information is accurate",
+
+        confirmTruthDescription:
+          "I confirm that the completed work, hours, materials, remaining issues, and evidence reflect the actual site conditions.",
+
+        confirmStandardTitle:
+          "I checked the customer-confirmed standards",
+
+        confirmStandardDescription:
+          "I reviewed the stage results against the confirmed scope, completion standards, and inspection method.",
+
+        confirmNoUnauthorizedTitle:
+          "I did not perform unauthorized additional work",
+
+        confirmNoUnauthorizedDescription:
+          "Customer additions were reported, and unapproved additional work was not performed as part of the original task.",
+
+        submissionNotice:
+          "After submission, this stage will move to customer evaluation. The next stage remains locked until customer evaluation, paper signatures, and operations review are complete.",
+
+        clearButton:
+          "Clear Form",
+
+        submitButton:
+          "Submit Stage Results",
+
+        emptyTitle:
+          "No Stage Available",
+
+        emptyDescription:
+          "Confirm the phone number and make sure operations has opened the current stage.",
+
+        milestoneSequence:
+          "Stage",
+
+        milestoneUnit:
+          "",
+
+        phoneRequired:
+          "Enter the worker phone number.",
+
+        requestNotFound:
+          "No current service order was found.",
+
+        workerNotMatched:
+          "This phone number does not match the assigned worker.",
+
+        milestoneNotFound:
+          "There is no open stage currently available for worker submission.",
+
+        milestoneFound:
+          "The current open stage was found. Complete the stage submission form.",
+
+        completionRequired:
+          "Enter the actual work completed.",
+
+        actualHoursRequired:
+          "Enter the actual labor hours.",
+
+        completionTimeRequired:
+          "Select the stage completion time.",
+
+        materialsRequired:
+          "Enter the materials used, or enter “None.”",
+
+        exceptionRequired:
+          "Detailed information is required when there is an additional request, incident, or damage.",
+
+        evidenceRequired:
+          "Select at least one stage evidence file.",
+
+        confirmationRequired:
+          "Complete all truthfulness and standards confirmations.",
+
+        submitSuccess:
+          "The stage results were submitted. This milestone is now awaiting customer evaluation, and the next stage remains locked.",
+
+        fileCount:
+          "Files",
+
+        fileSize:
+          "File Size",
+
+        noFiles:
+          "No files selected",
+
+        defaultWorker:
+          "Current Worker",
+
+        notProvided:
+          "Not Provided"
+      }
+    };
+
+    let currentLanguage =
+      localStorage.getItem(
+        "echocity-language"
+      ) || "zh";
+
+    let currentRequest = null;
+    let currentMilestone = null;
+    let selectedEvidenceFiles = [];
+
+    function translate(key) {
+      return (
+        translations[currentLanguage][key] ||
+        translations.zh[key] ||
+        key
+      );
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang =
+        currentLanguage === "zh"
+          ? "zh-CN"
+          : "en";
+
+      document
+        .querySelectorAll(
+          "[data-i18n]"
+        )
+        .forEach((element) => {
+          const key =
+            element.getAttribute(
+              "data-i18n"
+            );
+
+          if (
+            translations[
+              currentLanguage
+            ][key]
+          ) {
+            element.textContent =
+              translations[
+                currentLanguage
+              ][key];
+          }
+        });
+
+      document
+        .querySelectorAll(
+          "[data-i18n-placeholder]"
+        )
+        .forEach((element) => {
+          const key =
+            element.getAttribute(
+              "data-i18n-placeholder"
+            );
+
+          if (
+            translations[
+              currentLanguage
+            ][key]
+          ) {
+            element.placeholder =
+              translations[
+                currentLanguage
+              ][key];
+          }
+        });
+
+      document.getElementById(
+        "languageButton"
+      ).textContent =
+        currentLanguage === "zh"
+          ? "EN"
+          : "中文";
+
+      if (currentMilestone) {
+        renderMilestone();
+      }
+
+      renderFileList();
+    }
+
+    function toggleLanguage() {
+      currentLanguage =
+        currentLanguage === "zh"
+          ? "en"
+          : "zh";
+
+      localStorage.setItem(
+        "echocity-language",
+        currentLanguage
+      );
+
+      applyLanguage();
+    }    function loadCurrentRequest() {
+      try {
+        const storedRequest =
+          localStorage.getItem(
+            "echocity-last-request"
+          );
+
+        currentRequest =
+          storedRequest
+            ? JSON.parse(storedRequest)
+            : null;
+
+      } catch (error) {
+        console.error(
+          "Failed to load request:",
+          error
+        );
+
+        currentRequest = null;
+      }
+    }
+
+    function normalizePhone(value) {
+      return String(value || "")
+        .replace(/\s+/g, "")
+        .replace(/-/g, "")
+        .replace(/\(/g, "")
+        .replace(/\)/g, "");
+    }
+
+    function getAssignedWorkerPhone() {
+      return normalizePhone(
+        currentRequest
+          ?.assignment
+          ?.workerPhone ||
+
+        currentRequest
+          ?.assignedWorker
+          ?.phone ||
+
+        currentRequest
+          ?.workerPhone ||
+
+        ""
+      );
+    }
+
+    function getOpenMilestone() {
+      if (
+        !currentRequest ||
+        !Array.isArray(
+          currentRequest.milestones
+        )
+      ) {
+        return null;
+      }
+
+      return (
+        currentRequest.milestones.find(
+          (milestone) =>
+            milestone.status === "open"
+        ) || null
+      );
+    }
+
+    function showStatus(
+      type,
+      message
+    ) {
+      const statusMessage =
+        document.getElementById(
+          "statusMessage"
+        );
+
+      statusMessage.className =
+        "status-message " + type;
+
+      statusMessage.textContent =
+        message;
+    }
+
+    function hideStatus() {
+      const statusMessage =
+        document.getElementById(
+          "statusMessage"
+        );
+
+      statusMessage.className =
+        "status-message";
+
+      statusMessage.textContent =
+        "";
+    }
+
+    function showEmptyState() {
+      document.getElementById(
+        "milestoneSection"
+      ).style.display =
+        "none";
+
+      document.getElementById(
+        "emptyState"
+      ).classList.add(
+        "show"
+      );
+    }
+
+    function hideEmptyState() {
+      document.getElementById(
+        "emptyState"
+      ).classList.remove(
+        "show"
+      );
+    }
+
+    function searchOpenMilestone() {
+      hideStatus();
+
+      const phoneInput =
+        document.getElementById(
+          "workerPhoneInput"
+        );
+
+      const enteredPhone =
+        normalizePhone(
+          phoneInput.value
+        );
+
+      if (!enteredPhone) {
+        showStatus(
+          "error",
+          translate(
+            "phoneRequired"
+          )
+        );
+
+        showEmptyState();
+        return;
+      }
+
+      loadCurrentRequest();
+
+      if (!currentRequest) {
+        showStatus(
+          "error",
+          translate(
+            "requestNotFound"
+          )
+        );
+
+        showEmptyState();
+        return;
+      }
+
+      const assignedPhone =
+        getAssignedWorkerPhone();
+
+      if (
+        assignedPhone &&
+        enteredPhone !==
+          assignedPhone
+      ) {
+        showStatus(
+          "error",
+          translate(
+            "workerNotMatched"
+          )
+        );
+
+        showEmptyState();
+        return;
+      }
+
+      currentMilestone =
+        getOpenMilestone();
+
+      if (!currentMilestone) {
+        showStatus(
+          "error",
+          translate(
+            "milestoneNotFound"
+          )
+        );
+
+        showEmptyState();
+        return;
+      }
+
+      hideEmptyState();
+
+      document.getElementById(
+        "milestoneSection"
+      ).style.display =
+        "block";
+
+      renderMilestone();
+
+      showStatus(
+        "success",
+        translate(
+          "milestoneFound"
+        )
+      );
+    }
+
+    function renderMilestone() {
+      if (!currentMilestone) {
+        return;
+      }
+
+      document.getElementById(
+        "milestoneSequence"
+      ).textContent =
+        currentLanguage === "zh"
+          ? `${translate(
+              "milestoneSequence"
+            )}${currentMilestone.sequence}${translate(
+              "milestoneUnit"
+            )}`
+          : `${translate(
+              "milestoneSequence"
+            )} ${currentMilestone.sequence}`;
+
+      document.getElementById(
+        "milestoneTitle"
+      ).textContent =
+        currentMilestone
+          .milestoneName ||
+        currentMilestone
+          .taskName ||
+        translate(
+          "notProvided"
+        );
+
+      document.getElementById(
+        "workScope"
+      ).textContent =
+        currentMilestone
+          .workScope ||
+        translate(
+          "notProvided"
+        );
+
+      document.getElementById(
+        "completionStandard"
+      ).textContent =
+        currentMilestone
+          .completionStandard ||
+        translate(
+          "notProvided"
+        );
+
+      document.getElementById(
+        "inspectionMethod"
+      ).textContent =
+        currentMilestone
+          .inspectionMethod ||
+        translate(
+          "notProvided"
+        );
+
+      document.getElementById(
+        "evidenceRequirement"
+      ).textContent =
+        currentMilestone
+          .evidenceRequirement ||
+        translate(
+          "notProvided"
+        );
+    }
+
+    function formatFileSize(
+      bytes
+    ) {
+      if (!bytes) {
+        return "0 KB";
+      }
+
+      const kilobytes =
+        bytes / 1024;
+
+      if (kilobytes < 1024) {
+        return (
+          kilobytes.toFixed(1) +
+          " KB"
+        );
+      }
+
+      return (
+        (
+          kilobytes / 1024
+        ).toFixed(1) +
+        " MB"
+      );
+    }
+
+    function handleEvidenceFiles(
+      event
+    ) {
+      selectedEvidenceFiles =
+        Array.from(
+          event.target.files || []
+        ).map(
+          (file) => ({
+            name: file.name,
+            type:
+              file.type ||
+              "unknown",
+            size: file.size,
+            lastModified:
+              file.lastModified
+          })
+        );
+
+      renderFileList();
+    }
+
+    function renderFileList() {
+      const fileList =
+        document.getElementById(
+          "fileList"
+        );
+
+      if (!fileList) {
+        return;
+      }
+
+      if (
+        selectedEvidenceFiles
+          .length === 0
+      ) {
+        fileList.innerHTML =
+          `
+            <div class="file-item">
+              ${translate(
+                "noFiles"
+              )}
+            </div>
+          `;
+
+        return;
+      }
+
+      fileList.innerHTML =
+        selectedEvidenceFiles
+          .map(
+            (
+              file,
+              index
+            ) => `
+              <div class="file-item">
+                <strong>
+                  ${index + 1}.
+                  ${escapeHTML(
+                    file.name
+                  )}
+                </strong>
+
+                <br />
+
+                ${escapeHTML(
+                  translate(
+                    "fileSize"
+                  )
+                )}:
+                ${escapeHTML(
+                  formatFileSize(
+                    file.size
+                  )
+                )}
+              </div>
+            `
+          )
+          .join("");
+    }
+
+    function escapeHTML(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function setDefaultCompletionTime() {
+      const completionTime =
+        document.getElementById(
+          "completionTime"
+        );
+
+      if (!completionTime.value) {
+        const now =
+          new Date();
+
+        const offset =
+          now.getTimezoneOffset();
+
+        const localDate =
+          new Date(
+            now.getTime() -
+            offset * 60000
+          );
+
+        completionTime.value =
+          localDate
+            .toISOString()
+            .slice(0, 16);
+      }
+    }
+
+    function clearSubmissionForm() {
+      document.getElementById(
+        "completionStatement"
+      ).value =
+        "";
+
+      document.getElementById(
+        "actualHours"
+      ).value =
+        "";
+
+      document.getElementById(
+        "completionTime"
+      ).value =
+        "";
+
+      document.getElementById(
+        "materialsUsed"
+      ).value =
+        "";
+
+      document.getElementById(
+        "remainingIssues"
+      ).value =
+        "";
+
+      document.getElementById(
+        "variationStatus"
+      ).value =
+        "no";
+
+      document.getElementById(
+        "incidentStatus"
+      ).value =
+        "no";
+
+      document.getElementById(
+        "exceptionDetails"
+      ).value =
+        "";
+
+      document.getElementById(
+        "confirmTruth"
+      ).checked =
+        false;
+
+      document.getElementById(
+        "confirmStandard"
+      ).checked =
+        false;
+
+      document.getElementById(
+        "confirmNoUnauthorizedWork"
+      ).checked =
+        false;
+
+      document.getElementById(
+        "evidenceFiles"
+      ).value =
+        "";
+
+      selectedEvidenceFiles = [];
+
+      renderFileList();
+      setDefaultCompletionTime();
+      hideStatus();
+    }    function validateSubmission() {
+      const completionStatement =
+        document.getElementById(
+          "completionStatement"
+        ).value.trim();
+
+      const actualHours =
+        document.getElementById(
+          "actualHours"
+        ).value.trim();
+
+      const completionTime =
+        document.getElementById(
+          "completionTime"
+        ).value;
+
+      const materialsUsed =
+        document.getElementById(
+          "materialsUsed"
+        ).value.trim();
+
+      const variationStatus =
+        document.getElementById(
+          "variationStatus"
+        ).value;
+
+      const incidentStatus =
+        document.getElementById(
+          "incidentStatus"
+        ).value;
+
+      const exceptionDetails =
+        document.getElementById(
+          "exceptionDetails"
+        ).value.trim();
+
+      const confirmTruth =
+        document.getElementById(
+          "confirmTruth"
+        ).checked;
+
+      const confirmStandard =
+        document.getElementById(
+          "confirmStandard"
+        ).checked;
+
+      const confirmNoUnauthorizedWork =
+        document.getElementById(
+          "confirmNoUnauthorizedWork"
+        ).checked;
+
+      if (!completionStatement) {
+        showStatus(
+          "error",
+          translate(
+            "completionRequired"
+          )
+        );
+
+        return false;
+      }
+
+      if (
+        !actualHours ||
+        Number(actualHours) <= 0
+      ) {
+        showStatus(
+          "error",
+          translate(
+            "actualHoursRequired"
+          )
+        );
+
+        return false;
+      }
+
+      if (!completionTime) {
+        showStatus(
+          "error",
+          translate(
+            "completionTimeRequired"
+          )
+        );
+
+        return false;
+      }
+
+      if (!materialsUsed) {
+        showStatus(
+          "error",
+          translate(
+            "materialsRequired"
+          )
+        );
+
+        return false;
+      }
+
+      if (
+        (
+          variationStatus === "yes" ||
+          incidentStatus === "yes"
+        ) &&
+        !exceptionDetails
+      ) {
+        showStatus(
+          "error",
+          translate(
+            "exceptionRequired"
+          )
+        );
+
+        return false;
+      }
+
+      if (
+        selectedEvidenceFiles.length ===
+        0
+      ) {
+        showStatus(
+          "error",
+          translate(
+            "evidenceRequired"
+          )
+        );
+
+        return false;
+      }
+
+      if (
+        !confirmTruth ||
+        !confirmStandard ||
+        !confirmNoUnauthorizedWork
+      ) {
+        showStatus(
+          "error",
+          translate(
+            "confirmationRequired"
+          )
+        );
+
+        return false;
+      }
+
+      return true;
+    }
+
+    function saveCurrentRequest() {
+      if (!currentRequest) {
+        return;
+      }
+
+      currentRequest.updatedAt =
+        new Date().toISOString();
+
+      const requests =
+        JSON.parse(
+          localStorage.getItem(
+            "echocity-service-requests"
+          ) || "[]"
+        );
+
+      const requestIndex =
+        requests.findIndex(
+          (request) =>
+            request.id ===
+            currentRequest.id
+        );
+
+      if (requestIndex >= 0) {
+        requests[requestIndex] =
+          currentRequest;
+      } else {
+        requests.unshift(
+          currentRequest
+        );
+      }
+
+      localStorage.setItem(
+        "echocity-service-requests",
+        JSON.stringify(requests)
+      );
+
+      localStorage.setItem(
+        "echocity-last-request",
+        JSON.stringify(
+          currentRequest
+        )
+      );
+
+      localStorage.setItem(
+        "echocity-last-milestones",
+        JSON.stringify(
+          currentRequest.milestones ||
+          []
+        )
+      );
+    }
+
+    function getWorkerName() {
+      return (
+        currentRequest
+          ?.assignment
+          ?.workerName ||
+
+        currentRequest
+          ?.assignedWorker
+          ?.name ||
+
+        currentRequest
+          ?.workerName ||
+
+        translate(
+          "defaultWorker"
+        )
+      );
+    }
+
+    function submitMilestoneResult() {
+      if (
+        !currentRequest ||
+        !currentMilestone
+      ) {
+        showStatus(
+          "error",
+          translate(
+            "milestoneNotFound"
+          )
+        );
+
+        return;
+      }
+
+      if (
+        currentMilestone.status !==
+        "open"
+      ) {
+        showStatus(
+          "error",
+          translate(
+            "milestoneNotFound"
+          )
+        );
+
+        return;
+      }
+
+      if (!validateSubmission()) {
+        return;
+      }
+
+      const now =
+        new Date().toISOString();
+
+      const completionStatement =
+        document.getElementById(
+          "completionStatement"
+        ).value.trim();
+
+      const actualHours =
+        Number(
+          document.getElementById(
+            "actualHours"
+          ).value
+        );
+
+      const completionTime =
+        document.getElementById(
+          "completionTime"
+        ).value;
+
+      const materialsUsed =
+        document.getElementById(
+          "materialsUsed"
+        ).value.trim();
+
+      const remainingIssues =
+        document.getElementById(
+          "remainingIssues"
+        ).value.trim();
+
+      const variationStatus =
+        document.getElementById(
+          "variationStatus"
+        ).value;
+
+      const incidentStatus =
+        document.getElementById(
+          "incidentStatus"
+        ).value;
+
+      const exceptionDetails =
+        document.getElementById(
+          "exceptionDetails"
+        ).value.trim();
+
+      currentMilestone.workerSubmission = {
+        id:
+          "WORKER-SUBMISSION-" +
+          Date.now(),
+
+        requestId:
+          currentRequest.id,
+
+        milestoneId:
+          currentMilestone.id,
+
+        submittedBy:
+          getWorkerName(),
+
+        workerPhone:
+          document.getElementById(
+            "workerPhoneInput"
+          ).value.trim(),
+
+        submittedAt:
+          now,
+
+        completionTime:
+          new Date(
+            completionTime
+          ).toISOString(),
+
+        completionStatement,
+        actualHours,
+        materialsUsed,
+        remainingIssues,
+
+        variationStatus,
+        incidentStatus,
+        exceptionDetails,
+
+        evidenceFiles:
+          selectedEvidenceFiles.map(
+            (
+              file,
+              index
+            ) => ({
+              id:
+                "EVIDENCE-" +
+                Date.now() +
+                "-" +
+                index,
+
+              name: file.name,
+              type: file.type,
+              size: file.size,
+
+              lastModified:
+                file.lastModified,
+
+              status:
+                "recorded"
+            })
+          ),
+
+        confirmations: {
+          truthConfirmed: true,
+          standardConfirmed: true,
+
+          noUnauthorizedWorkConfirmed:
+            true
+        },
+
+        status:
+          "submitted"
+      };
+
+      currentMilestone.status =
+        "worker_submitted";
+
+      currentMilestone.updatedAt =
+        now;
+
+      currentRequest.status =
+        "milestone_review";
+
+      currentRequest.milestones =
+        currentRequest.milestones.map(
+          (milestone) =>
+            milestone.id ===
+            currentMilestone.id
+              ? currentMilestone
+              : milestone
+        );
+
+      saveCurrentRequest();
+
+      document.getElementById(
+        "submitButton"
+      ).disabled =
+        true;
+
+      showStatus(
+        "success",
+        translate(
+          "submitSuccess"
+        )
+      );
+
+      document.getElementById(
+        "milestoneSection"
+      ).style.display =
+        "none";
+
+      document.getElementById(
+        "emptyState"
+      ).classList.add(
+        "show"
+      );
+    }
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        loadCurrentRequest();
+        applyLanguage();
+        setDefaultCompletionTime();
+        renderFileList();
+      }
+    );
+  </script>
+
+</body>
+</html>

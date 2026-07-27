@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <meta
+    name="description"
+    content="Submit a service request to EchoCity."
+  />
+
+  <title>提交需求 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #176b5b;
+      --primary-dark: #105247;
+      --primary-light: #e9f5f1;
+      --background: #f4f7f6;
+      --surface: #ffffff;
+      --text: #18201e;
+      --text-light: #66716e;
+      --border: #dce5e2;
+      --danger: #b42318;
+      --shadow: 0 12px 32px rgba(20, 55, 48, 0.09);
+      --radius: 20px;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "PingFang SC",
+        "Microsoft YaHei",
+        Arial,
+        sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(
+          180deg,
+          #edf7f4 0,
+          var(--background) 280px
+        );
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 760px;
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 18px 16px 44px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 26px;
+    }
+
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      text-decoration: none;
+      box-shadow: 0 5px 16px rgba(20, 55, 48, 0.06);
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: 750;
+      letter-spacing: -0.3px;
+    }
+
+    .language-button {
+      min-width: 54px;
+      height: 40px;
+      padding: 0 13px;
+      color: var(--primary-dark);
+      font-size: 14px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+    }
+
+    .hero {
+      margin-bottom: 22px;
+      padding: 4px 3px 0;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      margin-bottom: 13px;
+      padding: 5px 11px;
+      color: var(--primary-dark);
+      font-size: 13px;
+      font-weight: 700;
+      background: var(--primary-light);
+      border: 1px solid #cee6df;
+      border-radius: 20px;
+    }
+
+    .hero h1 {
+      margin-bottom: 10px;
+      font-size: clamp(28px, 7vw, 42px);
+      line-height: 1.14;
+      letter-spacing: -1.1px;
+    }
+
+    .hero p {
+      max-width: 600px;
+      color: var(--text-light);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .request-card {
+      padding: 22px 18px;
+      background: var(--surface);
+      border: 1px solid rgba(220, 229, 226, 0.92);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .required {
+      margin-left: 3px;
+      color: var(--danger);
+    }
+
+    .form-help {
+      margin-top: 7px;
+      color: var(--text-light);
+      font-size: 13px;
+      line-height: 1.55;
+    }    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #ffffff;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s ease,
+                  box-shadow 0.2s ease;
+    }
+
+    .form-input,
+    .form-select {
+      min-height: 48px;
+      padding: 0 14px;
+    }
+
+    .form-textarea {
+      min-height: 135px;
+      padding: 13px 14px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.12);
+    }
+
+    .quick-services {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .quick-service {
+      min-height: 68px;
+      padding: 12px 10px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #ffffff;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.45;
+      cursor: pointer;
+      transition: transform 0.2s ease,
+                  border-color 0.2s ease,
+                  background 0.2s ease;
+    }
+
+    .quick-service:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    .quick-service.active {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .photo-upload {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 92px;
+      padding: 16px;
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      background: #fbfcfe;
+      color: var(--text-light);
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .photo-upload input {
+      display: none;
+    }
+
+    .submit-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .primary-button,
+    .secondary-button {
+      min-height: 50px;
+      border-radius: 14px;
+      padding: 0 20px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .primary-button {
+      flex: 1;
+      border: 0;
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 10px 22px rgba(31, 111, 235, 0.2);
+    }
+
+    .secondary-button {
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    .primary-button:hover {
+      opacity: 0.92;
+    }
+
+    .secondary-button:hover {
+      background: #f7f9fc;
+    }
+
+    .status-message {
+      display: none;
+      margin-top: 16px;
+      padding: 13px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .status-message.success {
+      display: block;
+      background: #eaf8ef;
+      color: #176b3a;
+      border: 1px solid #b9e4c8;
+    }
+
+    .status-message.error {
+      display: block;
+      background: #fff0f0;
+      color: #a72b2b;
+      border: 1px solid #f0c0c0;
+    }
+
+    .safety-note {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 12px;
+      background: #fff8e8;
+      color: #70500c;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        padding: 14px;
+      }
+
+      .topbar {
+        margin-bottom: 22px;
+      }
+
+      .hero {
+        padding-top: 8px;
+      }
+
+      .hero h1 {
+        font-size: 29px;
+      }
+
+      .request-card {
+        padding: 18px 15px;
+      }
+
+      .quick-services,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .submit-row {
+        flex-direction: column;
+      }
+
+      .secondary-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <header class="topbar">
+      <a class="brand" href=" ">
+        <span class="brand-mark">E</span>
+        <span>EchoCity</span>
+      </a >
+
+      <button
+        class="language-button"
+        id="languageButton"
+        type="button"
+        onclick="toggleLanguage()"
+      >
+        EN
+      </button>
+    </header>
+
+    <section class="hero">
+      <span class="hero-tag" data-i18n="tag">
+        本地人员与生活服务
+      </span>
+
+      <h1 data-i18n="title">
+        你好，我能帮你什么？
+      </h1>
+
+      <p data-i18n="subtitle">
+        告诉数字人 Echo 你的需要，我们会组织合适的人员和资源，
+        确认服务范围、价格和时间后再开始。
+      </p >
+    </section>
+
+    <section class="request-card">
+
+      <div class="form-group">
+        <label class="form-label" data-i18n="serviceType">
+          你需要哪一类服务？
+        </label>
+
+        <div class="quick-services">
+          <button
+            class="quick-service"
+            type="button"
+            data-service="workers"
+            onclick="selectService(this)"
+          >
+            <span data-i18n="workers">需要人手</span>
+          </button>
+
+          <button
+            class="quick-service"
+            type="button"
+            data-service="repair"
+            onclick="selectService(this)"
+          >
+            <span data-i18n="repair">维修或清洁</span>
+          </button>
+
+          <button
+            class="quick-service"
+            type="button"
+            data-service="support"
+            onclick="selectService(this)"
+          >
+            <span data-i18n="support">生活帮助</span>
+          </button>
+        </div>
+
+        <input
+          id="serviceType"
+          name="serviceType"
+          type="hidden"
+        />
+      </div>      <div class="form-group">
+        <label
+          class="form-label"
+          for="requestDescription"
+          data-i18n="requestLabel"
+        >
+          请告诉我具体需要什么
+          <span class="required">*</span>
+        </label>
+
+        <textarea
+          class="form-textarea"
+          id="requestDescription"
+          name="requestDescription"
+          data-i18n-placeholder="requestPlaceholder"
+          placeholder="例如：明天下午需要两个人帮我搬家具，大约工作3小时。"
+          required
+        ></textarea>
+
+        <p class="form-help" data-i18n="requestHelp">
+          你可以说明工作内容、人数、工具、楼梯、重物或其他特殊情况。
+        </p >
+      </div>
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label
+            class="form-label"
+            for="serviceDate"
+            data-i18n="dateLabel"
+          >
+            服务日期
+            <span class="required">*</span>
+          </label>
+
+          <input
+            class="form-input"
+            id="serviceDate"
+            name="serviceDate"
+            type="date"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label
+            class="form-label"
+            for="serviceTime"
+            data-i18n="timeLabel"
+          >
+            开始时间
+            <span class="required">*</span>
+          </label>
+
+          <input
+            class="form-input"
+            id="serviceTime"
+            name="serviceTime"
+            type="time"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label
+            class="form-label"
+            for="workerCount"
+            data-i18n="workerCountLabel"
+          >
+            需要人数
+          </label>
+
+          <select
+            class="form-select"
+            id="workerCount"
+            name="workerCount"
+          >
+            <option value="1" data-i18n="oneWorker">
+              1人
+            </option>
+
+            <option value="2" data-i18n="twoWorkers">
+              2人
+            </option>
+
+            <option value="3" data-i18n="threeWorkers">
+              3人
+            </option>
+
+            <option value="4" data-i18n="fourWorkers">
+              4人
+            </option>
+
+            <option value="5plus" data-i18n="fivePlusWorkers">
+              5人以上
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label
+            class="form-label"
+            for="estimatedHours"
+            data-i18n="hoursLabel"
+          >
+            预计时长
+          </label>
+
+          <select
+            class="form-select"
+            id="estimatedHours"
+            name="estimatedHours"
+          >
+            <option value="2" data-i18n="twoHours">
+              约2小时
+            </option>
+
+            <option value="3" data-i18n="threeHours">
+              约3小时
+            </option>
+
+            <option value="4" data-i18n="fourHours">
+              约4小时
+            </option>
+
+            <option value="8" data-i18n="fullDay">
+              约8小时
+            </option>
+
+            <option value="unknown" data-i18n="unknownHours">
+              暂不确定
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group full-width">
+          <label
+            class="form-label"
+            for="serviceAddress"
+            data-i18n="addressLabel"
+          >
+            服务地址
+            <span class="required">*</span>
+          </label>
+
+          <input
+            class="form-input"
+            id="serviceAddress"
+            name="serviceAddress"
+            type="text"
+            data-i18n-placeholder="addressPlaceholder"
+            placeholder="请输入街道、城市和邮政编码"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label
+            class="form-label"
+            for="customerName"
+            data-i18n="nameLabel"
+          >
+            你的姓名
+            <span class="required">*</span>
+          </label>
+
+          <input
+            class="form-input"
+            id="customerName"
+            name="customerName"
+            type="text"
+            data-i18n-placeholder="namePlaceholder"
+            placeholder="请输入姓名"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label
+            class="form-label"
+            for="customerPhone"
+            data-i18n="phoneLabel"
+          >
+            手机号码
+            <span class="required">*</span>
+          </label>
+
+          <input
+            class="form-input"
+            id="customerPhone"
+            name="customerPhone"
+            type="tel"
+            data-i18n-placeholder="phonePlaceholder"
+            placeholder="请输入手机号码"
+            required
+          />
+        </div>
+
+        <div class="form-group full-width">
+          <label
+            class="form-label"
+            for="customerEmail"
+            data-i18n="emailLabel"
+          >
+            邮箱
+          </label>
+
+          <input
+            class="form-input"
+            id="customerEmail"
+            name="customerEmail"
+            type="email"
+            data-i18n-placeholder="emailPlaceholder"
+            placeholder="请输入邮箱，选填"
+          />
+        </div>
+
+        <div class="form-group full-width">
+          <label
+            class="form-label"
+            for="requestPhoto"
+            data-i18n="photoLabel"
+          >
+            上传现场照片
+          </label>
+
+          <label class="photo-upload" for="requestPhoto">
+            <span id="photoUploadText" data-i18n="photoUpload">
+              点击选择照片，帮助我们更准确地了解需求
+            </span>
+
+            <input
+              id="requestPhoto"
+              name="requestPhoto"
+              type="file"
+              accept="image/*"
+              multiple
+              onchange="showSelectedPhotos()"
+            />
+          </label>
+        </div>
+
+      </div>
+
+      <div class="safety-note" data-i18n="safetyNote">
+        涉及电气、燃气、管道、结构、屋面、医疗护理或其他高风险事项时，
+        系统不会自动派普通工作人员，将转由人工审核或持证合作方处理。
+      </div>
+
+      <div class="submit-row">
+
+        <button
+          class="secondary-button"
+          type="button"
+          onclick="clearRequestForm()"
+          data-i18n="clearButton"
+        >
+          清空
+        </button>
+
+        <button
+          class="primary-button"
+          id="submitButton"
+          type="button"
+          onclick="submitServiceRequest()"
+          data-i18n="submitButton"
+        >
+          确认并获取报价
+        </button>
+
+      </div>
+
+      <div
+        class="status-message"
+        id="statusMessage"
+      ></div>
+
+    </section>
+
+  </main>
+
+  <script src="js/echocity-store.js"></script>
+  <script src="js/echocity-supabase.js"></script>
+  <script src="js/echocity-services.js"></script>
+
+  <script>    const translations = {
+      zh: {
+        tag: "本地人员与生活服务",
+        title: "你好，我能帮你什么？",
+        subtitle:
+          "告诉数字人 Echo 你的需要，我们会组织合适的人员和资源，确认服务范围、价格和时间后再开始。",
+
+        serviceType: "你需要哪一类服务？",
+        workers: "需要人手",
+        repair: "维修或清洁",
+        support: "生活帮助",
+
+        requestLabel: "请告诉我具体需要什么",
+        requestPlaceholder:
+          "例如：明天下午需要两个人帮我搬家具，大约工作3小时。",
+        requestHelp:
+          "你可以说明工作内容、人数、工具、楼梯、重物或其他特殊情况。",
+
+        dateLabel: "服务日期",
+        timeLabel: "开始时间",
+        workerCountLabel: "需要人数",
+        hoursLabel: "预计时长",
+        addressLabel: "服务地址",
+        addressPlaceholder: "请输入街道、城市和邮政编码",
+
+        nameLabel: "你的姓名",
+        namePlaceholder: "请输入姓名",
+        phoneLabel: "手机号码",
+        phonePlaceholder: "请输入手机号码",
+        emailLabel: "邮箱",
+        emailPlaceholder: "请输入邮箱，选填",
+
+        oneWorker: "1人",
+        twoWorkers: "2人",
+        threeWorkers: "3人",
+        fourWorkers: "4人",
+        fivePlusWorkers: "5人以上",
+
+        twoHours: "约2小时",
+        threeHours: "约3小时",
+        fourHours: "约4小时",
+        fullDay: "约8小时",
+        unknownHours: "暂不确定",
+
+        photoLabel: "上传现场照片",
+        photoUpload: "点击选择照片，帮助我们更准确地了解需求",
+        selectedPhoto: "已选择 {count} 张照片",
+
+        safetyNote:
+          "涉及电气、燃气、管道、结构、屋面、医疗护理或其他高风险事项时，系统不会自动派普通工作人员，将转由人工审核或持证合作方处理。",
+
+        clearButton: "清空",
+        submitButton: "确认并获取报价",
+
+        selectServiceError: "请选择一类服务。",
+        descriptionError: "请填写具体服务需求。",
+        dateError: "请选择服务日期。",
+        timeError: "请选择开始时间。",
+        addressError: "请填写服务地址。",
+        nameError: "请填写你的姓名。",
+        phoneError: "请填写手机号码。",
+        phoneFormatError: "请输入有效的手机号码。",
+
+        submitting: "正在提交需求……",
+        submitSuccess:
+          "需求已经收到。数字人 Echo 已生成需求记录，我们会尽快与你联系并确认报价。",
+        submitError:
+          "提交没有成功，请检查网络后重试，或者稍后再次提交。",
+        confirmClear: "确定要清空当前填写的内容吗？"
+      },
+
+      en: {
+        tag: "Local Workforce & Daily Support",
+        title: "How can I help you today?",
+        subtitle:
+          "Tell Echo what you need. We will organize the right people and resources, then confirm the scope, price, and timing before service begins.",
+
+        serviceType: "What kind of service do you need?",
+        workers: "Need Workers",
+        repair: "Repair or Cleaning",
+        support: "Daily Support",
+
+        requestLabel: "Tell us what you need",
+        requestPlaceholder:
+          "Example: I need two people tomorrow afternoon to help move furniture for about three hours.",
+        requestHelp:
+          "Please mention the work, number of workers, tools, stairs, heavy items, or any special conditions.",
+
+        dateLabel: "Service Date",
+        timeLabel: "Start Time",
+        workerCountLabel: "Number of Workers",
+        hoursLabel: "Estimated Duration",
+        addressLabel: "Service Address",
+        addressPlaceholder: "Enter street, city, and ZIP code",
+
+        nameLabel: "Your Name",
+        namePlaceholder: "Enter your name",
+        phoneLabel: "Phone Number",
+        phonePlaceholder: "Enter your phone number",
+        emailLabel: "Email",
+        emailPlaceholder: "Enter your email, optional",
+
+        oneWorker: "1 worker",
+        twoWorkers: "2 workers",
+        threeWorkers: "3 workers",
+        fourWorkers: "4 workers",
+        fivePlusWorkers: "5 or more workers",
+
+        twoHours: "About 2 hours",
+        threeHours: "About 3 hours",
+        fourHours: "About 4 hours",
+        fullDay: "About 8 hours",
+        unknownHours: "Not sure yet",
+
+        photoLabel: "Upload Site Photos",
+        photoUpload:
+          "Select photos to help us understand the request more accurately",
+        selectedPhoto: "{count} photo(s) selected",
+
+        safetyNote:
+          "Electrical, gas, plumbing, structural, roofing, medical care, and other high-risk requests will not be assigned automatically to general workers. They will be reviewed by a coordinator or referred to a licensed provider.",
+
+        clearButton: "Clear",
+        submitButton: "Confirm and Get a Quote",
+
+        selectServiceError: "Please select a service category.",
+        descriptionError: "Please describe the service you need.",
+        dateError: "Please select a service date.",
+        timeError: "Please select a start time.",
+        addressError: "Please enter the service address.",
+        nameError: "Please enter your name.",
+        phoneError: "Please enter your phone number.",
+        phoneFormatError: "Please enter a valid phone number.",
+
+        submitting: "Submitting your request…",
+        submitSuccess:
+          "Your request has been received. Echo has created a service record, and we will contact you shortly to confirm the quote.",
+        submitError:
+          "The request could not be submitted. Please check your connection and try again.",
+        confirmClear: "Are you sure you want to clear this form?"
+      }
+    };
+
+    let currentLanguage =
+      localStorage.getItem("echocity-language") || "zh";
+
+    function translate(key) {
+      return (
+        translations[currentLanguage][key] ||
+        translations.zh[key] ||
+        key
+      );
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang =
+        currentLanguage === "zh" ? "zh-CN" : "en";
+
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        const key = element.getAttribute("data-i18n");
+
+        if (translations[currentLanguage][key]) {
+          element.textContent = translations[currentLanguage][key];
+        }
+      });
+
+      document
+        .querySelectorAll("[data-i18n-placeholder]")
+        .forEach((element) => {
+          const key = element.getAttribute(
+            "data-i18n-placeholder"
+          );
+
+          if (translations[currentLanguage][key]) {
+            element.placeholder =
+              translations[currentLanguage][key];
+          }
+        });
+
+      const languageButton =
+        document.getElementById("languageButton");
+
+      languageButton.textContent =
+        currentLanguage === "zh" ? "EN" : "中文";
+
+      showSelectedPhotos();
+    }
+
+    function toggleLanguage() {
+      currentLanguage =
+        currentLanguage === "zh" ? "en" : "zh";
+
+      localStorage.setItem(
+        "echocity-language",
+        currentLanguage
+      );
+
+      applyLanguage();
+    }
+
+    function selectService(button) {
+      document
+        .querySelectorAll(".quick-service")
+        .forEach((item) => {
+          item.classList.remove("active");
+        });
+
+      button.classList.add("active");
+
+      document.getElementById("serviceType").value =
+        button.dataset.service;
+    }
+
+    function showSelectedPhotos() {
+      const photoInput =
+        document.getElementById("requestPhoto");
+
+      const photoText =
+        document.getElementById("photoUploadText");
+
+      const count = photoInput.files.length;
+
+      if (count > 0) {
+        photoText.textContent =
+          translate("selectedPhoto").replace(
+            "{count}",
+            count
+          );
+      } else {
+        photoText.textContent =
+          translate("photoUpload");
+      }
+    }
+
+    function showStatus(type, message) {
+      const statusMessage =
+        document.getElementById("statusMessage");
+
+      statusMessage.className =
+        "status-message " + type;
+
+      statusMessage.textContent = message;
+
+      statusMessage.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    function validateRequestForm() {
+      const serviceType =
+        document.getElementById("serviceType").value;
+
+      const description =
+        document
+          .getElementById("requestDescription")
+          .value.trim();
+
+      const serviceDate =
+        document.getElementById("serviceDate").value;
+
+      const serviceTime =
+        document.getElementById("serviceTime").value;
+
+      const address =
+        document
+          .getElementById("serviceAddress")
+          .value.trim();
+
+      const customerName =
+        document
+          .getElementById("customerName")
+          .value.trim();
+
+      const customerPhone =
+        document
+          .getElementById("customerPhone")
+          .value.trim();
+
+      if (!serviceType) {
+        showStatus(
+          "error",
+          translate("selectServiceError")
+        );
+        return false;
+      }
+
+      if (!description) {
+        showStatus(
+          "error",
+          translate("descriptionError")
+        );
+        return false;
+      }
+
+      if (!serviceDate) {
+        showStatus(
+          "error",
+          translate("dateError")
+        );
+        return false;
+      }
+
+      if (!serviceTime) {
+        showStatus(
+          "error",
+          translate("timeError")
+        );
+        return false;
+      }
+
+      if (!address) {
+        showStatus(
+          "error",
+          translate("addressError")
+        );
+        return false;
+      }
+
+      if (!customerName) {
+        showStatus(
+          "error",
+          translate("nameError")
+        );
+        return false;
+      }
+
+      if (!customerPhone) {
+        showStatus(
+          "error",
+          translate("phoneError")
+        );
+        return false;
+      }
+
+      const phonePattern =
+        /^[0-9+\-()\s]{7,20}$/;
+
+      if (!phonePattern.test(customerPhone)) {
+        showStatus(
+          "error",
+          translate("phoneFormatError")
+        );
+        return false;
+      }
+
+      return true;
+    }
+
+    function createRequestData() {
+      return {
+        id:
+          "REQ-" +
+          Date.now(),
+
+        serviceType:
+          document.getElementById("serviceType").value,
+
+        description:
+          document
+            .getElementById("requestDescription")
+            .value.trim(),
+
+        serviceDate:
+          document.getElementById("serviceDate").value,
+
+        serviceTime:
+          document.getElementById("serviceTime").value,
+
+        workerCount:
+          document.getElementById("workerCount").value,
+
+        estimatedHours:
+          document.getElementById("estimatedHours").value,
+
+        serviceAddress:
+          document
+            .getElementById("serviceAddress")
+            .value.trim(),
+
+        customerName:
+          document
+            .getElementById("customerName")
+            .value.trim(),
+
+        customerPhone:
+          document
+            .getElementById("customerPhone")
+            .value.trim(),
+
+        customerEmail:
+          document
+            .getElementById("customerEmail")
+            .value.trim(),
+
+        photoCount:
+          document.getElementById("requestPhoto")
+            .files.length,
+
+        language:
+          currentLanguage,
+
+        status:
+          "new",
+
+        createdAt:
+          new Date().toISOString()
+      };
+    }
+
+    async function saveRequestData(requestData) {
+      if (
+        window.EchoCityServices &&
+        typeof window.EchoCityServices
+          .createServiceRequest === "function"
+      ) {
+        return await window.EchoCityServices
+          .createServiceRequest(requestData);
+      }
+
+      if (
+        window.EchoCityStore &&
+        typeof window.EchoCityStore
+          .addServiceRequest === "function"
+      ) {
+        return window.EchoCityStore
+          .addServiceRequest(requestData);
+      }
+
+      const existingRequests =
+        JSON.parse(
+          localStorage.getItem(
+            "echocity-service-requests"
+          ) || "[]"
+        );
+
+      existingRequests.unshift(requestData);
+
+      localStorage.setItem(
+        "echocity-service-requests",
+        JSON.stringify(existingRequests)
+      );
+
+      return requestData;
+    }
+
+    async function submitServiceRequest() {
+      if (!validateRequestForm()) {
+        return;
+      }
+
+      const submitButton =
+        document.getElementById("submitButton");
+
+      submitButton.disabled = true;
+      submitButton.textContent =
+        translate("submitting");
+
+      showStatus(
+        "success",
+        translate("submitting")
+      );
+
+      try {
+        const requestData = createRequestData();
+
+        await saveRequestData(requestData);
+
+        localStorage.setItem(
+          "echocity-last-request",
+          JSON.stringify(requestData)
+        );
+
+        showStatus(
+          "success",
+          translate("submitSuccess")
+        );
+
+        submitButton.textContent =
+          translate("submitButton");
+
+        setTimeout(() => {
+          window.location.href =
+            "service-request-confirmation.html";
+        }, 1300);
+
+      } catch (error) {
+        console.error(
+          "Service request submission failed:",
+          error
+        );
+
+        showStatus(
+          "error",
+          translate("submitError")
+        );
+
+        submitButton.disabled = false;
+        submitButton.textContent =
+          translate("submitButton");
+      }
+    }
+
+    function clearRequestForm() {
+      const confirmed =
+        window.confirm(
+          translate("confirmClear")
+        );
+
+      if (!confirmed) {
+        return;
+      }
+
+      document
+        .querySelectorAll(
+          ".form-input, .form-textarea"
+        )
+        .forEach((input) => {
+          input.value = "";
+        });
+
+      document.getElementById("workerCount").value =
+        "1";
+
+      document.getElementById("estimatedHours").value =
+        "2";
+
+      document.getElementById("serviceType").value =
+        "";
+
+      document.getElementById("requestPhoto").value =
+        "";
+
+      document
+        .querySelectorAll(".quick-service")
+        .forEach((button) => {
+          button.classList.remove("active");
+        });
+
+      const statusMessage =
+        document.getElementById("statusMessage");
+
+      statusMessage.className =
+        "status-message";
+
+      statusMessage.textContent = "";
+
+      setMinimumDate();
+      showSelectedPhotos();
+    }
+
+    function setMinimumDate() {
+      const dateInput =
+        document.getElementById("serviceDate");
+
+      const today = new Date();
+
+      const year = today.getFullYear();
+
+      const month = String(
+        today.getMonth() + 1
+      ).padStart(2, "0");
+
+      const day = String(
+        today.getDate()
+      ).padStart(2, "0");
+
+      dateInput.min =
+        `${year}-${month}-${day}`;
+    }
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        setMinimumDate();
+        applyLanguage();
+      }
+    );
+  </script>
+
+</body>
+</html>

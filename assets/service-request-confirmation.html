@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>需求确认 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #1f6feb;
+      --primary-dark: #1557b0;
+      --primary-soft: #edf5ff;
+
+      --success: #18864b;
+      --success-soft: #eaf8f0;
+
+      --warning: #8a5b00;
+      --warning-soft: #fff7df;
+
+      --text: #172033;
+      --text-light: #667085;
+
+      --border: #d9e1ec;
+      --background: #f5f8fc;
+      --card: #ffffff;
+
+      --shadow:
+        0 18px 45px rgba(24, 39, 75, 0.09);
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        linear-gradient(
+          180deg,
+          #edf5ff 0%,
+          #f7f9fc 42%,
+          #f5f8fc 100%
+        );
+
+      color: var(--text);
+
+      font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(100%, 780px);
+      margin: 0 auto;
+      padding: 22px 18px 50px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 34px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 38px;
+      height: 38px;
+
+      border-radius: 13px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          #65a4ff
+        );
+
+      color: #ffffff;
+      font-weight: 900;
+
+      box-shadow:
+        0 8px 20px rgba(31, 111, 235, 0.22);
+    }
+
+    .language-button {
+      min-width: 58px;
+      height: 40px;
+
+      padding: 0 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: rgba(255, 255, 255, 0.86);
+      color: var(--text);
+
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .language-button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .success-panel {
+      padding: 28px 22px;
+
+      border: 1px solid #c9ead7;
+      border-radius: 22px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #f2fff7 0%,
+          #ffffff 100%
+        );
+
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .success-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 76px;
+      height: 76px;
+
+      margin: 0 auto 18px;
+
+      border-radius: 50%;
+
+      background: var(--success-soft);
+      color: var(--success);
+
+      font-size: 40px;
+      font-weight: 900;
+    }
+
+    .success-title {
+      font-size: clamp(27px, 7vw, 40px);
+      line-height: 1.16;
+      letter-spacing: -1px;
+    }
+
+    .success-description {
+      max-width: 610px;
+
+      margin:
+        14px auto 0;
+
+      color: var(--text-light);
+
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .request-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      margin-top: 17px;
+      padding: 9px 14px;
+
+      border-radius: 999px;
+
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .summary-card {
+      margin-top: 20px;
+      padding: 22px;
+
+      border: 1px solid var(--border);
+      border-radius: 20px;
+
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      line-height: 1.35;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 32px;
+      padding: 0 12px;
+
+      border-radius: 999px;
+
+      background: var(--warning-soft);
+      color: var(--warning);
+
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .summary-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .summary-item {
+      display: grid;
+      grid-template-columns: 145px 1fr;
+      gap: 18px;
+
+      padding: 14px 0;
+
+      border-bottom:
+        1px solid #edf0f5;
+    }
+
+    .summary-item:last-child {
+      border-bottom: 0;
+    }
+
+    .summary-label {
+      color: var(--text-light);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .summary-value {
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .description-box {
+      margin-top: 12px;
+      padding: 15px;
+
+      border-radius: 14px;
+
+      background: #f8fafc;
+      color: var(--text);
+
+      font-size: 15px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }    .next-step-card {
+      margin-top: 20px;
+      padding: 20px;
+
+      border: 1px solid #dbe7f5;
+      border-radius: 18px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #f4f9ff 0%,
+          #ffffff 100%
+        );
+    }
+
+    .next-step-title {
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .next-step-list {
+      display: grid;
+      gap: 13px;
+
+      margin-top: 16px;
+    }
+
+    .next-step-item {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .step-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 36px;
+      height: 36px;
+
+      border-radius: 12px;
+
+      background: var(--primary);
+      color: #ffffff;
+
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .step-content strong {
+      display: block;
+
+      margin-bottom: 3px;
+
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .step-content p {
+      color: var(--text-light);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .notice-card {
+      margin-top: 20px;
+      padding: 16px;
+
+      border: 1px solid #f1d99f;
+      border-radius: 15px;
+
+      background: var(--warning-soft);
+      color: #6d4b00;
+
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 12px;
+
+      margin-top: 22px;
+    }
+
+    .primary-button,
+    .secondary-button {
+      min-height: 50px;
+      padding: 0 18px;
+
+      border-radius: 14px;
+
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 800;
+
+      cursor: pointer;
+    }
+
+    .primary-button {
+      flex: 1;
+
+      border: 0;
+
+      background: var(--primary);
+      color: #ffffff;
+
+      box-shadow:
+        0 10px 24px rgba(31, 111, 235, 0.2);
+    }
+
+    .primary-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .secondary-button {
+      border: 1px solid var(--border);
+
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    .secondary-button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .empty-state {
+      display: none;
+
+      margin-top: 20px;
+      padding: 24px 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: #ffffff;
+      box-shadow: var(--shadow);
+
+      text-align: center;
+    }
+
+    .empty-state.show {
+      display: block;
+    }
+
+    .empty-state h2 {
+      font-size: 22px;
+      line-height: 1.4;
+    }
+
+    .empty-state p {
+      margin-top: 10px;
+
+      color: var(--text-light);
+
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding:
+          16px
+          14px
+          40px;
+      }
+
+      .topbar {
+        margin-bottom: 24px;
+      }
+
+      .success-panel,
+      .summary-card {
+        padding: 20px 16px;
+      }
+
+      .success-title {
+        font-size: 29px;
+      }
+
+      .summary-item {
+        grid-template-columns: 1fr;
+        gap: 5px;
+
+        padding: 12px 0;
+      }
+
+      .action-row {
+        flex-direction: column;
+      }
+
+      .primary-button,
+      .secondary-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <header class="topbar">
+      <a class="brand" href=" ">
+        <span class="brand-mark">E</span>
+        <span>EchoCity</span>
+      </a >
+
+      <button
+        class="language-button"
+        id="languageButton"
+        type="button"
+        onclick="toggleLanguage()"
+      >
+        EN
+      </button>
+    </header>
+
+    <section
+      class="success-panel"
+      id="successPanel"
+    >
+      <div class="success-icon">
+        ✓
+      </div>
+
+      <h1
+        class="success-title"
+        data-i18n="successTitle"
+      >
+        需求已经收到
+      </h1>
+
+      <p
+        class="success-description"
+        data-i18n="successDescription"
+      >
+        数字人 Echo 已经生成需求记录。
+        我们会尽快确认工作范围、人员、价格和时间。
+      </p >
+
+      <div
+        class="request-number"
+        id="requestNumber"
+      >
+        需求编号：--
+      </div>
+    </section>
+
+    <section
+      class="summary-card"
+      id="summaryCard"
+    >
+      <div class="section-header">
+
+        <h2
+          class="section-title"
+          data-i18n="summaryTitle"
+        >
+          需求摘要
+        </h2>
+
+        <span
+          class="status-badge"
+          data-i18n="statusNew"
+        >
+          待人工确认
+        </span>
+
+      </div>
+
+      <div class="summary-list">
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="serviceLabel"
+          >
+            服务类型
+          </div>
+
+          <div
+            class="summary-value"
+            id="summaryService"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="dateTimeLabel"
+          >
+            服务时间
+          </div>
+
+          <div
+            class="summary-value"
+            id="summaryDateTime"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="workersLabel"
+          >
+            人数与时长
+          </div>
+
+          <div
+            class="summary-value"
+            id="summaryWorkers"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="addressLabel"
+          >
+            服务地址
+          </div>
+
+          <div
+            class="summary-value"
+            id="summaryAddress"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="contactLabel"
+          >
+            联系方式
+          </div>
+
+          <div
+            class="summary-value"
+            id="summaryContact"
+          >
+            --
+          </div>
+        </div>
+
+      </div>
+
+      <div
+        class="summary-label"
+        data-i18n="descriptionLabel"
+      >
+        具体需求
+      </div>
+
+      <div
+        class="description-box"
+        id="summaryDescription"
+      >
+        --
+      </div>      <div class="next-step-card">
+
+        <h2
+          class="next-step-title"
+          data-i18n="nextStepTitle"
+        >
+          接下来会发生什么？
+        </h2>
+
+        <div class="next-step-list">
+
+          <div class="next-step-item">
+            <div class="step-number">
+              1
+            </div>
+
+            <div class="step-content">
+              <strong data-i18n="stepOneTitle">
+                人工确认需求
+              </strong>
+
+              <p data-i18n="stepOneText">
+                运营人员会检查服务范围、时间、地点和风险信息。
+              </p >
+            </div>
+          </div>
+
+          <div class="next-step-item">
+            <div class="step-number">
+              2
+            </div>
+
+            <div class="step-content">
+              <strong data-i18n="stepTwoTitle">
+                确认价格与人员
+              </strong>
+
+              <p data-i18n="stepTwoText">
+                我们会联系你确认报价、人数、工具和服务安排。
+              </p >
+            </div>
+          </div>
+
+          <div class="next-step-item">
+            <div class="step-number">
+              3
+            </div>
+
+            <div class="step-content">
+              <strong data-i18n="stepThreeTitle">
+                开始服务
+              </strong>
+
+              <p data-i18n="stepThreeText">
+                只有在你确认报价和时间后，平台才会正式派工。
+              </p >
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div
+        class="notice-card"
+        data-i18n="safetyNotice"
+      >
+        涉及电气、燃气、管道、结构、屋面、医疗护理或其他高风险事项时，
+        将转由人工审核或持证合作方处理，不会自动派普通工作人员。
+      </div>
+
+      <div class="action-row">
+
+        <button
+          class="secondary-button"
+          type="button"
+          onclick="goBackToEdit()"
+          data-i18n="editButton"
+        >
+          返回修改
+        </button>
+
+        <button
+          class="primary-button"
+          type="button"
+          onclick="goToHome()"
+          data-i18n="homeButton"
+        >
+          返回首页
+        </button>
+
+      </div>
+
+    </section>
+
+    <section
+      class="empty-state"
+      id="emptyState"
+    >
+      <h2 data-i18n="emptyTitle">
+        没有找到需求记录
+      </h2>
+
+      <p data-i18n="emptyDescription">
+        当前设备没有保存最近提交的需求，请返回需求页面重新填写。
+      </p >
+
+      <div class="action-row">
+        <button
+          class="primary-button"
+          type="button"
+          onclick="goBackToEdit()"
+          data-i18n="newRequestButton"
+        >
+          重新提交需求
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const translations = {
+      zh: {
+        successTitle: "需求已经收到",
+        successDescription:
+          "数字人 Echo 已经生成需求记录。我们会尽快确认工作范围、人员、价格和时间。",
+
+        requestNumberLabel: "需求编号：",
+        summaryTitle: "需求摘要",
+        statusNew: "待人工确认",
+
+        serviceLabel: "服务类型",
+        dateTimeLabel: "服务时间",
+        workersLabel: "人数与时长",
+        addressLabel: "服务地址",
+        contactLabel: "联系方式",
+        descriptionLabel: "具体需求",
+
+        workersService: "需要人手",
+        repairService: "维修或清洁",
+        supportService: "生活帮助",
+        unknownService: "未选择",
+
+        workerUnit: "人",
+        workersUnit: "人",
+        hourUnit: "小时",
+        hoursUnit: "小时",
+        fivePlusWorkers: "5人以上",
+        unknownHours: "时长暂不确定",
+
+        nextStepTitle: "接下来会发生什么？",
+
+        stepOneTitle: "人工确认需求",
+        stepOneText:
+          "运营人员会检查服务范围、时间、地点和风险信息。",
+
+        stepTwoTitle: "确认价格与人员",
+        stepTwoText:
+          "我们会联系你确认报价、人数、工具和服务安排。",
+
+        stepThreeTitle: "开始服务",
+        stepThreeText:
+          "只有在你确认报价和时间后，平台才会正式派工。",
+
+        safetyNotice:
+          "涉及电气、燃气、管道、结构、屋面、医疗护理或其他高风险事项时，将转由人工审核或持证合作方处理，不会自动派普通工作人员。",
+
+        editButton: "返回修改",
+        homeButton: "返回首页",
+
+        emptyTitle: "没有找到需求记录",
+        emptyDescription:
+          "当前设备没有保存最近提交的需求，请返回需求页面重新填写。",
+        newRequestButton: "重新提交需求",
+
+        notProvided: "未填写"
+      },
+
+      en: {
+        successTitle: "Request Received",
+        successDescription:
+          "Echo has created your service request. We will review the scope, people, price, and timing shortly.",
+
+        requestNumberLabel: "Request ID: ",
+        summaryTitle: "Request Summary",
+        statusNew: "Awaiting Review",
+
+        serviceLabel: "Service Type",
+        dateTimeLabel: "Service Time",
+        workersLabel: "Workers and Duration",
+        addressLabel: "Service Address",
+        contactLabel: "Contact",
+        descriptionLabel: "Request Details",
+
+        workersService: "Need Workers",
+        repairService: "Repair or Cleaning",
+        supportService: "Daily Support",
+        unknownService: "Not Selected",
+
+        workerUnit: "worker",
+        workersUnit: "workers",
+        hourUnit: "hour",
+        hoursUnit: "hours",
+        fivePlusWorkers: "5 or more workers",
+        unknownHours: "Duration not confirmed",
+
+        nextStepTitle: "What Happens Next?",
+
+        stepOneTitle: "Request Review",
+        stepOneText:
+          "A coordinator will review the scope, time, location, and risk information.",
+
+        stepTwoTitle: "Price and People Confirmation",
+        stepTwoText:
+          "We will contact you to confirm the quote, workers, tools, and service arrangement.",
+
+        stepThreeTitle: "Service Begins",
+        stepThreeText:
+          "Workers will only be assigned after you confirm the quote and service time.",
+
+        safetyNotice:
+          "Electrical, gas, plumbing, structural, roofing, medical care, and other high-risk requests will be reviewed by a coordinator or referred to a licensed provider. General workers will not be assigned automatically.",
+
+        editButton: "Edit Request",
+        homeButton: "Back to Home",
+
+        emptyTitle: "No Request Record Found",
+        emptyDescription:
+          "No recent request is stored on this device. Please return to the request page and submit a new request.",
+        newRequestButton: "Submit a New Request",
+
+        notProvided: "Not provided"
+      }
+    };
+
+    let currentLanguage =
+      localStorage.getItem("echocity-language") || "zh";
+
+    let currentRequest = null;
+
+    function translate(key) {
+      return (
+        translations[currentLanguage][key] ||
+        translations.zh[key] ||
+        key
+      );
+    }
+
+    function toggleLanguage() {
+      currentLanguage =
+        currentLanguage === "zh" ? "en" : "zh";
+
+      localStorage.setItem(
+        "echocity-language",
+        currentLanguage
+      );
+
+      applyLanguage();
+      renderRequest();
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang =
+        currentLanguage === "zh" ? "zh-CN" : "en";
+
+      document.querySelectorAll("[data-i18n]")
+        .forEach((element) => {
+          const key =
+            element.getAttribute("data-i18n");
+
+          if (translations[currentLanguage][key]) {
+            element.textContent =
+              translations[currentLanguage][key];
+          }
+        });
+
+      document.getElementById(
+        "languageButton"
+      ).textContent =
+        currentLanguage === "zh" ? "EN" : "中文";
+    }    function getStoredRequest() {
+      try {
+        const storedRequest =
+          localStorage.getItem(
+            "echocity-last-request"
+          );
+
+        if (!storedRequest) {
+          return null;
+        }
+
+        return JSON.parse(storedRequest);
+
+      } catch (error) {
+        console.error(
+          "Failed to read request record:",
+          error
+        );
+
+        return null;
+      }
+    }
+
+    function getServiceName(serviceType) {
+      const serviceMap = {
+        workers: "workersService",
+        repair: "repairService",
+        support: "supportService"
+      };
+
+      const key =
+        serviceMap[serviceType] ||
+        "unknownService";
+
+      return translate(key);
+    }
+
+    function formatDateTime(
+      serviceDate,
+      serviceTime
+    ) {
+      if (!serviceDate && !serviceTime) {
+        return translate("notProvided");
+      }
+
+      let formattedDate = serviceDate || "";
+
+      if (serviceDate) {
+        const date = new Date(
+          serviceDate + "T00:00:00"
+        );
+
+        formattedDate =
+          date.toLocaleDateString(
+            currentLanguage === "zh"
+              ? "zh-CN"
+              : "en-US",
+            {
+              year: "numeric",
+              month: "long",
+              day: "numeric"
+            }
+          );
+      }
+
+      if (serviceTime) {
+        return `${formattedDate} ${serviceTime}`;
+      }
+
+      return formattedDate;
+    }
+
+    function formatWorkersAndHours(
+      workerCount,
+      estimatedHours
+    ) {
+      let workerText = "";
+
+      if (workerCount === "5plus") {
+        workerText =
+          translate("fivePlusWorkers");
+      } else {
+        const count =
+          Number(workerCount || 1);
+
+        const workerUnit =
+          count === 1
+            ? translate("workerUnit")
+            : translate("workersUnit");
+
+        workerText =
+          `${count} ${workerUnit}`;
+      }
+
+      let hourText = "";
+
+      if (
+        estimatedHours === "unknown" ||
+        !estimatedHours
+      ) {
+        hourText =
+          translate("unknownHours");
+      } else {
+        const hours =
+          Number(estimatedHours);
+
+        const hourUnit =
+          hours === 1
+            ? translate("hourUnit")
+            : translate("hoursUnit");
+
+        hourText =
+          `${hours} ${hourUnit}`;
+      }
+
+      return `${workerText} · ${hourText}`;
+    }
+
+    function formatContact(request) {
+      const contactItems = [];
+
+      if (request.customerName) {
+        contactItems.push(
+          request.customerName
+        );
+      }
+
+      if (request.customerPhone) {
+        contactItems.push(
+          request.customerPhone
+        );
+      }
+
+      if (request.customerEmail) {
+        contactItems.push(
+          request.customerEmail
+        );
+      }
+
+      if (contactItems.length === 0) {
+        return translate("notProvided");
+      }
+
+      return contactItems.join(" · ");
+    }
+
+    function renderRequest() {
+      if (!currentRequest) {
+        document.getElementById(
+          "successPanel"
+        ).style.display = "none";
+
+        document.getElementById(
+          "summaryCard"
+        ).style.display = "none";
+
+        document.getElementById(
+          "emptyState"
+        ).classList.add("show");
+
+        return;
+      }
+
+      document.getElementById(
+        "successPanel"
+      ).style.display = "block";
+
+      document.getElementById(
+        "summaryCard"
+      ).style.display = "block";
+
+      document.getElementById(
+        "emptyState"
+      ).classList.remove("show");
+
+      document.getElementById(
+        "requestNumber"
+      ).textContent =
+        translate("requestNumberLabel") +
+        (
+          currentRequest.id ||
+          "--"
+        );
+
+      document.getElementById(
+        "summaryService"
+      ).textContent =
+        getServiceName(
+          currentRequest.serviceType
+        );
+
+      document.getElementById(
+        "summaryDateTime"
+      ).textContent =
+        formatDateTime(
+          currentRequest.serviceDate,
+          currentRequest.serviceTime
+        );
+
+      document.getElementById(
+        "summaryWorkers"
+      ).textContent =
+        formatWorkersAndHours(
+          currentRequest.workerCount,
+          currentRequest.estimatedHours
+        );
+
+      document.getElementById(
+        "summaryAddress"
+      ).textContent =
+        currentRequest.serviceAddress ||
+        translate("notProvided");
+
+      document.getElementById(
+        "summaryContact"
+      ).textContent =
+        formatContact(currentRequest);
+
+      document.getElementById(
+        "summaryDescription"
+      ).textContent =
+        currentRequest.description ||
+        translate("notProvided");
+    }
+
+    function goBackToEdit() {
+      window.location.href =
+        "service-request.html";
+    }
+
+    function goToHome() {
+      window.location.href =
+        "../index.html";
+    }
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        currentRequest =
+          getStoredRequest();
+
+        applyLanguage();
+        renderRequest();
+      }
+    );
+  </script>
+
+</body>
+</html>

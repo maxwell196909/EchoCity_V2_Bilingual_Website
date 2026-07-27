@@ -1,0 +1,2320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>任务标准纸面确认单 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #1f6feb;
+      --primary-dark: #1557b0;
+      --success: #18864b;
+      --danger: #b42318;
+      --warning: #9a6700;
+
+      --text: #172033;
+      --text-light: #667085;
+      --border: #cfd8e5;
+      --background: #f3f6fa;
+      --card: #ffffff;
+
+      --shadow:
+        0 16px 40px rgba(24, 39, 75, 0.09);
+    }
+
+    body {
+      min-height: 100vh;
+
+      background: var(--background);
+      color: var(--text);
+
+      font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(100%, 980px);
+      margin: 0 auto;
+      padding: 20px 16px 56px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 38px;
+      height: 38px;
+
+      border-radius: 13px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          #65a4ff
+        );
+
+      color: #ffffff;
+      font-weight: 900;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .top-button {
+      min-height: 40px;
+      padding: 0 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 11px;
+
+      background: #ffffff;
+      color: var(--text);
+
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .print-button {
+      border-color: var(--primary);
+
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .paper {
+      padding: 34px;
+
+      border: 1px solid var(--border);
+      border-radius: 6px;
+
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .paper-header {
+      text-align: center;
+    }
+
+    .paper-title {
+      font-size: 27px;
+      line-height: 1.45;
+      letter-spacing: 1px;
+    }
+
+    .paper-subtitle {
+      margin-top: 6px;
+
+      color: var(--text-light);
+
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .document-meta {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 9px 22px;
+
+      margin-top: 26px;
+      padding-bottom: 18px;
+
+      border-bottom: 2px solid #1f2937;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+
+      min-width: 0;
+
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .meta-label {
+      color: var(--text-light);
+      white-space: nowrap;
+    }
+
+    .meta-value {
+      color: var(--text);
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .paper-section {
+      margin-top: 24px;
+    }
+
+    .section-title {
+      padding: 8px 11px;
+
+      border-left: 4px solid var(--primary);
+
+      background: #edf5ff;
+
+      color: var(--primary-dark);
+
+      font-size: 17px;
+      line-height: 1.45;
+    }
+
+    .section-content {
+      margin-top: 12px;
+
+      color: var(--text);
+
+      font-size: 13px;
+      line-height: 1.75;
+    }
+
+    .original-request {
+      padding: 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 8px;
+
+      background: #fafbfd;
+
+      white-space: pre-wrap;
+    }
+
+    .task-table {
+      width: 100%;
+      margin-top: 12px;
+
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .task-table th,
+    .task-table td {
+      padding: 10px;
+
+      border: 1px solid #aeb8c6;
+
+      font-size: 12px;
+      line-height: 1.65;
+      vertical-align: top;
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+
+    .task-table th {
+      background: #f1f4f8;
+      font-weight: 800;
+      text-align: left;
+    }
+
+    .task-table .number-column {
+      width: 70px;
+    }
+
+    .task-table .name-column {
+      width: 145px;
+    }
+
+    .standard-block {
+      margin-top: 18px;
+
+      border: 1px solid #aeb8c6;
+      border-radius: 6px;
+
+      overflow: hidden;
+      page-break-inside: avoid;
+    }
+
+    .standard-block-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+
+      padding: 11px 13px;
+
+      background: #f1f4f8;
+
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .standard-number {
+      color: var(--primary-dark);
+    }    .standard-block-body {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    }
+
+    .standard-field {
+      padding: 11px 13px;
+
+      border-top: 1px solid #aeb8c6;
+      border-right: 1px solid #aeb8c6;
+    }
+
+    .standard-field:nth-child(even) {
+      border-right: 0;
+    }
+
+    .standard-field.full {
+      grid-column: 1 / -1;
+      border-right: 0;
+    }
+
+    .field-label {
+      color: var(--text-light);
+
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .field-value {
+      margin-top: 5px;
+
+      color: var(--text);
+
+      font-size: 12px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .control-table {
+      width: 100%;
+      margin-top: 12px;
+
+      border-collapse: collapse;
+    }
+
+    .control-table th,
+    .control-table td {
+      padding: 10px;
+
+      border: 1px solid #aeb8c6;
+
+      font-size: 12px;
+      line-height: 1.65;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .control-table th {
+      width: 28%;
+      background: #f1f4f8;
+    }
+
+    .agreement-box {
+      margin-top: 12px;
+      padding: 14px;
+
+      border: 1px solid #aeb8c6;
+      border-radius: 6px;
+
+      background: #fafbfd;
+    }
+
+    .agreement-item {
+      margin-top: 9px;
+
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .agreement-item:first-child {
+      margin-top: 0;
+    }
+
+    .signature-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+      gap: 18px;
+
+      margin-top: 18px;
+    }
+
+    .signature-box {
+      min-height: 130px;
+      padding: 12px;
+
+      border: 1px solid #aeb8c6;
+      border-radius: 6px;
+    }
+
+    .signature-title {
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .signature-line {
+      margin-top: 54px;
+      padding-top: 7px;
+
+      border-top: 1px solid #1f2937;
+
+      color: var(--text-light);
+      font-size: 11px;
+    }
+
+    .date-line {
+      margin-top: 18px;
+
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .upload-card {
+      margin-top: 18px;
+      padding: 18px;
+
+      border: 1px solid var(--border);
+      border-radius: 16px;
+
+      background: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    .upload-card h2 {
+      font-size: 20px;
+      line-height: 1.45;
+    }
+
+    .upload-card p {
+      margin-top: 7px;
+
+      color: var(--text-light);
+
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .upload-area {
+      margin-top: 15px;
+      padding: 20px;
+
+      border: 2px dashed var(--border);
+      border-radius: 14px;
+
+      background: #fafbfd;
+      text-align: center;
+    }
+
+    .file-input {
+      width: 100%;
+    }
+
+    .file-preview {
+      display: none;
+
+      margin-top: 14px;
+      padding: 12px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: #ffffff;
+
+      font-size: 13px;
+      line-height: 1.6;
+      text-align: left;
+      word-break: break-word;
+    }
+
+    .file-preview.show {
+      display: block;
+    }
+
+    .status-message {
+      display: none;
+
+      margin-top: 14px;
+      padding: 13px 14px;
+
+      border-radius: 12px;
+
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .status-message.success {
+      display: block;
+
+      border: 1px solid #b9e4c8;
+
+      background: #eaf8f0;
+      color: var(--success);
+    }
+
+    .status-message.error {
+      display: block;
+
+      border: 1px solid #f0c0c0;
+
+      background: #fff0ee;
+      color: var(--danger);
+    }
+
+    .upload-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+
+      margin-top: 16px;
+    }
+
+    .secondary-button,
+    .primary-button {
+      min-height: 44px;
+      padding: 0 17px;
+
+      border-radius: 11px;
+
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .secondary-button {
+      border: 1px solid var(--border);
+
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    .primary-button {
+      border: 0;
+
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .primary-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .primary-button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .empty-state {
+      display: none;
+
+      padding: 30px 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: #ffffff;
+      box-shadow: var(--shadow);
+
+      text-align: center;
+    }
+
+    .empty-state.show {
+      display: block;
+    }
+
+    .empty-state h2 {
+      font-size: 22px;
+      line-height: 1.45;
+    }
+
+    .empty-state p {
+      margin-top: 8px;
+
+      color: var(--text-light);
+
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        padding:
+          14px
+          12px
+          40px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .topbar-actions {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .paper {
+        padding: 20px 15px;
+      }
+
+      .document-meta,
+      .standard-block-body,
+      .signature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .standard-field {
+        border-right: 0;
+      }
+
+      .upload-actions {
+        flex-direction: column-reverse;
+      }
+
+      .secondary-button,
+      .primary-button {
+        width: 100%;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      .page {
+        width: 100%;
+        padding: 0;
+      }
+
+      .topbar,
+      .upload-card,
+      .empty-state {
+        display: none !important;
+      }
+
+      .paper {
+        padding: 16mm;
+
+        border: 0;
+        box-shadow: none;
+      }
+
+      .standard-block,
+      .signature-box,
+      .paper-section {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <header class="topbar">
+
+      <a
+        class="brand"
+        href=" "
+      >
+        <span class="brand-mark">E</span>
+        <span>EchoCity</span>
+      </a >
+
+      <div class="topbar-actions">
+
+        <button
+          class="top-button"
+          type="button"
+          onclick="goBack()"
+          data-i18n="backButton"
+        >
+          返回
+        </button>
+
+        <button
+          class="top-button"
+          id="languageButton"
+          type="button"
+          onclick="toggleLanguage()"
+        >
+          EN
+        </button>
+
+        <button
+          class="top-button print-button"
+          type="button"
+          onclick="printPaper()"
+          data-i18n="printButton"
+        >
+          打印确认单
+        </button>
+
+      </div>
+
+    </header>
+
+    <section
+      class="paper"
+      id="paperDocument"
+    >
+
+      <div class="paper-header">
+
+        <h1
+          class="paper-title"
+          data-i18n="paperTitle"
+        >
+          服务任务、完成标准及验收依据确认单
+        </h1>
+
+        <p
+          class="paper-subtitle"
+          data-i18n="paperSubtitle"
+        >
+          本确认单作为报价、派工、中间验收、最终验收和争议处理的共同依据
+        </p >
+
+      </div>
+
+      <div class="document-meta">
+
+        <div class="meta-item">
+          <span
+            class="meta-label"
+            data-i18n="documentNumberLabel"
+          >
+            文件编号：
+          </span>
+
+          <span
+            class="meta-value"
+            id="documentNumber"
+          >
+            --
+          </span>
+        </div>
+
+        <div class="meta-item">
+          <span
+            class="meta-label"
+            data-i18n="requestIdLabel"
+          >
+            需求编号：
+          </span>
+
+          <span
+            class="meta-value"
+            id="requestId"
+          >
+            --
+          </span>
+        </div>
+
+        <div class="meta-item">
+          <span
+            class="meta-label"
+            data-i18n="customerLabel"
+          >
+            客户：
+          </span>
+
+          <span
+            class="meta-value"
+            id="customerName"
+          >
+            --
+          </span>
+        </div>
+
+        <div class="meta-item">
+          <span
+            class="meta-label"
+            data-i18n="addressLabel"
+          >
+            服务地址：
+          </span>
+
+          <span
+            class="meta-value"
+            id="serviceAddress"
+          >
+            --
+          </span>
+        </div>
+
+        <div class="meta-item">
+          <span
+            class="meta-label"
+            data-i18n="confirmedAtLabel"
+          >
+            线上确认时间：
+          </span>
+
+          <span
+            class="meta-value"
+            id="customerConfirmedAt"
+          >
+            --
+          </span>
+        </div>
+
+        <div class="meta-item">
+          <span
+            class="meta-label"
+            data-i18n="documentStatusLabel"
+          >
+            文件状态：
+          </span>
+
+          <span
+            class="meta-value"
+            id="documentStatus"
+          >
+            --
+          </span>
+        </div>
+
+      </div>
+
+      <section class="paper-section">
+
+        <h2
+          class="section-title"
+          data-i18n="originalRequestTitle"
+        >
+          一、客户原始需求
+        </h2>
+
+        <div
+          class="section-content original-request"
+          id="originalRequest"
+        >
+          --
+        </div>
+
+      </section>
+
+      <section class="paper-section">
+
+        <h2
+          class="section-title"
+          data-i18n="taskStandardsTitle"
+        >
+          二、服务任务与完成标准
+        </h2>
+
+        <div
+          class="section-content"
+          id="taskStandardsContainer"
+        ></div>
+
+      </section>
+
+      <section class="paper-section">
+
+        <h2
+          class="section-title"
+          data-i18n="controlRulesTitle"
+        >
+          三、中间控制与验收规则
+        </h2>
+
+        <table class="control-table">
+          <tbody>
+
+            <tr>
+              <th data-i18n="milestoneControlLabel">
+                中间节点控制
+              </th>
+
+              <td data-i18n="milestoneControlText">
+                每个关键节点完成后，客户应对前一阶段完成情况进行评价，并形成纸面中间验收记录。
+              </td>
+            </tr>
+
+            <tr>
+              <th data-i18n="nextStageControlLabel">
+                下一阶段控制
+              </th>
+
+              <td data-i18n="nextStageControlText">
+                客户评价、纸面签字及运营审核未完成时，下一阶段不得开始。
+              </td>
+            </tr>
+
+            <tr>
+              <th data-i18n="variationControlLabel">
+                新增要求控制
+              </th>
+
+              <td data-i18n="variationControlText">
+                客户新增要求须另行明确工作范围、费用、工期和验收标准，不自动纳入原任务。
+              </td>
+            </tr>
+
+            <tr>
+              <th data-i18n="evidenceControlLabel">
+                证据要求
+              </th>
+
+              <td data-i18n="evidenceControlText">
+                过程照片、视频、测试记录、客户评价、纸面签字及运营审核记录应共同保存。
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+      </section>      <section class="paper-section">
+
+        <h2
+          class="section-title"
+          data-i18n="customerAgreementTitle"
+        >
+          四、客户确认内容
+        </h2>
+
+        <div class="agreement-box">
+
+          <div
+            class="agreement-item"
+            data-i18n="agreementItemOne"
+          >
+            1. 客户已查看并理解本次服务任务、工作范围和不包含内容。
+          </div>
+
+          <div
+            class="agreement-item"
+            data-i18n="agreementItemTwo"
+          >
+            2. 客户同意以本确认单中的完成标准和验收方法作为中间验收与最终验收依据。
+          </div>
+
+          <div
+            class="agreement-item"
+            data-i18n="agreementItemThree"
+          >
+            3. 客户理解新增要求应另行确认，不自动纳入原任务范围。
+          </div>
+
+          <div
+            class="agreement-item"
+            data-i18n="agreementItemFour"
+          >
+            4. 客户同意在关键节点对前一阶段完成情况进行评价，并签署纸面中间验收文件。
+          </div>
+
+          <div
+            class="agreement-item"
+            data-i18n="agreementItemFive"
+          >
+            5. 未在中间验收文件中提出的问题，原则上不能在后续阶段作为否定前一阶段全部工作的理由，但隐蔽缺陷、质量缺陷及依法应承担的责任除外。
+          </div>
+
+        </div>
+
+      </section>
+
+      <section class="paper-section">
+
+        <h2
+          class="section-title"
+          data-i18n="customerCommentsTitle"
+        >
+          五、客户补充意见
+        </h2>
+
+        <div
+          class="section-content original-request"
+          id="customerComments"
+        >
+          --
+        </div>
+
+      </section>
+
+      <section class="paper-section">
+
+        <h2
+          class="section-title"
+          data-i18n="signatureTitle"
+        >
+          六、纸面签字确认
+        </h2>
+
+        <div class="signature-grid">
+
+          <div class="signature-box">
+
+            <div
+              class="signature-title"
+              data-i18n="customerSignatureTitle"
+            >
+              客户签字
+            </div>
+
+            <div
+              class="signature-line"
+              data-i18n="signatureLineText"
+            >
+              签字：
+            </div>
+
+            <div
+              class="date-line"
+              data-i18n="dateLineText"
+            >
+              日期：____年____月____日
+            </div>
+
+          </div>
+
+          <div class="signature-box">
+
+            <div
+              class="signature-title"
+              data-i18n="representativeSignatureTitle"
+            >
+              服务负责人签字
+            </div>
+
+            <div
+              class="signature-line"
+              data-i18n="signatureLineText"
+            >
+              签字：
+            </div>
+
+            <div
+              class="date-line"
+              data-i18n="dateLineText"
+            >
+              日期：____年____月____日
+            </div>
+
+          </div>
+
+          <div class="signature-box">
+
+            <div
+              class="signature-title"
+              data-i18n="operatorSignatureTitle"
+            >
+              运营审核人签字
+            </div>
+
+            <div
+              class="signature-line"
+              data-i18n="signatureLineText"
+            >
+              签字：
+            </div>
+
+            <div
+              class="date-line"
+              data-i18n="dateLineText"
+            >
+              日期：____年____月____日
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </section>
+
+    <section
+      class="upload-card"
+      id="uploadCard"
+    >
+
+      <h2 data-i18n="uploadTitle">
+        上传签字后的纸面确认单
+      </h2>
+
+      <p data-i18n="uploadDescription">
+        请先打印确认单，由客户、服务负责人和运营审核人签字，再拍照或扫描后上传。
+      </p >
+
+      <div class="upload-area">
+
+        <input
+          class="file-input"
+          id="signedFileInput"
+          type="file"
+          accept="image/*,.pdf"
+          onchange="handleFileSelection(event)"
+        />
+
+        <div
+          class="file-preview"
+          id="filePreview"
+        ></div>
+
+      </div>
+
+      <div
+        class="status-message"
+        id="statusMessage"
+      ></div>
+
+      <div class="upload-actions">
+
+        <button
+          class="secondary-button"
+          type="button"
+          onclick="goBack()"
+          data-i18n="laterButton"
+        >
+          稍后上传
+        </button>
+
+        <button
+          class="primary-button"
+          id="uploadButton"
+          type="button"
+          onclick="saveSignedDocument()"
+          data-i18n="uploadButton"
+        >
+          保存签字文件
+        </button>
+
+      </div>
+
+    </section>
+
+    <section
+      class="empty-state"
+      id="emptyState"
+    >
+      <h2 data-i18n="emptyTitle">
+        没有找到纸面确认单
+      </h2>
+
+      <p data-i18n="emptyDescription">
+        请先完成客户任务标准确认，再生成纸面确认文件。
+      </p >
+    </section>
+
+  </main>
+
+  <script>    const translations = {
+      zh: {
+        backButton: "返回",
+        printButton: "打印确认单",
+
+        paperTitle:
+          "服务任务、完成标准及验收依据确认单",
+
+        paperSubtitle:
+          "本确认单作为报价、派工、中间验收、最终验收和争议处理的共同依据",
+
+        documentNumberLabel: "文件编号：",
+        requestIdLabel: "需求编号：",
+        customerLabel: "客户：",
+        addressLabel: "服务地址：",
+        confirmedAtLabel: "线上确认时间：",
+        documentStatusLabel: "文件状态：",
+
+        statusPending: "等待纸面签字",
+        statusUploaded: "签字文件已上传",
+
+        originalRequestTitle:
+          "一、客户原始需求",
+
+        taskStandardsTitle:
+          "二、服务任务与完成标准",
+
+        controlRulesTitle:
+          "三、中间控制与验收规则",
+
+        milestoneControlLabel:
+          "中间节点控制",
+
+        milestoneControlText:
+          "每个关键节点完成后，客户应对前一阶段完成情况进行评价，并形成纸面中间验收记录。",
+
+        nextStageControlLabel:
+          "下一阶段控制",
+
+        nextStageControlText:
+          "客户评价、纸面签字及运营审核未完成时，下一阶段不得开始。",
+
+        variationControlLabel:
+          "新增要求控制",
+
+        variationControlText:
+          "客户新增要求须另行明确工作范围、费用、工期和验收标准，不自动纳入原任务。",
+
+        evidenceControlLabel:
+          "证据要求",
+
+        evidenceControlText:
+          "过程照片、视频、测试记录、客户评价、纸面签字及运营审核记录应共同保存。",
+
+        customerAgreementTitle:
+          "四、客户确认内容",
+
+        agreementItemOne:
+          "1. 客户已查看并理解本次服务任务、工作范围和不包含内容。",
+
+        agreementItemTwo:
+          "2. 客户同意以本确认单中的完成标准和验收方法作为中间验收与最终验收依据。",
+
+        agreementItemThree:
+          "3. 客户理解新增要求应另行确认，不自动纳入原任务范围。",
+
+        agreementItemFour:
+          "4. 客户同意在关键节点对前一阶段完成情况进行评价，并签署纸面中间验收文件。",
+
+        agreementItemFive:
+          "5. 未在中间验收文件中提出的问题，原则上不能在后续阶段作为否定前一阶段全部工作的理由，但隐蔽缺陷、质量缺陷及依法应承担的责任除外。",
+
+        customerCommentsTitle:
+          "五、客户补充意见",
+
+        signatureTitle:
+          "六、纸面签字确认",
+
+        customerSignatureTitle:
+          "客户签字",
+
+        representativeSignatureTitle:
+          "服务负责人签字",
+
+        operatorSignatureTitle:
+          "运营审核人签字",
+
+        signatureLineText: "签字：",
+
+        dateLineText:
+          "日期：____年____月____日",
+
+        uploadTitle:
+          "上传签字后的纸面确认单",
+
+        uploadDescription:
+          "请先打印确认单，由客户、服务负责人和运营审核人签字，再拍照或扫描后上传。",
+
+        laterButton: "稍后上传",
+        uploadButton: "保存签字文件",
+
+        emptyTitle:
+          "没有找到纸面确认单",
+
+        emptyDescription:
+          "请先完成客户任务标准确认，再生成纸面确认文件。",
+
+        standardNumberLabel: "标准编号",
+        taskNameLabel: "任务名称",
+        workScopeLabel: "工作范围",
+        excludedScopeLabel: "不包含内容",
+        completionStandardLabel: "完成标准",
+        inspectionMethodLabel: "验收方法",
+        evidenceLabel: "证据要求",
+        plannedDateLabel: "计划完成日期",
+        milestoneNameLabel: "关键节点",
+        hiddenWorkLabel: "隐蔽工程",
+        paperSignatureLabel: "要求纸面签字",
+        nextStageLockLabel: "验收前锁定下一阶段",
+
+        yesText: "是",
+        noText: "否",
+        notProvided: "未填写",
+        noComments: "客户没有补充意见",
+
+        fileSelected: "已选择文件",
+        fileNameLabel: "文件名称",
+        fileTypeLabel: "文件类型",
+        fileSizeLabel: "文件大小",
+
+        fileRequired:
+          "请先选择签字后的照片、扫描件或PDF文件。",
+
+        saving: "正在保存……",
+
+        saved:
+          "签字文件记录已经保存。任务标准纸面确认流程已经完成。",
+
+        saveError:
+          "签字文件保存失败，请重新选择文件后再试。"
+      },
+
+      en: {
+        backButton: "Back",
+        printButton: "Print Form",
+
+        paperTitle:
+          "Service Task, Completion Standards, and Acceptance Criteria Confirmation",
+
+        paperSubtitle:
+          "This form is the shared basis for quotation, assignment, interim acceptance, final acceptance, and dispute handling.",
+
+        documentNumberLabel:
+          "Document Number:",
+
+        requestIdLabel: "Request ID:",
+        customerLabel: "Customer:",
+        addressLabel: "Service Address:",
+
+        confirmedAtLabel:
+          "Online Confirmation Time:",
+
+        documentStatusLabel:
+          "Document Status:",
+
+        statusPending:
+          "Awaiting Paper Signatures",
+
+        statusUploaded:
+          "Signed File Uploaded",
+
+        originalRequestTitle:
+          "1. Original Customer Request",
+
+        taskStandardsTitle:
+          "2. Service Tasks and Completion Standards",
+
+        controlRulesTitle:
+          "3. Interim Control and Acceptance Rules",
+
+        milestoneControlLabel:
+          "Milestone Control",
+
+        milestoneControlText:
+          "After each milestone, the customer must evaluate the completed stage and a paper interim acceptance record must be prepared.",
+
+        nextStageControlLabel:
+          "Next Stage Control",
+
+        nextStageControlText:
+          "The next stage cannot begin until customer evaluation, paper signatures, and operational approval are complete.",
+
+        variationControlLabel:
+          "Change Request Control",
+
+        variationControlText:
+          "New customer requests must separately define scope, price, schedule, and acceptance standards and do not automatically become part of the original task.",
+
+        evidenceControlLabel:
+          "Evidence Requirements",
+
+        evidenceControlText:
+          "Process photos, videos, test records, customer evaluations, paper signatures, and operational review records must be retained together.",
+
+        customerAgreementTitle:
+          "4. Customer Confirmations",
+
+        agreementItemOne:
+          "1. The customer has reviewed and understood the service tasks, work scope, and excluded work.",
+
+        agreementItemTwo:
+          "2. The customer agrees that the completion standards and inspection methods in this form will be used for interim and final acceptance.",
+
+        agreementItemThree:
+          "3. The customer understands that new requests must be confirmed separately and do not automatically become part of the original task.",
+
+        agreementItemFour:
+          "4. The customer agrees to evaluate the previous stage at each milestone and sign a paper interim acceptance document.",
+
+        agreementItemFive:
+          "5. Issues not recorded in an interim acceptance document should not normally be used later to reject all work from the previous stage, except for hidden defects, quality defects, or legally required responsibilities.",
+
+        customerCommentsTitle:
+          "5. Customer Comments",
+
+        signatureTitle:
+          "6. Paper Signatures",
+
+        customerSignatureTitle:
+          "Customer Signature",
+
+        representativeSignatureTitle:
+          "Service Representative Signature",
+
+        operatorSignatureTitle:
+          "Operations Reviewer Signature",
+
+        signatureLineText: "Signature:",
+
+        dateLineText:
+          "Date: ____ / ____ / ______",
+
+        uploadTitle:
+          "Upload the Signed Paper Form",
+
+        uploadDescription:
+          "Print the form, obtain the required signatures, and upload a photo, scanned copy, or PDF.",
+
+        laterButton: "Upload Later",
+        uploadButton: "Save Signed File",
+
+        emptyTitle:
+          "No Paper Confirmation Form Found",
+
+        emptyDescription:
+          "Complete the customer task standards confirmation before generating this paper form.",
+
+        standardNumberLabel:
+          "Standard Number",
+
+        taskNameLabel: "Task Name",
+        workScopeLabel: "Work Scope",
+        excludedScopeLabel: "Excluded Work",
+
+        completionStandardLabel:
+          "Completion Standards",
+
+        inspectionMethodLabel:
+          "Inspection Method",
+
+        evidenceLabel:
+          "Evidence Requirements",
+
+        plannedDateLabel:
+          "Planned Completion Date",
+
+        milestoneNameLabel:
+          "Milestone",
+
+        hiddenWorkLabel:
+          "Hidden Work",
+
+        paperSignatureLabel:
+          "Paper Signature Required",
+
+        nextStageLockLabel:
+          "Lock Next Stage Before Acceptance",
+
+        yesText: "Yes",
+        noText: "No",
+        notProvided: "Not Provided",
+        noComments:
+          "No additional customer comments",
+
+        fileSelected: "File Selected",
+        fileNameLabel: "File Name",
+        fileTypeLabel: "File Type",
+        fileSizeLabel: "File Size",
+
+        fileRequired:
+          "Select a signed photo, scanned copy, or PDF first.",
+
+        saving: "Saving...",
+
+        saved:
+          "The signed file record has been saved. The paper task standards confirmation process is complete.",
+
+        saveError:
+          "The signed file could not be saved. Select the file again and retry."
+      }
+    };
+
+    let currentLanguage =
+      localStorage.getItem(
+        "echocity-language"
+      ) || "zh";
+
+    let currentRequest = null;
+    let standardsDocument = null;
+    let paperDocument = null;
+    let selectedFile = null;
+
+    function translate(key) {
+      return (
+        translations[currentLanguage][key] ||
+        translations.zh[key] ||
+        key
+      );
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang =
+        currentLanguage === "zh"
+          ? "zh-CN"
+          : "en";
+
+      document
+        .querySelectorAll("[data-i18n]")
+        .forEach((element) => {
+          const key =
+            element.getAttribute(
+              "data-i18n"
+            );
+
+          if (
+            translations[
+              currentLanguage
+            ][key]
+          ) {
+            element.textContent =
+              translations[
+                currentLanguage
+              ][key];
+          }
+        });
+
+      document.getElementById(
+        "languageButton"
+      ).textContent =
+        currentLanguage === "zh"
+          ? "EN"
+          : "中文";
+
+      renderDocument();
+      renderFilePreview();
+    }
+
+    function toggleLanguage() {
+      currentLanguage =
+        currentLanguage === "zh"
+          ? "en"
+          : "zh";
+
+      localStorage.setItem(
+        "echocity-language",
+        currentLanguage
+      );
+
+      applyLanguage();
+    }
+
+    function loadDocumentData() {
+      try {
+        const storedRequest =
+          localStorage.getItem(
+            "echocity-last-request"
+          );
+
+        currentRequest =
+          storedRequest
+            ? JSON.parse(storedRequest)
+            : null;
+
+        standardsDocument =
+          currentRequest
+            ?.serviceStandards ||
+          null;
+
+        paperDocument =
+          currentRequest
+            ?.paperStandardsDocument ||
+          standardsDocument
+            ?.paperDocument ||
+          null;
+
+      } catch (error) {
+        console.error(
+          "Failed to load paper document:",
+          error
+        );
+
+        currentRequest = null;
+        standardsDocument = null;
+        paperDocument = null;
+      }
+    }
+
+    function escapeHTML(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function formatDate(value) {
+      if (!value) {
+        return translate(
+          "notProvided"
+        );
+      }
+
+      const date =
+        new Date(
+          value + "T00:00:00"
+        );
+
+      if (
+        Number.isNaN(
+          date.getTime()
+        )
+      ) {
+        return value;
+      }
+
+      return date.toLocaleDateString(
+        currentLanguage === "zh"
+          ? "zh-CN"
+          : "en-US",
+        {
+          year: "numeric",
+          month: "long",
+          day: "numeric"
+        }
+      );
+    }
+
+    function formatTimestamp(value) {
+      if (!value) {
+        return translate(
+          "notProvided"
+        );
+      }
+
+      const date =
+        new Date(value);
+
+      if (
+        Number.isNaN(
+          date.getTime()
+        )
+      ) {
+        return value;
+      }
+
+      return date.toLocaleString(
+        currentLanguage === "zh"
+          ? "zh-CN"
+          : "en-US"
+      );
+    }
+
+    function yesOrNo(value) {
+      return value
+        ? translate("yesText")
+        : translate("noText");
+    }
+
+    function getDocumentStatus() {
+      if (
+        paperDocument
+          ?.uploadedFile
+      ) {
+        return translate(
+          "statusUploaded"
+        );
+      }
+
+      return translate(
+        "statusPending"
+      );
+    }
+
+    function buildStandardField(
+      labelKey,
+      value,
+      fullWidth = false
+    ) {
+      return `
+        <div class="standard-field ${
+          fullWidth ? "full" : ""
+        }">
+
+          <div class="field-label">
+            ${escapeHTML(
+              translate(labelKey)
+            )}
+          </div>
+
+          <div class="field-value">
+            ${escapeHTML(
+              value ||
+              translate("notProvided")
+            )}
+          </div>
+
+        </div>
+      `;
+    }
+
+    function buildStandardBlock(
+      task,
+      index
+    ) {
+      const number =
+        task.standardNumber ||
+        `STD-${String(
+          index + 1
+        ).padStart(2, "0")}`;
+
+      return `
+        <article class="standard-block">
+
+          <div class="standard-block-header">
+
+            <span>
+              ${escapeHTML(
+                task.taskName ||
+                translate("notProvided")
+              )}
+            </span>
+
+            <span class="standard-number">
+              ${escapeHTML(number)}
+            </span>
+
+          </div>
+
+          <div class="standard-block-body">
+
+            ${buildStandardField(
+              "workScopeLabel",
+              task.workScope,
+              true
+            )}
+
+            ${buildStandardField(
+              "excludedScopeLabel",
+              task.excludedScope,
+              true
+            )}
+
+            ${buildStandardField(
+              "completionStandardLabel",
+              task.completionStandard,
+              true
+            )}
+
+            ${buildStandardField(
+              "inspectionMethodLabel",
+              task.inspectionMethod,
+              true
+            )}
+
+            ${buildStandardField(
+              "evidenceLabel",
+              task.evidenceRequirement,
+              true
+            )}
+
+            ${buildStandardField(
+              "plannedDateLabel",
+              formatDate(
+                task.plannedDate
+              )
+            )}
+
+            ${buildStandardField(
+              "milestoneNameLabel",
+              task.milestoneName
+            )}
+
+            ${buildStandardField(
+              "hiddenWorkLabel",
+              yesOrNo(
+                task.isHiddenWork
+              )
+            )}
+
+            ${buildStandardField(
+              "paperSignatureLabel",
+              yesOrNo(
+                task
+                  .requiresPaperSignature
+              )
+            )}
+
+            ${buildStandardField(
+              "nextStageLockLabel",
+              yesOrNo(
+                task.lockNextStage
+              ),
+              true
+            )}
+
+          </div>
+
+        </article>
+      `;
+    }    function renderDocument() {
+      const paperElement =
+        document.getElementById(
+          "paperDocument"
+        );
+
+      const uploadCard =
+        document.getElementById(
+          "uploadCard"
+        );
+
+      const emptyState =
+        document.getElementById(
+          "emptyState"
+        );
+
+      const hasDocument =
+        currentRequest &&
+        standardsDocument &&
+        paperDocument &&
+        Array.isArray(
+          standardsDocument.tasks
+        ) &&
+        standardsDocument.tasks.length > 0;
+
+      if (!hasDocument) {
+        paperElement.style.display =
+          "none";
+
+        uploadCard.style.display =
+          "none";
+
+        emptyState.classList.add(
+          "show"
+        );
+
+        return;
+      }
+
+      paperElement.style.display =
+        "block";
+
+      uploadCard.style.display =
+        "block";
+
+      emptyState.classList.remove(
+        "show"
+      );
+
+      document.getElementById(
+        "documentNumber"
+      ).textContent =
+        paperDocument.documentNumber ||
+        standardsDocument.documentNumber ||
+        "--";
+
+      document.getElementById(
+        "requestId"
+      ).textContent =
+        currentRequest.id || "--";
+
+      document.getElementById(
+        "customerName"
+      ).textContent =
+        currentRequest.customerName ||
+        translate("notProvided");
+
+      document.getElementById(
+        "serviceAddress"
+      ).textContent =
+        currentRequest.serviceAddress ||
+        translate("notProvided");
+
+      document.getElementById(
+        "customerConfirmedAt"
+      ).textContent =
+        formatTimestamp(
+          standardsDocument
+            .customerConfirmedAt
+        );
+
+      document.getElementById(
+        "documentStatus"
+      ).textContent =
+        getDocumentStatus();
+
+      document.getElementById(
+        "originalRequest"
+      ).textContent =
+        currentRequest.description ||
+        translate("notProvided");
+
+      document.getElementById(
+        "customerComments"
+      ).textContent =
+        standardsDocument
+          .customerComments ||
+        translate("noComments");
+
+      document.getElementById(
+        "taskStandardsContainer"
+      ).innerHTML =
+        standardsDocument.tasks
+          .map(
+            (
+              task,
+              index
+            ) =>
+              buildStandardBlock(
+                task,
+                index
+              )
+          )
+          .join("");
+    }
+
+    function handleFileSelection(
+      event
+    ) {
+      const file =
+        event.target.files?.[0];
+
+      selectedFile =
+        file || null;
+
+      renderFilePreview();
+    }
+
+    function renderFilePreview() {
+      const filePreview =
+        document.getElementById(
+          "filePreview"
+        );
+
+      if (!selectedFile) {
+        const savedFile =
+          paperDocument
+            ?.uploadedFile;
+
+        if (!savedFile) {
+          filePreview.classList.remove(
+            "show"
+          );
+
+          filePreview.innerHTML = "";
+
+          return;
+        }
+
+        filePreview.classList.add(
+          "show"
+        );
+
+        filePreview.innerHTML = `
+          <strong>
+            ${escapeHTML(
+              translate("fileSelected")
+            )}
+          </strong>
+
+          <br />
+
+          ${escapeHTML(
+            translate("fileNameLabel")
+          )}：
+          ${escapeHTML(
+            savedFile.name || "--"
+          )}
+
+          <br />
+
+          ${escapeHTML(
+            translate("fileTypeLabel")
+          )}：
+          ${escapeHTML(
+            savedFile.type || "--"
+          )}
+
+          <br />
+
+          ${escapeHTML(
+            translate("fileSizeLabel")
+          )}：
+          ${escapeHTML(
+            formatFileSize(
+              savedFile.size
+            )
+          )}
+        `;
+
+        return;
+      }
+
+      filePreview.classList.add(
+        "show"
+      );
+
+      filePreview.innerHTML = `
+        <strong>
+          ${escapeHTML(
+            translate("fileSelected")
+          )}
+        </strong>
+
+        <br />
+
+        ${escapeHTML(
+          translate("fileNameLabel")
+        )}：
+        ${escapeHTML(
+          selectedFile.name
+        )}
+
+        <br />
+
+        ${escapeHTML(
+          translate("fileTypeLabel")
+        )}：
+        ${escapeHTML(
+          selectedFile.type ||
+          "unknown"
+        )}
+
+        <br />
+
+        ${escapeHTML(
+          translate("fileSizeLabel")
+        )}：
+        ${escapeHTML(
+          formatFileSize(
+            selectedFile.size
+          )
+        )}
+      `;
+    }
+
+    function formatFileSize(
+      size
+    ) {
+      const bytes =
+        Number(size || 0);
+
+      if (bytes < 1024) {
+        return `${bytes} B`;
+      }
+
+      if (
+        bytes <
+        1024 * 1024
+      ) {
+        return `${(
+          bytes / 1024
+        ).toFixed(1)} KB`;
+      }
+
+      return `${(
+        bytes /
+        1024 /
+        1024
+      ).toFixed(1)} MB`;
+    }
+
+    function showStatus(
+      type,
+      message
+    ) {
+      const statusMessage =
+        document.getElementById(
+          "statusMessage"
+        );
+
+      statusMessage.className =
+        "status-message " + type;
+
+      statusMessage.textContent =
+        message;
+
+      statusMessage.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    function updateStandardsRecords() {
+      const records =
+        JSON.parse(
+          localStorage.getItem(
+            "echocity-service-standards"
+          ) || "[]"
+        );
+
+      const recordIndex =
+        records.findIndex(
+          (record) =>
+            record.requestId ===
+            currentRequest.id
+        );
+
+      if (recordIndex >= 0) {
+        records[recordIndex] =
+          standardsDocument;
+      } else {
+        records.unshift(
+          standardsDocument
+        );
+      }
+
+      localStorage.setItem(
+        "echocity-service-standards",
+        JSON.stringify(records)
+      );
+
+      localStorage.setItem(
+        "echocity-last-service-standards",
+        JSON.stringify(
+          standardsDocument
+        )
+      );
+    }
+
+    function updatePaperRecords() {
+      const paperDocuments =
+        JSON.parse(
+          localStorage.getItem(
+            "echocity-paper-standard-documents"
+          ) || "[]"
+        );
+
+      const documentIndex =
+        paperDocuments.findIndex(
+          (document) =>
+            document.requestId ===
+            currentRequest.id
+        );
+
+      if (documentIndex >= 0) {
+        paperDocuments[
+          documentIndex
+        ] = paperDocument;
+      } else {
+        paperDocuments.unshift(
+          paperDocument
+        );
+      }
+
+      localStorage.setItem(
+        "echocity-paper-standard-documents",
+        JSON.stringify(
+          paperDocuments
+        )
+      );
+
+      localStorage.setItem(
+        "echocity-last-paper-standard-document",
+        JSON.stringify(
+          paperDocument
+        )
+      );
+    }
+
+    function updateRequestRecords() {
+      const requests =
+        JSON.parse(
+          localStorage.getItem(
+            "echocity-service-requests"
+          ) || "[]"
+        );
+
+      const requestIndex =
+        requests.findIndex(
+          (request) =>
+            request.id ===
+            currentRequest.id
+        );
+
+      if (requestIndex >= 0) {
+        requests[
+          requestIndex
+        ] = currentRequest;
+      } else {
+        requests.unshift(
+          currentRequest
+        );
+      }
+
+      localStorage.setItem(
+        "echocity-service-requests",
+        JSON.stringify(requests)
+      );
+
+      localStorage.setItem(
+        "echocity-last-request",
+        JSON.stringify(
+          currentRequest
+        )
+      );
+    }
+
+    function saveSignedDocument() {
+      if (
+        !currentRequest ||
+        !standardsDocument ||
+        !paperDocument
+      ) {
+        return;
+      }
+
+      if (!selectedFile) {
+        showStatus(
+          "error",
+          translate("fileRequired")
+        );
+
+        return;
+      }
+
+      const uploadButton =
+        document.getElementById(
+          "uploadButton"
+        );
+
+      uploadButton.disabled =
+        true;
+
+      uploadButton.textContent =
+        translate("saving");
+
+      try {
+        const now =
+          new Date().toISOString();
+
+        const uploadedFileRecord = {
+          name:
+            selectedFile.name,
+
+          type:
+            selectedFile.type ||
+            "application/octet-stream",
+
+          size:
+            selectedFile.size,
+
+          lastModified:
+            selectedFile.lastModified,
+
+          uploadedAt: now,
+
+          storageMode:
+            "local-browser-metadata"
+        };
+
+        paperDocument.status =
+          "signed_file_uploaded";
+
+        paperDocument.uploadedFile =
+          uploadedFileRecord;
+
+        paperDocument.updatedAt =
+          now;
+
+        standardsDocument.paperDocument =
+          paperDocument;
+
+        standardsDocument.status =
+          "paper_document_uploaded";
+
+        standardsDocument.updatedAt =
+          now;
+
+        currentRequest.paperStandardsDocument =
+          paperDocument;
+
+        currentRequest.serviceStandards =
+          standardsDocument;
+
+        currentRequest.status =
+          "standards_paper_signed";
+
+        currentRequest.updatedAt =
+          now;
+
+        updatePaperRecords();
+        updateStandardsRecords();
+        updateRequestRecords();
+
+        showStatus(
+          "success",
+          translate("saved")
+        );
+
+        uploadButton.textContent =
+          translate("uploadButton");
+
+        renderDocument();
+        renderFilePreview();
+
+        setTimeout(() => {
+          window.location.href =
+            "admin-service-requests.html";
+        }, 1500);
+
+      } catch (error) {
+        console.error(
+          "Failed to save signed document:",
+          error
+        );
+
+        showStatus(
+          "error",
+          translate("saveError")
+        );
+
+        uploadButton.disabled =
+          false;
+
+        uploadButton.textContent =
+          translate("uploadButton");
+      }
+    }
+
+    function printPaper() {
+      window.print();
+    }
+
+    function goBack() {
+      window.location.href =
+        "service-standards-confirmation.html";
+    }
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        loadDocumentData();
+        applyLanguage();
+      }
+    );
+  </script>
+
+</body>
+</html>

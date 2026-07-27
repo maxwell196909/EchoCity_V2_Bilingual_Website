@@ -1,0 +1,2259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>任务标准设置 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #1f6feb;
+      --primary-dark: #1557b0;
+      --primary-soft: #edf5ff;
+
+      --success: #18864b;
+      --success-soft: #eaf8f0;
+
+      --warning: #9a6700;
+      --warning-soft: #fff6dc;
+
+      --danger: #b42318;
+      --danger-soft: #fff0ee;
+
+      --text: #172033;
+      --text-light: #667085;
+
+      --border: #d9e1ec;
+      --background: #f4f7fb;
+      --card: #ffffff;
+
+      --shadow:
+        0 16px 40px rgba(24, 39, 75, 0.08);
+    }
+
+    body {
+      min-height: 100vh;
+
+      background:
+        linear-gradient(
+          180deg,
+          #edf5ff 0%,
+          #f7f9fc 42%,
+          #f4f7fb 100%
+        );
+
+      color: var(--text);
+
+      font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(100%, 980px);
+      margin: 0 auto;
+      padding: 22px 16px 56px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 38px;
+      height: 38px;
+
+      border-radius: 13px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          #65a4ff
+        );
+
+      color: #ffffff;
+      font-weight: 900;
+
+      box-shadow:
+        0 8px 20px rgba(31, 111, 235, 0.22);
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-button,
+    .language-button {
+      min-height: 40px;
+      padding: 0 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: rgba(255, 255, 255, 0.88);
+      color: var(--text);
+
+      font-weight: 800;
+    }
+
+    .hero {
+      margin-bottom: 18px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+
+      min-height: 30px;
+      padding: 0 12px;
+
+      border-radius: 999px;
+
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      margin-top: 12px;
+
+      font-size: clamp(29px, 6vw, 42px);
+      line-height: 1.15;
+      letter-spacing: -1px;
+    }
+
+    .hero p {
+      max-width: 760px;
+
+      margin-top: 10px;
+
+      color: var(--text-light);
+
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .card {
+      margin-top: 16px;
+      padding: 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      font-size: 21px;
+      line-height: 1.4;
+    }
+
+    .card-description {
+      margin-top: 7px;
+
+      color: var(--text-light);
+
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .request-summary {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 12px;
+
+      margin-top: 16px;
+    }
+
+    .summary-item {
+      padding: 13px;
+
+      border-radius: 13px;
+
+      background: #f8fafc;
+    }
+
+    .summary-label {
+      color: var(--text-light);
+
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .summary-value {
+      margin-top: 5px;
+
+      color: var(--text);
+
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .original-request {
+      margin-top: 14px;
+      padding: 14px;
+
+      border-left: 4px solid var(--primary);
+      border-radius: 12px;
+
+      background: var(--primary-soft);
+
+      color: var(--text);
+
+      font-size: 14px;
+      line-height: 1.75;
+      white-space: pre-wrap;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+
+      margin-bottom: 15px;
+    }
+
+    .section-heading h2 {
+      font-size: 21px;
+      line-height: 1.4;
+    }
+
+    .section-heading p {
+      margin-top: 6px;
+
+      color: var(--text-light);
+
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .add-button {
+      min-height: 42px;
+      padding: 0 15px;
+
+      border: 0;
+      border-radius: 12px;
+
+      background: var(--primary);
+      color: #ffffff;
+
+      font-size: 14px;
+      font-weight: 800;
+
+      white-space: nowrap;
+    }
+
+    .add-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .task-standard-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .task-standard-card {
+      padding: 17px;
+
+      border: 1px solid var(--border);
+      border-radius: 16px;
+
+      background: #ffffff;
+    }
+
+    .task-standard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+
+      margin-bottom: 15px;
+    }
+
+    .task-standard-title {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .remove-button {
+      min-height: 36px;
+      padding: 0 12px;
+
+      border: 1px solid #f0c0c0;
+      border-radius: 10px;
+
+      background: var(--danger-soft);
+      color: var(--danger);
+
+      font-size: 13px;
+      font-weight: 800;
+    }    .form-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 13px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 7px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+      width: 100%;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: #ffffff;
+      color: var(--text);
+
+      outline: none;
+    }
+
+    .form-input,
+    .form-select {
+      min-height: 46px;
+      padding: 0 12px;
+    }
+
+    .form-textarea {
+      min-height: 105px;
+      padding: 12px;
+
+      line-height: 1.65;
+      resize: vertical;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+      border-color: var(--primary);
+
+      box-shadow:
+        0 0 0 3px rgba(31, 111, 235, 0.12);
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+
+      padding: 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: #f8fafc;
+    }
+
+    .checkbox-row input {
+      width: 18px;
+      height: 18px;
+
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .checkbox-content {
+      display: grid;
+      gap: 4px;
+    }
+
+    .checkbox-title {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .checkbox-description {
+      color: var(--text-light);
+
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .summary-panel {
+      display: grid;
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+      gap: 12px;
+
+      margin-top: 16px;
+    }
+
+    .summary-box {
+      padding: 14px;
+
+      border-radius: 13px;
+
+      background: #f8fafc;
+      text-align: center;
+    }
+
+    .summary-number {
+      color: var(--primary-dark);
+
+      font-size: 25px;
+      font-weight: 900;
+    }
+
+    .summary-text {
+      margin-top: 4px;
+
+      color: var(--text-light);
+
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .notice {
+      margin-top: 16px;
+      padding: 14px;
+
+      border: 1px solid #f2d693;
+      border-radius: 13px;
+
+      background: var(--warning-soft);
+      color: #6f4c00;
+
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .status-message {
+      display: none;
+
+      margin-top: 15px;
+      padding: 13px 14px;
+
+      border-radius: 12px;
+
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .status-message.success {
+      display: block;
+
+      border: 1px solid #b9e4c8;
+
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .status-message.error {
+      display: block;
+
+      border: 1px solid #f0c0c0;
+
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .action-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+
+      margin-top: 18px;
+    }
+
+    .secondary-button,
+    .primary-button {
+      min-height: 46px;
+      padding: 0 18px;
+
+      border-radius: 12px;
+
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .secondary-button {
+      border: 1px solid var(--border);
+
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    .primary-button {
+      border: 0;
+
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .primary-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .primary-button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .empty-state {
+      display: none;
+
+      margin-top: 18px;
+      padding: 30px 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: #ffffff;
+      box-shadow: var(--shadow);
+
+      text-align: center;
+    }
+
+    .empty-state.show {
+      display: block;
+    }
+
+    .empty-state h2 {
+      font-size: 22px;
+    }
+
+    .empty-state p {
+      margin-top: 9px;
+
+      color: var(--text-light);
+
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        padding:
+          15px
+          13px
+          42px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .topbar-actions {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .request-summary,
+      .form-grid,
+      .summary-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .section-heading {
+        flex-direction: column;
+      }
+
+      .add-button {
+        width: 100%;
+      }
+
+      .action-row {
+        flex-direction: column-reverse;
+      }
+
+      .secondary-button,
+      .primary-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <header class="topbar">
+
+      <a
+        class="brand"
+        href=" "
+      >
+        <span class="brand-mark">E</span>
+        <span>EchoCity</span>
+      </a >
+
+      <div class="topbar-actions">
+
+        <button
+          class="back-button"
+          type="button"
+          onclick="goBack()"
+          data-i18n="backButton"
+        >
+          返回订单
+        </button>
+
+        <button
+          class="language-button"
+          id="languageButton"
+          type="button"
+          onclick="toggleLanguage()"
+        >
+          EN
+        </button>
+
+      </div>
+
+    </header>
+
+    <section class="hero">
+
+      <span
+        class="hero-tag"
+        data-i18n="heroTag"
+      >
+        任务标准设置
+      </span>
+
+      <h1 data-i18n="heroTitle">
+        明确任务、完成标准和验收依据
+      </h1>
+
+      <p data-i18n="heroDescription">
+        将客户原始要求整理为可执行、可检查、可签字确认的任务标准，作为报价、派工、中间验收和最终验收的统一依据。
+      </p >
+
+    </section>
+
+    <section
+      class="card"
+      id="requestCard"
+    >
+
+      <h2
+        class="card-title"
+        data-i18n="requestTitle"
+      >
+        客户原始需求
+      </h2>
+
+      <p
+        class="card-description"
+        data-i18n="requestDescription"
+      >
+        先确认客户原始要求，再把模糊需求转化为清晰任务标准。
+      </p >
+
+      <div class="request-summary">
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="requestIdLabel"
+          >
+            需求编号
+          </div>
+
+          <div
+            class="summary-value"
+            id="requestId"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="customerLabel"
+          >
+            客户
+          </div>
+
+          <div
+            class="summary-value"
+            id="customerName"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="serviceTypeLabel"
+          >
+            服务类型
+          </div>
+
+          <div
+            class="summary-value"
+            id="serviceType"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="addressLabel"
+          >
+            服务地址
+          </div>
+
+          <div
+            class="summary-value"
+            id="serviceAddress"
+          >
+            --
+          </div>
+        </div>
+
+      </div>
+
+      <div
+        class="original-request"
+        id="originalRequest"
+      >
+        --
+      </div>
+
+    </section>
+
+    <section
+      class="card"
+      id="standardsCard"
+    >
+
+      <div class="section-heading">
+
+        <div>
+          <h2 data-i18n="standardsTitle">
+            服务任务与完成标准
+          </h2>
+
+          <p data-i18n="standardsDescription">
+            每一项任务都要明确范围、完成标准、验收方法、证据要求和不包含内容。
+          </p >
+        </div>
+
+        <button
+          class="add-button"
+          type="button"
+          onclick="addStandardCard()"
+          data-i18n="addTaskButton"
+        >
+          ＋ 添加任务
+        </button>
+
+      </div>
+
+      <div
+        class="task-standard-list"
+        id="taskStandardList"
+      ></div>
+
+      <div class="summary-panel">
+
+        <div class="summary-box">
+          <div
+            class="summary-number"
+            id="taskCount"
+          >
+            0
+          </div>
+
+          <div
+            class="summary-text"
+            data-i18n="taskCountLabel"
+          >
+            任务数量
+          </div>
+        </div>
+
+        <div class="summary-box">
+          <div
+            class="summary-number"
+            id="milestoneCount"
+          >
+            0
+          </div>
+
+          <div
+            class="summary-text"
+            data-i18n="milestoneCountLabel"
+          >
+            关键节点
+          </div>
+        </div>
+
+        <div class="summary-box">
+          <div
+            class="summary-number"
+            id="hiddenWorkCount"
+          >
+            0
+          </div>
+
+          <div
+            class="summary-text"
+            data-i18n="hiddenWorkCountLabel"
+          >
+            隐蔽验收
+          </div>
+        </div>
+
+      </div>
+
+      <div
+        class="notice"
+        data-i18n="controlNotice"
+      >
+        客户确认的任务范围和完成标准，将成为后续中间验收和最终验收的依据。新增要求必须另行确认，不能直接作为原任务不合格的理由。
+      </div>
+
+      <div
+        class="status-message"
+        id="statusMessage"
+      ></div>
+
+      <div class="action-row">
+
+        <button
+          class="secondary-button"
+          type="button"
+          onclick="goBack()"
+          data-i18n="cancelButton"
+        >
+          暂不设置
+        </button>
+
+        <button
+          class="primary-button"
+          id="saveStandardsButton"
+          type="button"
+          onclick="saveStandards()"
+          data-i18n="saveButton"
+        >
+          保存并提交客户确认
+        </button>
+
+      </div>
+
+    </section>
+
+    <section
+      class="empty-state"
+      id="emptyState"
+    >
+      <h2 data-i18n="emptyTitle">
+        没有找到客户需求
+      </h2>
+
+      <p data-i18n="emptyDescription">
+        请先在订单后台选择一条客户需求，再进入任务标准设置页面。
+      </p >
+    </section>
+
+  </main>
+
+  <script>    const translations = {
+      zh: {
+        backButton: "返回订单",
+
+        heroTag: "任务标准设置",
+        heroTitle: "明确任务、完成标准和验收依据",
+        heroDescription:
+          "将客户原始要求整理为可执行、可检查、可签字确认的任务标准，作为报价、派工、中间验收和最终验收的统一依据。",
+
+        requestTitle: "客户原始需求",
+        requestDescription:
+          "先确认客户原始要求，再把模糊需求转化为清晰任务标准。",
+
+        requestIdLabel: "需求编号",
+        customerLabel: "客户",
+        serviceTypeLabel: "服务类型",
+        addressLabel: "服务地址",
+
+        standardsTitle: "服务任务与完成标准",
+        standardsDescription:
+          "每一项任务都要明确范围、完成标准、验收方法、证据要求和不包含内容。",
+
+        addTaskButton: "＋ 添加任务",
+
+        taskCountLabel: "任务数量",
+        milestoneCountLabel: "关键节点",
+        hiddenWorkCountLabel: "隐蔽验收",
+
+        controlNotice:
+          "客户确认的任务范围和完成标准，将成为后续中间验收和最终验收的依据。新增要求必须另行确认，不能直接作为原任务不合格的理由。",
+
+        cancelButton: "暂不设置",
+        saveButton: "保存并提交客户确认",
+
+        emptyTitle: "没有找到客户需求",
+        emptyDescription:
+          "请先在订单后台选择一条客户需求，再进入任务标准设置页面。",
+
+        taskTitle: "任务",
+        removeButton: "删除",
+
+        taskNameLabel: "任务名称",
+        taskNamePlaceholder:
+          "例如：维修卧室窗户",
+
+        workScopeLabel: "工作范围",
+        workScopePlaceholder:
+          "明确本次需要完成哪些工作，做到哪里。",
+
+        excludedScopeLabel: "不包含内容",
+        excludedScopePlaceholder:
+          "明确哪些工作不属于本次服务范围。",
+
+        completionStandardLabel: "完成标准",
+        completionStandardPlaceholder:
+          "逐条写明达到什么结果才算完成。",
+
+        inspectionMethodLabel: "验收方法",
+        inspectionMethodPlaceholder:
+          "例如：客户现场连续开启和关闭3次。",
+
+        evidenceLabel: "证据要求",
+        evidencePlaceholder:
+          "例如：维修前照片、过程照片、完工照片和测试视频。",
+
+        plannedDateLabel: "计划完成日期",
+        milestoneNameLabel: "关键节点名称",
+        milestoneNamePlaceholder:
+          "例如：安装完成验收",
+
+        milestoneCheckboxTitle:
+          "设为中间验收关键节点",
+        milestoneCheckboxDescription:
+          "本阶段完成后，客户必须评价并签署纸面中间验收单，审核通过后才能进入下一阶段。",
+
+        hiddenWorkCheckboxTitle:
+          "属于隐蔽工程验收",
+        hiddenWorkCheckboxDescription:
+          "被覆盖、封闭或后续无法直接查看前，必须完成拍照、签字和运营审核。",
+
+        customerSignatureCheckboxTitle:
+          "要求客户纸面签字",
+        customerSignatureCheckboxDescription:
+          "必须打印或生成纸面文件，由客户和服务负责人签字后上传。",
+
+        nextStageLockCheckboxTitle:
+          "验收前锁定下一阶段",
+        nextStageLockCheckboxDescription:
+          "客户评价、纸面签字和运营审核未完成时，不允许开始下一阶段。",
+
+        workersService: "需要人手",
+        repairService: "维修或清洁",
+        supportService: "生活帮助",
+        unknownService: "未选择服务",
+
+        notProvided: "未填写",
+
+        taskRequired:
+          "请至少添加一项服务任务。",
+        taskNameRequired:
+          "请填写每一项任务的名称。",
+        scopeRequired:
+          "请填写每一项任务的工作范围。",
+        standardRequired:
+          "请填写每一项任务的完成标准。",
+        inspectionRequired:
+          "请填写每一项任务的验收方法。",
+        evidenceRequired:
+          "请填写每一项任务的证据要求。",
+
+        saving: "正在保存……",
+        saved:
+          "任务标准已保存，下一步由客户确认任务范围和验收依据。",
+        saveError:
+          "保存失败，请检查页面内容后重试。"
+      },
+
+      en: {
+        backButton: "Back to Orders",
+
+        heroTag: "Task Standards",
+        heroTitle:
+          "Define Tasks, Completion Standards, and Acceptance Criteria",
+        heroDescription:
+          "Convert the customer’s original request into executable, inspectable, and signable standards for quotation, assignment, interim acceptance, and final acceptance.",
+
+        requestTitle: "Original Customer Request",
+        requestDescription:
+          "Review the original request first, then convert unclear requirements into measurable task standards.",
+
+        requestIdLabel: "Request ID",
+        customerLabel: "Customer",
+        serviceTypeLabel: "Service Type",
+        addressLabel: "Service Address",
+
+        standardsTitle:
+          "Service Tasks and Completion Standards",
+        standardsDescription:
+          "Each task must define its scope, completion standard, inspection method, evidence, and exclusions.",
+
+        addTaskButton: "+ Add Task",
+
+        taskCountLabel: "Tasks",
+        milestoneCountLabel: "Milestones",
+        hiddenWorkCountLabel: "Hidden Work",
+
+        controlNotice:
+          "The task scope and completion standards confirmed by the customer will be the basis for interim and final acceptance. New requests must be confirmed separately.",
+
+        cancelButton: "Set Later",
+        saveButton:
+          "Save and Send for Customer Confirmation",
+
+        emptyTitle: "No Customer Request Found",
+        emptyDescription:
+          "Select a customer request in the order administration page before opening this page.",
+
+        taskTitle: "Task",
+        removeButton: "Remove",
+
+        taskNameLabel: "Task Name",
+        taskNamePlaceholder:
+          "Example: Repair bedroom window",
+
+        workScopeLabel: "Work Scope",
+        workScopePlaceholder:
+          "Describe exactly what work is included and where the work ends.",
+
+        excludedScopeLabel: "Excluded Work",
+        excludedScopePlaceholder:
+          "Describe what is not included in this service.",
+
+        completionStandardLabel:
+          "Completion Standards",
+        completionStandardPlaceholder:
+          "List the measurable results required for completion.",
+
+        inspectionMethodLabel:
+          "Inspection Method",
+        inspectionMethodPlaceholder:
+          "Example: Customer opens and closes the window three times.",
+
+        evidenceLabel: "Evidence Requirements",
+        evidencePlaceholder:
+          "Example: Before photos, process photos, completion photos, and test video.",
+
+        plannedDateLabel:
+          "Planned Completion Date",
+        milestoneNameLabel:
+          "Milestone Name",
+        milestoneNamePlaceholder:
+          "Example: Installation Completion Review",
+
+        milestoneCheckboxTitle:
+          "Set as an Interim Acceptance Milestone",
+        milestoneCheckboxDescription:
+          "After this stage, the customer must evaluate the work and sign a paper interim acceptance form before the next stage is opened.",
+
+        hiddenWorkCheckboxTitle:
+          "Hidden Work Acceptance Required",
+        hiddenWorkCheckboxDescription:
+          "Before the work is covered or closed, photos, signatures, and operational review are required.",
+
+        customerSignatureCheckboxTitle:
+          "Require Customer Paper Signature",
+        customerSignatureCheckboxDescription:
+          "A paper document must be signed by the customer and service representative and then uploaded.",
+
+        nextStageLockCheckboxTitle:
+          "Lock the Next Stage Before Acceptance",
+        nextStageLockCheckboxDescription:
+          "The next stage cannot begin until customer evaluation, paper signature, and operational approval are complete.",
+
+        workersService: "Need Workers",
+        repairService: "Repair or Cleaning",
+        supportService: "Daily Support",
+        unknownService: "Service Not Selected",
+
+        notProvided: "Not Provided",
+
+        taskRequired:
+          "Add at least one service task.",
+        taskNameRequired:
+          "Enter a name for every task.",
+        scopeRequired:
+          "Enter the work scope for every task.",
+        standardRequired:
+          "Enter the completion standards for every task.",
+        inspectionRequired:
+          "Enter the inspection method for every task.",
+        evidenceRequired:
+          "Enter the evidence requirements for every task.",
+
+        saving: "Saving...",
+        saved:
+          "The task standards have been saved and are ready for customer confirmation.",
+        saveError:
+          "The standards could not be saved. Check the form and try again."
+      }
+    };
+
+    let currentLanguage =
+      localStorage.getItem("echocity-language") || "zh";
+
+    let currentRequest = null;
+    let standards = [];
+
+    function translate(key) {
+      return (
+        translations[currentLanguage][key] ||
+        translations.zh[key] ||
+        key
+      );
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang =
+        currentLanguage === "zh"
+          ? "zh-CN"
+          : "en";
+
+      document
+        .querySelectorAll("[data-i18n]")
+        .forEach((element) => {
+          const key =
+            element.getAttribute("data-i18n");
+
+          if (translations[currentLanguage][key]) {
+            element.textContent =
+              translations[currentLanguage][key];
+          }
+        });
+
+      document
+        .querySelectorAll("[data-i18n-placeholder]")
+        .forEach((element) => {
+          const key =
+            element.getAttribute(
+              "data-i18n-placeholder"
+            );
+
+          if (translations[currentLanguage][key]) {
+            element.placeholder =
+              translations[currentLanguage][key];
+          }
+        });
+
+      document.getElementById(
+        "languageButton"
+      ).textContent =
+        currentLanguage === "zh"
+          ? "EN"
+          : "中文";
+
+      renderRequest();
+      renderStandards();
+    }
+
+    function toggleLanguage() {
+      currentLanguage =
+        currentLanguage === "zh"
+          ? "en"
+          : "zh";
+
+      localStorage.setItem(
+        "echocity-language",
+        currentLanguage
+      );
+
+      applyLanguage();
+    }
+
+    function loadCurrentRequest() {
+      try {
+        const storedRequest =
+          localStorage.getItem(
+            "echocity-last-request"
+          );
+
+        currentRequest =
+          storedRequest
+            ? JSON.parse(storedRequest)
+            : null;
+
+      } catch (error) {
+        console.error(
+          "Failed to load request:",
+          error
+        );
+
+        currentRequest = null;
+      }
+    }
+
+    function loadExistingStandards() {
+      if (
+        currentRequest &&
+        currentRequest.serviceStandards &&
+        Array.isArray(
+          currentRequest.serviceStandards.tasks
+        )
+      ) {
+        standards =
+          currentRequest.serviceStandards.tasks;
+      }
+    }
+
+    function getServiceName(serviceType) {
+      const serviceMap = {
+        workers: "workersService",
+        repair: "repairService",
+        support: "supportService"
+      };
+
+      return translate(
+        serviceMap[serviceType] ||
+        "unknownService"
+      );
+    }
+
+    function renderRequest() {
+      const requestCard =
+        document.getElementById(
+          "requestCard"
+        );
+
+      const standardsCard =
+        document.getElementById(
+          "standardsCard"
+        );
+
+      const emptyState =
+        document.getElementById(
+          "emptyState"
+        );
+
+      if (!currentRequest) {
+        requestCard.style.display =
+          "none";
+
+        standardsCard.style.display =
+          "none";
+
+        emptyState.classList.add(
+          "show"
+        );
+
+        return;
+      }
+
+      requestCard.style.display =
+        "block";
+
+      standardsCard.style.display =
+        "block";
+
+      emptyState.classList.remove(
+        "show"
+      );
+
+      document.getElementById(
+        "requestId"
+      ).textContent =
+        currentRequest.id || "--";
+
+      document.getElementById(
+        "customerName"
+      ).textContent =
+        currentRequest.customerName ||
+        translate("notProvided");
+
+      document.getElementById(
+        "serviceType"
+      ).textContent =
+        getServiceName(
+          currentRequest.serviceType
+        );
+
+      document.getElementById(
+        "serviceAddress"
+      ).textContent =
+        currentRequest.serviceAddress ||
+        translate("notProvided");
+
+      document.getElementById(
+        "originalRequest"
+      ).textContent =
+        currentRequest.description ||
+        translate("notProvided");
+    }
+
+    function createStandard() {
+      return {
+        id:
+          "STD-" +
+          Date.now() +
+          "-" +
+          Math.random()
+            .toString(16)
+            .slice(2),
+
+        taskName: "",
+        workScope: "",
+        excludedScope: "",
+        completionStandard: "",
+        inspectionMethod: "",
+        evidenceRequirement: "",
+        plannedDate: "",
+        milestoneName: "",
+
+        isMilestone: true,
+        isHiddenWork: false,
+        requiresPaperSignature: true,
+        lockNextStage: true
+      };
+    }
+
+    function addStandardCard() {
+      standards.push(
+        createStandard()
+      );
+
+      renderStandards();
+    }
+
+    function removeStandard(
+      standardId
+    ) {
+      standards =
+        standards.filter(
+          (standard) =>
+            standard.id !== standardId
+        );
+
+      renderStandards();
+    }
+
+    function updateStandard(
+      standardId,
+      field,
+      value
+    ) {
+      const standard =
+        standards.find(
+          (item) =>
+            item.id === standardId
+        );
+
+      if (!standard) {
+        return;
+      }
+
+      standard[field] = value;
+
+      updateSummary();
+    }
+
+    function updateStandardCheckbox(
+      standardId,
+      field,
+      checked
+    ) {
+      const standard =
+        standards.find(
+          (item) =>
+            item.id === standardId
+        );
+
+      if (!standard) {
+        return;
+      }
+
+      standard[field] = checked;
+
+      updateSummary();
+    }
+
+    function escapeAttribute(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }    function buildCheckbox(
+      standard,
+      field,
+      titleKey,
+      descriptionKey
+    ) {
+      return `
+        <label class="checkbox-row">
+
+          <input
+            type="checkbox"
+            ${standard[field]
+              ? "checked"
+              : ""}
+            onchange="
+              updateStandardCheckbox(
+                '${standard.id}',
+                '${field}',
+                this.checked
+              )
+            "
+          />
+
+          <span class="checkbox-content">
+
+            <span class="checkbox-title">
+              ${translate(titleKey)}
+            </span>
+
+            <span class="checkbox-description">
+              ${translate(
+                descriptionKey
+              )}
+            </span>
+
+          </span>
+
+        </label>
+      `;
+    }
+
+    function buildStandardCard(
+      standard,
+      index
+    ) {
+      return `
+        <article class="task-standard-card">
+
+          <div class="task-standard-header">
+
+            <div class="task-standard-title">
+              ${translate("taskTitle")}
+              ${index + 1}
+            </div>
+
+            <button
+              class="remove-button"
+              type="button"
+              onclick="
+                removeStandard(
+                  '${standard.id}'
+                )
+              "
+            >
+              ${translate("removeButton")}
+            </button>
+
+          </div>
+
+          <div class="form-grid">
+
+            <div class="form-group full">
+
+              <label class="form-label">
+                ${translate(
+                  "taskNameLabel"
+                )}
+              </label>
+
+              <input
+                class="form-input"
+                type="text"
+                value="${escapeAttribute(
+                  standard.taskName
+                )}"
+                placeholder="${escapeAttribute(
+                  translate(
+                    "taskNamePlaceholder"
+                  )
+                )}"
+                oninput="
+                  updateStandard(
+                    '${standard.id}',
+                    'taskName',
+                    this.value
+                  )
+                "
+              />
+
+            </div>
+
+            <div class="form-group full">
+
+              <label class="form-label">
+                ${translate(
+                  "workScopeLabel"
+                )}
+              </label>
+
+              <textarea
+                class="form-textarea"
+                placeholder="${escapeAttribute(
+                  translate(
+                    "workScopePlaceholder"
+                  )
+                )}"
+                oninput="
+                  updateStandard(
+                    '${standard.id}',
+                    'workScope',
+                    this.value
+                  )
+                "
+              >${escapeAttribute(
+                standard.workScope
+              )}</textarea>
+
+            </div>
+
+            <div class="form-group full">
+
+              <label class="form-label">
+                ${translate(
+                  "excludedScopeLabel"
+                )}
+              </label>
+
+              <textarea
+                class="form-textarea"
+                placeholder="${escapeAttribute(
+                  translate(
+                    "excludedScopePlaceholder"
+                  )
+                )}"
+                oninput="
+                  updateStandard(
+                    '${standard.id}',
+                    'excludedScope',
+                    this.value
+                  )
+                "
+              >${escapeAttribute(
+                standard.excludedScope
+              )}</textarea>
+
+            </div>
+
+            <div class="form-group full">
+
+              <label class="form-label">
+                ${translate(
+                  "completionStandardLabel"
+                )}
+              </label>
+
+              <textarea
+                class="form-textarea"
+                placeholder="${escapeAttribute(
+                  translate(
+                    "completionStandardPlaceholder"
+                  )
+                )}"
+                oninput="
+                  updateStandard(
+                    '${standard.id}',
+                    'completionStandard',
+                    this.value
+                  )
+                "
+              >${escapeAttribute(
+                standard.completionStandard
+              )}</textarea>
+
+            </div>
+
+            <div class="form-group full">
+
+              <label class="form-label">
+                ${translate(
+                  "inspectionMethodLabel"
+                )}
+              </label>
+
+              <textarea
+                class="form-textarea"
+                placeholder="${escapeAttribute(
+                  translate(
+                    "inspectionMethodPlaceholder"
+                  )
+                )}"
+                oninput="
+                  updateStandard(
+                    '${standard.id}',
+                    'inspectionMethod',
+                    this.value
+                  )
+                "
+              >${escapeAttribute(
+                standard.inspectionMethod
+              )}</textarea>
+
+            </div>
+
+            <div class="form-group full">
+
+              <label class="form-label">
+                ${translate(
+                  "evidenceLabel"
+                )}
+              </label>
+
+              <textarea
+                class="form-textarea"
+                placeholder="${escapeAttribute(
+                  translate(
+                    "evidencePlaceholder"
+                  )
+                )}"
+                oninput="
+                  updateStandard(
+                    '${standard.id}',
+                    'evidenceRequirement',
+                    this.value
+                  )
+                "
+              >${escapeAttribute(
+                standard.evidenceRequirement
+              )}</textarea>
+
+            </div>
+
+            <div class="form-group">
+
+              <label class="form-label">
+                ${translate(
+                  "plannedDateLabel"
+                )}
+              </label>
+
+              <input
+                class="form-input"
+                type="date"
+                value="${escapeAttribute(
+                  standard.plannedDate
+                )}"
+                onchange="
+                  updateStandard(
+                    '${standard.id}',
+                    'plannedDate',
+                    this.value
+                  )
+                "
+              />
+
+            </div>
+
+            <div class="form-group">
+
+              <label class="form-label">
+                ${translate(
+                  "milestoneNameLabel"
+                )}
+              </label>
+
+              <input
+                class="form-input"
+                type="text"
+                value="${escapeAttribute(
+                  standard.milestoneName
+                )}"
+                placeholder="${escapeAttribute(
+                  translate(
+                    "milestoneNamePlaceholder"
+                  )
+                )}"
+                oninput="
+                  updateStandard(
+                    '${standard.id}',
+                    'milestoneName',
+                    this.value
+                  )
+                "
+              />
+
+            </div>
+
+            <div class="form-group full">
+
+              ${buildCheckbox(
+                standard,
+                "isMilestone",
+                "milestoneCheckboxTitle",
+                "milestoneCheckboxDescription"
+              )}
+
+            </div>
+
+            <div class="form-group full">
+
+              ${buildCheckbox(
+                standard,
+                "isHiddenWork",
+                "hiddenWorkCheckboxTitle",
+                "hiddenWorkCheckboxDescription"
+              )}
+
+            </div>
+
+            <div class="form-group full">
+
+              ${buildCheckbox(
+                standard,
+                "requiresPaperSignature",
+                "customerSignatureCheckboxTitle",
+                "customerSignatureCheckboxDescription"
+              )}
+
+            </div>
+
+            <div class="form-group full">
+
+              ${buildCheckbox(
+                standard,
+                "lockNextStage",
+                "nextStageLockCheckboxTitle",
+                "nextStageLockCheckboxDescription"
+              )}
+
+            </div>
+
+          </div>
+
+        </article>
+      `;
+    }
+
+    function renderStandards() {
+      const taskStandardList =
+        document.getElementById(
+          "taskStandardList"
+        );
+
+      taskStandardList.innerHTML =
+        standards
+          .map(
+            (
+              standard,
+              index
+            ) =>
+              buildStandardCard(
+                standard,
+                index
+              )
+          )
+          .join("");
+
+      updateSummary();
+    }
+
+    function updateSummary() {
+      const milestoneCount =
+        standards.filter(
+          (standard) =>
+            standard.isMilestone
+        ).length;
+
+      const hiddenWorkCount =
+        standards.filter(
+          (standard) =>
+            standard.isHiddenWork
+        ).length;
+
+      document.getElementById(
+        "taskCount"
+      ).textContent =
+        standards.length;
+
+      document.getElementById(
+        "milestoneCount"
+      ).textContent =
+        milestoneCount;
+
+      document.getElementById(
+        "hiddenWorkCount"
+      ).textContent =
+        hiddenWorkCount;
+    }
+
+    function showStatus(
+      type,
+      message
+    ) {
+      const statusMessage =
+        document.getElementById(
+          "statusMessage"
+        );
+
+      statusMessage.className =
+        "status-message " + type;
+
+      statusMessage.textContent =
+        message;
+
+      statusMessage.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    function validateStandards() {
+      if (standards.length === 0) {
+        showStatus(
+          "error",
+          translate("taskRequired")
+        );
+
+        return false;
+      }
+
+      const missingTaskName =
+        standards.some(
+          (standard) =>
+            !standard.taskName.trim()
+        );
+
+      if (missingTaskName) {
+        showStatus(
+          "error",
+          translate(
+            "taskNameRequired"
+          )
+        );
+
+        return false;
+      }
+
+      const missingScope =
+        standards.some(
+          (standard) =>
+            !standard.workScope.trim()
+        );
+
+      if (missingScope) {
+        showStatus(
+          "error",
+          translate("scopeRequired")
+        );
+
+        return false;
+      }
+
+      const missingStandard =
+        standards.some(
+          (standard) =>
+            !standard
+              .completionStandard
+              .trim()
+        );
+
+      if (missingStandard) {
+        showStatus(
+          "error",
+          translate(
+            "standardRequired"
+          )
+        );
+
+        return false;
+      }
+
+      const missingInspection =
+        standards.some(
+          (standard) =>
+            !standard
+              .inspectionMethod
+              .trim()
+        );
+
+      if (missingInspection) {
+        showStatus(
+          "error",
+          translate(
+            "inspectionRequired"
+          )
+        );
+
+        return false;
+      }
+
+      const missingEvidence =
+        standards.some(
+          (standard) =>
+            !standard
+              .evidenceRequirement
+              .trim()
+        );
+
+      if (missingEvidence) {
+        showStatus(
+          "error",
+          translate(
+            "evidenceRequired"
+          )
+        );
+
+        return false;
+      }
+
+      return true;
+    }    function createStandardsDocument() {
+      const now =
+        new Date().toISOString();
+
+      const previousDocument =
+        currentRequest
+          .serviceStandards;
+
+      return {
+        id:
+          previousDocument?.id ||
+          "STANDARD-DOC-" +
+          Date.now(),
+
+        documentNumber:
+          previousDocument
+            ?.documentNumber ||
+          "ECS-" +
+          String(
+            Date.now()
+          ).slice(-10),
+
+        requestId:
+          currentRequest.id,
+
+        customerName:
+          currentRequest.customerName ||
+          "",
+
+        serviceAddress:
+          currentRequest
+            .serviceAddress || "",
+
+        originalRequest:
+          currentRequest.description ||
+          "",
+
+        status:
+          "pending_customer_confirmation",
+
+        customerConfirmed: false,
+
+        requiresCustomerSignature:
+          standards.some(
+            (standard) =>
+              standard
+                .requiresPaperSignature
+          ),
+
+        tasks:
+          standards.map(
+            (
+              standard,
+              index
+            ) => ({
+              ...standard,
+
+              standardNumber:
+                "STD-" +
+                String(
+                  index + 1
+                ).padStart(2, "0"),
+
+              milestoneName:
+                standard
+                  .milestoneName
+                  .trim() ||
+                standard.taskName.trim(),
+
+              taskName:
+                standard.taskName.trim(),
+
+              workScope:
+                standard.workScope.trim(),
+
+              excludedScope:
+                standard
+                  .excludedScope
+                  .trim(),
+
+              completionStandard:
+                standard
+                  .completionStandard
+                  .trim(),
+
+              inspectionMethod:
+                standard
+                  .inspectionMethod
+                  .trim(),
+
+              evidenceRequirement:
+                standard
+                  .evidenceRequirement
+                  .trim(),
+
+              milestoneStatus:
+                standard.isMilestone
+                  ? "locked"
+                  : "not_required",
+
+              customerEvaluation:
+                null,
+
+              paperDocument:
+                null,
+
+              operationApproval:
+                null
+            })
+          ),
+
+        createdAt:
+          previousDocument?.createdAt ||
+          now,
+
+        updatedAt: now
+      };
+    }
+
+    function updateStorage(
+      standardsDocument
+    ) {
+      currentRequest.serviceStandards =
+        standardsDocument;
+
+      currentRequest.status =
+        "standards_pending_customer";
+
+      currentRequest.updatedAt =
+        new Date().toISOString();
+
+      const requests =
+        JSON.parse(
+          localStorage.getItem(
+            "echocity-service-requests"
+          ) || "[]"
+        );
+
+      const requestIndex =
+        requests.findIndex(
+          (request) =>
+            request.id ===
+            currentRequest.id
+        );
+
+      if (requestIndex >= 0) {
+        requests[requestIndex] =
+          currentRequest;
+      } else {
+        requests.unshift(
+          currentRequest
+        );
+      }
+
+      localStorage.setItem(
+        "echocity-service-requests",
+        JSON.stringify(requests)
+      );
+
+      localStorage.setItem(
+        "echocity-last-request",
+        JSON.stringify(
+          currentRequest
+        )
+      );
+
+      localStorage.setItem(
+        "echocity-last-service-standards",
+        JSON.stringify(
+          standardsDocument
+        )
+      );
+
+      const standardsRecords =
+        JSON.parse(
+          localStorage.getItem(
+            "echocity-service-standards"
+          ) || "[]"
+        );
+
+      const recordIndex =
+        standardsRecords.findIndex(
+          (record) =>
+            record.requestId ===
+            currentRequest.id
+        );
+
+      if (recordIndex >= 0) {
+        standardsRecords[
+          recordIndex
+        ] = standardsDocument;
+      } else {
+        standardsRecords.unshift(
+          standardsDocument
+        );
+      }
+
+      localStorage.setItem(
+        "echocity-service-standards",
+        JSON.stringify(
+          standardsRecords
+        )
+      );
+    }
+
+    async function saveStandards() {
+      if (!currentRequest) {
+        return;
+      }
+
+      if (!validateStandards()) {
+        return;
+      }
+
+      const saveButton =
+        document.getElementById(
+          "saveStandardsButton"
+        );
+
+      saveButton.disabled = true;
+
+      saveButton.textContent =
+        translate("saving");
+
+      try {
+        const standardsDocument =
+          createStandardsDocument();
+
+        updateStorage(
+          standardsDocument
+        );
+
+        showStatus(
+          "success",
+          translate("saved")
+        );
+
+        saveButton.textContent =
+          translate("saveButton");
+
+        setTimeout(() => {
+          window.location.href =
+            "admin-service-requests.html";
+        }, 1400);
+
+      } catch (error) {
+        console.error(
+          "Failed to save service standards:",
+          error
+        );
+
+        showStatus(
+          "error",
+          translate("saveError")
+        );
+
+        saveButton.disabled = false;
+
+        saveButton.textContent =
+          translate("saveButton");
+      }
+    }
+
+    function goBack() {
+      window.location.href =
+        "admin-service-requests.html";
+    }
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        loadCurrentRequest();
+        loadExistingStandards();
+
+        if (
+          currentRequest &&
+          standards.length === 0
+        ) {
+          standards.push(
+            createStandard()
+          );
+        }
+
+        applyLanguage();
+      }
+    );
+  </script>
+
+</body>
+</html>

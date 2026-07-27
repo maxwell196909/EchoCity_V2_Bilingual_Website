@@ -1,0 +1,1895 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>创建服务报价 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #1f6feb;
+      --primary-dark: #1557b0;
+      --primary-soft: #edf5ff;
+
+      --success: #18864b;
+      --success-soft: #eaf8f0;
+
+      --warning: #9a6700;
+      --warning-soft: #fff6dc;
+
+      --danger: #b42318;
+      --danger-soft: #fff0ee;
+
+      --text: #172033;
+      --text-light: #667085;
+
+      --border: #d9e1ec;
+      --background: #f4f7fb;
+      --card: #ffffff;
+
+      --shadow:
+        0 16px 40px rgba(24, 39, 75, 0.08);
+    }
+
+    body {
+      min-height: 100vh;
+
+      background:
+        linear-gradient(
+          180deg,
+          #edf5ff 0%,
+          #f7f9fc 40%,
+          #f4f7fb 100%
+        );
+
+      color: var(--text);
+
+      font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(100%, 960px);
+      margin: 0 auto;
+      padding: 22px 18px 50px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+
+      margin-bottom: 28px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 38px;
+      height: 38px;
+
+      border-radius: 13px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          #65a4ff
+        );
+
+      color: #ffffff;
+      font-weight: 900;
+
+      box-shadow:
+        0 8px 20px rgba(31, 111, 235, 0.22);
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .topbar-button {
+      min-height: 40px;
+      padding: 0 14px;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: rgba(255, 255, 255, 0.88);
+      color: var(--text);
+
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .topbar-button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .hero {
+      margin-bottom: 20px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+
+      min-height: 30px;
+      padding: 0 12px;
+
+      border-radius: 999px;
+
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      margin-top: 12px;
+
+      font-size: clamp(29px, 6vw, 42px);
+      line-height: 1.16;
+      letter-spacing: -1px;
+    }
+
+    .hero p {
+      max-width: 720px;
+
+      margin-top: 10px;
+
+      color: var(--text-light);
+
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .request-summary {
+      padding: 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .summary-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+
+      margin-bottom: 16px;
+    }
+
+    .summary-title {
+      font-size: 20px;
+      line-height: 1.4;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 32px;
+      padding: 0 12px;
+
+      border-radius: 999px;
+
+      background: var(--warning-soft);
+      color: var(--warning);
+
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .summary-item {
+      padding: 13px;
+
+      border-radius: 12px;
+
+      background: #f8fafc;
+    }
+
+    .summary-label {
+      color: var(--text-light);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .summary-value {
+      margin-top: 5px;
+
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+
+    .summary-description {
+      margin-top: 14px;
+      padding: 14px;
+
+      border-radius: 13px;
+
+      background: #f8fafc;
+      color: var(--text);
+
+      font-size: 14px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .quote-card {
+      margin-top: 18px;
+      padding: 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .quote-title {
+      font-size: 20px;
+      line-height: 1.4;
+    }
+
+    .quote-description {
+      margin-top: 6px;
+
+      color: var(--text-light);
+
+      font-size: 14px;
+      line-height: 1.65;
+    }    .quote-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 14px;
+
+      margin-top: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .form-help {
+      color: var(--text-light);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .money-input-wrap {
+      position: relative;
+    }
+
+    .money-symbol {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      color: var(--text-light);
+      font-size: 14px;
+      font-weight: 800;
+
+      pointer-events: none;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: #ffffff;
+      color: var(--text);
+
+      font-family: inherit;
+      font-size: 15px;
+
+      outline: none;
+
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .form-input,
+    .form-select {
+      min-height: 48px;
+      padding: 0 13px;
+    }
+
+    .money-input {
+      padding-left: 31px;
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      padding: 13px;
+
+      resize: vertical;
+      line-height: 1.65;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--primary);
+
+      box-shadow:
+        0 0 0 3px rgba(31, 111, 235, 0.12);
+    }
+
+    .total-panel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+
+      margin-top: 18px;
+      padding: 18px;
+
+      border: 1px solid #cfe1f7;
+      border-radius: 15px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #f4f9ff 0%,
+          #ffffff 100%
+        );
+    }
+
+    .total-label {
+      color: var(--text-light);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .total-value {
+      margin-top: 5px;
+
+      color: var(--primary-dark);
+
+      font-size: 31px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .total-note {
+      max-width: 380px;
+
+      color: var(--text-light);
+
+      font-size: 12px;
+      line-height: 1.6;
+      text-align: right;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 12px;
+
+      margin-top: 20px;
+    }
+
+    .primary-button,
+    .secondary-button {
+      min-height: 50px;
+      padding: 0 18px;
+
+      border-radius: 14px;
+
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 800;
+
+      cursor: pointer;
+    }
+
+    .primary-button {
+      flex: 1;
+
+      border: 0;
+
+      background: var(--primary);
+      color: #ffffff;
+
+      box-shadow:
+        0 10px 24px rgba(31, 111, 235, 0.2);
+    }
+
+    .primary-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .secondary-button {
+      border: 1px solid var(--border);
+
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    .secondary-button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .status-message {
+      display: none;
+
+      margin-top: 16px;
+      padding: 13px 14px;
+
+      border-radius: 12px;
+
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .status-message.success {
+      display: block;
+
+      border: 1px solid #b9e4c8;
+
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .status-message.error {
+      display: block;
+
+      border: 1px solid #f0c0c0;
+
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .empty-state {
+      display: none;
+
+      margin-top: 20px;
+      padding: 28px 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: #ffffff;
+      box-shadow: var(--shadow);
+
+      text-align: center;
+    }
+
+    .empty-state.show {
+      display: block;
+    }
+
+    .empty-state h2 {
+      font-size: 22px;
+      line-height: 1.4;
+    }
+
+    .empty-state p {
+      max-width: 560px;
+
+      margin: 10px auto 0;
+
+      color: var(--text-light);
+
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 700px) {
+      .page {
+        padding:
+          15px
+          13px
+          40px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .topbar-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .summary-grid,
+      .quote-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full-width {
+        grid-column: auto;
+      }
+
+      .total-panel {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .total-note {
+        text-align: left;
+      }
+
+      .action-row {
+        flex-direction: column;
+      }
+
+      .primary-button,
+      .secondary-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <header class="topbar">
+
+      <a
+        class="brand"
+        href=" "
+      >
+        <span class="brand-mark">E</span>
+        <span>EchoCity</span>
+      </a >
+
+      <div class="topbar-actions">
+
+        <button
+          class="topbar-button"
+          type="button"
+          onclick="goBackToRequests()"
+          data-i18n="backButton"
+        >
+          返回需求管理
+        </button>
+
+        <button
+          class="topbar-button"
+          id="languageButton"
+          type="button"
+          onclick="toggleLanguage()"
+        >
+          EN
+        </button>
+
+      </div>
+
+    </header>
+
+    <section class="hero">
+
+      <span
+        class="hero-tag"
+        data-i18n="heroTag"
+      >
+        运营报价
+      </span>
+
+      <h1 data-i18n="heroTitle">
+        创建服务报价
+      </h1>
+
+      <p data-i18n="heroDescription">
+        根据客户需求填写人工、材料、交通和平台服务费用，
+        确认后保存为正式报价。
+      </p >
+
+    </section>
+
+    <section
+      class="request-summary"
+      id="requestSummary"
+    >
+
+      <div class="summary-header">
+
+        <h2
+          class="summary-title"
+          data-i18n="requestSummaryTitle"
+        >
+          客户需求摘要
+        </h2>
+
+        <span
+          class="status-badge"
+          id="requestStatus"
+        >
+          待人工确认
+        </span>
+
+      </div>
+
+      <div class="summary-grid">
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="requestIdLabel"
+          >
+            需求编号
+          </div>
+
+          <div
+            class="summary-value"
+            id="requestId"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="serviceTypeLabel"
+          >
+            服务类型
+          </div>
+
+          <div
+            class="summary-value"
+            id="serviceType"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="customerLabel"
+          >
+            客户
+          </div>
+
+          <div
+            class="summary-value"
+            id="customerName"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="contactLabel"
+          >
+            联系方式
+          </div>
+
+          <div
+            class="summary-value"
+            id="customerContact"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="serviceTimeLabel"
+          >
+            服务时间
+          </div>
+
+          <div
+            class="summary-value"
+            id="serviceTime"
+          >
+            --
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="serviceAddressLabel"
+          >
+            服务地址
+          </div>
+
+          <div
+            class="summary-value"
+            id="serviceAddress"
+          >
+            --
+          </div>
+        </div>
+
+      </div>
+
+      <div
+        class="summary-description"
+        id="requestDescription"
+      >
+        --
+      </div>
+
+    </section>
+
+    <section
+      class="quote-card"
+      id="quoteCard"
+    >
+
+      <h2
+        class="quote-title"
+        data-i18n="quoteTitle"
+      >
+        报价明细
+      </h2>
+
+      <p
+        class="quote-description"
+        data-i18n="quoteDescription"
+      >
+        所有金额使用美元。保存后，订单状态会自动更新为“已报价”。
+      </p >
+
+      <div class="quote-grid">
+
+        <div class="form-group">
+          <label
+            class="form-label"
+            for="laborFee"
+            data-i18n="laborFeeLabel"
+          >
+            人工费
+          </label>
+
+          <div class="money-input-wrap">
+            <span class="money-symbol">
+              $
+            </span>
+
+            <input
+              class="form-input money-input"
+              id="laborFee"
+              type="number"
+              min="0"
+              step="0.01"
+              value="0"
+              oninput="calculateTotal()"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label
+            class="form-label"
+            for="materialFee"
+            data-i18n="materialFeeLabel"
+          >
+            材料费
+          </label>
+
+          <div class="money-input-wrap">
+            <span class="money-symbol">
+              $
+            </span>
+
+            <input
+              class="form-input money-input"
+              id="materialFee"
+              type="number"
+              min="0"
+              step="0.01"
+              value="0"
+              oninput="calculateTotal()"
+            />
+          </div>
+        </div>        <div class="form-group">
+          <label
+            class="form-label"
+            for="travelFee"
+            data-i18n="travelFeeLabel"
+          >
+            交通费
+          </label>
+
+          <div class="money-input-wrap">
+            <span class="money-symbol">
+              $
+            </span>
+
+            <input
+              class="form-input money-input"
+              id="travelFee"
+              type="number"
+              min="0"
+              step="0.01"
+              value="0"
+              oninput="calculateTotal()"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label
+            class="form-label"
+            for="platformFee"
+            data-i18n="platformFeeLabel"
+          >
+            平台服务费
+          </label>
+
+          <div class="money-input-wrap">
+            <span class="money-symbol">
+              $
+            </span>
+
+            <input
+              class="form-input money-input"
+              id="platformFee"
+              type="number"
+              min="0"
+              step="0.01"
+              value="0"
+              oninput="calculateTotal()"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label
+            class="form-label"
+            for="taxFee"
+            data-i18n="taxFeeLabel"
+          >
+            税费
+          </label>
+
+          <div class="money-input-wrap">
+            <span class="money-symbol">
+              $
+            </span>
+
+            <input
+              class="form-input money-input"
+              id="taxFee"
+              type="number"
+              min="0"
+              step="0.01"
+              value="0"
+              oninput="calculateTotal()"
+            />
+          </div>
+
+          <p
+            class="form-help"
+            data-i18n="taxFeeHelp"
+          >
+            是否收取及税率应按实际经营州和服务类型确定。
+          </p >
+        </div>
+
+        <div class="form-group">
+          <label
+            class="form-label"
+            for="depositAmount"
+            data-i18n="depositLabel"
+          >
+            定金金额
+          </label>
+
+          <div class="money-input-wrap">
+            <span class="money-symbol">
+              $
+            </span>
+
+            <input
+              class="form-input money-input"
+              id="depositAmount"
+              type="number"
+              min="0"
+              step="0.01"
+              value="0"
+            />
+          </div>
+
+          <p
+            class="form-help"
+            data-i18n="depositHelp"
+          >
+            可填写0，表示暂时不收定金。
+          </p >
+        </div>
+
+        <div class="form-group">
+          <label
+            class="form-label"
+            for="validUntil"
+            data-i18n="validUntilLabel"
+          >
+            报价有效期
+          </label>
+
+          <input
+            class="form-input"
+            id="validUntil"
+            type="date"
+          />
+        </div>
+
+        <div class="form-group">
+          <label
+            class="form-label"
+            for="paymentTerms"
+            data-i18n="paymentTermsLabel"
+          >
+            付款方式
+          </label>
+
+          <select
+            class="form-select"
+            id="paymentTerms"
+          >
+            <option
+              value="full_before_service"
+              data-i18n="paymentFullBefore"
+            >
+              服务前全额支付
+            </option>
+
+            <option
+              value="deposit_then_balance"
+              data-i18n="paymentDepositBalance"
+            >
+              先付定金，完成后付尾款
+            </option>
+
+            <option
+              value="after_completion"
+              data-i18n="paymentAfterCompletion"
+            >
+              服务完成后支付
+            </option>
+
+            <option
+              value="manual"
+              data-i18n="paymentManual"
+            >
+              人工协商
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group full-width">
+          <label
+            class="form-label"
+            for="quoteNotes"
+            data-i18n="quoteNotesLabel"
+          >
+            报价说明
+          </label>
+
+          <textarea
+            class="form-textarea"
+            id="quoteNotes"
+            data-i18n-placeholder="quoteNotesPlaceholder"
+            placeholder="例如：报价包含2名工作人员、3小时服务，不包含大型设备租赁和额外材料。"
+          ></textarea>
+        </div>
+
+      </div>
+
+      <div class="total-panel">
+
+        <div>
+          <div
+            class="total-label"
+            data-i18n="totalLabel"
+          >
+            报价总额
+          </div>
+
+          <div
+            class="total-value"
+            id="totalValue"
+          >
+            $0.00
+          </div>
+        </div>
+
+        <p
+          class="total-note"
+          data-i18n="totalNote"
+        >
+          总额由人工费、材料费、交通费、平台服务费和税费相加计算。
+        </p >
+
+      </div>
+
+      <div class="action-row">
+
+        <button
+          class="secondary-button"
+          type="button"
+          onclick="goBackToRequests()"
+          data-i18n="cancelButton"
+        >
+          取消
+        </button>
+
+        <button
+          class="primary-button"
+          id="saveQuoteButton"
+          type="button"
+          onclick="saveQuote()"
+          data-i18n="saveQuoteButton"
+        >
+          保存正式报价
+        </button>
+
+      </div>
+
+      <div
+        class="status-message"
+        id="statusMessage"
+      ></div>
+
+    </section>
+
+    <section
+      class="empty-state"
+      id="emptyState"
+    >
+      <h2 data-i18n="emptyTitle">
+        没有找到需要报价的订单
+      </h2>
+
+      <p data-i18n="emptyDescription">
+        请先从服务需求管理页面选择一条需求，再进入报价页面。
+      </p >
+
+      <div class="action-row">
+        <button
+          class="primary-button"
+          type="button"
+          onclick="goBackToRequests()"
+          data-i18n="backToRequestsButton"
+        >
+          返回需求管理
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="js/echocity-store.js"></script>
+  <script src="js/echocity-services.js"></script>
+
+  <script>
+    const translations = {
+      zh: {
+        backButton: "返回需求管理",
+
+        heroTag: "运营报价",
+        heroTitle: "创建服务报价",
+        heroDescription:
+          "根据客户需求填写人工、材料、交通和平台服务费用，确认后保存为正式报价。",
+
+        requestSummaryTitle: "客户需求摘要",
+        requestIdLabel: "需求编号",
+        serviceTypeLabel: "服务类型",
+        customerLabel: "客户",
+        contactLabel: "联系方式",
+        serviceTimeLabel: "服务时间",
+        serviceAddressLabel: "服务地址",
+
+        statusNew: "待人工确认",
+        statusQuoted: "已报价",
+        statusAssigned: "已派工",
+        statusProgress: "服务进行中",
+        statusCompleted: "已完成",
+        statusCancelled: "已取消",
+
+        workersService: "需要人手",
+        repairService: "维修或清洁",
+        supportService: "生活帮助",
+        unknownService: "未选择",
+
+        quoteTitle: "报价明细",
+        quoteDescription:
+          "所有金额使用美元。保存后，订单状态会自动更新为“已报价”。",
+
+        laborFeeLabel: "人工费",
+        materialFeeLabel: "材料费",
+        travelFeeLabel: "交通费",
+        platformFeeLabel: "平台服务费",
+        taxFeeLabel: "税费",
+        taxFeeHelp:
+          "是否收取及税率应按实际经营州和服务类型确定。",
+
+        depositLabel: "定金金额",
+        depositHelp:
+          "可填写0，表示暂时不收定金。",
+
+        validUntilLabel: "报价有效期",
+        paymentTermsLabel: "付款方式",
+
+        paymentFullBefore: "服务前全额支付",
+        paymentDepositBalance:
+          "先付定金，完成后付尾款",
+        paymentAfterCompletion:
+          "服务完成后支付",
+        paymentManual: "人工协商",
+
+        quoteNotesLabel: "报价说明",
+        quoteNotesPlaceholder:
+          "例如：报价包含2名工作人员、3小时服务，不包含大型设备租赁和额外材料。",
+
+        totalLabel: "报价总额",
+        totalNote:
+          "总额由人工费、材料费、交通费、平台服务费和税费相加计算。",
+
+        cancelButton: "取消",
+        saveQuoteButton: "保存正式报价",
+        savingQuote: "正在保存报价……",
+
+        emptyTitle: "没有找到需要报价的订单",
+        emptyDescription:
+          "请先从服务需求管理页面选择一条需求，再进入报价页面。",
+        backToRequestsButton: "返回需求管理",
+
+        quoteSaved:
+          "报价已经保存，订单状态已更新为“已报价”。",
+        quoteSaveError:
+          "报价保存失败，请稍后重试。",
+        invalidAmount:
+          "金额不能小于0，请检查报价明细。",
+        depositTooHigh:
+          "定金不能高于报价总额。",
+        validUntilError:
+          "请选择报价有效期。",
+
+        notProvided: "未填写"
+      },
+
+      en: {
+        backButton: "Back to Requests",
+
+        heroTag: "Operations Quote",
+        heroTitle: "Create Service Quote",
+        heroDescription:
+          "Enter labor, materials, travel, platform service, and other charges, then save the formal quote.",
+
+        requestSummaryTitle: "Customer Request Summary",
+        requestIdLabel: "Request ID",
+        serviceTypeLabel: "Service Type",
+        customerLabel: "Customer",
+        contactLabel: "Contact",
+        serviceTimeLabel: "Service Time",
+        serviceAddressLabel: "Service Address",
+
+        statusNew: "Awaiting Review",
+        statusQuoted: "Quoted",
+        statusAssigned: "Assigned",
+        statusProgress: "In Progress",
+        statusCompleted: "Completed",
+        statusCancelled: "Cancelled",
+
+        workersService: "Need Workers",
+        repairService: "Repair or Cleaning",
+        supportService: "Daily Support",
+        unknownService: "Not Selected",
+
+        quoteTitle: "Quote Details",
+        quoteDescription:
+          "All amounts are in U.S. dollars. Saving the quote will update the order status to “Quoted.”",
+
+        laborFeeLabel: "Labor",
+        materialFeeLabel: "Materials",
+        travelFeeLabel: "Travel",
+        platformFeeLabel: "Platform Service Fee",
+        taxFeeLabel: "Taxes",
+        taxFeeHelp:
+          "Taxability and tax rate depend on the operating state and service type.",
+
+        depositLabel: "Deposit",
+        depositHelp:
+          "Enter 0 if no deposit is required.",
+
+        validUntilLabel: "Quote Valid Until",
+        paymentTermsLabel: "Payment Terms",
+
+        paymentFullBefore:
+          "Full Payment Before Service",
+        paymentDepositBalance:
+          "Deposit First, Balance After Completion",
+        paymentAfterCompletion:
+          "Payment After Completion",
+        paymentManual:
+          "Manually Agreed",
+
+        quoteNotesLabel: "Quote Notes",
+        quoteNotesPlaceholder:
+          "Example: The quote includes two workers for three hours. Equipment rental and extra materials are not included.",
+
+        totalLabel: "Quote Total",
+        totalNote:
+          "The total is the sum of labor, materials, travel, platform service fee, and taxes.",
+
+        cancelButton: "Cancel",
+        saveQuoteButton: "Save Formal Quote",
+        savingQuote: "Saving quote…",
+
+        emptyTitle: "No Request Selected for Quoting",
+        emptyDescription:
+          "Select a request from the service request management page before opening this page.",
+        backToRequestsButton: "Back to Requests",
+
+        quoteSaved:
+          "The quote has been saved and the order status is now “Quoted.”",
+        quoteSaveError:
+          "The quote could not be saved. Please try again.",
+        invalidAmount:
+          "Amounts cannot be negative. Please review the quote.",
+        depositTooHigh:
+          "The deposit cannot exceed the quote total.",
+        validUntilError:
+          "Please select a quote expiration date.",
+
+        notProvided: "Not provided"
+      }
+    };    let currentLanguage =
+      localStorage.getItem("echocity-language") || "zh";
+
+    let currentRequest = null;
+
+    function translate(key) {
+      return (
+        translations[currentLanguage][key] ||
+        translations.zh[key] ||
+        key
+      );
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang =
+        currentLanguage === "zh"
+          ? "zh-CN"
+          : "en";
+
+      document
+        .querySelectorAll("[data-i18n]")
+        .forEach((element) => {
+          const key =
+            element.getAttribute("data-i18n");
+
+          if (translations[currentLanguage][key]) {
+            element.textContent =
+              translations[currentLanguage][key];
+          }
+        });
+
+      document
+        .querySelectorAll("[data-i18n-placeholder]")
+        .forEach((element) => {
+          const key =
+            element.getAttribute(
+              "data-i18n-placeholder"
+            );
+
+          if (translations[currentLanguage][key]) {
+            element.placeholder =
+              translations[currentLanguage][key];
+          }
+        });
+
+      document.getElementById(
+        "languageButton"
+      ).textContent =
+        currentLanguage === "zh"
+          ? "EN"
+          : "中文";
+
+      renderRequestSummary();
+    }
+
+    function toggleLanguage() {
+      currentLanguage =
+        currentLanguage === "zh"
+          ? "en"
+          : "zh";
+
+      localStorage.setItem(
+        "echocity-language",
+        currentLanguage
+      );
+
+      applyLanguage();
+    }
+
+    function getSelectedRequest() {
+      try {
+        const storedRequest =
+          localStorage.getItem(
+            "echocity-last-request"
+          );
+
+        if (!storedRequest) {
+          return null;
+        }
+
+        return JSON.parse(storedRequest);
+
+      } catch (error) {
+        console.error(
+          "Failed to read selected request:",
+          error
+        );
+
+        return null;
+      }
+    }
+
+    function getServiceName(serviceType) {
+      const serviceMap = {
+        workers: "workersService",
+        repair: "repairService",
+        support: "supportService"
+      };
+
+      return translate(
+        serviceMap[serviceType] ||
+        "unknownService"
+      );
+    }
+
+    function getStatusName(status) {
+      const statusMap = {
+        new: "statusNew",
+        quoted: "statusQuoted",
+        assigned: "statusAssigned",
+        in_progress: "statusProgress",
+        completed: "statusCompleted",
+        cancelled: "statusCancelled"
+      };
+
+      return translate(
+        statusMap[status] ||
+        "statusNew"
+      );
+    }
+
+    function formatDateTime(
+      serviceDate,
+      serviceTime
+    ) {
+      if (!serviceDate && !serviceTime) {
+        return translate("notProvided");
+      }
+
+      let dateText =
+        serviceDate || "";
+
+      if (serviceDate) {
+        const date =
+          new Date(
+            serviceDate + "T00:00:00"
+          );
+
+        dateText =
+          date.toLocaleDateString(
+            currentLanguage === "zh"
+              ? "zh-CN"
+              : "en-US",
+            {
+              year: "numeric",
+              month: "long",
+              day: "numeric"
+            }
+          );
+      }
+
+      return serviceTime
+        ? `${dateText} ${serviceTime}`
+        : dateText;
+    }
+
+    function formatContact(request) {
+      const items = [];
+
+      if (request.customerPhone) {
+        items.push(request.customerPhone);
+      }
+
+      if (request.customerEmail) {
+        items.push(request.customerEmail);
+      }
+
+      return items.length
+        ? items.join(" · ")
+        : translate("notProvided");
+    }
+
+    function renderRequestSummary() {
+      if (!currentRequest) {
+        document.getElementById(
+          "requestSummary"
+        ).style.display = "none";
+
+        document.getElementById(
+          "quoteCard"
+        ).style.display = "none";
+
+        document.getElementById(
+          "emptyState"
+        ).classList.add("show");
+
+        return;
+      }
+
+      document.getElementById(
+        "requestSummary"
+      ).style.display = "block";
+
+      document.getElementById(
+        "quoteCard"
+      ).style.display = "block";
+
+      document.getElementById(
+        "emptyState"
+      ).classList.remove("show");
+
+      document.getElementById(
+        "requestId"
+      ).textContent =
+        currentRequest.id || "--";
+
+      document.getElementById(
+        "serviceType"
+      ).textContent =
+        getServiceName(
+          currentRequest.serviceType
+        );
+
+      document.getElementById(
+        "customerName"
+      ).textContent =
+        currentRequest.customerName ||
+        translate("notProvided");
+
+      document.getElementById(
+        "customerContact"
+      ).textContent =
+        formatContact(currentRequest);
+
+      document.getElementById(
+        "serviceTime"
+      ).textContent =
+        formatDateTime(
+          currentRequest.serviceDate,
+          currentRequest.serviceTime
+        );
+
+      document.getElementById(
+        "serviceAddress"
+      ).textContent =
+        currentRequest.serviceAddress ||
+        translate("notProvided");
+
+      document.getElementById(
+        "requestDescription"
+      ).textContent =
+        currentRequest.description ||
+        translate("notProvided");
+
+      document.getElementById(
+        "requestStatus"
+      ).textContent =
+        getStatusName(
+          currentRequest.status || "new"
+        );
+    }
+
+    function getMoneyValue(elementId) {
+      const value =
+        Number(
+          document.getElementById(
+            elementId
+          ).value
+        );
+
+      return Number.isFinite(value)
+        ? value
+        : 0;
+    }
+
+    function calculateTotal() {
+      const total =
+        getMoneyValue("laborFee") +
+        getMoneyValue("materialFee") +
+        getMoneyValue("travelFee") +
+        getMoneyValue("platformFee") +
+        getMoneyValue("taxFee");
+
+      document.getElementById(
+        "totalValue"
+      ).textContent =
+        total.toLocaleString(
+          "en-US",
+          {
+            style: "currency",
+            currency: "USD"
+          }
+        );
+
+      return total;
+    }
+
+    function showStatus(type, message) {
+      const statusMessage =
+        document.getElementById(
+          "statusMessage"
+        );
+
+      statusMessage.className =
+        "status-message " + type;
+
+      statusMessage.textContent =
+        message;
+
+      statusMessage.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    function validateQuote() {
+      const amountIds = [
+        "laborFee",
+        "materialFee",
+        "travelFee",
+        "platformFee",
+        "taxFee",
+        "depositAmount"
+      ];
+
+      const hasNegativeAmount =
+        amountIds.some(
+          (id) =>
+            getMoneyValue(id) < 0
+        );
+
+      if (hasNegativeAmount) {
+        showStatus(
+          "error",
+          translate("invalidAmount")
+        );
+
+        return false;
+      }
+
+      const total =
+        calculateTotal();
+
+      const deposit =
+        getMoneyValue(
+          "depositAmount"
+        );
+
+      if (deposit > total) {
+        showStatus(
+          "error",
+          translate("depositTooHigh")
+        );
+
+        return false;
+      }
+
+      const validUntil =
+        document.getElementById(
+          "validUntil"
+        ).value;
+
+      if (!validUntil) {
+        showStatus(
+          "error",
+          translate("validUntilError")
+        );
+
+        return false;
+      }
+
+      return true;
+    }
+
+    function buildQuoteData() {
+      return {
+        id:
+          "QUOTE-" +
+          Date.now(),
+
+        requestId:
+          currentRequest.id,
+
+        laborFee:
+          getMoneyValue("laborFee"),
+
+        materialFee:
+          getMoneyValue("materialFee"),
+
+        travelFee:
+          getMoneyValue("travelFee"),
+
+        platformFee:
+          getMoneyValue("platformFee"),
+
+        taxFee:
+          getMoneyValue("taxFee"),
+
+        depositAmount:
+          getMoneyValue("depositAmount"),
+
+        totalAmount:
+          calculateTotal(),
+
+        validUntil:
+          document.getElementById(
+            "validUntil"
+          ).value,
+
+        paymentTerms:
+          document.getElementById(
+            "paymentTerms"
+          ).value,
+
+        notes:
+          document.getElementById(
+            "quoteNotes"
+          ).value.trim(),
+
+        status:
+          "quoted",
+
+        createdAt:
+          new Date().toISOString()
+      };
+    }
+
+    function updateRequestInStorage(
+      quoteData
+    ) {
+      const requests =
+        JSON.parse(
+          localStorage.getItem(
+            "echocity-service-requests"
+          ) || "[]"
+        );
+
+      const requestIndex =
+        requests.findIndex(
+          (item) =>
+            item.id ===
+            currentRequest.id
+        );
+
+      currentRequest.status =
+        "quoted";
+
+      currentRequest.quote =
+        quoteData;
+
+      currentRequest.updatedAt =
+        new Date().toISOString();
+
+      if (requestIndex >= 0) {
+        requests[requestIndex] =
+          currentRequest;
+      } else {
+        requests.unshift(
+          currentRequest
+        );
+      }
+
+      localStorage.setItem(
+        "echocity-service-requests",
+        JSON.stringify(requests)
+      );
+
+      localStorage.setItem(
+        "echocity-last-request",
+        JSON.stringify(
+          currentRequest
+        )
+      );
+
+      localStorage.setItem(
+        "echocity-last-quote",
+        JSON.stringify(
+          quoteData
+        )
+      );
+    }
+
+    async function saveQuote() {
+      if (!currentRequest) {
+        return;
+      }
+
+      if (!validateQuote()) {
+        return;
+      }
+
+      const saveButton =
+        document.getElementById(
+          "saveQuoteButton"
+        );
+
+      saveButton.disabled = true;
+      saveButton.textContent =
+        translate("savingQuote");
+
+      try {
+        const quoteData =
+          buildQuoteData();
+
+        updateRequestInStorage(
+          quoteData
+        );
+
+        showStatus(
+          "success",
+          translate("quoteSaved")
+        );
+
+        renderRequestSummary();
+
+        saveButton.textContent =
+          translate("saveQuoteButton");
+
+        setTimeout(() => {
+          window.location.href =
+            "admin-service-requests.html";
+        }, 1200);
+
+      } catch (error) {
+        console.error(
+          "Failed to save quote:",
+          error
+        );
+
+        showStatus(
+          "error",
+          translate("quoteSaveError")
+        );
+
+        saveButton.disabled = false;
+
+        saveButton.textContent =
+          translate("saveQuoteButton");
+      }
+    }
+
+    function setDefaultValidUntil() {
+      const date =
+        new Date();
+
+      date.setDate(
+        date.getDate() + 7
+      );
+
+      const year =
+        date.getFullYear();
+
+      const month =
+        String(
+          date.getMonth() + 1
+        ).padStart(2, "0");
+
+      const day =
+        String(
+          date.getDate()
+        ).padStart(2, "0");
+
+      document.getElementById(
+        "validUntil"
+      ).value =
+        `${year}-${month}-${day}`;
+    }
+
+    function goBackToRequests() {
+      window.location.href =
+        "admin-service-requests.html";
+    }
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        currentRequest =
+          getSelectedRequest();
+
+        setDefaultValidUntil();
+        calculateTotal();
+        applyLanguage();
+      }
+    );
+  </script>
+
+</body>
+</html>
