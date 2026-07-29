@@ -252,4 +252,94 @@ publish: function (input) {
   };
 
   window.EchoServices = EchoServices;
+
+window.EchoCityServices = {
+  async createServiceRequest(input) {
+    const supabaseClient = window.echoCitySupabase;
+
+    if (!supabaseClient) {
+      throw new Error("Supabase connection is not available.");
+    }
+
+    const requestNo =
+      input.requestNo ||
+      input.requestId ||
+      input.id ||
+      `REQ-${Date.now()}`;
+
+    const payload = {
+      request_no: String(requestNo),
+      service_type:
+        input.serviceType ||
+        input.type ||
+        "other",
+
+      description:
+        input.description ||
+        input.request ||
+        input.details ||
+        input.content ||
+        "",
+
+      service_date:
+        input.serviceDate ||
+        input.date ||
+        null,
+
+      start_time:
+        input.startTime ||
+        input.time ||
+        null,
+
+      workers: Number(
+        input.workers ||
+        input.workerCount ||
+        input.people ||
+        1
+      ),
+
+      duration:
+        input.duration ||
+        input.estimatedDuration ||
+        "",
+
+      postal_code:
+        input.postalCode ||
+        input.zipCode ||
+        input.zip ||
+        "",
+
+      address:
+        input.address ||
+        input.serviceAddress ||
+        "",
+
+      customer_name:
+        input.customerName ||
+        input.name ||
+        "",
+
+      customer_phone:
+        input.customerPhone ||
+        input.phone ||
+        "",
+
+      status: "submitted"
+    };
+
+    const { data, error } = await supabaseClient
+      .from("service_requests")
+      .insert(payload)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Supabase request insert failed:", error);
+      throw error;
+    }
+
+    console.log("Service request saved to Supabase:", data);
+    return data;
+  }
+};
 })(window);

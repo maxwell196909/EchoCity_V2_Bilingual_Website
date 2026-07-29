@@ -831,8 +831,10 @@
 
   </main>
 
-  <script src="js/echocity-store.js"></script>
-  <script src="js/echocity-services.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/echocity-store.js"></script>
+<script src="../js/echocity-supabase.js"></script>
+<script src="../js/echocity-services.js?v=2"></script>
 
   <script>    const translations = {
       zh: {
@@ -1055,51 +1057,82 @@
         "service-request.html";
     }
 
-    function loadRequests() {
-      try {
-        const storedRequests =
-          JSON.parse(
-            localStorage.getItem(
-              "echocity-service-requests"
-            ) || "[]"
-          );
+    async function loadRequests() {
+  try {
+    const supabaseClient = window.echoCitySupabase;
 
-        serviceRequests =
-          Array.isArray(storedRequests)
-            ? storedRequests
-            : [];
-
-        const latestRequest =
-          JSON.parse(
-            localStorage.getItem(
-              "echocity-last-request"
-            ) || "null"
-          );
-
-        if (
-          latestRequest &&
-          !serviceRequests.some(
-            (item) =>
-              item.id === latestRequest.id
-          )
-        ) {
-          serviceRequests.unshift(
-            latestRequest
-          );
-
-          saveRequests();
-        }
-
-      } catch (error) {
-        console.error(
-          "Failed to load service requests:",
-          error
-        );
-
-        serviceRequests = [];
-      }
+    if (!supabaseClient) {
+      throw new Error("Supabase connection is not available.");
     }
 
+    const { data, error } = await supabaseClient
+      .from("service_requests")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    serviceRequests = (data || []).map((item) => ({
+      id: item.request_no,
+      requestId: item.request_no,
+      requestNo: item.request_no,
+
+      serviceType: item.service_type,
+      type: item.service_type,
+
+      description: item.description,
+      request: item.description,
+      details: item.description,
+
+      serviceDate: item.service_date,
+      date: item.service_date,
+
+      startTime: item.start_time,
+      time: item.start_time,
+
+      workers: item.workers || 1,
+      workerCount: item.workers || 1,
+      duration: item.duration || "",
+
+      postalCode: item.postal_code || "",
+      zipCode: item.postal_code || "",
+      address: item.address || "",
+
+      customerName: item.customer_name || "",
+      name: item.customer_name || "",
+
+      customerPhone: item.customer_phone || "",
+      phone: item.customer_phone || "",
+
+      status: item.status || "submitted",
+
+      quoteAmount: item.quote_amount,
+      quoteNote: item.quote_note || "",
+      quoteConfirmed: item.quote_confirmed || false,
+      assignedWorker: item.assigned_worker || "",
+
+      createdAt: item.created_at,
+      updatedAt: item.updated_at
+    }));
+
+    renderRequests();
+
+    console.log(
+      "Service requests loaded from Supabase:",
+      serviceRequests
+    );
+  } catch (error) {
+    console.error(
+      "Failed to load service requests from Supabase:",
+      error
+    );
+
+    serviceRequests = [];
+    renderRequests();
+  }
+}
     function saveRequests() {
       localStorage.setItem(
         "echocity-service-requests",
