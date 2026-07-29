@@ -594,7 +594,29 @@
             </option>
           </select>
         </div>
+<!-- ZIP Code -->
+<div class="form-group full-width">
+  <label
+    class="form-label"
+    for="zipCode"
+    data-i18n="zipCodeLabel"
+  >
+    ZIP Code
+    <span class="required">*</span>
+  </label>
 
+  <input
+    class="form-input"
+    id="zipCode"
+    name="zipCode"
+    type="text"
+    inputmode="numeric"
+    maxlength="10"
+    data-i18n-placeholder="zipCodePlaceholder"
+    placeholder="Enter ZIP Code"
+    required
+  />
+</div>
         <div class="form-group full-width">
           <label
             class="form-label"
@@ -740,10 +762,10 @@
     </section>
 
   </main>
-
-  <script src="js/echocity-store.js"></script>
-  <script src="js/echocity-supabase.js"></script>
-  <script src="js/echocity-services.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/echocity-store.js"></script>
+<script src="../js/echocity-supabase.js"></script>
+<script src="../js/echocity-services.js"></script>
 
   <script>    const translations = {
       zh: {
@@ -767,6 +789,8 @@
         timeLabel: "开始时间",
         workerCountLabel: "需要人数",
         hoursLabel: "预计时长",
+        zipCodeLabel: "邮政编码",
+zipCodePlaceholder: "请输入 ZIP Code",
         addressLabel: "服务地址",
         addressPlaceholder: "请输入街道、城市和邮政编码",
 
@@ -837,6 +861,8 @@
         timeLabel: "Start Time",
         workerCountLabel: "Number of Workers",
         hoursLabel: "Estimated Duration",
+zipCodeLabel: "ZIP Code",
+zipCodePlaceholder: "Enter ZIP Code", 
         addressLabel: "Service Address",
         addressPlaceholder: "Enter street, city, and ZIP code",
 
@@ -1227,8 +1253,7 @@
           translate("submitButton");
 
         setTimeout(() => {
-          window.location.href =
-            "service-request-confirmation.html";
+          window.location.href = "admin-service-quote.html";
         }, 1300);
 
       } catch (error) {
@@ -1323,6 +1348,37 @@
         applyLanguage();
       }
     );
+  const echoChat =
+  document.getElementById("echoChat");
+
+if (echoChat) {
+  echoChat.addEventListener(
+    "submit",
+    function (event) {
+      event.preventDefault();
+
+      const wishInput =
+        document.getElementById(
+          "wishInput"
+        );
+
+      const wish =
+        wishInput.value.trim();
+
+      if (!wish) {
+        return;
+      }
+
+      localStorage.setItem(
+        "echocityCurrentWish",
+        wish
+      );
+
+      window.location.href =
+        "./assets/service-request.html";
+    }
+  );
+}
   </script>
 
 </body>

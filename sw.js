@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v2";
+const CACHE_NAME = "echocity-v4";
 
 const APP_FILES = [
   "./",

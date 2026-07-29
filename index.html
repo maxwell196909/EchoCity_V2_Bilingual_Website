@@ -479,7 +479,13 @@
 
   </div>  <h1 class="echo-title">EchoCity</h1>
 
-  <form class="echo-chat" id="echoChat">
+  <form
+  class="echo-chat"
+  id="echoChat"
+  action="./assets/service-request.html"
+  method="get"
+  onsubmit="localStorage.setItem('echocityCurrentWish', document.getElementById('wishInput').value.trim());"
+>
     <span class="echo-chat-icon">◌</span>
 
     <input
@@ -543,7 +549,17 @@
         >
           English
         </button>
-
+<a
+  class="resident-button"
+  href=" "
+>
+  Get Help
+</a ><a
+  class="resident-button"
+  href=" "
+>
+  My Requests
+</a >
         <a
           class="resident-button"
           href="resident-home.html"
@@ -2334,7 +2350,7 @@
         rgba(6, 19, 35, 0.91) 52%,
         rgba(6, 19, 35, 0.48) 100%
       ),
-      url("./city-ai.png");
+      url("./images/echocity-homepage.png");
     background-size: cover;
     background-position: center right;
     background-repeat: no-repeat;
@@ -3059,7 +3075,7 @@
     );
   </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./echocity-supabase.js"></script>
+<script src="./js/echocity-supabase.js"></script>
 <script>
   if ("serviceWorker" in navigator) {
     window.addEventListener(
@@ -3080,7 +3096,27 @@
           });
       }
     );
-  }
+  }const echoChat = document.getElementById("echoChat");
+
+if (echoChat) {
+    echoChat.addEventListener("submit", function (e) {
+        e.preventDefault();console.log("Echo Chat Submit");
+
+        const wish =
+            document.getElementById("wishInput").value.trim();
+
+        if (!wish) return;
+
+        localStorage.setItem(
+            "echocityCurrentWish",
+            wish
+        );
+
+        window.location.href =
+            "./assets/service-request.html";
+    });
+}
+
 </script>
 </body>
 </html>

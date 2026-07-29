@@ -1742,14 +1742,30 @@
       if (!request) {
         return;
       }
+request.status = "quote_pending";
+request.quoteStatus = "pending";
+request.updatedAt = new Date().toISOString();
 
+const requestIndex =
+  serviceRequests.findIndex(
+    (item) => item.id === request.id
+  );
+
+if (requestIndex >= 0) {
+  serviceRequests[requestIndex] = request;
+}
+
+localStorage.setItem(
+  "echocity-service-requests",
+  JSON.stringify(serviceRequests)
+);
       localStorage.setItem(
         "echocity-last-request",
         JSON.stringify(request)
       );
 
       window.location.href =
-        "service-request-confirmation.html";
+  "admin-service-quote.html";
     }
 
     function contactCustomer(
