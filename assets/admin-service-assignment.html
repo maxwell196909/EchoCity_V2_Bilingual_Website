@@ -1079,9 +1079,26 @@
 
   </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/echocity-supabase.js"></script>
-  <script>
-    const translations = {
+<script>
+  // EchoCity Supabase connection
+// Use only the browser-safe Project URL and Publishable Key.
+
+const ECHOCITY_SUPABASE_URL = "https://dpljvspwcfglxfesxdmf.supabase.co";
+const ECHOCITY_SUPABASE_KEY = "sb_publishable_CngX8tJBl6eGAJUWTSt9HA_KtxTvM1-";
+
+if (!window.supabase) {
+  throw new Error("Supabase library has not been loaded.");
+}
+
+window.echoCitySupabase = window.supabase.createClient(
+  ECHOCITY_SUPABASE_URL,
+  ECHOCITY_SUPABASE_KEY
+);
+
+console.log("EchoCity connected to Supabase.");
+</script>
+   <script>  
+const translations = {
       zh: {
         backButton: "返回需求管理",
 
@@ -2143,8 +2160,7 @@
         )
       );
     }
-
-    async function saveAssignment() {
+async function saveAssignment() {
   if (!currentRequest) {
     return;
   }
@@ -2176,8 +2192,8 @@
       buildAssignmentData();
 
     const requestNo =
-      currentRequest.requestNo ||
       currentRequest.request_no ||
+      currentRequest.requestNo ||
       currentRequest.requestId ||
       currentRequest.id;
 
@@ -2187,16 +2203,38 @@
       );
     }
 
+    const firstWorker =
+      Array.isArray(
+        assignmentData.workers
+      )
+        ? assignmentData.workers[0]
+        : null;
+
     const workerName =
+      firstWorker?.name ||
+      firstWorker?.workerName ||
       assignmentData.workerName ||
       assignmentData.assignedWorker ||
       assignmentData.assigned_worker ||
-      assignmentData.worker ||
+      "";
+
+    const workerPhone =
+      firstWorker?.phone ||
+      firstWorker?.workerPhone ||
+      assignmentData.workerPhone ||
+      assignmentData.assignedWorkerPhone ||
+      assignmentData.assigned_worker_phone ||
       "";
 
     if (!workerName.trim()) {
       throw new Error(
         "Worker name is missing."
+      );
+    }
+
+    if (!workerPhone.trim()) {
+      throw new Error(
+        "Worker phone is missing."
       );
     }
 
@@ -2209,6 +2247,10 @@
         .update({
           assigned_worker:
             workerName.trim(),
+
+          assigned_worker_phone:
+            workerPhone.trim(),
+
           status: "assigned",
           updated_at: updatedAt
         })
@@ -2236,7 +2278,7 @@
     );
 
     console.log(
-      "Service assignment saved to Supabase:",
+      "Service assignment saved:",
       data
     );
 
@@ -2256,8 +2298,8 @@
     showStatus(
       "error",
       currentLanguage === "zh"
-        ? "派单失败，请检查执行人员和网络后重试。"
-        : "Assignment failed. Please check the worker and connection."
+        ? "派单失败，请检查工作人员姓名、电话和网络后重试。"
+        : "Assignment failed. Check the worker name, phone, and connection."
     );
 
     saveButton.disabled = false;
@@ -2265,6 +2307,7 @@
       translate("saveAssignmentButton");
   }
 }
+   
 
     function setDefaultValues() {
       if (!currentRequest) {

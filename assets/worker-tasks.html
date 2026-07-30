@@ -702,7 +702,28 @@
     </section>
 
   </main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script>
+  const ECHOCITY_SUPABASE_URL = "https://dpljvspwcfglxfesxdmf.supabase.co";
+const ECHOCITY_SUPABASE_KEY = "sb_publishable_CngX8tJBl6eGAJUWTSt9HA_KtxTvM1-";
+
+  if (!window.supabase) {
+    throw new Error(
+      "Supabase library has not been loaded."
+    );
+  }
+
+  window.echoCitySupabase =
+    window.supabase.createClient(
+      ECHOCITY_SUPABASE_URL,
+      ECHOCITY_SUPABASE_KEY
+    );
+
+  console.log(
+    "EchoCity connected to Supabase."
+  );
+</script>
   <script>    const translations = {
       zh: {
         heroTag: "工人任务中心",
@@ -925,30 +946,96 @@
       applyLanguage();
     }
 
-    function loadTasks() {
-      try {
-        const storedTasks =
-          JSON.parse(
-            localStorage.getItem(
-              "echocity-worker-tasks"
-            ) || "[]"
-          );
+    async function loadTasks() {
+  allTasks = [];
 
-        allTasks =
-          Array.isArray(storedTasks)
-            ? storedTasks
-            : [];
+  try {
+    const client =
+      window.echoCitySupabase;
 
-      } catch (error) {
-        console.error(
-          "Failed to load worker tasks:",
-          error
-        );
-
-        allTasks = [];
-      }
+    if (!client) {
+      throw new Error(
+        "Supabase connection is not available."
+      );
     }
 
+    const { data, error } =
+      await client
+        .from("service_requests")
+        .select("*")
+        .not(
+          "assigned_worker_phone",
+          "is",
+          null
+        )
+        .order(
+          "updated_at",
+          {
+            ascending: false
+          }
+        );
+
+    if (error) {
+      throw error;
+    }
+
+    allTasks =
+      Array.isArray(data)
+        ? data.map((item) => ({
+            id:
+              item.id,
+
+            requestNo:
+              item.request_no,
+
+            serviceType:
+              item.service_type,
+
+            description:
+              item.description || "",
+
+            serviceDate:
+              item.service_date || "",
+
+            startTime:
+              item.start_time || "",
+
+            address:
+              item.address || "",
+
+            customerName:
+              item.customer_name || "",
+
+            customerPhone:
+              item.customer_phone || "",
+
+            workerName:
+              item.assigned_worker || "",
+
+            workerPhone:
+              item.assigned_worker_phone || "",
+
+            status:
+              item.status || "assigned",
+
+            updatedAt:
+              item.updated_at || ""
+          }))
+        : [];
+
+    console.log(
+      "Worker tasks loaded from Supabase:",
+      allTasks
+    );
+  } catch (error) {
+    console.error(
+      "Failed to load worker tasks:",
+      error
+    );
+
+    allTasks = [];
+  }
+}
     function saveTasks() {
       localStorage.setItem(
         "echocity-worker-tasks",
@@ -1532,124 +1619,172 @@
           .join("");
     }
 
-    function updateTaskStatus(
-      taskId,
-      nextStatus
-    ) {
-      const task =
-        allTasks.find(
-          (item) =>
-            item.id === taskId
-        );
+    async function updateTaskStatus(
+  taskId,
+  nextStatus
+) {
+  const task =
+    allTasks.find(
+      (item) =>
+        String(item.id) ===
+        String(taskId)
+    );
 
-      if (!task) {
-        return;
-      }
+  if (!task) {
+    showStatus(
+      "error",
+      currentLanguage === "zh"
+        ? "没有找到该任务。"
+        : "Task not found."
+    );
 
-      const validTransitions = {
-        assigned: "accepted",
-        accepted: "arrived",
-        arrived: "in_progress",
-        in_progress: "completed"
-      };
+    return;
+  }
 
-      if (
-        validTransitions[
-          task.status
-        ] !== nextStatus
-      ) {
-        showStatus(
-          "error",
-          translate("invalidStep")
-        );
+  const validTransitions = {
+    assigned: "accepted",
+    accepted: "arrived",
+    arrived: "in_progress",
+    in_progress: "completed"
+  };
 
-        return;
-      }
+  if (
+    validTransitions[task.status] !==
+    nextStatus
+  ) {
+    showStatus(
+      "error",
+      translate("invalidStep")
+    );
 
-      if (
-        nextStatus === "completed"
-      ) {
-        const confirmed =
-          window.confirm(
-            translate(
-              "confirmComplete"
-            )
-          );
+    return;
+  }
 
-        if (!confirmed) {
-          return;
-        }
-      }
-
-      const now =
-        new Date().toISOString();
-
-      task.status =
-        nextStatus;
-
-      if (
-        nextStatus === "accepted"
-      ) {
-        task.acceptedAt = now;
-
-        showStatus(
-          "success",
-          translate("taskAccepted")
-        );
-      }
-
-      if (
-        nextStatus === "arrived"
-      ) {
-        task.arrivedAt = now;
-
-        showStatus(
-          "success",
-          translate("taskArrived")
-        );
-      }
-
-      if (
-        nextStatus === "in_progress"
-      ) {
-        task.startedAt = now;
-
-        showStatus(
-          "success",
-          translate("taskStarted")
-        );
-      }
-
-      if (
-        nextStatus === "completed"
-      ) {
-        task.completedAt = now;
-
-        showStatus(
-          "success",
-          translate("taskCompleted")
-        );
-      }
-
-      task.updatedAt = now;
-
-      saveTasks();
-
-      visibleTasks =
-        visibleTasks.map(
-          (item) =>
-            item.id === task.id
-              ? task
-              : item
-        );
-
-      syncRequestStatus(
-        task.requestId
+  if (
+    nextStatus === "completed"
+  ) {
+    const confirmed =
+      window.confirm(
+        translate(
+          "confirmComplete"
+        )
       );
 
-      renderTasks();
+    if (!confirmed) {
+      return;
+    }
+  }
+
+  try {
+    const client =
+      window.echoCitySupabase;
+
+    if (!client) {
+      throw new Error(
+        "Supabase connection is not available."
+      );
     }
 
+    const now =
+      new Date().toISOString();
+
+    const { data, error } =
+      await client
+        .from("service_requests")
+        .update({
+          status: nextStatus,
+          updated_at: now
+        })
+        .eq(
+          "id",
+          task.id
+        )
+        .select("*")
+        .single();
+
+    if (error) {
+      throw error;
+    }
+
+    task.status =
+      data.status;
+
+    task.updatedAt =
+      data.updated_at;
+
+    if (
+      nextStatus === "accepted"
+    ) {
+      task.acceptedAt = now;
+
+      showStatus(
+        "success",
+        translate("taskAccepted")
+      );
+    }
+
+    if (
+      nextStatus === "arrived"
+    ) {
+      task.arrivedAt = now;
+
+      showStatus(
+        "success",
+        translate("taskArrived")
+      );
+    }
+
+    if (
+      nextStatus === "in_progress"
+    ) {
+      task.startedAt = now;
+
+      showStatus(
+        "success",
+        translate("taskStarted")
+      );
+    }
+
+    if (
+      nextStatus === "completed"
+    ) {
+      task.completedAt = now;
+
+      showStatus(
+        "success",
+        translate("taskCompleted")
+      );
+    }
+
+    visibleTasks =
+      visibleTasks.map(
+        (item) =>
+          String(item.id) ===
+          String(task.id)
+            ? task
+            : item
+      );
+
+    console.log(
+      "Worker task status updated:",
+      data
+    );
+
+    renderTasks();
+  } catch (error) {
+    console.error(
+      "Failed to update worker task:",
+      error
+    );
+
+    showStatus(
+      "error",
+      currentLanguage === "zh"
+        ? "任务状态保存失败，请重试。"
+        : "Failed to save task status."
+    );
+  }
+}
     function syncRequestStatus(
       requestId
     ) {
