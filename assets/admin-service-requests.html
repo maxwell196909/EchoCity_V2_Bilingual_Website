@@ -726,7 +726,12 @@
         >
           待人工确认
         </option>
-
+<option
+  value="reviewed"
+  data-i18n="statusReviewed"
+>
+  需求已确认
+</option>
         <option
           value="quoted"
           data-i18n="statusQuoted"
@@ -1393,13 +1398,16 @@
       currentStatus
     ) {
       const statuses = [
-        ["new", "statusNew"],
-        ["quoted", "statusQuoted"],
-        ["assigned", "statusAssigned"],
-        ["in_progress", "statusProgress"],
-        ["completed", "statusCompleted"],
-        ["cancelled", "statusCancelled"]
-      ];
+  ["new", "statusNew"],
+  ["reviewed", "statusReviewed"],
+  ["quoted", "statusQuoted"],
+  ["confirmed", "statusConfirmed"],
+  ["quote_declined", "statusDeclined"],
+  ["assigned", "statusAssigned"],
+  ["in_progress", "statusInProgress"],
+  ["completed", "statusCompleted"],
+  ["cancelled", "statusCancelled"]
+];
 
       return statuses
         .map(([value, labelKey]) => {
@@ -1710,58 +1718,81 @@
           .join("");
     }
 
-    function updateRequestStatus(
-      requestId,
-      newStatus
-    ) {
-      const request =
-        serviceRequests.find(
-          (item) =>
-            item.id === requestId
-        );
+    async function updateRequestStatus(
+  requestId,
+  newStatus
+) {
+  const request = serviceRequests.find(
+    (item) =>
+      item.requestId === requestId ||
+      item.requestNo === requestId ||
+      item.id === requestId
+  );
 
-      if (!request) {
-        return;
-      }
+  if (!request) {
+    console.error(
+      "Service request not found:",
+      requestId
+    );
+    return;
+  }
 
-      request.status = newStatus;
+  try {
+    const client =
+      window.echoCitySupabase;
 
-      request.updatedAt =
-        new Date().toISOString();
-
-      saveRequests();
-
-      const latestRequest =
-        JSON.parse(
-          localStorage.getItem(
-            "echocity-last-request"
-          ) || "null"
-        );
-
-      if (
-        latestRequest &&
-        latestRequest.id === requestId
-      ) {
-        latestRequest.status =
-          newStatus;
-
-        latestRequest.updatedAt =
-          request.updatedAt;
-
-        localStorage.setItem(
-          "echocity-last-request",
-          JSON.stringify(
-            latestRequest
-          )
-        );
-      }
-
-      renderRequests();
-
-      window.alert(
-        translate("statusUpdated")
+    if (!client) {
+      throw new Error(
+        "Supabase connection is not available."
       );
     }
+
+    const updatedAt =
+      new Date().toISOString();
+
+    const { data, error } =
+      await client
+        .from("service_requests")
+        .update({
+          status: newStatus,
+          updated_at: updatedAt
+        })
+        .eq(
+          "request_no",
+          requestId
+        )
+        .select()
+        .single();
+
+    if (error) {
+      throw error;
+    }
+
+    request.status = data.status;
+    request.updatedAt = data.updated_at;
+
+    renderRequests();
+
+    console.log(
+      "Service request status updated:",
+      data
+    );
+  } catch (error) {
+    console.error(
+      "Failed to update service request status:",
+      error
+    );
+
+    window.alert(
+      currentLanguage === "zh"
+        ? "状态更新失败，请检查网络后重试。"
+        : "Status update failed. Please try again."
+    );
+
+    await loadRequests();
+  }
+}
+
 
     function setAsLatestRequest(
       requestId

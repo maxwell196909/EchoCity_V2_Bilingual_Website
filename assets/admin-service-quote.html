@@ -1788,65 +1788,137 @@
       );
     }
 
-    async function saveQuote() {
-      if (!currentRequest) {
-        return;
-      }
 
-      if (!validateQuote()) {
-        return;
-      }
+async function saveQuote() {
+  if (!currentRequest) {
+    return;
+  }
 
-      const saveButton =
-        document.getElementById(
-          "saveQuoteButton"
-        );
+  if (!validateQuote()) {
+    return;
+  }
 
-      saveButton.disabled = true;
-      saveButton.textContent =
-        translate("savingQuote");
+  const saveButton =
+    document.getElementById("saveQuoteButton");
 
-      try {
-        const quoteData =
-          buildQuoteData();
+  saveButton.disabled = true;
+  saveButton.textContent =
+    translate("savingQuote");
 
-        updateRequestInStorage(
-          quoteData
-        );
+  try {
+    const client =
+      window.echoCitySupabase;
 
-        showStatus(
-          "success",
-          translate("quoteSaved")
-        );
-
-        renderRequestSummary();
-
-        saveButton.textContent =
-          translate("saveQuoteButton");
-
-        setTimeout(() => {
-          window.location.href =
-            "admin-service-requests.html";
-        }, 1200);
-
-      } catch (error) {
-        console.error(
-          "Failed to save quote:",
-          error
-        );
-
-        showStatus(
-          "error",
-          translate("quoteSaveError")
-        );
-
-        saveButton.disabled = false;
-
-        saveButton.textContent =
-          translate("saveQuoteButton");
-      }
+    if (!client) {
+      throw new Error(
+        "Supabase connection is not available."
+      );
     }
 
+    const quoteData =
+      buildQuoteData();
+
+    const requestNo =
+      currentRequest.requestNo ||
+      currentRequest.request_no ||
+      currentRequest.requestId ||
+      currentRequest.id;
+
+    if (!requestNo) {
+      throw new Error(
+        "Request number is missing."
+      );
+    }
+
+    const quoteAmount = Number(
+      quoteData.quoteAmount ??
+      quoteData.quote_amount ??
+      quoteData.totalAmount ??
+      quoteData.amount ??
+      0
+    );
+
+    const quoteNote =
+      quoteData.quoteNote ||
+      quoteData.quote_note ||
+      quoteData.note ||
+      quoteData.description ||
+      "";
+
+    const updatedAt =
+      new Date().toISOString();
+
+    const { data, error } =
+      await client
+        .from("service_requests")
+        .update({
+          quote_amount: quoteAmount,
+          quote_note: quoteNote,
+          status: "quoted",
+          updated_at: updatedAt
+        })
+        .eq("request_no", requestNo)
+        .select()
+        .single();
+
+    if (error) {
+      throw error;
+    }
+
+    currentRequest.quoteAmount =
+      data.quote_amount;
+
+    currentRequest.quoteNote =
+      data.quote_note;
+
+    currentRequest.status =
+      data.status;
+
+    currentRequest.updatedAt =
+      data.updated_at;
+
+    localStorage.setItem(
+      "echocity-last-request",
+      JSON.stringify(currentRequest)
+    );
+
+    showStatus(
+      "success",
+      translate("quoteSaved")
+    );
+
+    renderRequestSummary();
+
+    console.log(
+      "Service quote saved to Supabase:",
+      data
+    );
+
+    saveButton.textContent =
+      translate("saveQuoteButton");
+
+    setTimeout(() => {
+      window.location.href =
+        "admin-service-requests.html";
+    }, 1200);
+  } catch (error) {
+    console.error(
+      "Failed to save service quote:",
+      error
+    );
+
+    showStatus(
+      "error",
+      currentLanguage === "zh"
+        ? "报价保存失败，请检查网络后重试。"
+        : "Failed to save the quote. Please try again."
+    );
+
+    saveButton.disabled = false;
+    saveButton.textContent =
+      translate("saveQuoteButton");
+  }
+}
     function setDefaultValidUntil() {
       const date =
         new Date();

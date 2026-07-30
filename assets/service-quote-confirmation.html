@@ -1,80 +1,58 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
   <meta charset="UTF-8" />
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   />
 
-  <title>报价确认 | EchoCity</title>
+  <title>确认服务报价 | EchoCity</title>
 
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
-    :root {
-      --primary: #1f6feb;
-      --primary-dark: #1557b0;
-      --primary-soft: #edf5ff;
-
-      --success: #18864b;
-      --success-soft: #eaf8f0;
-
-      --warning: #9a6700;
-      --warning-soft: #fff6dc;
-
-      --danger: #b42318;
-      --danger-soft: #fff0ee;
-
-      --text: #172033;
-      --text-light: #667085;
-
-      --border: #d9e1ec;
-      --background: #f4f7fb;
-      --card: #ffffff;
-
-      --shadow:
-        0 16px 40px rgba(24, 39, 75, 0.08);
+    html {
+      min-height: 100%;
+      background: #eef5ff;
     }
 
     body {
+      margin: 0;
       min-height: 100vh;
-
-      background:
-        linear-gradient(
-          180deg,
-          #edf5ff 0%,
-          #f7f9fc 42%,
-          #f4f7fb 100%
-        );
-
-      color: var(--text);
-
       font-family:
         Arial,
         "Microsoft YaHei",
         sans-serif;
+      color: #172033;
+      background:
+        linear-gradient(
+          180deg,
+          #edf4ff 0%,
+          #f8fbff 100%
+        );
+    }
+
+    button,
+    a {
+      font: inherit;
+      -webkit-tap-highlight-color: transparent;
     }
 
     button {
-      font: inherit;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
+      cursor: pointer;
     }
 
     .page {
-      width: min(100%, 860px);
+      width: min(760px, 100%);
       margin: 0 auto;
-      padding: 22px 18px 50px;
+      padding:
+        max(22px, env(safe-area-inset-top))
+        16px
+        calc(50px + env(safe-area-inset-bottom));
     }
 
     .topbar {
@@ -82,571 +60,370 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-
-      margin-bottom: 28px;
+      margin-bottom: 34px;
     }
 
     .brand {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-
-      font-size: 20px;
+      gap: 11px;
+      color: #172033;
+      font-size: 22px;
       font-weight: 800;
-      letter-spacing: -0.4px;
+      text-decoration: none;
     }
 
-    .brand-mark {
-      display: inline-flex;
+    .brand-icon {
+      display: flex;
+      width: 42px;
+      height: 42px;
       align-items: center;
       justify-content: center;
-
-      width: 38px;
-      height: 38px;
-
-      border-radius: 13px;
-
+      border-radius: 14px;
+      color: #ffffff;
       background:
         linear-gradient(
           135deg,
-          var(--primary),
-          #65a4ff
+          #2878e5,
+          #6557e8
         );
-
-      color: #ffffff;
-      font-weight: 900;
-
       box-shadow:
-        0 8px 20px rgba(31, 111, 235, 0.22);
+        0 10px 24px
+        rgba(40, 120, 229, 0.24);
     }
 
     .language-button {
-      min-width: 58px;
-      height: 40px;
-
-      padding: 0 13px;
-
-      border: 1px solid var(--border);
-      border-radius: 12px;
-
-      background: rgba(255, 255, 255, 0.88);
-      color: var(--text);
-
-      font-weight: 800;
-      cursor: pointer;
+      min-width: 56px;
+      min-height: 44px;
+      padding: 9px 15px;
+      border: 1px solid #ccd8e8;
+      border-radius: 14px;
+      color: #233044;
+      background: #ffffff;
+      font-weight: 700;
     }
 
-    .language-button:hover {
-      border-color: var(--primary);
-      color: var(--primary);
+    .language-button:active {
+      transform: scale(0.98);
     }
 
-    .hero {
-      text-align: center;
-      margin-bottom: 20px;
+    .intro {
+      margin-bottom: 24px;
     }
 
-    .hero-tag {
-      display: inline-flex;
-      align-items: center;
-
-      min-height: 30px;
-      padding: 0 12px;
-
-      border-radius: 999px;
-
-      background: var(--primary-soft);
-      color: var(--primary-dark);
-
-      font-size: 13px;
+    .intro-label {
+      margin: 0 0 9px;
+      color: #2872d8;
+      font-size: 14px;
       font-weight: 800;
     }
 
-    .hero h1 {
-      margin-top: 12px;
-
-      font-size: clamp(29px, 7vw, 42px);
-      line-height: 1.16;
-      letter-spacing: -1px;
+    h1 {
+      margin: 0 0 12px;
+      font-size:
+        clamp(
+          32px,
+          7vw,
+          46px
+        );
+      line-height: 1.12;
+      letter-spacing: -0.03em;
     }
 
-    .hero p {
-      max-width: 650px;
-
-      margin: 10px auto 0;
-
-      color: var(--text-light);
-
-      font-size: 15px;
+    .intro-description {
+      margin: 0;
+      color: #65738a;
       line-height: 1.7;
     }
 
-    .quote-card {
-      padding: 22px;
-
-      border: 1px solid var(--border);
-      border-radius: 20px;
-
-      background: var(--card);
-      box-shadow: var(--shadow);
+    .message {
+      display: none;
+      margin-bottom: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      line-height: 1.6;
     }
 
-    .quote-header {
+    .message.show {
+      display: block;
+    }
+
+    .message.info {
+      color: #255c9a;
+      background: #e8f2ff;
+      border: 1px solid #c6dcfa;
+    }
+
+    .message.success {
+      color: #17633a;
+      background: #e8f7ef;
+      border: 1px solid #bce6ce;
+    }
+
+    .message.error {
+      color: #9b2c2c;
+      background: #fff0f0;
+      border: 1px solid #f1c1c1;
+    }
+
+    .quote-card,
+    .empty-card {
+      border: 1px solid #d9e3f0;
+      border-radius: 24px;
+      background:
+        rgba(
+          255,
+          255,
+          255,
+          0.96
+        );
+      box-shadow:
+        0 16px 40px
+        rgba(36, 68, 108, 0.09);
+    }
+
+    .quote-card {
+      display: none;
+      padding: 22px;
+    }
+
+    .quote-card.show {
+      display: block;
+    }
+
+    .request-head {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
       gap: 14px;
-
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
 
-    .quote-title {
-      font-size: 21px;
-      line-height: 1.4;
+    .request-number {
+      margin-bottom: 7px;
+      color: #2872d8;
+      font-size: 14px;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .service-title {
+      margin: 0;
+      font-size: 25px;
+      line-height: 1.3;
     }
 
     .status-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      min-height: 32px;
-      padding: 0 12px;
-
+      flex: 0 0 auto;
+      padding: 8px 12px;
       border-radius: 999px;
-
-      background: var(--primary-soft);
-      color: var(--primary-dark);
-
+      color: #1f5d9c;
+      background: #e8f2ff;
       font-size: 13px;
       font-weight: 800;
-      white-space: nowrap;
-    }
-
-    .request-summary {
-      display: grid;
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .summary-item {
-      padding: 13px;
-
-      border-radius: 12px;
-
-      background: #f8fafc;
-    }
-
-    .summary-label {
-      color: var(--text-light);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .summary-value {
-      margin-top: 5px;
-
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 1.55;
-      word-break: break-word;
-    }
-
-    .request-description {
-      margin-top: 14px;
-      padding: 14px;
-
-      border-radius: 13px;
-
-      background: #f8fafc;
-      color: var(--text);
-
-      font-size: 14px;
-      line-height: 1.7;
-      white-space: pre-wrap;
-    }    .quote-details {
-      margin-top: 18px;
-      padding: 18px;
-
-      border: 1px solid #dbe7f5;
-      border-radius: 16px;
-
-      background:
-        linear-gradient(
-          180deg,
-          #f5f9ff 0%,
-          #ffffff 100%
-        );
-    }
-
-    .quote-details-title {
-      font-size: 18px;
-      line-height: 1.4;
-    }
-
-    .fee-list {
-      display: grid;
-      gap: 0;
-
-      margin-top: 14px;
-    }
-
-    .fee-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-
-      padding: 12px 0;
-
-      border-bottom: 1px solid #edf1f6;
-    }
-
-    .fee-row:last-child {
-      border-bottom: 0;
-    }
-
-    .fee-label {
-      color: var(--text-light);
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .fee-value {
-      color: var(--text);
-      font-size: 15px;
-      font-weight: 800;
-      text-align: right;
-    }
-
-    .total-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-
-      margin-top: 14px;
-      padding: 17px;
-
-      border-radius: 14px;
-
-      background: var(--primary-soft);
-    }
-
-    .total-label {
-      color: var(--primary-dark);
-      font-size: 15px;
-      font-weight: 800;
-    }
-
-    .total-value {
-      color: var(--primary-dark);
-      font-size: 29px;
-      font-weight: 900;
-      text-align: right;
-    }
-
-    .terms-grid {
-      display: grid;
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-      gap: 12px;
-
-      margin-top: 18px;
-    }
-
-    .terms-item {
-      padding: 13px;
-
-      border-radius: 12px;
-
-      background: #f8fafc;
-    }
-
-    .quote-notes {
-      margin-top: 14px;
-      padding: 14px;
-
-      border-radius: 13px;
-
-      background: #f8fafc;
-      color: var(--text);
-
-      font-size: 14px;
-      line-height: 1.7;
-      white-space: pre-wrap;
-    }
-
-    .notice-card {
-      margin-top: 18px;
-      padding: 15px;
-
-      border: 1px solid #f1d99f;
-      border-radius: 14px;
-
-      background: var(--warning-soft);
-      color: #6d4b00;
-
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    .confirmation-box {
-      display: flex;
-      align-items: flex-start;
-      gap: 11px;
-
-      margin-top: 18px;
-      padding: 15px;
-
-      border: 1px solid var(--border);
-      border-radius: 14px;
-
-      background: #ffffff;
-    }
-
-    .confirmation-box input {
-      width: 19px;
-      height: 19px;
-
-      margin-top: 2px;
-
-      accent-color: var(--primary);
-      cursor: pointer;
-    }
-
-    .confirmation-text {
-      color: var(--text);
-      font-size: 14px;
-      line-height: 1.7;
-      cursor: pointer;
-    }
-
-    .action-row {
-      display: flex;
-      gap: 12px;
-
-      margin-top: 20px;
-    }
-
-    .primary-button,
-    .secondary-button,
-    .danger-button {
-      min-height: 50px;
-      padding: 0 18px;
-
-      border-radius: 14px;
-
-      font-family: inherit;
-      font-size: 15px;
-      font-weight: 800;
-
-      cursor: pointer;
-    }
-
-    .primary-button {
-      flex: 1;
-
-      border: 0;
-
-      background: var(--primary);
-      color: #ffffff;
-
-      box-shadow:
-        0 10px 24px rgba(31, 111, 235, 0.2);
-    }
-
-    .primary-button:hover {
-      background: var(--primary-dark);
-    }
-
-    .secondary-button {
-      border: 1px solid var(--border);
-
-      background: #ffffff;
-      color: var(--text);
-    }
-
-    .secondary-button:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .danger-button {
-      border: 1px solid #f0c0c0;
-
-      background: var(--danger-soft);
-      color: var(--danger);
-    }
-
-    .danger-button:hover {
-      border-color: var(--danger);
-    }
-
-    .status-message {
-      display: none;
-
-      margin-top: 16px;
-      padding: 13px 14px;
-
-      border-radius: 12px;
-
-      font-size: 14px;
-      line-height: 1.65;
-    }
-
-    .status-message.success {
-      display: block;
-
-      border: 1px solid #b9e4c8;
-
-      background: var(--success-soft);
-      color: var(--success);
-    }
-
-    .status-message.error {
-      display: block;
-
-      border: 1px solid #f0c0c0;
-
-      background: var(--danger-soft);
-      color: var(--danger);
-    }
-
-    .accepted-panel {
-      display: none;
-
-      margin-top: 20px;
-      padding: 24px 20px;
-
-      border: 1px solid #b9e4c8;
-      border-radius: 18px;
-
-      background:
-        linear-gradient(
-          180deg,
-          #f1fff7 0%,
-          #ffffff 100%
-        );
-
-      box-shadow: var(--shadow);
       text-align: center;
     }
 
-    .accepted-panel.show {
+    .details {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 11px;
+      margin-bottom: 15px;
+    }
+
+    .detail {
+      min-width: 0;
+      padding: 14px;
+      border-radius: 15px;
+      background: #f3f6fa;
+    }
+
+    .detail-label {
+      margin-bottom: 6px;
+      color: #718096;
+      font-size: 12px;
+    }
+
+    .detail-value {
+      font-weight: 700;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .description-box {
+      margin-bottom: 16px;
+      padding: 16px;
+      border-radius: 16px;
+      background: #f7f9fc;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .quote-panel {
+      margin-top: 16px;
+      padding: 20px;
+      border-radius: 18px;
+      color: #ffffff;
+      background:
+        linear-gradient(
+          135deg,
+          #1f67d8,
+          #234ec5
+        );
+      box-shadow:
+        0 12px 28px
+        rgba(31, 103, 216, 0.22);
+    }
+
+    .quote-label {
+      margin-bottom: 7px;
+      font-size: 13px;
+      font-weight: 700;
+      opacity: 0.88;
+    }
+
+    .quote-amount {
+      font-size: 36px;
+      font-weight: 900;
+      line-height: 1.15;
+    }
+
+    .quote-note {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top:
+        1px solid
+        rgba(255, 255, 255, 0.24);
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .decision-title {
+      margin: 22px 0 12px;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .decision-actions {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 11px;
+    }
+
+    .decision-button {
+      min-height: 54px;
+      padding: 12px 16px;
+      border-radius: 15px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .accept-button {
+      border: 0;
+      color: #ffffff;
+      background: #2878e5;
+    }
+
+    .decline-button {
+      border: 1px solid #e0b7b7;
+      color: #9b2c2c;
+      background: #fffafa;
+    }
+
+    .decision-button:active {
+      transform: scale(0.985);
+    }
+
+    .decision-button:disabled {
+      cursor: wait;
+      opacity: 0.62;
+    }
+
+    .result-box {
+      display: none;
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      font-weight: 800;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .result-box.show {
       display: block;
     }
 
-    .accepted-icon {
+    .result-box.accepted {
+      color: #17633a;
+      background: #e8f7ef;
+      border: 1px solid #bce6ce;
+    }
+
+    .result-box.declined {
+      color: #8a5a16;
+      background: #fff6df;
+      border: 1px solid #ead49c;
+    }
+
+    .back-link {
       display: flex;
+      min-height: 52px;
       align-items: center;
       justify-content: center;
-
-      width: 64px;
-      height: 64px;
-
-      margin: 0 auto 14px;
-
-      border-radius: 50%;
-
-      background: var(--success-soft);
-      color: var(--success);
-
-      font-size: 34px;
-      font-weight: 900;
-    }
-
-    .accepted-panel h2 {
-      font-size: 24px;
-      line-height: 1.4;
-    }
-
-    .accepted-panel p {
-      max-width: 590px;
-
-      margin: 10px auto 0;
-
-      color: var(--text-light);
-
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    .empty-state {
-      display: none;
-
-      margin-top: 20px;
-      padding: 28px 20px;
-
-      border: 1px solid var(--border);
-      border-radius: 18px;
-
+      margin-top: 18px;
+      padding: 0 18px;
+      border: 1px solid #ccd8e8;
+      border-radius: 15px;
+      color: #233044;
       background: #ffffff;
-      box-shadow: var(--shadow);
+      font-weight: 800;
+      text-decoration: none;
+    }
 
+    .empty-card {
+      display: none;
+      padding: 38px 22px;
       text-align: center;
     }
 
-    .empty-state.show {
+    .empty-card.show {
       display: block;
     }
 
-    .empty-state h2 {
-      font-size: 22px;
-      line-height: 1.4;
+    .empty-card h2 {
+      margin: 0 0 10px;
+      font-size: 23px;
     }
 
-    .empty-state p {
-      max-width: 560px;
-
-      margin: 10px auto 0;
-
-      color: var(--text-light);
-
-      font-size: 14px;
+    .empty-card p {
+      margin: 0;
+      color: #68768b;
       line-height: 1.7;
     }
 
-    @media (max-width: 700px) {
-      .page {
-        padding:
-          15px
-          13px
-          40px;
-      }
-
-      .request-summary,
-      .terms-grid {
+    @media (max-width: 560px) {
+      .details,
+      .decision-actions {
         grid-template-columns: 1fr;
       }
 
+      .request-head {
+        flex-direction: column;
+      }
+
+      .status-badge {
+        align-self: flex-start;
+      }
+
       .quote-card {
-        padding: 18px 15px;
+        padding: 17px;
       }
 
-      .quote-header {
-        flex-direction: column;
-      }
-
-      .action-row {
-        flex-direction: column;
-      }
-
-      .primary-button,
-      .secondary-button,
-      .danger-button {
-        width: 100%;
-      }
-
-      .total-row {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .total-value {
-        text-align: left;
+      .quote-amount {
+        font-size: 32px;
       }
     }
   </style>
@@ -654,14 +431,12 @@
 
 <body>
   <main class="page">
-
     <header class="topbar">
-
       <a
         class="brand"
         href=" "
       >
-        <span class="brand-mark">E</span>
+        <span class="brand-icon">E</span>
         <span>EchoCity</span>
       </a >
 
@@ -669,571 +444,448 @@
         class="language-button"
         id="languageButton"
         type="button"
-        onclick="toggleLanguage()"
       >
         EN
       </button>
-
     </header>
 
-    <section class="hero">
-
-      <span
-        class="hero-tag"
-        data-i18n="heroTag"
+    <section class="intro">
+      <p
+        class="intro-label"
+        data-i18n="label"
       >
         客户报价确认
-      </span>
+      </p >
 
-      <h1 data-i18n="heroTitle">
+      <h1 data-i18n="title">
         请确认服务报价
       </h1>
 
-      <p data-i18n="heroDescription">
-        请检查服务内容、价格、定金、付款方式和有效期。
-        接受报价后，订单将进入人员匹配和派工阶段。
+      <p
+        class="intro-description"
+        data-i18n="subtitle"
+      >
+        请核对服务内容和报价。确认后，订单将进入人员匹配和派工流程。
       </p >
-
     </section>
+
+    <div
+      class="message info show"
+      id="message"
+    >
+      正在读取云端报价……
+    </div>
 
     <section
       class="quote-card"
       id="quoteCard"
     >
+      <div class="request-head">
+        <div>
+          <div
+            class="request-number"
+            id="requestNumber"
+          ></div>
 
-      <div class="quote-header">
-
-        <h2
-          class="quote-title"
-          data-i18n="requestSummaryTitle"
-        >
-          服务需求
-        </h2>
+          <h2
+            class="service-title"
+            id="serviceTitle"
+          ></h2>
+        </div>
 
         <span
           class="status-badge"
-          id="quoteStatus"
-        >
-          等待客户确认
-        </span>
-
+          id="statusBadge"
+        ></span>
       </div>
 
-      <div class="request-summary">
-
-        <div class="summary-item">
+      <div class="details">
+        <div class="detail">
           <div
-            class="summary-label"
-            data-i18n="requestIdLabel"
+            class="detail-label"
+            data-i18n="serviceDate"
           >
-            需求编号
+            服务日期
           </div>
 
           <div
-            class="summary-value"
-            id="requestId"
+            class="detail-value"
+            id="serviceDate"
           >
-            --
-          </div>
-        </div>
-
-        <div class="summary-item">
-          <div
-            class="summary-label"
-            data-i18n="serviceTypeLabel"
-          >
-            服务类型
-          </div>
-
-          <div
-            class="summary-value"
-            id="serviceType"
-          >
-            --
+            -
           </div>
         </div>
 
-        <div class="summary-item">
+        <div class="detail">
           <div
-            class="summary-label"
-            data-i18n="serviceTimeLabel"
+            class="detail-label"
+            data-i18n="startTime"
           >
-            服务时间
+            开始时间
           </div>
 
           <div
-            class="summary-value"
-            id="serviceTime"
+            class="detail-value"
+            id="startTime"
           >
-            --
+            -
           </div>
         </div>
 
-        <div class="summary-item">
+        <div class="detail">
           <div
-            class="summary-label"
-            data-i18n="serviceAddressLabel"
+            class="detail-label"
+            data-i18n="serviceAddress"
           >
             服务地址
           </div>
 
           <div
-            class="summary-value"
+            class="detail-value"
             id="serviceAddress"
           >
-            --
+            -
           </div>
         </div>
 
+        <div class="detail">
+          <div
+            class="detail-label"
+            data-i18n="workers"
+          >
+            需要人数
+          </div>
+
+          <div
+            class="detail-value"
+            id="workers"
+          >
+            -
+          </div>
+        </div>
       </div>
 
       <div
-        class="request-description"
-        id="requestDescription"
-      >
-        --
-      </div>      <section class="quote-details">
+        class="description-box"
+        id="description"
+      ></div>
 
-        <h2
-          class="quote-details-title"
-          data-i18n="quoteDetailsTitle"
+      <div class="quote-panel">
+        <div
+          class="quote-label"
+          data-i18n="quoteLabel"
         >
-          报价明细
-        </h2>
-
-        <div class="fee-list">
-
-          <div class="fee-row">
-            <span
-              class="fee-label"
-              data-i18n="laborFeeLabel"
-            >
-              人工费
-            </span>
-
-            <span
-              class="fee-value"
-              id="laborFee"
-            >
-              $0.00
-            </span>
-          </div>
-
-          <div class="fee-row">
-            <span
-              class="fee-label"
-              data-i18n="materialFeeLabel"
-            >
-              材料费
-            </span>
-
-            <span
-              class="fee-value"
-              id="materialFee"
-            >
-              $0.00
-            </span>
-          </div>
-
-          <div class="fee-row">
-            <span
-              class="fee-label"
-              data-i18n="travelFeeLabel"
-            >
-              交通费
-            </span>
-
-            <span
-              class="fee-value"
-              id="travelFee"
-            >
-              $0.00
-            </span>
-          </div>
-
-          <div class="fee-row">
-            <span
-              class="fee-label"
-              data-i18n="platformFeeLabel"
-            >
-              平台服务费
-            </span>
-
-            <span
-              class="fee-value"
-              id="platformFee"
-            >
-              $0.00
-            </span>
-          </div>
-
-          <div class="fee-row">
-            <span
-              class="fee-label"
-              data-i18n="taxFeeLabel"
-            >
-              税费
-            </span>
-
-            <span
-              class="fee-value"
-              id="taxFee"
-            >
-              $0.00
-            </span>
-          </div>
-
-        </div>
-
-        <div class="total-row">
-
-          <span
-            class="total-label"
-            data-i18n="totalLabel"
-          >
-            报价总额
-          </span>
-
-          <span
-            class="total-value"
-            id="totalAmount"
-          >
-            $0.00
-          </span>
-
-        </div>
-
-        <div class="terms-grid">
-
-          <div class="terms-item">
-            <div
-              class="summary-label"
-              data-i18n="depositLabel"
-            >
-              定金金额
-            </div>
-
-            <div
-              class="summary-value"
-              id="depositAmount"
-            >
-              $0.00
-            </div>
-          </div>
-
-          <div class="terms-item">
-            <div
-              class="summary-label"
-              data-i18n="validUntilLabel"
-            >
-              报价有效期
-            </div>
-
-            <div
-              class="summary-value"
-              id="validUntil"
-            >
-              --
-            </div>
-          </div>
-
-          <div class="terms-item">
-            <div
-              class="summary-label"
-              data-i18n="paymentTermsLabel"
-            >
-              付款方式
-            </div>
-
-            <div
-              class="summary-value"
-              id="paymentTerms"
-            >
-              --
-            </div>
-          </div>
-
-          <div class="terms-item">
-            <div
-              class="summary-label"
-              data-i18n="quoteIdLabel"
-            >
-              报价编号
-            </div>
-
-            <div
-              class="summary-value"
-              id="quoteId"
-            >
-              --
-            </div>
-          </div>
-
+          服务报价
         </div>
 
         <div
-          class="quote-notes"
-          id="quoteNotes"
+          class="quote-amount"
+          id="quoteAmount"
         >
-          --
+          $0.00
         </div>
 
-      </section>
-
-      <div
-        class="notice-card"
-        data-i18n="noticeText"
-      >
-        接受报价表示你确认当前服务范围和价格。若现场情况发生变化，
-        任何新增工作或费用都需要再次确认。
+        <div
+          class="quote-note"
+          id="quoteNote"
+        ></div>
       </div>
 
-      <label
-        class="confirmation-box"
-        for="acceptCheckbox"
+      <div
+        class="decision-title"
+        id="decisionTitle"
+        data-i18n="decisionTitle"
       >
-        <input
-          id="acceptCheckbox"
-          type="checkbox"
-        />
+        请选择是否接受本次报价
+      </div>
 
-        <span
-          class="confirmation-text"
-          data-i18n="confirmationText"
+      <div
+        class="decision-actions"
+        id="decisionActions"
+      >
+        <button
+          class="decision-button accept-button"
+          id="acceptButton"
+          type="button"
+          data-i18n="acceptQuote"
         >
-          我已经阅读并确认服务内容、报价金额、付款方式和报价有效期。
-        </span>
-      </label>
-
-      <div class="action-row">
+          确认报价
+        </button>
 
         <button
-          class="danger-button"
+          class="decision-button decline-button"
+          id="declineButton"
           type="button"
-          onclick="declineQuote()"
-          data-i18n="declineButton"
+          data-i18n="declineQuote"
         >
           暂不接受
         </button>
-
-        <button
-          class="primary-button"
-          id="acceptButton"
-          type="button"
-          onclick="acceptQuote()"
-          data-i18n="acceptButton"
-        >
-          接受报价
-        </button>
-
       </div>
 
       <div
-        class="status-message"
-        id="statusMessage"
+        class="result-box"
+        id="resultBox"
       ></div>
 
+      <a
+        class="back-link"
+        href="customer-my-requests.html"
+        data-i18n="backRequests"
+      >
+        返回我的需求
+      </a >
     </section>
 
     <section
-      class="accepted-panel"
-      id="acceptedPanel"
+      class="empty-card"
+      id="emptyCard"
     >
-      <div class="accepted-icon">
-        ✓
-      </div>
-
-      <h2 data-i18n="acceptedTitle">
-        报价已经接受
-      </h2>
-
-      <p data-i18n="acceptedDescription">
-        订单已进入人员匹配和派工准备阶段。
-        我们会继续与你确认工作人员和服务安排。
-      </p >
-    </section>
-
-    <section
-      class="empty-state"
-      id="emptyState"
-    >
-      <h2 data-i18n="emptyTitle">
+      <h2 data-i18n="notFoundTitle">
         没有找到报价
       </h2>
 
-      <p data-i18n="emptyDescription">
-        当前设备没有保存可确认的服务报价。
+      <p data-i18n="notFoundText">
+        请返回“我的需求”，重新选择一条已报价的订单。
       </p >
 
-      <div class="action-row">
-        <button
-          class="primary-button"
-          type="button"
-          onclick="goToRequestPage()"
-          data-i18n="newRequestButton"
-        >
-          提交新需求
-        </button>
-      </div>
+      <a
+        class="back-link"
+        href="customer-my-requests.html"
+        data-i18n="backRequests"
+      >
+        返回我的需求
+      </a >
     </section>
-
-  </main>
+  </main>  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/echocity-supabase.js"></script>
 
   <script>
     const translations = {
       zh: {
-        heroTag: "客户报价确认",
-        heroTitle: "请确认服务报价",
-        heroDescription:
-          "请检查服务内容、价格、定金、付款方式和有效期。接受报价后，订单将进入人员匹配和派工阶段。",
+        label: "客户报价确认",
+        title: "请确认服务报价",
+        subtitle:
+          "请核对服务内容和报价。确认后，订单将进入人员匹配和派工流程。",
 
-        requestSummaryTitle: "服务需求",
-        waitingConfirmation: "等待客户确认",
-        acceptedStatus: "客户已接受",
-        declinedStatus: "客户暂不接受",
+        loading: "正在读取云端报价……",
+        loadError:
+          "报价读取失败，请检查网络后重新打开。",
+        submitting:
+          "正在提交您的选择……",
+        submitError:
+          "提交失败，请检查网络后重新尝试。",
 
-        requestIdLabel: "需求编号",
-        serviceTypeLabel: "服务类型",
-        serviceTimeLabel: "服务时间",
-        serviceAddressLabel: "服务地址",
+        serviceDate: "服务日期",
+        startTime: "开始时间",
+        serviceAddress: "服务地址",
+        workers: "需要人数",
+        quoteLabel: "服务报价",
+        decisionTitle:
+          "请选择是否接受本次报价",
 
-        workersService: "需要人手",
-        repairService: "维修或清洁",
-        supportService: "生活帮助",
-        unknownService: "未选择",
+        acceptQuote: "确认报价",
+        declineQuote: "暂不接受",
+        backRequests: "返回我的需求",
 
-        quoteDetailsTitle: "报价明细",
-        laborFeeLabel: "人工费",
-        materialFeeLabel: "材料费",
-        travelFeeLabel: "交通费",
-        platformFeeLabel: "平台服务费",
-        taxFeeLabel: "税费",
-        totalLabel: "报价总额",
+        notFoundTitle: "没有找到报价",
+        notFoundText:
+          "请返回“我的需求”，重新选择一条已报价的订单。",
 
-        depositLabel: "定金金额",
-        validUntilLabel: "报价有效期",
-        paymentTermsLabel: "付款方式",
-        quoteIdLabel: "报价编号",
+        noQuoteTitle: "报价尚未准备完成",
+        noQuoteText:
+          "运营人员尚未填写正式报价，请稍后再查看。",
 
-        paymentFullBefore: "服务前全额支付",
-        paymentDepositBalance:
-          "先付定金，完成后付尾款",
-        paymentAfterCompletion:
-          "服务完成后支付",
-        paymentManual: "人工协商",
+        acceptedResult:
+          "您已确认本次报价。订单将进入人员匹配和派工流程。",
+        declinedResult:
+          "您暂未接受本次报价。运营人员将根据情况与您联系。",
 
-        noticeText:
-          "接受报价表示你确认当前服务范围和价格。若现场情况发生变化，任何新增工作或费用都需要再次确认。",
+        statusSubmitted: "待人工确认",
+        statusReviewed: "需求已确认",
+        statusQuoted: "等待客户确认",
+        statusConfirmed: "报价已确认",
+        statusDeclined: "暂不接受",
+        statusAssigned: "已派工",
+        statusInProgress: "服务进行中",
+        statusCompleted: "已完成",
+        statusCancelled: "已取消",
 
-        confirmationText:
-          "我已经阅读并确认服务内容、报价金额、付款方式和报价有效期。",
+        serviceRepair: "维修或清洁",
+        serviceWorkers: "需要人手",
+        serviceSupport: "生活帮助",
+        serviceUnknown: "其他服务",
 
-        declineButton: "暂不接受",
-        acceptButton: "接受报价",
-        accepting: "正在确认报价……",
-
-        acceptedTitle: "报价已经接受",
-        acceptedDescription:
-          "订单已进入人员匹配和派工准备阶段。我们会继续与你确认工作人员和服务安排。",
-
-        emptyTitle: "没有找到报价",
-        emptyDescription:
-          "当前设备没有保存可确认的服务报价。",
-        newRequestButton: "提交新需求",
-
-        mustConfirm:
-          "请先勾选确认框，再接受报价。",
-        quoteAccepted:
-          "你已经接受报价，订单将进入人员匹配阶段。",
-        quoteDeclined:
-          "你已选择暂不接受报价，运营人员会看到这个状态。",
-        confirmDecline:
-          "确定暂不接受这份报价吗？",
-
-        noNotes: "没有补充说明",
+        noDescription: "未填写服务说明",
+        noQuoteNote: "未填写报价说明",
         notProvided: "未填写"
       },
 
       en: {
-        heroTag: "Customer Quote Confirmation",
-        heroTitle: "Please Review Your Service Quote",
-        heroDescription:
-          "Review the service, price, deposit, payment terms, and expiration date. Once accepted, the order will move to worker matching and assignment.",
+        label: "Customer quote confirmation",
+        title: "Confirm Service Quote",
+        subtitle:
+          "Please review the service details and quote. Once accepted, the request will move to worker matching and assignment.",
 
-        requestSummaryTitle: "Service Request",
-        waitingConfirmation: "Awaiting Customer Confirmation",
-        acceptedStatus: "Accepted by Customer",
-        declinedStatus: "Not Accepted",
+        loading: "Loading the cloud quote...",
+        loadError:
+          "Unable to load the quote. Please check your connection and reopen this page.",
+        submitting:
+          "Submitting your decision...",
+        submitError:
+          "Submission failed. Please check your connection and try again.",
 
-        requestIdLabel: "Request ID",
-        serviceTypeLabel: "Service Type",
-        serviceTimeLabel: "Service Time",
-        serviceAddressLabel: "Service Address",
+        serviceDate: "Service date",
+        startTime: "Start time",
+        serviceAddress: "Service address",
+        workers: "Workers needed",
+        quoteLabel: "Service quote",
+        decisionTitle:
+          "Please choose whether to accept this quote",
 
-        workersService: "Need Workers",
-        repairService: "Repair or Cleaning",
-        supportService: "Daily Support",
-        unknownService: "Not Selected",
+        acceptQuote: "Accept Quote",
+        declineQuote: "Not Now",
+        backRequests: "Back to My Requests",
 
-        quoteDetailsTitle: "Quote Details",
-        laborFeeLabel: "Labor",
-        materialFeeLabel: "Materials",
-        travelFeeLabel: "Travel",
-        platformFeeLabel: "Platform Service Fee",
-        taxFeeLabel: "Taxes",
-        totalLabel: "Quote Total",
+        notFoundTitle: "Quote Not Found",
+        notFoundText:
+          "Return to My Requests and select an order with a quote.",
 
-        depositLabel: "Deposit",
-        validUntilLabel: "Quote Valid Until",
-        paymentTermsLabel: "Payment Terms",
-        quoteIdLabel: "Quote ID",
+        noQuoteTitle: "Quote Not Ready",
+        noQuoteText:
+          "The operations team has not completed the formal quote. Please check again later.",
 
-        paymentFullBefore:
-          "Full Payment Before Service",
-        paymentDepositBalance:
-          "Deposit First, Balance After Completion",
-        paymentAfterCompletion:
-          "Payment After Completion",
-        paymentManual: "Manually Agreed",
+        acceptedResult:
+          "You accepted this quote. The request will move to worker matching and assignment.",
+        declinedResult:
+          "You have not accepted this quote. The operations team may contact you.",
 
-        noticeText:
-          "Accepting the quote confirms the current service scope and price. Any additional work or charges caused by changed site conditions must be approved separately.",
+        statusSubmitted: "Pending review",
+        statusReviewed: "Request confirmed",
+        statusQuoted: "Waiting for customer",
+        statusConfirmed: "Quote accepted",
+        statusDeclined: "Not accepted",
+        statusAssigned: "Assigned",
+        statusInProgress: "In progress",
+        statusCompleted: "Completed",
+        statusCancelled: "Cancelled",
 
-        confirmationText:
-          "I have reviewed and confirmed the service, quote amount, payment terms, and expiration date.",
+        serviceRepair: "Repair or Cleaning",
+        serviceWorkers: "Extra Help",
+        serviceSupport: "Daily Support",
+        serviceUnknown: "Other Service",
 
-        declineButton: "Not Now",
-        acceptButton: "Accept Quote",
-        accepting: "Confirming quote…",
-
-        acceptedTitle: "Quote Accepted",
-        acceptedDescription:
-          "The order is now ready for worker matching and assignment. We will contact you to confirm the service arrangement.",
-
-        emptyTitle: "No Quote Found",
-        emptyDescription:
-          "No service quote is available for confirmation on this device.",
-        newRequestButton: "Submit a New Request",
-
-        mustConfirm:
-          "Please check the confirmation box before accepting the quote.",
-        quoteAccepted:
-          "You accepted the quote. The order will now move to worker matching.",
-        quoteDeclined:
-          "You chose not to accept the quote at this time. The coordinator will see this status.",
-        confirmDecline:
-          "Are you sure you do not want to accept this quote?",
-
-        noNotes: "No additional notes",
+        noDescription:
+          "No service description provided",
+        noQuoteNote:
+          "No quote note provided",
         notProvided: "Not provided"
       }
-    };    let currentLanguage =
-      localStorage.getItem("echocity-language") || "zh";
+    };
+
+    let currentLanguage =
+      localStorage.getItem(
+        "echocity-language"
+      ) || "zh";
 
     let currentRequest = null;
-    let currentQuote = null;
+    let requestNo = "";
 
-    function translate(key) {
+    const languageButton =
+      document.getElementById(
+        "languageButton"
+      );
+
+    const message =
+      document.getElementById(
+        "message"
+      );
+
+    const quoteCard =
+      document.getElementById(
+        "quoteCard"
+      );
+
+    const emptyCard =
+      document.getElementById(
+        "emptyCard"
+      );
+
+    const requestNumber =
+      document.getElementById(
+        "requestNumber"
+      );
+
+    const serviceTitle =
+      document.getElementById(
+        "serviceTitle"
+      );
+
+    const statusBadge =
+      document.getElementById(
+        "statusBadge"
+      );
+
+    const serviceDate =
+      document.getElementById(
+        "serviceDate"
+      );
+
+    const startTime =
+      document.getElementById(
+        "startTime"
+      );
+
+    const serviceAddress =
+      document.getElementById(
+        "serviceAddress"
+      );
+
+    const workers =
+      document.getElementById(
+        "workers"
+      );
+
+    const description =
+      document.getElementById(
+        "description"
+      );
+
+    const quoteAmount =
+      document.getElementById(
+        "quoteAmount"
+      );
+
+    const quoteNote =
+      document.getElementById(
+        "quoteNote"
+      );
+
+    const decisionTitle =
+      document.getElementById(
+        "decisionTitle"
+      );
+
+    const decisionActions =
+      document.getElementById(
+        "decisionActions"
+      );
+
+    const acceptButton =
+      document.getElementById(
+        "acceptButton"
+      );
+
+    const declineButton =
+      document.getElementById(
+        "declineButton"
+      );
+
+    const resultBox =
+      document.getElementById(
+        "resultBox"
+      );
+
+    function t(key) {
       return (
         translations[currentLanguage][key] ||
         translations.zh[key] ||
@@ -1247,564 +899,468 @@
           ? "zh-CN"
           : "en";
 
-      document
-        .querySelectorAll("[data-i18n]")
-        .forEach((element) => {
-          const key =
-            element.getAttribute("data-i18n");
-
-          if (translations[currentLanguage][key]) {
-            element.textContent =
-              translations[currentLanguage][key];
-          }
-        });
-
-      document.getElementById(
-        "languageButton"
-      ).textContent =
+      languageButton.textContent =
         currentLanguage === "zh"
           ? "EN"
           : "中文";
 
-      renderQuote();
-    }
+      document
+        .querySelectorAll("[data-i18n]")
+        .forEach((element) => {
+          const key =
+            element.getAttribute(
+              "data-i18n"
+            );
 
-    function toggleLanguage() {
-      currentLanguage =
-        currentLanguage === "zh"
-          ? "en"
-          : "zh";
+          element.textContent = t(key);
+        });
 
-      localStorage.setItem(
-        "echocity-language",
-        currentLanguage
-      );
-
-      applyLanguage();
-    }
-
-    function loadQuoteData() {
-      try {
-        const storedRequest =
-          localStorage.getItem(
-            "echocity-last-request"
-          );
-
-        const storedQuote =
-          localStorage.getItem(
-            "echocity-last-quote"
-          );
-
-        currentRequest =
-          storedRequest
-            ? JSON.parse(storedRequest)
-            : null;
-
-        currentQuote =
-          storedQuote
-            ? JSON.parse(storedQuote)
-            : null;
-
-        if (
-          currentRequest &&
-          currentRequest.quote
-        ) {
-          currentQuote =
-            currentRequest.quote;
-        }
-
-      } catch (error) {
-        console.error(
-          "Failed to load quote data:",
-          error
-        );
-
-        currentRequest = null;
-        currentQuote = null;
+      if (currentRequest) {
+        renderRequest(currentRequest);
       }
     }
 
-    function getServiceName(serviceType) {
+    function showMessage(
+      type,
+      text
+    ) {
+      message.className =
+        `message ${type} show`;
+
+      message.textContent = text;
+    }
+
+    function hideMessage() {
+      message.className =
+        "message";
+
+      message.textContent = "";
+    }
+
+    function showEmpty(
+      titleKey = "notFoundTitle",
+      textKey = "notFoundText"
+    ) {
+      quoteCard.classList.remove(
+        "show"
+      );
+
+      emptyCard.classList.add(
+        "show"
+      );
+
+      const title =
+        emptyCard.querySelector("h2");
+
+      const text =
+        emptyCard.querySelector("p");
+
+      title.textContent =
+        t(titleKey);
+
+      text.textContent =
+        t(textKey);
+    }
+
+    function getRequestNumber() {
+      const params =
+        new URLSearchParams(
+          window.location.search
+        );
+
+      return (
+        params.get("request_no") ||
+        params.get("requestNo") ||
+        params.get("id") ||
+        ""
+      ).trim();
+    }
+
+    function getServiceName(
+      serviceType
+    ) {
       const serviceMap = {
-        workers: "workersService",
-        repair: "repairService",
-        support: "supportService"
+        repair: "serviceRepair",
+        workers: "serviceWorkers",
+        support: "serviceSupport"
       };
 
-      return translate(
+      return t(
         serviceMap[serviceType] ||
-        "unknownService"
+        "serviceUnknown"
+      );
+    }
+
+    function getStatusText(status) {
+      const statusMap = {
+        submitted: "statusSubmitted",
+        new: "statusSubmitted",
+        reviewed: "statusReviewed",
+        quoted: "statusQuoted",
+        confirmed: "statusConfirmed",
+        quote_confirmed:
+          "statusConfirmed",
+        quote_declined:
+          "statusDeclined",
+        assigned: "statusAssigned",
+        in_progress:
+          "statusInProgress",
+        completed: "statusCompleted",
+        cancelled: "statusCancelled"
+      };
+
+      return t(
+        statusMap[status] ||
+        "statusSubmitted"
       );
     }
 
     function formatMoney(value) {
       const amount =
-        Number(value || 0);
+        Number(value);
 
-      return amount.toLocaleString(
+      if (!Number.isFinite(amount)) {
+        return "$0.00";
+      }
+
+      return new Intl.NumberFormat(
         "en-US",
         {
           style: "currency",
           currency: "USD"
         }
-      );
+      ).format(amount);
     }
 
-    function formatDate(
-      dateValue
+    function updateDecisionDisplay(
+      status
     ) {
-      if (!dateValue) {
-        return translate("notProvided");
-      }
+      decisionActions.style.display =
+        "none";
 
-      const date =
-        new Date(
-          dateValue + "T00:00:00"
-        );
+      decisionTitle.style.display =
+        "none";
 
-      return date.toLocaleDateString(
-        currentLanguage === "zh"
-          ? "zh-CN"
-          : "en-US",
-        {
-          year: "numeric",
-          month: "long",
-          day: "numeric"
-        }
-      );
-    }
+      resultBox.className =
+        "result-box";
 
-    function formatServiceDateTime(
-      serviceDate,
-      serviceTime
-    ) {
-      if (!serviceDate && !serviceTime) {
-        return translate("notProvided");
-      }
+      resultBox.textContent = "";
 
-      const dateText =
-        serviceDate
-          ? formatDate(serviceDate)
-          : "";
+      if (status === "quoted") {
+        decisionTitle.style.display =
+          "block";
 
-      return serviceTime
-        ? `${dateText} ${serviceTime}`
-        : dateText;
-    }
-
-    function getPaymentTermsName(
-      paymentTerms
-    ) {
-      const paymentMap = {
-        full_before_service:
-          "paymentFullBefore",
-
-        deposit_then_balance:
-          "paymentDepositBalance",
-
-        after_completion:
-          "paymentAfterCompletion",
-
-        manual:
-          "paymentManual"
-      };
-
-      return translate(
-        paymentMap[paymentTerms] ||
-        "paymentManual"
-      );
-    }
-
-    function getQuoteStatusName() {
-      if (
-        currentQuote &&
-        currentQuote.customerDecision ===
-          "accepted"
-      ) {
-        return translate(
-          "acceptedStatus"
-        );
-      }
-
-      if (
-        currentQuote &&
-        currentQuote.customerDecision ===
-          "declined"
-      ) {
-        return translate(
-          "declinedStatus"
-        );
-      }
-
-      return translate(
-        "waitingConfirmation"
-      );
-    }
-
-    function renderQuote() {
-      const quoteCard =
-        document.getElementById(
-          "quoteCard"
-        );
-
-      const emptyState =
-        document.getElementById(
-          "emptyState"
-        );
-
-      const acceptedPanel =
-        document.getElementById(
-          "acceptedPanel"
-        );
-
-      if (
-        !currentRequest ||
-        !currentQuote
-      ) {
-        quoteCard.style.display =
-          "none";
-
-        acceptedPanel.classList.remove(
-          "show"
-        );
-
-        emptyState.classList.add(
-          "show"
-        );
+        decisionActions.style.display =
+          "grid";
 
         return;
       }
 
-      quoteCard.style.display =
-        "block";
+      if (
+        status === "confirmed" ||
+        status === "quote_confirmed"
+      ) {
+        resultBox.className =
+          "result-box accepted show";
 
-      emptyState.classList.remove(
+        resultBox.textContent =
+          t("acceptedResult");
+
+        return;
+      }
+
+      if (
+        status === "quote_declined"
+      ) {
+        resultBox.className =
+          "result-box declined show";
+
+        resultBox.textContent =
+          t("declinedResult");
+      }
+    }
+
+    function renderRequest(item) {
+      requestNumber.textContent =
+        item.request_no || requestNo;
+
+      serviceTitle.textContent =
+        getServiceName(
+          item.service_type
+        );
+
+      statusBadge.textContent =
+        getStatusText(item.status);
+
+      serviceDate.textContent =
+        item.service_date ||
+        t("notProvided");
+
+      startTime.textContent =
+        item.start_time ||
+        t("notProvided");
+
+      serviceAddress.textContent =
+        item.address ||
+        t("notProvided");
+
+      workers.textContent =
+        item.workers ??
+        t("notProvided");
+
+      description.textContent =
+        item.description ||
+        t("noDescription");
+
+      quoteAmount.textContent =
+        formatMoney(
+          item.quote_amount
+        );
+
+      quoteNote.textContent =
+        item.quote_note ||
+        t("noQuoteNote");
+
+      updateDecisionDisplay(
+        item.status
+      );
+
+      emptyCard.classList.remove(
         "show"
       );
 
-      document.getElementById(
-        "requestId"
-      ).textContent =
-        currentRequest.id || "--";
-
-      document.getElementById(
-        "serviceType"
-      ).textContent =
-        getServiceName(
-          currentRequest.serviceType
-        );
-
-      document.getElementById(
-        "serviceTime"
-      ).textContent =
-        formatServiceDateTime(
-          currentRequest.serviceDate,
-          currentRequest.serviceTime
-        );
-
-      document.getElementById(
-        "serviceAddress"
-      ).textContent =
-        currentRequest.serviceAddress ||
-        translate("notProvided");
-
-      document.getElementById(
-        "requestDescription"
-      ).textContent =
-        currentRequest.description ||
-        translate("notProvided");
-
-      document.getElementById(
-        "laborFee"
-      ).textContent =
-        formatMoney(
-          currentQuote.laborFee
-        );
-
-      document.getElementById(
-        "materialFee"
-      ).textContent =
-        formatMoney(
-          currentQuote.materialFee
-        );
-
-      document.getElementById(
-        "travelFee"
-      ).textContent =
-        formatMoney(
-          currentQuote.travelFee
-        );
-
-      document.getElementById(
-        "platformFee"
-      ).textContent =
-        formatMoney(
-          currentQuote.platformFee
-        );
-
-      document.getElementById(
-        "taxFee"
-      ).textContent =
-        formatMoney(
-          currentQuote.taxFee
-        );
-
-      document.getElementById(
-        "totalAmount"
-      ).textContent =
-        formatMoney(
-          currentQuote.totalAmount
-        );
-
-      document.getElementById(
-        "depositAmount"
-      ).textContent =
-        formatMoney(
-          currentQuote.depositAmount
-        );
-
-      document.getElementById(
-        "validUntil"
-      ).textContent =
-        formatDate(
-          currentQuote.validUntil
-        );
-
-      document.getElementById(
-        "paymentTerms"
-      ).textContent =
-        getPaymentTermsName(
-          currentQuote.paymentTerms
-        );
-
-      document.getElementById(
-        "quoteId"
-      ).textContent =
-        currentQuote.id || "--";
-
-      document.getElementById(
-        "quoteNotes"
-      ).textContent =
-        currentQuote.notes ||
-        translate("noNotes");
-
-      document.getElementById(
-        "quoteStatus"
-      ).textContent =
-        getQuoteStatusName();
-
-      const decision =
-        currentQuote.customerDecision;
-
-      if (decision === "accepted") {
-        acceptedPanel.classList.add(
-          "show"
-        );
-
-        document.getElementById(
-          "acceptCheckbox"
-        ).checked = true;
-
-        document.getElementById(
-          "acceptCheckbox"
-        ).disabled = true;
-
-        document.getElementById(
-          "acceptButton"
-        ).disabled = true;
-
-        document.getElementById(
-          "acceptButton"
-        ).textContent =
-          translate("acceptedStatus");
-
-      } else {
-        acceptedPanel.classList.remove(
-          "show"
-        );
-      }
+      quoteCard.classList.add(
+        "show"
+      );
     }
 
-    function showStatus(
-      type,
-      message
-    ) {
-      const statusMessage =
-        document.getElementById(
-          "statusMessage"
-        );
+    async function loadQuote() {
+      requestNo =
+        getRequestNumber();
 
-      statusMessage.className =
-        "status-message " + type;
-
-      statusMessage.textContent =
-        message;
-
-      statusMessage.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
-    }
-
-    function updateStoredRequest() {
-      const requests =
-        JSON.parse(
-          localStorage.getItem(
-            "echocity-service-requests"
-          ) || "[]"
-        );
-
-      const requestIndex =
-        requests.findIndex(
-          (item) =>
-            item.id ===
-            currentRequest.id
-        );
-
-      if (requestIndex >= 0) {
-        requests[requestIndex] =
-          currentRequest;
-      } else {
-        requests.unshift(
-          currentRequest
-        );
+      if (!requestNo) {
+        hideMessage();
+        showEmpty();
+        return;
       }
 
-      localStorage.setItem(
-        "echocity-service-requests",
-        JSON.stringify(requests)
+      showMessage(
+        "info",
+        t("loading")
       );
 
-      localStorage.setItem(
-        "echocity-last-request",
-        JSON.stringify(
-          currentRequest
-        )
-      );
+      try {
+        const client =
+          window.echoCitySupabase;
 
-      localStorage.setItem(
-        "echocity-last-quote",
-        JSON.stringify(
-          currentQuote
-        )
-      );
-    }
+        if (!client) {
+          throw new Error(
+            "Supabase client unavailable."
+          );
+        }
 
-    function acceptQuote() {
-      if (
-        !document.getElementById(
-          "acceptCheckbox"
-        ).checked
-      ) {
-        showStatus(
+        const { data, error } =
+          await client
+            .from("service_requests")
+            .select("*")
+            .eq(
+              "request_no",
+              requestNo
+            )
+            .maybeSingle();
+
+        if (error) {
+          throw error;
+        }
+
+        if (!data) {
+          hideMessage();
+          showEmpty();
+          return;
+        }
+
+        if (
+          data.quote_amount === null ||
+          data.quote_amount === undefined
+        ) {
+          hideMessage();
+
+          showEmpty(
+            "noQuoteTitle",
+            "noQuoteText"
+          );
+
+          return;
+        }
+
+        currentRequest = data;
+
+        hideMessage();
+        renderRequest(data);
+      } catch (error) {
+        console.error(
+          "Failed to load service quote:",
+          error
+        );
+
+        showMessage(
           "error",
-          translate("mustConfirm")
+          t("loadError")
+        );
+
+        showEmpty();
+      }
+    }    async function submitDecision(
+      newStatus
+    ) {
+      if (
+        !currentRequest ||
+        !requestNo
+      ) {
+        showMessage(
+          "error",
+          t("notFoundText")
         );
 
         return;
       }
 
-      const acceptButton =
-        document.getElementById(
-          "acceptButton"
-        );
+      const accepted =
+        newStatus === "confirmed";
+
+      const confirmText =
+        accepted
+          ? (
+              currentLanguage === "zh"
+                ? "确认接受本次报价吗？"
+                : "Accept this quote?"
+            )
+          : (
+              currentLanguage === "zh"
+                ? "确认暂不接受本次报价吗？"
+                : "Decline this quote for now?"
+            );
+
+      if (
+        !window.confirm(confirmText)
+      ) {
+        return;
+      }
 
       acceptButton.disabled = true;
+      declineButton.disabled = true;
 
-      acceptButton.textContent =
-        translate("accepting");
-
-      const acceptedAt =
-        new Date().toISOString();
-
-      currentQuote.customerDecision =
-        "accepted";
-
-      currentQuote.acceptedAt =
-        acceptedAt;
-
-      currentQuote.status =
-        "accepted";
-
-      currentRequest.status =
-        "confirmed";
-
-      currentRequest.customerDecision =
-        "accepted";
-
-      currentRequest.quote =
-        currentQuote;
-
-      currentRequest.updatedAt =
-        acceptedAt;
-
-      updateStoredRequest();
-
-      showStatus(
-        "success",
-        translate("quoteAccepted")
+      showMessage(
+        "info",
+        t("submitting")
       );
 
-      renderQuote();
-    }
+      try {
+        const client =
+          window.echoCitySupabase;
 
-    function declineQuote() {
-      const confirmed =
-        window.confirm(
-          translate("confirmDecline")
+        if (!client) {
+          throw new Error(
+            "Supabase client unavailable."
+          );
+        }
+
+        const updatedAt =
+          new Date().toISOString();
+
+        const { data, error } =
+          await client
+            .from("service_requests")
+            .update({
+              status: newStatus,
+              quote_confirmed: accepted,
+              updated_at: updatedAt
+            })
+            .eq(
+              "request_no",
+              requestNo
+            )
+            .select("*")
+            .single();
+
+        if (error) {
+          throw error;
+        }
+
+        currentRequest = data;
+
+        hideMessage();
+        renderRequest(data);
+
+        console.log(
+          "Customer quote decision saved:",
+          data
+        );
+      } catch (error) {
+        console.error(
+          "Failed to submit quote decision:",
+          error
         );
 
-      if (!confirmed) {
-        return;
+        showMessage(
+          "error",
+          t("submitError")
+        );
+
+        acceptButton.disabled = false;
+        declineButton.disabled = false;
       }
-
-      const declinedAt =
-        new Date().toISOString();
-
-      currentQuote.customerDecision =
-        "declined";
-
-      currentQuote.declinedAt =
-        declinedAt;
-
-      currentQuote.status =
-        "declined";
-
-      currentRequest.status =
-        "quote_declined";
-
-      currentRequest.customerDecision =
-        "declined";
-
-      currentRequest.quote =
-        currentQuote;
-
-      currentRequest.updatedAt =
-        declinedAt;
-
-      updateStoredRequest();
-
-      showStatus(
-        "success",
-        translate("quoteDeclined")
-      );
-
-      renderQuote();
     }
 
-    function goToRequestPage() {
-      window.location.href =
-        "service-request.html";
-    }
+    acceptButton.addEventListener(
+      "click",
+      () => {
+        submitDecision(
+          "confirmed"
+        );
+      }
+    );
+
+    declineButton.addEventListener(
+      "click",
+      () => {
+        submitDecision(
+          "quote_declined"
+        );
+      }
+    );
+
+    languageButton.addEventListener(
+      "click",
+      () => {
+        currentLanguage =
+          currentLanguage === "zh"
+            ? "en"
+            : "zh";
+
+        localStorage.setItem(
+          "echocity-language",
+          currentLanguage
+        );
+
+        applyLanguage();
+
+        if (!currentRequest) {
+          showMessage(
+            "info",
+            t("loading")
+          );
+        }
+      }
+    );
 
     document.addEventListener(
       "DOMContentLoaded",
-      () => {
-        loadQuoteData();
+      async () => {
         applyLanguage();
+        await loadQuote();
       }
     );
   </script>
-
 </body>
 </html>

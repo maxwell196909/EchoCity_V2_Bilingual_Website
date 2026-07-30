@@ -868,6 +868,22 @@
                 </strong>
 
                 ${escapeHtml(quoteText)}
+                ${
+  hasQuote && item.status === "quoted"
+    ? `
+      <a
+  class="primary-link"
+  href="./service-quote-confirmation.html?request_no=${encodeURIComponent(item.request_no)}"
+>
+  ${
+    currentLanguage === "en"
+      ? "View and confirm quote"
+      : "查看并确认报价"
+  }
+</a >
+    `
+    : ""
+}
               </div>
             </article>
           `;
