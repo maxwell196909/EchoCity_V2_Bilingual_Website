@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
 
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
-  />
+  >
 
   <title>我的任务 | EchoCity</title>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ <script src="../js/echocity-supabase.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -19,43 +19,30 @@
     }
 
     :root {
-      --primary: #1f6feb;
-      --primary-dark: #1557b0;
-      --primary-soft: #edf5ff;
-
-      --success: #18864b;
-      --success-soft: #eaf8f0;
-
-      --warning: #9a6700;
-      --warning-soft: #fff6dc;
-
-      --danger: #b42318;
-      --danger-soft: #fff0ee;
-
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --success: #15803d;
+      --success-bg: #ecfdf3;
+      --warning: #b45309;
+      --warning-bg: #fff7ed;
+      --danger: #b91c1c;
+      --danger-bg: #fef2f2;
       --text: #172033;
-      --text-light: #667085;
-
-      --border: #d9e1ec;
-      --background: #f4f7fb;
+      --muted: #667085;
+      --border: #d8dee9;
+      --background: #f3f6fb;
       --card: #ffffff;
-
-      --shadow:
-        0 16px 40px rgba(24, 39, 75, 0.08);
     }
 
     body {
       min-height: 100vh;
-
+      color: var(--text);
       background:
         linear-gradient(
-          180deg,
-          #edf5ff 0%,
-          #f7f9fc 40%,
-          #f4f7fb 100%
+          135deg,
+          rgba(37, 99, 235, 0.08),
+          rgba(255, 255, 255, 0.96)
         );
-
-      color: var(--text);
-
       font-family:
         Arial,
         "Microsoft YaHei",
@@ -63,524 +50,383 @@
     }
 
     button,
-    input {
+    input,
+    textarea {
       font: inherit;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
+    button {
+      cursor: pointer;
     }
 
-    .page {
-      width: min(100%, 760px);
+    .page-shell {
+      width: min(980px, calc(100% - 24px));
       margin: 0 auto;
-      padding: 20px 15px 48px;
+      padding: 24px 0 48px;
     }
 
     .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
-
-      margin-bottom: 26px;
+      gap: 16px;
+      margin-bottom: 28px;
     }
 
     .brand {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: 10px;
-
-      font-size: 20px;
+      font-size: 21px;
       font-weight: 800;
     }
 
-    .brand-mark {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
+    .brand-logo {
+      display: grid;
       width: 38px;
       height: 38px;
-
-      border-radius: 13px;
-
-      background:
-        linear-gradient(
-          135deg,
-          var(--primary),
-          #65a4ff
-        );
-
+      place-items: center;
+      border-radius: 12px;
       color: #ffffff;
-      font-weight: 900;
-
-      box-shadow:
-        0 8px 20px rgba(31, 111, 235, 0.22);
+      background: var(--primary);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.24);
     }
 
     .language-button {
-      min-width: 58px;
-      height: 40px;
-
-      padding: 0 13px;
-
+      min-width: 54px;
+      padding: 8px 14px;
       border: 1px solid var(--border);
-      border-radius: 12px;
-
-      background: rgba(255, 255, 255, 0.88);
-      color: var(--text);
-
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .hero {
-      margin-bottom: 18px;
-    }
-
-    .hero-tag {
-      display: inline-flex;
-      align-items: center;
-
-      min-height: 30px;
-      padding: 0 12px;
-
       border-radius: 999px;
+      color: var(--text);
+      background: #ffffff;
+      font-weight: 700;
+    }
 
-      background: var(--primary-soft);
-      color: var(--primary-dark);
+    .language-button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
 
-      font-size: 13px;
+    .page-heading {
+      margin-bottom: 22px;
+    }
+
+    .eyebrow {
+      margin-bottom: 7px;
+      color: var(--primary);
+      font-size: 14px;
       font-weight: 800;
     }
 
-    .hero h1 {
-      margin-top: 12px;
-
-      font-size: clamp(29px, 7vw, 40px);
-      line-height: 1.16;
-      letter-spacing: -1px;
+    .page-title {
+      margin-bottom: 10px;
+      font-size: clamp(30px, 5vw, 46px);
+      line-height: 1.15;
     }
 
-    .hero p {
-      margin-top: 10px;
-
-      color: var(--text-light);
-
-      font-size: 15px;
+    .page-description {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 16px;
       line-height: 1.7;
     }
 
-    .login-card {
-      padding: 20px;
-
-      border: 1px solid var(--border);
+    .card {
+      margin-top: 18px;
+      padding: 22px;
+      border: 1px solid rgba(216, 222, 233, 0.95);
       border-radius: 18px;
-
-      background: var(--card);
-      box-shadow: var(--shadow);
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 14px 38px rgba(31, 41, 55, 0.08);
     }
 
-    .login-title {
-      font-size: 19px;
-      line-height: 1.4;
+    .card-title {
+      margin-bottom: 8px;
+      font-size: 20px;
     }
 
-    .login-description {
-      margin-top: 7px;
-
-      color: var(--text-light);
-
-      font-size: 14px;
-      line-height: 1.65;
+    .card-description {
+      margin-bottom: 18px;
+      color: var(--muted);
+      line-height: 1.6;
     }
 
-    .phone-row {
-      display: flex;
-      gap: 10px;
-
-      margin-top: 16px;
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
     }
 
-    .phone-input {
-      flex: 1;
-      min-width: 0;
-      min-height: 48px;
-
-      padding: 0 13px;
-
+    .text-input,
+    .agreement-input,
+    .work-input {
+      width: 100%;
+      min-height: 46px;
+      padding: 11px 13px;
       border: 1px solid var(--border);
-      border-radius: 12px;
-
-      background: #ffffff;
+      border-radius: 10px;
       color: var(--text);
-
+      background: #ffffff;
       outline: none;
     }
 
-    .phone-input:focus {
+    .text-input:focus,
+    .agreement-input:focus,
+    .work-input:focus {
       border-color: var(--primary);
-
-      box-shadow:
-        0 0 0 3px rgba(31, 111, 235, 0.12);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
     }
 
-    .search-button {
-      min-height: 48px;
-      padding: 0 18px;
+    textarea.agreement-input,
+    textarea.work-input {
+      min-height: 96px;
+      resize: vertical;
+    }
 
-      border: 0;
-      border-radius: 12px;
-
-      background: var(--primary);
+    .primary-button,
+    .secondary-button,
+    .success-button,
+    .danger-button {
+      min-height: 44px;
+      padding: 10px 17px;
+      border: none;
+      border-radius: 10px;
       color: #ffffff;
-
       font-weight: 800;
-      cursor: pointer;
     }
 
-    .search-button:hover {
+    .primary-button {
+      background: var(--primary);
+    }
+
+    .primary-button:hover {
       background: var(--primary-dark);
+    }
+
+    .secondary-button {
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      background: #ffffff;
+    }
+
+    .success-button {
+      background: var(--success);
+    }
+
+    .danger-button {
+      background: var(--danger);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.48;
+    }
+
+    .message {
+      display: none;
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      line-height: 1.55;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.info {
+      color: #1e40af;
+      background: #eff6ff;
+    }
+
+    .message.success {
+      color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .message.error {
+      color: var(--danger);
+      background: var(--danger-bg);
     }
 
     .task-list {
       display: grid;
-      gap: 15px;
-
-      margin-top: 18px;
+      gap: 20px;
+      margin-top: 22px;
     }
 
     .task-card {
-      padding: 18px;
-
+      overflow: hidden;
       border: 1px solid var(--border);
       border-radius: 18px;
-
       background: var(--card);
-      box-shadow: var(--shadow);
+      box-shadow: 0 12px 32px rgba(31, 41, 55, 0.08);
     }
 
     .task-header {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 14px;
+      gap: 16px;
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
     }
 
     .task-number {
-      color: var(--primary-dark);
-
-      font-size: 12px;
-      font-weight: 800;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 13px;
     }
 
     .task-title {
-      margin-top: 5px;
-
-      font-size: 20px;
-      line-height: 1.4;
+      font-size: 21px;
+      line-height: 1.35;
     }
 
     .status-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      min-height: 31px;
-      padding: 0 11px;
-
+      flex-shrink: 0;
+      padding: 7px 11px;
       border-radius: 999px;
-
-      font-size: 12px;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
-    .status-assigned {
-      background: var(--warning-soft);
-      color: var(--warning);
-    }
-
-    .status-accepted {
-      background: var(--primary-soft);
-      color: var(--primary-dark);
-    }
-
-    .status-arrived {
-      background: #e8f7ff;
-      color: #146a8a;
-    }
-
-    .status-progress {
-      background: #eef0ff;
-      color: #4b4fa8;
-    }
-
-    .status-completed {
-      background: var(--success-soft);
-      color: var(--success);
-    }    .task-details {
-      display: grid;
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-      gap: 12px;
-
-      margin-top: 15px;
-    }
-
-    .detail-item {
-      padding: 12px;
-
-      border-radius: 12px;
-
-      background: #f8fafc;
-    }
-
-    .detail-label {
-      color: var(--text-light);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .detail-value {
-      margin-top: 5px;
-
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 1.55;
-      word-break: break-word;
-    }
-
-    .task-description {
-      margin-top: 14px;
-      padding: 14px;
-
-      border-radius: 13px;
-
-      background: #f8fafc;
-      color: var(--text);
-
-      font-size: 14px;
-      line-height: 1.7;
-      white-space: pre-wrap;
-    }
-
-    .manager-card {
-      margin-top: 14px;
-      padding: 14px;
-
-      border: 1px solid #dbe7f5;
-      border-radius: 13px;
-
-      background:
-        linear-gradient(
-          180deg,
-          #f5f9ff 0%,
-          #ffffff 100%
-        );
-    }
-
-    .manager-title {
-      color: var(--primary-dark);
+      color: #1e40af;
+      background: #eff6ff;
       font-size: 13px;
       font-weight: 800;
     }
 
-    .manager-content {
-      margin-top: 6px;
+    .task-body {
+      display: grid;
+      gap: 14px;
+      padding: 20px;
+    }
 
-      color: var(--text);
-      font-size: 14px;
-      line-height: 1.6;
+    .task-detail {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr);
+      gap: 12px;
+      line-height: 1.55;
+    }
+
+    .task-detail-label {
+      color: var(--muted);
+      font-weight: 700;
     }
 
     .task-actions {
-      display: grid;
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-      gap: 10px;
-
-      margin-top: 16px;
-    }
-
-    .task-button {
-      min-height: 46px;
-
-      padding: 0 14px;
-
-      border: 1px solid var(--border);
-      border-radius: 12px;
-
-      background: #ffffff;
-      color: var(--text);
-
-      font-size: 14px;
-      font-weight: 800;
-
-      cursor: pointer;
-    }
-
-    .task-button:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .task-button.primary {
-      border-color: var(--primary);
-
-      background: var(--primary);
-      color: #ffffff;
-    }
-
-    .task-button.primary:hover {
-      background: var(--primary-dark);
-      color: #ffffff;
-    }
-
-    .task-button.success {
-      border-color: var(--success);
-
-      background: var(--success);
-      color: #ffffff;
-    }
-
-    .task-button.success:hover {
-      opacity: 0.92;
-    }
-
-    .task-button:disabled {
-      opacity: 0.48;
-      cursor: not-allowed;
-    }
-
-    .timeline {
-      display: grid;
-      gap: 10px;
-
-      margin-top: 16px;
-      padding-top: 14px;
-
-      border-top: 1px solid #edf1f6;
-    }
-
-    .timeline-item {
       display: flex;
-      align-items: flex-start;
+      flex-wrap: wrap;
       gap: 10px;
+      padding-top: 8px;
     }
 
-    .timeline-dot {
-      width: 10px;
-      height: 10px;
-
-      margin-top: 5px;
-
-      border-radius: 50%;
-
-      background: var(--border);
-      flex-shrink: 0;
+    .workflow-section {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #f9fbff;
     }
 
-    .timeline-dot.active {
-      background: var(--primary);
+    .workflow-title {
+      margin-bottom: 6px;
+      font-size: 19px;
     }
 
-    .timeline-dot.done {
-      background: var(--success);
-    }
-
-    .timeline-content {
-      color: var(--text-light);
-
-      font-size: 13px;
+    .workflow-description {
+      margin-bottom: 16px;
+      color: var(--muted);
       line-height: 1.55;
     }
 
-    .timeline-content strong {
-      color: var(--text);
+    .check-section {
+      margin-top: 14px;
+      padding: 15px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .check-section-title {
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      line-height: 1.5;
+    }
+
+    .check-item input {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+    }
+
+    .agreement-form,
+    .work-form {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      align-items: center;
+      gap: 12px 16px;
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .agreement-form label,
+    .work-form label {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .full-width-field {
+      grid-column: 2;
+    }
+
+    .section-note {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
     }
 
     .empty-state {
-      display: none;
-
-      margin-top: 18px;
-      padding: 28px 20px;
-
-      border: 1px solid var(--border);
-      border-radius: 18px;
-
-      background: #ffffff;
-      box-shadow: var(--shadow);
-
+      padding: 36px 20px;
       text-align: center;
+      color: var(--muted);
     }
 
-    .empty-state.show {
-      display: block;
+    .hidden {
+      display: none !important;
     }
 
-    .empty-state h2 {
-      font-size: 22px;
-      line-height: 1.4;
-    }
-
-    .empty-state p {
-      max-width: 560px;
-
-      margin: 10px auto 0;
-
-      color: var(--text-light);
-
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    .status-message {
-      display: none;
-
-      margin-top: 14px;
-      padding: 13px 14px;
-
-      border-radius: 12px;
-
-      font-size: 14px;
-      line-height: 1.65;
-    }
-
-    .status-message.success {
-      display: block;
-
-      border: 1px solid #b9e4c8;
-
-      background: var(--success-soft);
-      color: var(--success);
-    }
-
-    .status-message.error {
-      display: block;
-
-      border: 1px solid #f0c0c0;
-
-      background: var(--danger-soft);
-      color: var(--danger);
-    }
-
-    @media (max-width: 620px) {
-      .page {
-        padding:
-          15px
-          13px
-          40px;
+    @media (max-width: 700px) {
+      .page-shell {
+        width: min(100% - 16px, 980px);
+        padding-top: 14px;
       }
 
-      .phone-row {
-        flex-direction: column;
+      .topbar {
+        margin-bottom: 20px;
       }
 
-      .search-button {
+      .card {
+        padding: 16px;
+      }
+
+      .search-row {
+        grid-template-columns: 1fr;
+      }
+
+      .search-row button {
         width: 100%;
       }
 
@@ -588,1324 +434,3628 @@
         flex-direction: column;
       }
 
-      .task-details,
-      .task-actions {
+      .task-detail {
         grid-template-columns: 1fr;
+        gap: 4px;
+      }
+
+      .agreement-form,
+      .work-form {
+        grid-template-columns: 1fr;
+      }
+
+      .full-width-field {
+        grid-column: 1;
+      }
+
+      .task-actions button {
+        width: 100%;
       }
     }
   </style>
 </head>
 
 <body>
-  <main class="page">
-
+  <main class="page-shell">
     <header class="topbar">
-
-      <a
-        class="brand"
-        href=" "
-      >
-        <span class="brand-mark">E</span>
+      <div class="brand">
+        <div class="brand-logo">E</div>
         <span>EchoCity</span>
-      </a >
+      </div>
 
       <button
-        class="language-button"
         id="languageButton"
+        class="language-button"
         type="button"
-        onclick="toggleLanguage()"
       >
         EN
       </button>
-
     </header>
 
-    <section class="hero">
-
-      <span
-        class="hero-tag"
-        data-i18n="heroTag"
-      >
-        工人任务中心
-      </span>
-
-      <h1 data-i18n="heroTitle">
-        我的任务
-      </h1>
-
-      <p data-i18n="heroDescription">
-        输入派工时登记的手机号码，查看任务、报酬、集合时间和工作进度。
-      </p >
-
+    <section class="page-heading">
+      <p id="pageEyebrow" class="eyebrow"></p >
+      <h1 id="pageTitle" class="page-title"></h1>
+      <p id="pageDescription" class="page-description"></p >
     </section>
 
-    <section class="login-card">
+    <section class="card">
+      <h2 id="searchTitle" class="card-title"></h2>
+      <p id="searchDescription" class="card-description"></p >
 
-      <h2
-        class="login-title"
-        data-i18n="loginTitle"
-      >
-        查询我的任务
-      </h2>
-
-      <p
-        class="login-description"
-        data-i18n="loginDescription"
-      >
-        使用派工记录中的手机号码查询。当前测试版本的数据保存在本设备浏览器中。
-      </p >
-
-      <div class="phone-row">
-
+      <div class="search-row">
         <input
-          class="phone-input"
           id="workerPhoneInput"
+          class="text-input"
           type="tel"
-          data-i18n-placeholder="phonePlaceholder"
-          placeholder="请输入手机号码"
-        />
+          autocomplete="tel"
+        >
 
         <button
-          class="search-button"
+          id="searchTaskButton"
+          class="primary-button"
           type="button"
-          onclick="searchTasks()"
-          data-i18n="searchButton"
-        >
-          查询任务
-        </button>
-
+        ></button>
       </div>
 
       <div
-        class="status-message"
-        id="statusMessage"
+        id="pageMessage"
+        class="message"
+        role="status"
       ></div>
-
     </section>
 
     <section
-      class="task-list"
       id="taskList"
+      class="task-list"
     ></section>
+  </main><script>
+  const translations = {
+    zh: {
+      pageEyebrow: "工作人员服务中心",
+      pageTitle: "我的工作任务",
+      pageDescription:
+        "查询并完成已分配给你的服务任务。所有服务过程都将保留记录。",
 
-    <section
-      class="empty-state"
-      id="emptyState"
-    >
-      <h2 data-i18n="emptyTitle">
-        没有找到任务
-      </h2>
+      searchTitle: "查询我的任务",
+      searchDescription:
+        "请输入接收任务时使用的手机号码。",
+      phonePlaceholder: "请输入手机号码",
+      searchTaskButton: "查询任务",
 
-      <p data-i18n="emptyDescription">
-        请确认手机号码与派工记录一致。
-      </p >
-    </section>
+      loadingTasks: "正在查询任务，请稍候……",
+      noPhone: "请输入手机号码。",
+      noTasks: "暂时没有找到分配给你的任务。",
+      taskLoadFailed: "任务查询失败，请稍后再试。",
+      supabaseUnavailable: "系统连接暂时不可用。",
 
-  </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      requestNumber: "需求编号",
+      serviceTitle: "服务项目",
+      customerName: "客户姓名",
+      customerPhone: "客户电话",
+      serviceAddress: "服务地址",
+      scheduledTime: "计划时间",
+      workerName: "工作人员",
+      taskStatus: "任务状态",
+      customerRequirements: "客户要求",
+      qualityStandards: "质量标准",
+      agreedPrice: "确认价格",
+      currencySymbol: "$",
 
-<script>
-  const ECHOCITY_SUPABASE_URL = "https://dpljvspwcfglxfesxdmf.supabase.co";
-const ECHOCITY_SUPABASE_KEY = "sb_publishable_CngX8tJBl6eGAJUWTSt9HA_KtxTvM1-";
+      statusPending: "等待接受",
+      statusAccepted: "已接受",
+      statusArrived: "已到达",
+      statusAgreementSubmitted: "开工协议已提交",
+      statusWorking: "工作进行中",
+      statusMilestoneSubmitted: "阶段成果已提交",
+      statusCompleted: "工作已完成",
 
-  if (!window.supabase) {
-    throw new Error(
-      "Supabase library has not been loaded."
-    );
-  }
+      acceptTask: "接受任务",
+      confirmArrival: "确认到达现场",
+      startWork: "开始工作",
+      saveProgress: "保存工作记录",
+      submitMilestone: "提交阶段成果",
+      submitCompletion: "提交最终完成",
 
-  window.echoCitySupabase =
-    window.supabase.createClient(
-      ECHOCITY_SUPABASE_URL,
-      ECHOCITY_SUPABASE_KEY
-    );
+      acceptedSuccessfully: "任务已成功接受。",
+      arrivalConfirmed: "已确认到达服务现场。",
+      taskUpdateFailed: "任务状态更新失败。",
 
-  console.log(
-    "EchoCity connected to Supabase."
-  );
-</script>
-  <script>    const translations = {
-      zh: {
-        heroTag: "工人任务中心",
-        heroTitle: "我的任务",
-        heroDescription:
-          "输入派工时登记的手机号码，查看任务、报酬、集合时间和工作进度。",
+      preWorkTitle: "开工前协议",
+      preWorkDescription:
+        "开始工作前，工作人员和客户共同确认服务内容、现场情况和安全要求。",
 
-        loginTitle: "查询我的任务",
-        loginDescription:
-          "使用派工记录中的手机号码查询。当前测试版本的数据保存在本设备浏览器中。",
+      requirementConfirmation: "客户要求与标准确认",
+      requirementCheck:
+        "我已阅读并理解客户提出的服务要求。",
+      standardCheck:
+        "我已阅读并理解本次服务的质量标准。",
+      priceCheck:
+        "客户与工作人员已确认本次服务价格。",
 
-        phonePlaceholder: "请输入手机号码",
-        searchButton: "查询任务",
+      siteChecklistTitle: "现场检查",
+      siteSafeCheck:
+        "服务现场具备基本安全作业条件。",
+      toolsCheck:
+        "所需工具、设备和材料已经确认。",
+      damageCheck:
+        "现场原有损坏或特殊情况已经记录。",
+      accessCheck:
+        "客户已提供必要的现场进入条件。",
+      photoCheck:
+        "开工前现场照片已经拍摄并保存。",
 
-        emptyTitle: "没有找到任务",
-        emptyDescription:
-          "请确认手机号码与派工记录一致。",
+      workerConfirmationTitle: "工作人员确认",
+      workerSignature: "工作人员签名",
+      workerSignaturePlaceholder: "请输入工作人员姓名作为签名",
 
-        phoneRequired:
-          "请输入派工时登记的手机号码。",
-        taskFound:
-          "已经找到你的任务。",
+      customerConfirmationTitle: "客户确认",
+      confirmationCustomerName: "客户姓名",
+      customerNamePlaceholder: "请输入客户姓名",
+      customerSignature: "客户签名",
+      customerSignaturePlaceholder: "请输入客户姓名作为签名",
+      confirmationTime: "确认日期与时间",
+      customerComments: "客户意见",
+      customerCommentsPlaceholder:
+        "客户可填写补充要求、现场说明或其他意见",
 
-        taskIdLabel: "任务编号",
-        requestIdLabel: "需求编号",
+      submitAgreement: "提交开工协议",
+      agreementRequired:
+        "请完成所有检查项目并填写双方签名。",
+      agreementSubmitted:
+        "开工协议已成功提交，现在可以开始工作。",
+      agreementSubmitFailed:
+        "开工协议提交失败，请稍后再试。",
 
-        workersService: "需要人手",
-        repairService: "维修或清洁",
-        supportService: "生活帮助",
-        unknownService: "未选择服务",
+      workExecutionTitle: "工作过程记录",
+      workExecutionDescription:
+        "记录每天的工作过程、现场进度和需要客户关注的问题。",
+      workDate: "工作日期",
+      startTime: "开始时间",
+      endTime: "结束时间",
+      workHours: "工作小时数",
+      workProgress: "工作进展",
+      workProgressPlaceholder:
+        "请填写今天完成的工作、现场情况和下一步计划",
+      materialsUsed: "使用的材料",
+      materialsPlaceholder:
+        "填写材料名称、数量和使用位置",
+      issuesFound: "发现的问题",
+      issuesPlaceholder:
+        "填写施工过程中发现的问题或风险",
+      photoRecord: "现场照片记录",
+      photoRecordPlaceholder:
+        "填写照片文件名称或照片说明",
+      videoRecord: "现场视频记录",
+      videoRecordPlaceholder:
+        "填写视频文件名称或视频说明",
+      customerOnSiteComment: "客户现场意见",
+      customerOnSiteCommentPlaceholder:
+        "填写客户对当前工作过程的意见",
 
-        statusAssigned: "等待接受",
-        statusAccepted: "已接受",
-        statusArrived: "已到达",
-        statusProgress: "工作进行中",
-        statusCompleted: "工作已完成",
+      progressRequired:
+        "请填写工作日期和工作进展。",
+      progressSaved:
+        "工作过程记录已成功保存。",
+      progressSaveFailed:
+        "工作记录保存失败，请稍后再试。",
 
-        serviceTimeLabel: "服务时间",
-        meetingTimeLabel: "集合时间",
-        addressLabel: "服务地址",
-        roleLabel: "任务角色",
-        payLabel: "任务报酬",
-        siteManagerLabel: "现场负责人",
-        managerPhoneLabel: "负责人电话",
-        taskDetailsLabel: "工作内容",
-        assignmentNotesLabel: "派工说明",
+      milestoneTitle: "阶段成果提交",
+      milestoneDescription:
+        "完成一个工作阶段后，提交成果供客户检查和签字确认。",
+      milestoneSummary: "阶段成果说明",
+      milestoneSummaryPlaceholder:
+        "说明本阶段完成的工作和达到的标准",
+      milestoneEvidence: "成果证据",
+      milestoneEvidencePlaceholder:
+        "填写照片、视频、文件或其他成果证明",
+      submitMilestoneButton: "提交阶段成果",
 
-        acceptButton: "接受任务",
-        arrivedButton: "我已到达",
-        startButton: "开始工作",
-        completeButton: "完成工作",
+      finalCompletionTitle: "最终完成提交",
+      finalCompletionDescription:
+        "全部工作完成后，提交最终成果，等待客户最终验收。",
+      completionSummary: "最终完成说明",
+      completionSummaryPlaceholder:
+        "说明全部完成内容、质量情况和需要客户确认的事项",
+      submitFinalCompletion: "提交最终完成",
 
-        acceptedTimeLabel: "接受任务",
-        arrivedTimeLabel: "到达现场",
-        startedTimeLabel: "开始工作",
-        completedTimeLabel: "完成工作",
+      notAvailable: "未提供",
+      unknownTask: "未命名服务",
+      emptyValue: "—"
+    },
 
-        taskAccepted:
-          "你已经接受任务。",
-        taskArrived:
-          "已记录到达时间。",
-        taskStarted:
-          "已记录开始工作时间。",
-        taskCompleted:
-          "任务已完成，系统已经保存完成时间。",
+    en: {
+      pageEyebrow: "Worker Service Center",
+      pageTitle: "My Work Tasks",
+      pageDescription:
+        "Find and complete the service tasks assigned to you. The full service process will be recorded.",
 
-        invalidStep:
-          "请按照任务流程依次操作。",
-        confirmComplete:
-          "确定已经完成全部工作吗？",
+      searchTitle: "Find My Tasks",
+      searchDescription:
+        "Enter the phone number used when you received the task.",
+      phonePlaceholder: "Enter your phone number",
+      searchTaskButton: "Find Tasks",
 
-        noNotes: "没有补充说明",
-        notProvided: "未填写"
-      },
+      loadingTasks: "Loading your tasks. Please wait...",
+      noPhone: "Please enter your phone number.",
+      noTasks: "No assigned tasks were found.",
+      taskLoadFailed: "Unable to load tasks. Please try again.",
+      supabaseUnavailable:
+        "The system connection is temporarily unavailable.",
 
-      en: {
-        heroTag: "Worker Task Center",
-        heroTitle: "My Tasks",
-        heroDescription:
-          "Enter the phone number used during assignment to view your task, pay, meeting time, and work progress.",
+      requestNumber: "Request Number",
+      serviceTitle: "Service",
+      customerName: "Customer Name",
+      customerPhone: "Customer Phone",
+      serviceAddress: "Service Address",
+      scheduledTime: "Scheduled Time",
+      workerName: "Worker",
+      taskStatus: "Task Status",
+      customerRequirements: "Customer Requirements",
+      qualityStandards: "Quality Standards",
+      agreedPrice: "Confirmed Price",
+      currencySymbol: "$",
 
-        loginTitle: "Find My Tasks",
-        loginDescription:
-          "Use the phone number recorded during assignment. This test version stores data in this browser.",
+      statusPending: "Waiting for Acceptance",
+      statusAccepted: "Accepted",
+      statusArrived: "Arrived",
+      statusAgreementSubmitted: "Pre-Work Agreement Submitted",
+      statusWorking: "Work in Progress",
+      statusMilestoneSubmitted: "Milestone Submitted",
+      statusCompleted: "Work Completed",
 
-        phonePlaceholder:
-          "Enter your phone number",
-        searchButton: "Find Tasks",
+      acceptTask: "Accept Task",
+      confirmArrival: "Confirm Arrival",
+      startWork: "Start Work",
+      saveProgress: "Save Work Record",
+      submitMilestone: "Submit Milestone",
+      submitCompletion: "Submit Final Completion",
 
-        emptyTitle: "No Tasks Found",
-        emptyDescription:
-          "Make sure the phone number matches the assignment record.",
+      acceptedSuccessfully: "The task has been accepted.",
+      arrivalConfirmed:
+        "Your arrival at the service location has been confirmed.",
+      taskUpdateFailed: "Unable to update the task status.",
 
-        phoneRequired:
-          "Enter the phone number used during assignment.",
-        taskFound:
-          "Your task has been found.",
+      preWorkTitle: "Pre-Work Agreement",
+      preWorkDescription:
+        "Before work begins, the worker and customer confirm the service scope, site conditions, and safety requirements.",
 
-        taskIdLabel: "Task ID",
-        requestIdLabel: "Request ID",
+      requirementConfirmation:
+        "Customer Requirements and Standards",
+      requirementCheck:
+        "I have read and understood the customer’s service requirements.",
+      standardCheck:
+        "I have read and understood the quality standards for this service.",
+      priceCheck:
+        "The customer and worker have confirmed the service price.",
 
-        workersService: "Need Workers",
-        repairService: "Repair or Cleaning",
-        supportService: "Daily Support",
-        unknownService: "Service Not Selected",
+      siteChecklistTitle: "Site Checklist",
+      siteSafeCheck:
+        "The site has the basic conditions required for safe work.",
+      toolsCheck:
+        "The required tools, equipment, and materials have been confirmed.",
+      damageCheck:
+        "Existing damage and special site conditions have been recorded.",
+      accessCheck:
+        "The customer has provided the necessary site access.",
+      photoCheck:
+        "Pre-work site photographs have been taken and saved.",
 
-        statusAssigned: "Awaiting Acceptance",
-        statusAccepted: "Accepted",
-        statusArrived: "Arrived",
-        statusProgress: "In Progress",
-        statusCompleted: "Completed",
+      workerConfirmationTitle: "Worker Confirmation",
+      workerSignature: "Worker Signature",
+      workerSignaturePlaceholder:
+        "Enter the worker’s name as a signature",
 
-        serviceTimeLabel: "Service Time",
-        meetingTimeLabel: "Meeting Time",
-        addressLabel: "Service Address",
-        roleLabel: "Task Role",
-        payLabel: "Task Pay",
-        siteManagerLabel: "Site Manager",
-        managerPhoneLabel: "Manager Phone",
-        taskDetailsLabel: "Task Details",
-        assignmentNotesLabel:
-          "Assignment Notes",
+      customerConfirmationTitle: "Customer Confirmation",
+      confirmationCustomerName: "Customer Name",
+      customerNamePlaceholder: "Enter the customer’s name",
+      customerSignature: "Customer Signature",
+      customerSignaturePlaceholder:
+        "Enter the customer’s name as a signature",
+      confirmationTime: "Confirmation Date and Time",
+      customerComments: "Customer Comments",
+      customerCommentsPlaceholder:
+        "Add requirements, site notes, or other comments",
 
-        acceptButton: "Accept Task",
-        arrivedButton: "I Have Arrived",
-        startButton: "Start Work",
-        completeButton: "Complete Work",
+      submitAgreement: "Submit Pre-Work Agreement",
+      agreementRequired:
+        "Complete every checklist item and enter both signatures.",
+      agreementSubmitted:
+        "The pre-work agreement was submitted. Work can now begin.",
+      agreementSubmitFailed:
+        "Unable to submit the agreement. Please try again.",
 
-        acceptedTimeLabel: "Task Accepted",
-        arrivedTimeLabel: "Arrived On Site",
-        startedTimeLabel: "Work Started",
-        completedTimeLabel: "Work Completed",
+      workExecutionTitle: "Work Execution Record",
+      workExecutionDescription:
+        "Record daily work, site progress, and any matters requiring customer attention.",
+      workDate: "Work Date",
+      startTime: "Start Time",
+      endTime: "End Time",
+      workHours: "Working Hours",
+      workProgress: "Work Progress",
+      workProgressPlaceholder:
+        "Describe today’s completed work, site conditions, and next steps",
+      materialsUsed: "Materials Used",
+      materialsPlaceholder:
+        "Enter material names, quantities, and locations used",
+      issuesFound: "Issues Found",
+      issuesPlaceholder:
+        "Describe problems or risks found during the work",
+      photoRecord: "Photo Record",
+      photoRecordPlaceholder:
+        "Enter photo file names or descriptions",
+      videoRecord: "Video Record",
+      videoRecordPlaceholder:
+        "Enter video file names or descriptions",
+      customerOnSiteComment: "Customer Site Comments",
+      customerOnSiteCommentPlaceholder:
+        "Enter the customer’s comments about the current work",
 
-        taskAccepted:
-          "You accepted the task.",
-        taskArrived:
-          "Your arrival time has been recorded.",
-        taskStarted:
-          "Your work start time has been recorded.",
-        taskCompleted:
-          "The task is complete and the completion time has been saved.",
+      progressRequired:
+        "Enter the work date and work progress.",
+      progressSaved:
+        "The work progress record was saved.",
+      progressSaveFailed:
+        "Unable to save the work record. Please try again.",
 
-        invalidStep:
-          "Complete each task step in order.",
-        confirmComplete:
-          "Are you sure all work has been completed?",
+      milestoneTitle: "Milestone Submission",
+      milestoneDescription:
+        "After completing a work stage, submit the results for customer inspection and confirmation.",
+      milestoneSummary: "Milestone Summary",
+      milestoneSummaryPlaceholder:
+        "Describe the work completed and the standards achieved",
+      milestoneEvidence: "Supporting Evidence",
+      milestoneEvidencePlaceholder:
+        "List photographs, videos, files, or other evidence",
+      submitMilestoneButton: "Submit Milestone",
 
-        noNotes: "No additional notes",
-        notProvided: "Not provided"
-      }
-    };
+      finalCompletionTitle: "Final Completion",
+      finalCompletionDescription:
+        "After all work is complete, submit the final results for customer acceptance.",
+      completionSummary: "Final Completion Summary",
+      completionSummaryPlaceholder:
+        "Describe all completed work, quality results, and matters requiring customer confirmation",
+      submitFinalCompletion: "Submit Final Completion",
 
-    let currentLanguage =
-      localStorage.getItem("echocity-language") || "zh";
-
-    let allTasks = [];
-    let visibleTasks = [];
-
-    function translate(key) {
-      return (
-        translations[currentLanguage][key] ||
-        translations.zh[key] ||
-        key
-      );
+      notAvailable: "Not provided",
+      unknownTask: "Unnamed Service",
+      emptyValue: "—"
     }
-
-    function applyLanguage() {
-      document.documentElement.lang =
-        currentLanguage === "zh"
-          ? "zh-CN"
-          : "en";
-
-      document
-        .querySelectorAll("[data-i18n]")
-        .forEach((element) => {
-          const key =
-            element.getAttribute("data-i18n");
-
-          if (translations[currentLanguage][key]) {
-            element.textContent =
-              translations[currentLanguage][key];
-          }
-        });
-
-      document
-        .querySelectorAll("[data-i18n-placeholder]")
-        .forEach((element) => {
-          const key =
-            element.getAttribute(
-              "data-i18n-placeholder"
-            );
-
-          if (translations[currentLanguage][key]) {
-            element.placeholder =
-              translations[currentLanguage][key];
-          }
-        });
-
-      document.getElementById(
-        "languageButton"
-      ).textContent =
-        currentLanguage === "zh"
-          ? "EN"
-          : "中文";
-
-      renderTasks();
-    }
-
-    function toggleLanguage() {
-      currentLanguage =
-        currentLanguage === "zh"
-          ? "en"
-          : "zh";
-
-      localStorage.setItem(
-        "echocity-language",
-        currentLanguage
-      );
-
-      applyLanguage();
-    }
-
-    async function loadTasks() {
-  allTasks = [];
-
-  try {
-    const client =
-      window.echoCitySupabase;
-
-    if (!client) {
-      throw new Error(
-        "Supabase connection is not available."
-      );
-    }
-
-    const { data, error } =
-      await client
-        .from("service_requests")
-        .select("*")
-        .not(
-          "assigned_worker_phone",
-          "is",
-          null
-        )
-        .order(
-          "updated_at",
-          {
-            ascending: false
-          }
-        );
-
-    if (error) {
-      throw error;
-    }
-
-    allTasks =
-      Array.isArray(data)
-        ? data.map((item) => ({
-            id:
-              item.id,
-
-            requestNo:
-              item.request_no,
-
-            serviceType:
-              item.service_type,
-
-            description:
-              item.description || "",
-
-            serviceDate:
-              item.service_date || "",
-
-            startTime:
-              item.start_time || "",
-
-            address:
-              item.address || "",
-
-            customerName:
-              item.customer_name || "",
-
-            customerPhone:
-              item.customer_phone || "",
-
-            workerName:
-              item.assigned_worker || "",
-
-            workerPhone:
-              item.assigned_worker_phone || "",
-
-            status:
-              item.status || "assigned",
-
-            updatedAt:
-              item.updated_at || ""
-          }))
-        : [];
-
-    console.log(
-      "Worker tasks loaded from Supabase:",
-      allTasks
-    );
-  } catch (error) {
-    console.error(
-      "Failed to load worker tasks:",
-      error
-    );
-
-    allTasks = [];
-  }
-}
-    function saveTasks() {
-      localStorage.setItem(
-        "echocity-worker-tasks",
-        JSON.stringify(allTasks)
-      );
-    }
-
-    function normalizePhone(value) {
-      return String(value || "")
-        .replace(/[^0-9]/g, "");
-    }
-
-    function getServiceName(serviceType) {
-      const serviceMap = {
-        workers: "workersService",
-        repair: "repairService",
-        support: "supportService"
-      };
-
-      return translate(
-        serviceMap[serviceType] ||
-        "unknownService"
-      );
-    }
-
-    function getStatusName(status) {
-      const statusMap = {
-        assigned: "statusAssigned",
-        accepted: "statusAccepted",
-        arrived: "statusArrived",
-        in_progress: "statusProgress",
-        completed: "statusCompleted"
-      };
-
-      return translate(
-        statusMap[status] ||
-        "statusAssigned"
-      );
-    }
-
-    function getStatusClass(status) {
-      const classMap = {
-        assigned: "status-assigned",
-        accepted: "status-accepted",
-        arrived: "status-arrived",
-        in_progress: "status-progress",
-        completed: "status-completed"
-      };
-
-      return (
-        classMap[status] ||
-        "status-assigned"
-      );
-    }
-
-    function formatDateTime(
-      dateValue,
-      timeValue
-    ) {
-      if (!dateValue && !timeValue) {
-        return translate("notProvided");
-      }
-
-      let dateText =
-        dateValue || "";
-
-      if (dateValue) {
-        const date =
-          new Date(
-            dateValue + "T00:00:00"
-          );
-
-        dateText =
-          date.toLocaleDateString(
-            currentLanguage === "zh"
-              ? "zh-CN"
-              : "en-US",
-            {
-              year: "numeric",
-              month: "long",
-              day: "numeric"
-            }
-          );
-      }
-
-      return timeValue
-        ? `${dateText} ${timeValue}`
-        : dateText;
-    }
-
-    function formatMoney(value) {
-      return Number(value || 0)
-        .toLocaleString(
-          "en-US",
-          {
-            style: "currency",
-            currency: "USD"
-          }
-        );
-    }
-
-    function formatTimestamp(value) {
-      if (!value) {
-        return "--";
-      }
-
-      const date =
-        new Date(value);
-
-      if (Number.isNaN(date.getTime())) {
-        return value;
-      }
-
-      return date.toLocaleString(
-        currentLanguage === "zh"
-          ? "zh-CN"
-          : "en-US"
-      );
-    }
-
-    function escapeHTML(value) {
-      return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }    function searchTasks() {
-      const phoneInput =
-        document.getElementById(
-          "workerPhoneInput"
-        );
-
-      const phoneValue =
-        normalizePhone(
-          phoneInput.value
-        );
-
-      if (!phoneValue) {
-        showStatus(
-          "error",
-          translate("phoneRequired")
-        );
-
-        return;
-      }
-
-      visibleTasks =
-        allTasks.filter(
-          (task) =>
-            normalizePhone(
-              task.workerPhone
-            ) === phoneValue
-        );
-
-      if (visibleTasks.length === 0) {
-        document.getElementById(
-          "taskList"
-        ).innerHTML = "";
-
-        document.getElementById(
-          "emptyState"
-        ).classList.add("show");
-
-        showStatus(
-          "error",
-          translate("emptyDescription")
-        );
-
-        return;
-      }
-
-      document.getElementById(
-        "emptyState"
-      ).classList.remove("show");
-
-      localStorage.setItem(
-        "echocity-worker-phone",
-        phoneInput.value.trim()
-      );
-
-      showStatus(
-        "success",
-        translate("taskFound")
-      );
-
-      renderTasks();
-    }
-
-    function showStatus(
-      type,
-      message
-    ) {
-      const statusMessage =
-        document.getElementById(
-          "statusMessage"
-        );
-
-      statusMessage.className =
-        "status-message " + type;
-
-      statusMessage.textContent =
-        message;
-    }
-
-    function buildTimelineItem(
-      labelKey,
-      timeValue,
-      state
-    ) {
-      return `
-        <div class="timeline-item">
-
-          <span
-            class="timeline-dot ${state}"
-          ></span>
-
-          <div class="timeline-content">
-            <strong>
-              ${escapeHTML(
-                translate(labelKey)
-              )}
-            </strong>
-
-            <br />
-
-            ${escapeHTML(
-              formatTimestamp(
-                timeValue
-              )
-            )}
-          </div>
-
-        </div>
-      `;
-    }
-
-    function buildTaskActions(task) {
-      const status =
-        task.status || "assigned";
-
-      return `
-        <div class="task-actions">
-
-          <button
-            class="task-button primary"
-            type="button"
-            onclick="
-              updateTaskStatus(
-                '${escapeHTML(task.id)}',
-                'accepted'
-              )
-            "
-            ${status !== "assigned"
-              ? "disabled"
-              : ""}
-          >
-            ${escapeHTML(
-              translate("acceptButton")
-            )}
-          </button>
-
-          <button
-            class="task-button"
-            type="button"
-            onclick="
-              updateTaskStatus(
-                '${escapeHTML(task.id)}',
-                'arrived'
-              )
-            "
-            ${status !== "accepted"
-              ? "disabled"
-              : ""}
-          >
-            ${escapeHTML(
-              translate("arrivedButton")
-            )}
-          </button>
-
-          <button
-            class="task-button"
-            type="button"
-            onclick="
-              updateTaskStatus(
-                '${escapeHTML(task.id)}',
-                'in_progress'
-              )
-            "
-            ${status !== "arrived"
-              ? "disabled"
-              : ""}
-          >
-            ${escapeHTML(
-              translate("startButton")
-            )}
-          </button>
-
-          <button
-            class="task-button success"
-            type="button"
-            onclick="
-              updateTaskStatus(
-                '${escapeHTML(task.id)}',
-                'completed'
-              )
-            "
-            ${status !== "in_progress"
-              ? "disabled"
-              : ""}
-          >
-            ${escapeHTML(
-              translate("completeButton")
-            )}
-          </button>
-
-        </div>
-      `;
-    }
-
-    function buildTaskCard(task) {
-      return `
-        <article class="task-card">
-
-          <div class="task-header">
-
-            <div>
-              <div class="task-number">
-                ${escapeHTML(
-                  translate("taskIdLabel")
-                )}：
-                ${escapeHTML(
-                  task.id || "--"
-                )}
-              </div>
-
-              <h2 class="task-title">
-                ${escapeHTML(
-                  getServiceName(
-                    task.serviceType
-                  )
-                )}
-              </h2>
-            </div>
-
-            <span
-              class="status-badge
-              ${getStatusClass(
-                task.status
-              )}"
-            >
-              ${escapeHTML(
-                getStatusName(
-                  task.status
-                )
-              )}
-            </span>
-
-          </div>
-
-          <div class="task-details">
-
-            <div class="detail-item">
-              <div class="detail-label">
-                ${escapeHTML(
-                  translate(
-                    "serviceTimeLabel"
-                  )
-                )}
-              </div>
-
-              <div class="detail-value">
-                ${escapeHTML(
-                  formatDateTime(
-                    task.serviceDate,
-                    task.serviceTime
-                  )
-                )}
-              </div>
-            </div>
-
-            <div class="detail-item">
-              <div class="detail-label">
-                ${escapeHTML(
-                  translate(
-                    "meetingTimeLabel"
-                  )
-                )}
-              </div>
-
-              <div class="detail-value">
-                ${escapeHTML(
-                  formatDateTime(
-                    task.meetingDate,
-                    task.meetingTime
-                  )
-                )}
-              </div>
-            </div>
-
-            <div class="detail-item">
-              <div class="detail-label">
-                ${escapeHTML(
-                  translate(
-                    "addressLabel"
-                  )
-                )}
-              </div>
-
-              <div class="detail-value">
-                ${escapeHTML(
-                  task.address ||
-                  translate("notProvided")
-                )}
-              </div>
-            </div>
-
-            <div class="detail-item">
-              <div class="detail-label">
-                ${escapeHTML(
-                  translate(
-                    "roleLabel"
-                  )
-                )}
-              </div>
-
-              <div class="detail-value">
-                ${escapeHTML(
-                  task.role ||
-                  translate("notProvided")
-                )}
-              </div>
-            </div>
-
-            <div class="detail-item">
-              <div class="detail-label">
-                ${escapeHTML(
-                  translate(
-                    "payLabel"
-                  )
-                )}
-              </div>
-
-              <div class="detail-value">
-                ${escapeHTML(
-                  formatMoney(task.pay)
-                )}
-              </div>
-            </div>
-
-            <div class="detail-item">
-              <div class="detail-label">
-                ${escapeHTML(
-                  translate(
-                    "requestIdLabel"
-                  )
-                )}
-              </div>
-
-              <div class="detail-value">
-                ${escapeHTML(
-                  task.requestId || "--"
-                )}
-              </div>
-            </div>
-
-          </div>
-
-          <div class="task-description">
-            <strong>
-              ${escapeHTML(
-                translate(
-                  "taskDetailsLabel"
-                )
-              )}：
-            </strong>
-
-            <br />
-
-            ${escapeHTML(
-              task.description ||
-              translate("notProvided")
-            )}
-          </div>
-
-          <div class="manager-card">
-            <div class="manager-title">
-              ${escapeHTML(
-                translate(
-                  "siteManagerLabel"
-                )
-              )}
-            </div>
-
-            <div class="manager-content">
-              ${escapeHTML(
-                task.siteManager ||
-                translate("notProvided")
-              )}
-              ·
-              ${escapeHTML(
-                task.siteManagerPhone ||
-                translate("notProvided")
-              )}
-            </div>
-          </div>
-
-          <div class="task-description">
-            <strong>
-              ${escapeHTML(
-                translate(
-                  "assignmentNotesLabel"
-                )
-              )}：
-            </strong>
-
-            <br />
-
-            ${escapeHTML(
-              task.notes ||
-              translate("noNotes")
-            )}
-          </div>
-
-          ${buildTaskActions(task)}
-
-          <div class="timeline">
-
-            ${buildTimelineItem(
-              "acceptedTimeLabel",
-              task.acceptedAt,
-              task.acceptedAt
-                ? "done"
-                : ""
-            )}
-
-            ${buildTimelineItem(
-              "arrivedTimeLabel",
-              task.arrivedAt,
-              task.arrivedAt
-                ? "done"
-                : ""
-            )}
-
-            ${buildTimelineItem(
-              "startedTimeLabel",
-              task.startedAt,
-              task.startedAt
-                ? "done"
-                : ""
-            )}
-
-            ${buildTimelineItem(
-              "completedTimeLabel",
-              task.completedAt,
-              task.completedAt
-                ? "done"
-                : ""
-            )}
-
-          </div>
-
-        </article>
-      `;
-    }
-
-    function renderTasks() {
-      const taskList =
-        document.getElementById(
-          "taskList"
-        );
-
-      if (visibleTasks.length === 0) {
-        taskList.innerHTML = "";
-        return;
-      }
-
-      taskList.innerHTML =
-        visibleTasks
-          .map(buildTaskCard)
-          .join("");
-    }
-
-    async function updateTaskStatus(
-  taskId,
-  nextStatus
-) {
-  const task =
-    allTasks.find(
-      (item) =>
-        String(item.id) ===
-        String(taskId)
-    );
-
-  if (!task) {
-    showStatus(
-      "error",
-      currentLanguage === "zh"
-        ? "没有找到该任务。"
-        : "Task not found."
-    );
-
-    return;
-  }
-
-  const validTransitions = {
-    assigned: "accepted",
-    accepted: "arrived",
-    arrived: "in_progress",
-    in_progress: "completed"
   };
 
-  if (
-    validTransitions[task.status] !==
-    nextStatus
-  ) {
-    showStatus(
-      "error",
-      translate("invalidStep")
-    );
+  let currentLanguage =
+    localStorage.getItem("echocity-language") || "zh";
 
-    return;
+  if (!translations[currentLanguage]) {
+    currentLanguage = "zh";
   }
 
-  if (
-    nextStatus === "completed"
+  function t(key) {
+    return translations[currentLanguage][key] || key;
+  }
+
+  function applyStaticTranslations() {
+    document.documentElement.lang =
+      currentLanguage === "zh" ? "zh-CN" : "en";
+
+    document.title =
+      currentLanguage === "zh"
+        ? "我的任务 | EchoCity"
+        : "My Tasks | EchoCity";
+
+    document.getElementById("pageEyebrow").textContent =
+      t("pageEyebrow");
+
+    document.getElementById("pageTitle").textContent =
+      t("pageTitle");
+
+    document.getElementById("pageDescription").textContent =
+      t("pageDescription");
+
+    document.getElementById("searchTitle").textContent =
+      t("searchTitle");
+
+    document.getElementById("searchDescription").textContent =
+      t("searchDescription");
+
+    document.getElementById("workerPhoneInput").placeholder =
+      t("phonePlaceholder");
+
+    document.getElementById("searchTaskButton").textContent =
+      t("searchTaskButton");
+
+    document.getElementById("languageButton").textContent =
+      currentLanguage === "zh" ? "EN" : "中文";
+  }
+
+  function changeLanguage() {
+    currentLanguage =
+      currentLanguage === "zh" ? "en" : "zh";
+
+    localStorage.setItem(
+      "echocity-language",
+      currentLanguage
+    );
+
+    applyStaticTranslations();
+
+    if (
+      typeof renderTasks === "function" &&
+      Array.isArray(window.loadedWorkerTasks)
+    ) {
+      renderTasks(window.loadedWorkerTasks);
+    }
+  }
+
+  document
+    .getElementById("languageButton")
+    .addEventListener("click", changeLanguage);
+
+  applyStaticTranslations();  /*
+   * Supabase connection
+   * 优先使用项目中已经创建好的全局客户端。
+   */
+  function getSupabaseClient() {
+    return (
+      window.echoCitySupabase ||
+      window.supabaseClient ||
+      window.supabase ||
+      null
+    );
+  }
+
+  /*
+   * 当前页面已加载的工作人员任务
+   */
+  window.loadedWorkerTasks = [];
+
+  let currentWorkerPhone = "";
+
+  /*
+   * 统一显示页面消息
+   */
+  function showPageMessage(text, type = "info") {
+    const messageElement =
+      document.getElementById("pageMessage");
+
+    messageElement.textContent = text;
+
+    messageElement.className =
+      `message show ${type}`;
+  }
+
+  /*
+   * 清空页面消息
+   */
+  function clearPageMessage() {
+    const messageElement =
+      document.getElementById("pageMessage");
+
+    messageElement.textContent = "";
+    messageElement.className = "message";
+  }
+
+  /*
+   * 设置查询按钮状态
+   */
+  function setSearchButtonLoading(isLoading) {
+    const button =
+      document.getElementById("searchTaskButton");
+
+    button.disabled = isLoading;
+
+    button.textContent = isLoading
+      ? t("loadingTasks")
+      : t("searchTaskButton");
+  }
+
+  /*
+   * 处理手机号码
+   * 保留 + 号和数字，删除空格、横线、括号。
+   */
+  function normalizePhone(phone) {
+    return String(phone || "")
+      .trim()
+      .replace(/[^\d+]/g, "");
+  }
+
+  /*
+   * 防止HTML内容破坏页面结构
+   */
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  /*
+   * 安全读取数据库字段
+   * 数据库字段名称暂时不一致时，可以读取多个候选字段。
+   */
+  function getTaskValue(task, fieldNames, fallback = "") {
+    for (const fieldName of fieldNames) {
+      const value = task?.[fieldName];
+
+      if (
+        value !== undefined &&
+        value !== null &&
+        value !== ""
+      ) {
+        return value;
+      }
+    }
+
+    return fallback;
+  }
+
+  /*
+   * 日期时间格式化
+   */
+  function formatDateTime(value) {
+    if (!value) {
+      return t("emptyValue");
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return String(value);
+    }
+
+    return new Intl.DateTimeFormat(
+      currentLanguage === "zh"
+        ? "zh-CN"
+        : "en-US",
+      {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      }
+    ).format(date);
+  }
+
+  /*
+   * 任务状态标准化
+   */
+  function normalizeTaskStatus(task) {
+    const rawStatus = String(
+      getTaskValue(
+        task,
+        [
+          "worker_status",
+          "task_status",
+          "status"
+        ],
+        "pending"
+      )
+    )
+      .trim()
+      .toLowerCase();
+
+    const statusMap = {
+      pending: "pending",
+      assigned: "pending",
+      waiting: "pending",
+
+      accepted: "accepted",
+      accept: "accepted",
+
+      arrived: "arrived",
+      onsite: "arrived",
+      on_site: "arrived",
+
+      agreement_submitted: "agreement_submitted",
+      prework_confirmed: "agreement_submitted",
+      pre_work_confirmed: "agreement_submitted",
+
+      working: "working",
+      in_progress: "working",
+      started: "working",
+
+      milestone_submitted: "milestone_submitted",
+      milestone: "milestone_submitted",
+
+      completed: "completed",
+      finished: "completed",
+      final_submitted: "completed"
+    };
+
+    return statusMap[rawStatus] || "pending";
+  }
+
+  /*
+   * 根据任务状态显示文字
+   */
+  function getTaskStatusText(status) {
+    const statusTextMap = {
+      pending: "statusPending",
+      accepted: "statusAccepted",
+      arrived: "statusArrived",
+      agreement_submitted:
+        "statusAgreementSubmitted",
+      working: "statusWorking",
+      milestone_submitted:
+        "statusMilestoneSubmitted",
+      completed: "statusCompleted"
+    };
+
+    return t(
+      statusTextMap[status] ||
+      "statusPending"
+    );
+  }
+
+  /*
+   * 查询任务
+   */
+  async function searchWorkerTasks() {
+    clearPageMessage();
+
+    const input =
+      document.getElementById("workerPhoneInput");
+
+    const phone = normalizePhone(input.value);
+
+    if (!phone) {
+      showPageMessage(t("noPhone"), "error");
+      input.focus();
+      return;
+    }
+
+    const client = getSupabaseClient();
+
+    if (
+      !client ||
+      typeof client.from !== "function"
+    ) {
+      showPageMessage(
+        t("supabaseUnavailable"),
+        "error"
+      );
+      return;
+    }
+
+    currentWorkerPhone = phone;
+    setSearchButtonLoading(true);
+
+    const taskList =
+      document.getElementById("taskList");
+
+    taskList.innerHTML = "";
+
+    showPageMessage(
+      t("loadingTasks"),
+      "info"
+    );
+
+    try {
+      /*
+       * 当前使用 service_requests 表。
+       * 每一个任务继续使用同一个 request_no。
+       */
+      const { data, error } = await client
+        .from("service_requests")
+        .select("*")
+       .eq("assigned_worker_phone", phone)
+        .order("created_at", {
+          ascending: false
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      window.loadedWorkerTasks =
+        Array.isArray(data) ? data : [];
+
+      if (
+        window.loadedWorkerTasks.length === 0
+      ) {
+        showPageMessage(
+          t("noTasks"),
+          "info"
+        );
+
+        taskList.innerHTML = `
+          <div class="card empty-state">
+            ${escapeHtml(t("noTasks"))}
+          </div>
+        `;
+
+        return;
+      }
+
+      clearPageMessage();
+
+      /*
+       * renderTasks函数将在第4段建立。
+       */
+      if (typeof renderTasks === "function") {
+        renderTasks(
+          window.loadedWorkerTasks
+        );
+      }
+    } catch (error) {
+      console.error(
+        "Worker task search failed:",
+        error
+      );
+
+      window.loadedWorkerTasks = [];
+
+      showPageMessage(
+        t("taskLoadFailed"),
+        "error"
+      );
+    } finally {
+      setSearchButtonLoading(false);
+    }
+  }
+
+  /*
+   * 点击查询按钮
+   */
+  document
+    .getElementById("searchTaskButton")
+    .addEventListener(
+      "click",
+      searchWorkerTasks
+    );
+
+  /*
+   * 在手机号码输入框按Enter，也可以查询
+   */
+  document
+    .getElementById("workerPhoneInput")
+    .addEventListener(
+      "keydown",
+      function (event) {
+        if (event.key === "Enter") {
+          searchWorkerTasks();
+        }
+      }
+    );  /*
+   * 从任务数据中读取需求编号
+   */
+  function getRequestNumber(task) {
+    return String(
+      getTaskValue(
+        task,
+        [
+          "request_no",
+          "request_number",
+          "service_request_no"
+        ],
+        ""
+      )
+    );
+  }
+
+  /*
+   * 根据需求编号找到当前任务
+   */
+  function findLoadedTask(requestNo) {
+    return window.loadedWorkerTasks.find(
+      function (task) {
+        return (
+          getRequestNumber(task) ===
+          String(requestNo)
+        );
+      }
+    );
+  }
+
+  /*
+   * 更新本地任务状态
+   */
+  function updateLocalTaskStatus(
+    requestNo,
+    newStatus
   ) {
+    const task = findLoadedTask(requestNo);
+
+    if (!task) {
+      return;
+    }
+
+    task.worker_status = newStatus;
+    task.task_status = newStatus;
+  }
+
+  /*
+   * 更新数据库中的任务状态
+   */
+  async function updateTaskStatus(
+    requestNo,
+    newStatus,
+    successMessage
+  ) {
+    const client = getSupabaseClient();
+
+    if (
+      !client ||
+      typeof client.from !== "function"
+    ) {
+      showPageMessage(
+        t("supabaseUnavailable"),
+        "error"
+      );
+      return false;
+    }
+
+    showPageMessage(
+      currentLanguage === "zh"
+        ? "正在更新任务状态……"
+        : "Updating task status...",
+      "info"
+    );
+
+    try {
+      const updateData = {
+        worker_status: newStatus,
+        updated_at: new Date().toISOString()
+      };
+
+      const { error } = await client
+        .from("service_requests")
+        .update(updateData)
+        .eq("request_no", requestNo);
+
+      if (error) {
+        throw error;
+      }
+
+      updateLocalTaskStatus(
+        requestNo,
+        newStatus
+      );
+
+      renderTasks(
+        window.loadedWorkerTasks
+      );
+
+      showPageMessage(
+        successMessage,
+        "success"
+      );
+
+      return true;
+    } catch (error) {
+      console.error(
+        "Task status update failed:",
+        error
+      );
+
+      showPageMessage(
+        t("taskUpdateFailed"),
+        "error"
+      );
+
+      return false;
+    }
+  }
+
+  /*
+   * 接受任务
+   */
+  async function acceptTask(requestNo) {
+    await updateTaskStatus(
+      requestNo,
+      "accepted",
+      t("acceptedSuccessfully")
+    );
+  }
+
+  /*
+   * 确认已经到达现场
+   */
+  async function confirmArrival(requestNo) {
+    const confirmed = window.confirm(
+      currentLanguage === "zh"
+        ? "请确认：你已经到达客户服务现场。"
+        : "Please confirm that you have arrived at the service location."
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    const client = getSupabaseClient();
+
+    if (
+      !client ||
+      typeof client.from !== "function"
+    ) {
+      showPageMessage(
+        t("supabaseUnavailable"),
+        "error"
+      );
+      return;
+    }
+
+    showPageMessage(
+      currentLanguage === "zh"
+        ? "正在确认到场……"
+        : "Confirming arrival...",
+      "info"
+    );
+
+    try {
+      const { error } = await client
+        .from("service_requests")
+        .update({
+          worker_status: "arrived",
+          worker_arrived_at:
+            new Date().toISOString(),
+          updated_at:
+            new Date().toISOString()
+        })
+        .eq("request_no", requestNo);
+
+      if (error) {
+        throw error;
+      }
+
+      updateLocalTaskStatus(
+        requestNo,
+        "arrived"
+      );
+
+      const task = findLoadedTask(requestNo);
+
+      if (task) {
+        task.worker_arrived_at =
+          new Date().toISOString();
+      }
+
+      renderTasks(
+        window.loadedWorkerTasks
+      );
+
+      showPageMessage(
+        t("arrivalConfirmed"),
+        "success"
+      );
+    } catch (error) {
+      console.error(
+        "Arrival confirmation failed:",
+        error
+      );
+
+      showPageMessage(
+        t("taskUpdateFailed"),
+        "error"
+      );
+    }
+  }
+
+  /*
+   * 生成单项任务信息
+   */
+  function buildTaskDetail(
+    label,
+    value
+  ) {
+    const displayValue =
+      value === undefined ||
+      value === null ||
+      value === ""
+        ? t("emptyValue")
+        : value;
+
+    return `
+      <div class="task-detail">
+        <div class="task-detail-label">
+          ${escapeHtml(label)}
+        </div>
+
+        <div>
+          ${escapeHtml(displayValue)}
+        </div>
+      </div>
+    `;
+  }
+
+  /*
+   * 生成价格显示
+   */
+  function formatPrice(task) {
+    const price = getTaskValue(
+      task,
+      [
+        "confirmed_price",
+        "agreed_price",
+        "quoted_price",
+        "price"
+      ],
+      ""
+    );
+
+    if (
+      price === "" ||
+      price === null ||
+      price === undefined
+    ) {
+      return t("emptyValue");
+    }
+
+    const currency = getTaskValue(
+      task,
+      [
+        "currency",
+        "price_currency"
+      ],
+      "USD"
+    );
+
+    return `${currency} ${price}`;
+  }
+
+  /*
+   * 根据状态生成操作按钮
+   */
+  function buildTaskActionButtons(
+    task,
+    status
+  ) {
+    const requestNo =
+      getRequestNumber(task);
+
+    if (status === "pending") {
+      return `
+        <button
+          class="primary-button"
+          type="button"
+          onclick="acceptTask(
+            '${escapeHtml(requestNo)}'
+          )"
+        >
+          ${escapeHtml(t("acceptTask"))}
+        </button>
+      `;
+    }
+
+    if (status === "accepted") {
+      return `
+        <button
+          class="primary-button"
+          type="button"
+          onclick="confirmArrival(
+            '${escapeHtml(requestNo)}'
+          )"
+        >
+          ${escapeHtml(
+            t("confirmArrival")
+          )}
+        </button>
+      `;
+    }
+
+    if (status === "arrived") {
+      return `
+        <button
+          class="primary-button"
+          type="button"
+          onclick="showPreWorkAgreement(
+            '${escapeHtml(requestNo)}'
+          )"
+        >
+          ${escapeHtml(
+            t("preWorkTitle")
+          )}
+        </button>
+      `;
+    }
+
+    if (
+      status ===
+      "agreement_submitted"
+    ) {
+      return `
+        <button
+          class="success-button"
+          type="button"
+          onclick="startWork(
+            '${escapeHtml(requestNo)}'
+          )"
+        >
+          ${escapeHtml(t("startWork"))}
+        </button>
+      `;
+    }
+
+    if (status === "working") {
+      return `
+        <button
+          class="primary-button"
+          type="button"
+          onclick="showWorkExecution(
+            '${escapeHtml(requestNo)}'
+          )"
+        >
+          ${escapeHtml(
+            t("workExecutionTitle")
+          )}
+        </button>
+      `;
+    }
+
+    if (
+      status ===
+      "milestone_submitted"
+    ) {
+      return `
+        <button
+          class="secondary-button"
+          type="button"
+          onclick="showFinalCompletion(
+            '${escapeHtml(requestNo)}'
+          )"
+        >
+          ${escapeHtml(
+            t("finalCompletionTitle")
+          )}
+        </button>
+      `;
+    }
+
+    return `
+      <button
+        class="secondary-button"
+        type="button"
+        disabled
+      >
+        ${escapeHtml(
+          t("statusCompleted")
+        )}
+      </button>
+    `;
+  }
+
+  /*
+   * 生成单个任务卡片
+   */
+  function buildTaskCard(task) {
+    const requestNo =
+      getRequestNumber(task);
+
+    const status =
+      normalizeTaskStatus(task);
+
+    const serviceTitle =
+      getTaskValue(
+        task,
+        [
+          "service_title",
+          "service_name",
+          "title",
+          "request_title"
+        ],
+        t("unknownTask")
+      );
+
+    const customerName =
+      getTaskValue(
+        task,
+        [
+          "customer_name",
+          "contact_name",
+          "requester_name"
+        ],
+        t("notAvailable")
+      );
+
+    const customerPhone =
+      getTaskValue(
+        task,
+        [
+          "customer_phone",
+          "contact_phone",
+          "requester_phone"
+        ],
+        t("notAvailable")
+      );
+
+    const address =
+      getTaskValue(
+        task,
+        [
+          "service_address",
+          "address",
+          "location"
+        ],
+        t("notAvailable")
+      );
+
+    const scheduledTime =
+      getTaskValue(
+        task,
+        [
+          "scheduled_time",
+          "appointment_time",
+          "service_time"
+        ],
+        ""
+      );
+
+    const workerName =
+      getTaskValue(
+        task,
+        [
+          "worker_name",
+          "assigned_worker_name"
+        ],
+        t("notAvailable")
+      );
+
+    const requirements =
+      getTaskValue(
+        task,
+        [
+          "customer_requirements",
+          "service_requirements",
+          "requirements",
+          "description"
+        ],
+        t("notAvailable")
+      );
+
+    const qualityStandards =
+      getTaskValue(
+        task,
+        [
+          "quality_standards",
+          "service_standard",
+          "acceptance_standard"
+        ],
+        t("notAvailable")
+      );
+
+    return `
+      <article
+        class="task-card"
+        data-request-no="${escapeHtml(
+          requestNo
+        )}"
+      >
+        <header class="task-header">
+          <div>
+            <p class="task-number">
+              ${escapeHtml(
+                t("requestNumber")
+              )}:
+              ${escapeHtml(
+                requestNo ||
+                t("emptyValue")
+              )}
+            </p >
+
+            <h2 class="task-title">
+              ${escapeHtml(serviceTitle)}
+            </h2>
+          </div>
+
+          <span class="status-badge">
+            ${escapeHtml(
+              getTaskStatusText(status)
+            )}
+          </span>
+        </header>
+
+        <div class="task-body">
+          ${buildTaskDetail(
+            t("customerName"),
+            customerName
+          )}
+
+          ${buildTaskDetail(
+            t("customerPhone"),
+            customerPhone
+          )}
+
+          ${buildTaskDetail(
+            t("serviceAddress"),
+            address
+          )}
+
+          ${buildTaskDetail(
+            t("scheduledTime"),
+            formatDateTime(
+              scheduledTime
+            )
+          )}
+
+          ${buildTaskDetail(
+            t("workerName"),
+            workerName
+          )}
+
+          ${buildTaskDetail(
+            t("agreedPrice"),
+            formatPrice(task)
+          )}
+
+          ${buildTaskDetail(
+            t("customerRequirements"),
+            requirements
+          )}
+
+          ${buildTaskDetail(
+            t("qualityStandards"),
+            qualityStandards
+          )}
+
+          <div class="task-actions">
+            ${buildTaskActionButtons(
+              task,
+              status
+            )}
+          </div>
+
+          <div
+            id="workflow-${escapeHtml(
+              requestNo
+            )}"
+          ></div>
+        </div>
+      </article>
+    `;
+  }
+
+  /*
+   * 显示全部任务
+   */
+  function renderTasks(tasks) {
+    const taskList =
+      document.getElementById("taskList");
+
+    if (
+      !Array.isArray(tasks) ||
+      tasks.length === 0
+    ) {
+      taskList.innerHTML = `
+        <div class="card empty-state">
+          ${escapeHtml(t("noTasks"))}
+        </div>
+      `;
+
+      return;
+    }
+
+    taskList.innerHTML = tasks
+      .map(buildTaskCard)
+      .join("");
+  }  /*
+   * 找到某个任务卡片中的流程区域
+   */
+  function getWorkflowContainer(requestNo) {
+    return document.getElementById(
+      `workflow-${requestNo}`
+    );
+  }
+
+  /*
+   * 生成复选确认项目
+   */
+  function buildAgreementCheckItem(
+    requestNo,
+    fieldName,
+    translationKey
+  ) {
+    return `
+      <label class="check-item">
+        <input
+          type="checkbox"
+          data-agreement-field="${escapeHtml(
+            fieldName
+          )}"
+          data-request-no="${escapeHtml(
+            requestNo
+          )}"
+        >
+
+        <span>
+          ${escapeHtml(
+            t(translationKey)
+          )}
+        </span>
+      </label>
+    `;
+  }
+
+  /*
+   * 显示开工前协议
+   */
+  function showPreWorkAgreement(requestNo) {
+    const container =
+      getWorkflowContainer(requestNo);
+
+    if (!container) {
+      return;
+    }
+
+    const task =
+      findLoadedTask(requestNo);
+
+    if (!task) {
+      showPageMessage(
+        t("taskLoadFailed"),
+        "error"
+      );
+      return;
+    }
+
+    const workerName =
+      getTaskValue(
+        task,
+        [
+          "worker_name",
+          "assigned_worker_name"
+        ],
+        ""
+      );
+
+    const customerName =
+      getTaskValue(
+        task,
+        [
+          "customer_name",
+          "contact_name",
+          "requester_name"
+        ],
+        ""
+      );
+
+    const confirmationTime =
+      new Date()
+        .toISOString()
+        .slice(0, 16);
+
+    container.innerHTML = `
+      <section class="workflow-section">
+        <h3 class="workflow-title">
+          ${escapeHtml(
+            t("preWorkTitle")
+          )}
+        </h3>
+
+        <p class="workflow-description">
+          ${escapeHtml(
+            t("preWorkDescription")
+          )}
+        </p >
+
+        <div class="check-section">
+          <h4 class="check-section-title">
+            ${escapeHtml(
+              t("requirementConfirmation")
+            )}
+          </h4>
+
+          <div class="check-list">
+            ${buildAgreementCheckItem(
+              requestNo,
+              "requirement_confirmed",
+              "requirementCheck"
+            )}
+
+            ${buildAgreementCheckItem(
+              requestNo,
+              "standard_confirmed",
+              "standardCheck"
+            )}
+
+            ${buildAgreementCheckItem(
+              requestNo,
+              "price_confirmed",
+              "priceCheck"
+            )}
+          </div>
+        </div>
+
+        <div class="check-section">
+          <h4 class="check-section-title">
+            ${escapeHtml(
+              t("siteChecklistTitle")
+            )}
+          </h4>
+
+          <div class="check-list">
+            ${buildAgreementCheckItem(
+              requestNo,
+              "site_safe",
+              "siteSafeCheck"
+            )}
+
+            ${buildAgreementCheckItem(
+              requestNo,
+              "tools_confirmed",
+              "toolsCheck"
+            )}
+
+            ${buildAgreementCheckItem(
+              requestNo,
+              "existing_damage_recorded",
+              "damageCheck"
+            )}
+
+            ${buildAgreementCheckItem(
+              requestNo,
+              "site_access_confirmed",
+              "accessCheck"
+            )}
+
+            ${buildAgreementCheckItem(
+              requestNo,
+              "prework_photos_saved",
+              "photoCheck"
+            )}
+          </div>
+        </div>
+
+        <div class="check-section">
+          <h4 class="check-section-title">
+            ${escapeHtml(
+              t("workerConfirmationTitle")
+            )}
+          </h4>
+
+          <div class="agreement-form">
+            <label>
+              ${escapeHtml(
+                t("workerSignature")
+              )}
+            </label>
+
+            <input
+              class="agreement-input"
+              type="text"
+              data-agreement-input="worker_signature"
+              value="${escapeHtml(
+                workerName
+              )}"
+              placeholder="${escapeHtml(
+                t(
+                  "workerSignaturePlaceholder"
+                )
+              )}"
+            >
+          </div>
+        </div>
+
+        <div class="check-section">
+          <h4 class="check-section-title">
+            ${escapeHtml(
+              t("customerConfirmationTitle")
+            )}
+          </h4>
+
+          <div class="agreement-form">
+            <label>
+              ${escapeHtml(
+                t(
+                  "confirmationCustomerName"
+                )
+              )}
+            </label>
+
+            <input
+              class="agreement-input"
+              type="text"
+              data-agreement-input="customer_name"
+              value="${escapeHtml(
+                customerName
+              )}"
+              placeholder="${escapeHtml(
+                t("customerNamePlaceholder")
+              )}"
+            >
+
+            <label>
+              ${escapeHtml(
+                t("customerSignature")
+              )}
+            </label>
+
+            <input
+              class="agreement-input"
+              type="text"
+              data-agreement-input="customer_signature"
+              placeholder="${escapeHtml(
+                t(
+                  "customerSignaturePlaceholder"
+                )
+              )}"
+            >
+
+            <label>
+              ${escapeHtml(
+                t("confirmationTime")
+              )}
+            </label>
+
+            <input
+              class="agreement-input"
+              type="datetime-local"
+              data-agreement-input="confirmation_time"
+              value="${escapeHtml(
+                confirmationTime
+              )}"
+            >
+
+            <label>
+              ${escapeHtml(
+                t("customerComments")
+              )}
+            </label>
+
+            <textarea
+              class="agreement-input"
+              data-agreement-input="customer_comments"
+              placeholder="${escapeHtml(
+                t(
+                  "customerCommentsPlaceholder"
+                )
+              )}"
+            ></textarea>
+          </div>
+        </div>
+
+        <p class="section-note">
+          ${
+            currentLanguage === "zh"
+              ? "提交后，开工协议将与当前需求编号永久关联。"
+              : "After submission, the agreement will remain connected to this request number."
+          }
+        </p >
+
+        <div class="task-actions">
+          <button
+            class="success-button"
+            type="button"
+            onclick="submitPreWorkAgreement(
+              '${escapeHtml(requestNo)}'
+            )"
+          >
+            ${escapeHtml(
+              t("submitAgreement")
+            )}
+          </button>
+        </div>
+      </section>
+    `;
+
+    container.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  /*
+   * 读取开工协议的所有复选框
+   */
+  function collectAgreementChecks(
+    container
+  ) {
+    const checkboxes =
+      container.querySelectorAll(
+        "[data-agreement-field]"
+      );
+
+    const result = {};
+    let allChecked = true;
+
+    checkboxes.forEach(
+      function (checkbox) {
+        const fieldName =
+          checkbox.dataset.agreementField;
+
+        result[fieldName] =
+          checkbox.checked;
+
+        if (!checkbox.checked) {
+          allChecked = false;
+        }
+      }
+    );
+
+    return {
+      values: result,
+      allChecked
+    };
+  }
+
+  /*
+   * 读取开工协议输入内容
+   */
+  function collectAgreementInputs(
+    container
+  ) {
+    const inputs =
+      container.querySelectorAll(
+        "[data-agreement-input]"
+      );
+
+    const result = {};
+
+    inputs.forEach(
+      function (input) {
+        const fieldName =
+          input.dataset.agreementInput;
+
+        result[fieldName] =
+          String(input.value || "").trim();
+      }
+    );
+
+    return result;
+  }
+
+  /*
+   * 在浏览器本地保留一份协议记录
+   * 即使网络暂时中断，也能保留填写内容。
+   */
+  function saveAgreementLocally(
+    requestNo,
+    agreementData
+  ) {
+    const storageKey =
+      `echocity-prework-${requestNo}`;
+
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify(agreementData)
+    );
+  }
+
+  /*
+   * 提交开工前协议
+   */
+  async function submitPreWorkAgreement(
+    requestNo
+  ) {
+    const container =
+      getWorkflowContainer(requestNo);
+
+    if (!container) {
+      return;
+    }
+
+    const checkResult =
+      collectAgreementChecks(
+        container
+      );
+
+    const inputValues =
+      collectAgreementInputs(
+        container
+      );
+
+    const workerSignature =
+      inputValues.worker_signature;
+
+    const customerName =
+      inputValues.customer_name;
+
+    const customerSignature =
+      inputValues.customer_signature;
+
+    const confirmationTime =
+      inputValues.confirmation_time;
+
+    if (
+      !checkResult.allChecked ||
+      !workerSignature ||
+      !customerName ||
+      !customerSignature ||
+      !confirmationTime
+    ) {
+      showPageMessage(
+        t("agreementRequired"),
+        "error"
+      );
+
+      return;
+    }
+
+    const client =
+      getSupabaseClient();
+
+    if (
+      !client ||
+      typeof client.from !== "function"
+    ) {
+      showPageMessage(
+        t("supabaseUnavailable"),
+        "error"
+      );
+      return;
+    }
+
+    const submittedAt =
+      new Date().toISOString();
+
+    const agreementData = {
+      request_no: requestNo,
+
+      requirement_confirmed:
+        checkResult.values
+          .requirement_confirmed,
+
+      standard_confirmed:
+        checkResult.values
+          .standard_confirmed,
+
+      price_confirmed:
+        checkResult.values
+          .price_confirmed,
+
+      site_safe:
+        checkResult.values.site_safe,
+
+      tools_confirmed:
+        checkResult.values
+          .tools_confirmed,
+
+      existing_damage_recorded:
+        checkResult.values
+          .existing_damage_recorded,
+
+      site_access_confirmed:
+        checkResult.values
+          .site_access_confirmed,
+
+      prework_photos_saved:
+        checkResult.values
+          .prework_photos_saved,
+
+      worker_signature:
+        workerSignature,
+
+      customer_name:
+        customerName,
+
+      customer_signature:
+        customerSignature,
+
+      confirmation_time:
+        new Date(
+          confirmationTime
+        ).toISOString(),
+
+      customer_comments:
+        inputValues.customer_comments || "",
+
+      submitted_at:
+        submittedAt
+    };
+
+    saveAgreementLocally(
+      requestNo,
+      agreementData
+    );
+
+    const submitButton =
+      container.querySelector(
+        ".success-button"
+      );
+
+    if (submitButton) {
+      submitButton.disabled = true;
+
+      submitButton.textContent =
+        currentLanguage === "zh"
+          ? "正在提交……"
+          : "Submitting...";
+    }
+
+    showPageMessage(
+      currentLanguage === "zh"
+        ? "正在提交开工协议……"
+        : "Submitting the pre-work agreement...",
+      "info"
+    );
+
+    try {
+      /*
+       * 先更新任务主状态。
+       *
+       * 详细协议已经同时保存在浏览器本地。
+       * 后续建立专用协议数据表后，
+       * 再把完整协议同步到服务器。
+       */
+      const { error } = await client
+        .from("service_requests")
+        .update({
+          worker_status:
+            "agreement_submitted",
+
+          prework_confirmed_at:
+            submittedAt,
+
+          updated_at:
+            submittedAt
+        })
+        .eq(
+          "request_no",
+          requestNo
+        );
+
+      if (error) {
+        throw error;
+      }
+
+      updateLocalTaskStatus(
+        requestNo,
+        "agreement_submitted"
+      );
+
+      const task =
+        findLoadedTask(requestNo);
+
+      if (task) {
+        task.prework_confirmed_at =
+          submittedAt;
+
+        task.prework_agreement =
+          agreementData;
+      }
+
+      renderTasks(
+        window.loadedWorkerTasks
+      );
+
+      showPageMessage(
+        t("agreementSubmitted"),
+        "success"
+      );
+    } catch (error) {
+      console.error(
+        "Pre-work agreement submission failed:",
+        error
+      );
+
+      showPageMessage(
+        t("agreementSubmitFailed"),
+        "error"
+      );
+
+      if (submitButton) {
+        submitButton.disabled = false;
+
+        submitButton.textContent =
+          t("submitAgreement");
+      }
+    }
+  }
+
+  /*
+   * 开始工作
+   * 只有开工协议提交后才能执行。
+   */
+  async function startWork(requestNo) {
+    const confirmed = window.confirm(
+      currentLanguage === "zh"
+        ? "请确认：现在正式开始本次服务工作。"
+        : "Please confirm that the service work is now starting."
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    const client =
+      getSupabaseClient();
+
+    if (
+      !client ||
+      typeof client.from !== "function"
+    ) {
+      showPageMessage(
+        t("supabaseUnavailable"),
+        "error"
+      );
+      return;
+    }
+
+    const startedAt =
+      new Date().toISOString();
+
+    showPageMessage(
+      currentLanguage === "zh"
+        ? "正在开始工作……"
+        : "Starting work...",
+      "info"
+    );
+
+    try {
+      const { error } = await client
+        .from("service_requests")
+        .update({
+          worker_status: "working",
+          work_started_at: startedAt,
+          updated_at: startedAt
+        })
+        .eq(
+          "request_no",
+          requestNo
+        );
+
+      if (error) {
+        throw error;
+      }
+
+      updateLocalTaskStatus(
+        requestNo,
+        "working"
+      );
+
+      const task =
+        findLoadedTask(requestNo);
+
+      if (task) {
+        task.work_started_at =
+          startedAt;
+      }
+
+      renderTasks(
+        window.loadedWorkerTasks
+      );
+
+      showPageMessage(
+        currentLanguage === "zh"
+          ? "工作已经正式开始，请记录工作过程。"
+          : "Work has started. Please record the work process.",
+        "success"
+      );
+    } catch (error) {
+      console.error(
+        "Start work failed:",
+        error
+      );
+
+      showPageMessage(
+        t("taskUpdateFailed"),
+        "error"
+      );
+    }
+  }  /*
+   * 显示工作过程记录
+   */
+  function showWorkExecution(requestNo) {
+    const container =
+      getWorkflowContainer(requestNo);
+
+    if (!container) {
+      return;
+    }
+
+    const today =
+      new Date()
+        .toISOString()
+        .slice(0, 10);
+
+    container.innerHTML = `
+      <section class="workflow-section">
+        <h3 class="workflow-title">
+          ${escapeHtml(
+            t("workExecutionTitle")
+          )}
+        </h3>
+
+        <p class="workflow-description">
+          ${escapeHtml(
+            t("workExecutionDescription")
+          )}
+        </p >
+
+        <div class="work-form">
+          <label>
+            ${escapeHtml(t("workDate"))}
+          </label>
+
+          <input
+            class="work-input"
+            type="date"
+            data-work-input="work_date"
+            value="${escapeHtml(today)}"
+          >
+
+          <label>
+            ${escapeHtml(t("startTime"))}
+          </label>
+
+          <input
+            class="work-input"
+            type="time"
+            data-work-input="start_time"
+          >
+
+          <label>
+            ${escapeHtml(t("endTime"))}
+          </label>
+
+          <input
+            class="work-input"
+            type="time"
+            data-work-input="end_time"
+          >
+
+          <label>
+            ${escapeHtml(t("workHours"))}
+          </label>
+
+          <input
+            class="work-input"
+            type="number"
+            min="0"
+            step="0.5"
+            data-work-input="work_hours"
+            placeholder="0"
+          >
+
+          <label>
+            ${escapeHtml(t("workProgress"))}
+          </label>
+
+          <textarea
+            class="work-input"
+            data-work-input="work_progress"
+            placeholder="${escapeHtml(
+              t("workProgressPlaceholder")
+            )}"
+          ></textarea>
+
+          <label>
+            ${escapeHtml(t("materialsUsed"))}
+          </label>
+
+          <textarea
+            class="work-input"
+            data-work-input="materials_used"
+            placeholder="${escapeHtml(
+              t("materialsPlaceholder")
+            )}"
+          ></textarea>
+
+          <label>
+            ${escapeHtml(t("issuesFound"))}
+          </label>
+
+          <textarea
+            class="work-input"
+            data-work-input="issues_found"
+            placeholder="${escapeHtml(
+              t("issuesPlaceholder")
+            )}"
+          ></textarea>
+
+          <label>
+            ${escapeHtml(t("photoRecord"))}
+          </label>
+
+          <textarea
+            class="work-input"
+            data-work-input="photo_record"
+            placeholder="${escapeHtml(
+              t("photoRecordPlaceholder")
+            )}"
+          ></textarea>
+
+          <label>
+            ${escapeHtml(t("videoRecord"))}
+          </label>
+
+          <textarea
+            class="work-input"
+            data-work-input="video_record"
+            placeholder="${escapeHtml(
+              t("videoRecordPlaceholder")
+            )}"
+          ></textarea>
+
+          <label>
+            ${escapeHtml(
+              t("customerOnSiteComment")
+            )}
+          </label>
+
+          <textarea
+            class="work-input"
+            data-work-input="customer_site_comment"
+            placeholder="${escapeHtml(
+              t(
+                "customerOnSiteCommentPlaceholder"
+              )
+            )}"
+          ></textarea>
+        </div>
+
+        <p class="section-note">
+          ${
+            currentLanguage === "zh"
+              ? "工作记录将继续关联当前需求编号，不会生成新的任务编号。"
+              : "This work record remains connected to the current request number."
+          }
+        </p >
+
+        <div class="task-actions">
+          <button
+            class="primary-button"
+            type="button"
+            onclick="saveWorkProgress(
+              '${escapeHtml(requestNo)}'
+            )"
+          >
+            ${escapeHtml(
+              t("saveProgress")
+            )}
+          </button>
+
+          <button
+            class="secondary-button"
+            type="button"
+            onclick="showMilestoneSubmission(
+              '${escapeHtml(requestNo)}'
+            )"
+          >
+            ${escapeHtml(
+              t("submitMilestone")
+            )}
+          </button>
+
+          <button
+            class="success-button"
+            type="button"
+            onclick="showFinalCompletion(
+              '${escapeHtml(requestNo)}'
+            )"
+          >
+            ${escapeHtml(
+              t("submitCompletion")
+            )}
+          </button>
+        </div>
+      </section>
+    `;
+
+    restoreWorkDraft(
+      requestNo,
+      container
+    );
+
+    container.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  /*
+   * 读取工作记录表单
+   */
+  function collectWorkInputs(container) {
+    const inputs =
+      container.querySelectorAll(
+        "[data-work-input]"
+      );
+
+    const result = {};
+
+    inputs.forEach(
+      function (input) {
+        const fieldName =
+          input.dataset.workInput;
+
+        result[fieldName] =
+          String(input.value || "").trim();
+      }
+    );
+
+    return result;
+  }
+
+  /*
+   * 计算工作小时数
+   */
+  function calculateWorkHours(
+    startTime,
+    endTime
+  ) {
+    if (!startTime || !endTime) {
+      return "";
+    }
+
+    const startParts =
+      startTime.split(":");
+
+    const endParts =
+      endTime.split(":");
+
+    if (
+      startParts.length !== 2 ||
+      endParts.length !== 2
+    ) {
+      return "";
+    }
+
+    const startMinutes =
+      Number(startParts[0]) * 60 +
+      Number(startParts[1]);
+
+    let endMinutes =
+      Number(endParts[0]) * 60 +
+      Number(endParts[1]);
+
+    if (
+      Number.isNaN(startMinutes) ||
+      Number.isNaN(endMinutes)
+    ) {
+      return "";
+    }
+
+    if (endMinutes < startMinutes) {
+      endMinutes += 24 * 60;
+    }
+
+    const totalHours =
+      (endMinutes - startMinutes) / 60;
+
+    return totalHours
+      .toFixed(2)
+      .replace(/\.00$/, "");
+  }
+
+  /*
+   * 本地保存工作草稿
+   */
+  function saveWorkDraftLocally(
+    requestNo,
+    workData
+  ) {
+    const storageKey =
+      `echocity-work-draft-${requestNo}`;
+
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify(workData)
+    );
+  }
+
+  /*
+   * 恢复未提交的工作草稿
+   */
+  function restoreWorkDraft(
+    requestNo,
+    container
+  ) {
+    const storageKey =
+      `echocity-work-draft-${requestNo}`;
+
+    const savedText =
+      localStorage.getItem(storageKey);
+
+    if (!savedText) {
+      return;
+    }
+
+    try {
+      const savedData =
+        JSON.parse(savedText);
+
+      const inputs =
+        container.querySelectorAll(
+          "[data-work-input]"
+        );
+
+      inputs.forEach(
+        function (input) {
+          const fieldName =
+            input.dataset.workInput;
+
+          if (
+            savedData[fieldName] !==
+            undefined
+          ) {
+            input.value =
+              savedData[fieldName];
+          }
+        }
+      );
+    } catch (error) {
+      console.error(
+        "Restore work draft failed:",
+        error
+      );
+    }
+  }
+
+  /*
+   * 保存工作过程记录
+   */
+  async function saveWorkProgress(
+    requestNo
+  ) {
+    const container =
+      getWorkflowContainer(requestNo);
+
+    if (!container) {
+      return;
+    }
+
+    const workData =
+      collectWorkInputs(container);
+
+    if (
+      !workData.work_date ||
+      !workData.work_progress
+    ) {
+      showPageMessage(
+        t("progressRequired"),
+        "error"
+      );
+      return;
+    }
+
+    if (
+      !workData.work_hours &&
+      workData.start_time &&
+      workData.end_time
+    ) {
+      workData.work_hours =
+        calculateWorkHours(
+          workData.start_time,
+          workData.end_time
+        );
+    }
+
+    workData.request_no =
+      requestNo;
+
+    workData.worker_phone =
+      currentWorkerPhone;
+
+    workData.recorded_at =
+      new Date().toISOString();
+
+    saveWorkDraftLocally(
+      requestNo,
+      workData
+    );
+
+    const client =
+      getSupabaseClient();
+
+    if (
+      !client ||
+      typeof client.from !== "function"
+    ) {
+      showPageMessage(
+        t("supabaseUnavailable"),
+        "error"
+      );
+      return;
+    }
+
+    showPageMessage(
+      currentLanguage === "zh"
+        ? "正在保存工作记录……"
+        : "Saving the work record...",
+      "info"
+    );
+
+    try {
+      /*
+       * 当前先把最新工作记录写入任务主表。
+       * 后续建立 work_records 专用表后，
+       * 每一天的记录都可以独立保存。
+       */
+      const { error } = await client
+        .from("service_requests")
+        .update({
+          latest_work_date:
+            workData.work_date,
+
+          latest_work_progress:
+            workData.work_progress,
+
+          latest_work_hours:
+            workData.work_hours || null,
+
+          latest_materials_used:
+            workData.materials_used || null,
+
+          latest_issues_found:
+            workData.issues_found || null,
+
+          latest_photo_record:
+            workData.photo_record || null,
+
+          latest_video_record:
+            workData.video_record || null,
+
+          latest_customer_comment:
+            workData.customer_site_comment ||
+            null,
+
+          latest_work_recorded_at:
+            workData.recorded_at,
+
+          updated_at:
+            workData.recorded_at
+        })
+        .eq(
+          "request_no",
+          requestNo
+        );
+
+      if (error) {
+        throw error;
+      }
+
+      const task =
+        findLoadedTask(requestNo);
+
+      if (task) {
+        task.latest_work_record =
+          workData;
+      }
+
+      showPageMessage(
+        t("progressSaved"),
+        "success"
+      );
+    } catch (error) {
+      console.error(
+        "Save work progress failed:",
+        error
+      );
+
+      /*
+       * 即使服务器保存失败，
+       * 浏览器本地仍然保留填写内容。
+       */
+      showPageMessage(
+        t("progressSaveFailed"),
+        "error"
+      );
+    }
+  }  /*
+   * 显示阶段成果提交表单
+   */
+  function showMilestoneSubmission(requestNo) {
+    const container =
+      getWorkflowContainer(requestNo);
+
+    if (!container) {
+      return;
+    }
+
+    container.innerHTML = `
+      <section class="workflow-section">
+        <h3 class="workflow-title">
+          ${escapeHtml(
+            t("milestoneTitle")
+          )}
+        </h3>
+
+        <p class="workflow-description">
+          ${escapeHtml(
+            t("milestoneDescription")
+          )}
+        </p >
+
+        <div class="work-form">
+          <label>
+            ${escapeHtml(
+              t("milestoneSummary")
+            )}
+          </label>
+
+          <textarea
+            class="work-input"
+            data-milestone-input="milestone_summary"
+            placeholder="${escapeHtml(
+              t(
+                "milestoneSummaryPlaceholder"
+              )
+            )}"
+          ></textarea>
+
+          <label>
+            ${escapeHtml(
+              t("milestoneEvidence")
+            )}
+          </label>
+
+          <textarea
+            class="work-input"
+            data-milestone-input="milestone_evidence"
+            placeholder="${escapeHtml(
+              t(
+                "milestoneEvidencePlaceholder"
+              )
+            )}"
+          ></textarea>
+
+          <label>
+            ${
+              currentLanguage === "zh"
+                ? "工作人员签名"
+                : "Worker Signature"
+            }
+          </label>
+
+          <input
+            class="work-input"
+            type="text"
+            data-milestone-input="worker_signature"
+            placeholder="${
+              currentLanguage === "zh"
+                ? "请输入工作人员姓名作为签名"
+                : "Enter the worker’s name as a signature"
+            }"
+          >
+
+          <label>
+            ${
+              currentLanguage === "zh"
+                ? "提交日期与时间"
+                : "Submission Date and Time"
+            }
+          </label>
+
+          <input
+            class="work-input"
+            type="datetime-local"
+            data-milestone-input="submitted_time"
+            value="${escapeHtml(
+              new Date()
+                .toISOString()
+                .slice(0, 16)
+            )}"
+          >
+
+          <label>
+            ${
+              currentLanguage === "zh"
+                ? "需要客户重点检查的内容"
+                : "Items Requiring Customer Review"
+            }
+          </label>
+
+          <textarea
+            class="work-input"
+            data-milestone-input="customer_review_items"
+            placeholder="${
+              currentLanguage === "zh"
+                ? "填写需要客户检查、确认或签字的工作内容"
+                : "Describe the work requiring customer inspection, confirmation, or signature"
+            }"
+          ></textarea>
+        </div>
+
+        <p class="section-note">
+          ${
+            currentLanguage === "zh"
+              ? "阶段成果提交后，客户将在客户验收页面完成检查、意见和签字确认。"
+              : "After submission, the customer will inspect, comment, and sign through the customer acceptance page."
+          }
+        </p >
+
+        <div class="task-actions">
+          <button
+            class="secondary-button"
+            type="button"
+            onclick="showWorkExecution(
+              '${escapeHtml(requestNo)}'
+            )"
+          >
+            ${
+              currentLanguage === "zh"
+                ? "返回工作记录"
+                : "Back to Work Record"
+            }
+          </button>
+
+          <button
+            class="primary-button"
+            type="button"
+            onclick="submitMilestone(
+              '${escapeHtml(requestNo)}'
+            )"
+          >
+            ${escapeHtml(
+              t("submitMilestoneButton")
+            )}
+          </button>
+        </div>
+      </section>
+    `;
+
+    restoreMilestoneDraft(
+      requestNo,
+      container
+    );
+
+    container.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  /*
+   * 读取阶段成果表单
+   */
+  function collectMilestoneInputs(
+    container
+  ) {
+    const inputs =
+      container.querySelectorAll(
+        "[data-milestone-input]"
+      );
+
+    const result = {};
+
+    inputs.forEach(
+      function (input) {
+        const fieldName =
+          input.dataset.milestoneInput;
+
+        result[fieldName] =
+          String(input.value || "").trim();
+      }
+    );
+
+    return result;
+  }
+
+  /*
+   * 本地保存阶段成果草稿
+   */
+  function saveMilestoneDraftLocally(
+    requestNo,
+    milestoneData
+  ) {
+    localStorage.setItem(
+      `echocity-milestone-${requestNo}`,
+      JSON.stringify(milestoneData)
+    );
+  }
+
+  /*
+   * 恢复阶段成果草稿
+   */
+  function restoreMilestoneDraft(
+    requestNo,
+    container
+  ) {
+    const savedText =
+      localStorage.getItem(
+        `echocity-milestone-${requestNo}`
+      );
+
+    if (!savedText) {
+      return;
+    }
+
+    try {
+      const savedData =
+        JSON.parse(savedText);
+
+      const inputs =
+        container.querySelectorAll(
+          "[data-milestone-input]"
+        );
+
+      inputs.forEach(
+        function (input) {
+          const fieldName =
+            input.dataset.milestoneInput;
+
+          if (
+            savedData[fieldName] !==
+            undefined
+          ) {
+            input.value =
+              savedData[fieldName];
+          }
+        }
+      );
+    } catch (error) {
+      console.error(
+        "Restore milestone draft failed:",
+        error
+      );
+    }
+  }
+
+  /*
+   * 提交阶段成果
+   */
+  async function submitMilestone(
+    requestNo
+  ) {
+    const container =
+      getWorkflowContainer(requestNo);
+
+    if (!container) {
+      return;
+    }
+
+    const milestoneData =
+      collectMilestoneInputs(
+        container
+      );
+
+    if (
+      !milestoneData.milestone_summary ||
+      !milestoneData.worker_signature ||
+      !milestoneData.submitted_time
+    ) {
+      showPageMessage(
+        currentLanguage === "zh"
+          ? "请填写阶段成果说明、工作人员签名和提交时间。"
+          : "Enter the milestone summary, worker signature, and submission time.",
+        "error"
+      );
+
+      return;
+    }
+
+    milestoneData.request_no =
+      requestNo;
+
+    milestoneData.worker_phone =
+      currentWorkerPhone;
+
+    milestoneData.submitted_at =
+      new Date().toISOString();
+
+    saveMilestoneDraftLocally(
+      requestNo,
+      milestoneData
+    );
+
+    const client =
+      getSupabaseClient();
+
+    if (
+      !client ||
+      typeof client.from !== "function"
+    ) {
+      showPageMessage(
+        t("supabaseUnavailable"),
+        "error"
+      );
+      return;
+    }
+
+    const submitButton =
+      container.querySelector(
+        ".primary-button"
+      );
+
+    if (submitButton) {
+      submitButton.disabled = true;
+
+      submitButton.textContent =
+        currentLanguage === "zh"
+          ? "正在提交……"
+          : "Submitting...";
+    }
+
+    showPageMessage(
+      currentLanguage === "zh"
+        ? "正在提交阶段成果……"
+        : "Submitting milestone results...",
+      "info"
+    );
+
+    try {
+      const submittedAt =
+        new Date().toISOString();
+
+      const { error } = await client
+        .from("service_requests")
+        .update({
+          worker_status:
+            "milestone_submitted",
+
+          milestone_summary:
+            milestoneData
+              .milestone_summary,
+
+          milestone_evidence:
+            milestoneData
+              .milestone_evidence ||
+            null,
+
+          milestone_worker_signature:
+            milestoneData
+              .worker_signature,
+
+          milestone_customer_review_items:
+            milestoneData
+              .customer_review_items ||
+            null,
+
+          milestone_submitted_at:
+            submittedAt,
+
+          updated_at:
+            submittedAt
+        })
+        .eq(
+          "request_no",
+          requestNo
+        );
+
+      if (error) {
+        throw error;
+      }
+
+      updateLocalTaskStatus(
+        requestNo,
+        "milestone_submitted"
+      );
+
+      const task =
+        findLoadedTask(requestNo);
+
+      if (task) {
+        task.milestone_summary =
+          milestoneData
+            .milestone_summary;
+
+        task.milestone_evidence =
+          milestoneData
+            .milestone_evidence;
+
+        task.milestone_submitted_at =
+          submittedAt;
+      }
+
+      renderTasks(
+        window.loadedWorkerTasks
+      );
+
+      showPageMessage(
+        currentLanguage === "zh"
+          ? "阶段成果已提交，等待客户阶段验收。"
+          : "The milestone has been submitted and is awaiting customer acceptance.",
+        "success"
+      );
+    } catch (error) {
+      console.error(
+        "Submit milestone failed:",
+        error
+      );
+
+      showPageMessage(
+        currentLanguage === "zh"
+          ? "阶段成果提交失败，请稍后再试。"
+          : "Unable to submit the milestone. Please try again.",
+        "error"
+      );
+
+      if (submitButton) {
+        submitButton.disabled = false;
+
+        submitButton.textContent =
+          t("submitMilestoneButton");
+      }
+    }
+  }  /*
+   * 显示最终完成提交表单
+   */
+  function showFinalCompletion(requestNo) {
+    const container =
+      getWorkflowContainer(requestNo);
+
+    if (!container) {
+      return;
+    }
+
+    const task =
+      findLoadedTask(requestNo);
+
+    const workerName = getTaskValue(
+      task,
+      [
+        "worker_name",
+        "assigned_worker_name"
+      ],
+      ""
+    );
+
+    const completionTime =
+      new Date()
+        .toISOString()
+        .slice(0, 16);
+
+    container.innerHTML = `
+      <section class="workflow-section">
+        <h3 class="workflow-title">
+          ${escapeHtml(
+            t("finalCompletionTitle")
+          )}
+        </h3>
+
+        <p class="workflow-description">
+          ${escapeHtml(
+            t("finalCompletionDescription")
+          )}
+        </p >
+
+        <div class="work-form">
+          <label>
+            ${escapeHtml(
+              t("completionSummary")
+            )}
+          </label>
+
+          <textarea
+            class="work-input"
+            data-completion-input="completion_summary"
+            placeholder="${escapeHtml(
+              t(
+                "completionSummaryPlaceholder"
+              )
+            )}"
+          ></textarea>
+
+          <label>
+            ${
+              currentLanguage === "zh"
+                ? "最终成果证据"
+                : "Final Evidence"
+            }
+          </label>
+
+          <textarea
+            class="work-input"
+            data-completion-input="completion_evidence"
+            placeholder="${
+              currentLanguage === "zh"
+                ? "填写最终照片、视频、文件及其他成果证明"
+                : "List final photographs, videos, files, and other evidence"
+            }"
+          ></textarea>
+
+          <label>
+            ${
+              currentLanguage === "zh"
+                ? "遗留问题"
+                : "Outstanding Issues"
+            }
+          </label>
+
+          <textarea
+            class="work-input"
+            data-completion-input="outstanding_issues"
+            placeholder="${
+              currentLanguage === "zh"
+                ? "如无遗留问题，请填写“无”"
+                : "Enter None when there are no outstanding issues"
+            }"
+          ></textarea>
+
+          <label>
+            ${
+              currentLanguage === "zh"
+                ? "现场清理确认"
+                : "Site Cleanup Confirmation"
+            }
+          </label>
+
+          <select
+            class="work-input"
+            data-completion-input="site_cleanup_confirmed"
+          >
+            <option value="">
+              ${
+                currentLanguage === "zh"
+                  ? "请选择"
+                  : "Select"
+              }
+            </option>
+
+            <option value="yes">
+              ${
+                currentLanguage === "zh"
+                  ? "已完成现场清理"
+                  : "Site cleanup completed"
+              }
+            </option>
+
+            <option value="no">
+              ${
+                currentLanguage === "zh"
+                  ? "尚未完成现场清理"
+                  : "Site cleanup not completed"
+              }
+            </option>
+          </select>
+
+          <label>
+            ${
+              currentLanguage === "zh"
+                ? "工具和剩余材料确认"
+                : "Tools and Remaining Materials"
+            }
+          </label>
+
+          <textarea
+            class="work-input"
+            data-completion-input="tools_materials_note"
+            placeholder="${
+              currentLanguage === "zh"
+                ? "说明工具撤离、剩余材料移交或处理情况"
+                : "Describe tool removal and the handling of remaining materials"
+            }"
+          ></textarea>
+
+          <label>
+            ${
+              currentLanguage === "zh"
+                ? "工作人员签名"
+                : "Worker Signature"
+            }
+          </label>
+
+          <input
+            class="work-input"
+            type="text"
+            data-completion-input="worker_signature"
+            value="${escapeHtml(
+              workerName
+            )}"
+            placeholder="${
+              currentLanguage === "zh"
+                ? "请输入工作人员姓名作为签名"
+                : "Enter the worker’s name as a signature"
+            }"
+          >
+
+          <label>
+            ${
+              currentLanguage === "zh"
+                ? "完成日期与时间"
+                : "Completion Date and Time"
+            }
+          </label>
+
+          <input
+            class="work-input"
+            type="datetime-local"
+            data-completion-input="completion_time"
+            value="${escapeHtml(
+              completionTime
+            )}"
+          >
+
+          <label>
+            ${
+              currentLanguage === "zh"
+                ? "请客户重点验收的内容"
+                : "Items Requiring Final Acceptance"
+            }
+          </label>
+
+          <textarea
+            class="work-input"
+            data-completion-input="customer_acceptance_items"
+            placeholder="${
+              currentLanguage === "zh"
+                ? "填写需要客户最终检查、确认和签字的内容"
+                : "Describe the items requiring final customer inspection and signature"
+            }"
+          ></textarea>
+        </div>
+
+        <p class="section-note">
+          ${
+            currentLanguage === "zh"
+              ? "工作人员提交最终成果后，任务将进入客户最终验收环节。客户验收通过后才能结算和归档。"
+              : "After final submission, the task enters customer final acceptance. Settlement and archiving follow customer approval."
+          }
+        </p >
+
+        <div class="task-actions">
+          <button
+            class="secondary-button"
+            type="button"
+            onclick="showWorkExecution(
+              '${escapeHtml(requestNo)}'
+            )"
+          >
+            ${
+              currentLanguage === "zh"
+                ? "返回工作记录"
+                : "Back to Work Record"
+            }
+          </button>
+
+          <button
+            class="success-button"
+            type="button"
+            onclick="submitFinalCompletion(
+              '${escapeHtml(requestNo)}'
+            )"
+          >
+            ${escapeHtml(
+              t("submitFinalCompletion")
+            )}
+          </button>
+        </div>
+      </section>
+    `;
+
+    restoreCompletionDraft(
+      requestNo,
+      container
+    );
+
+    container.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  /*
+   * 读取最终完成表单
+   */
+  function collectCompletionInputs(
+    container
+  ) {
+    const inputs =
+      container.querySelectorAll(
+        "[data-completion-input]"
+      );
+
+    const result = {};
+
+    inputs.forEach(
+      function (input) {
+        const fieldName =
+          input.dataset.completionInput;
+
+        result[fieldName] =
+          String(input.value || "").trim();
+      }
+    );
+
+    return result;
+  }
+
+  /*
+   * 本地保存最终完成草稿
+   */
+  function saveCompletionDraftLocally(
+    requestNo,
+    completionData
+  ) {
+    localStorage.setItem(
+      `echocity-completion-${requestNo}`,
+      JSON.stringify(completionData)
+    );
+  }
+
+  /*
+   * 恢复最终完成草稿
+   */
+  function restoreCompletionDraft(
+    requestNo,
+    container
+  ) {
+    const savedText =
+      localStorage.getItem(
+        `echocity-completion-${requestNo}`
+      );
+
+    if (!savedText) {
+      return;
+    }
+
+    try {
+      const savedData =
+        JSON.parse(savedText);
+
+      const inputs =
+        container.querySelectorAll(
+          "[data-completion-input]"
+        );
+
+      inputs.forEach(
+        function (input) {
+          const fieldName =
+            input.dataset.completionInput;
+
+          if (
+            savedData[fieldName] !==
+            undefined
+          ) {
+            input.value =
+              savedData[fieldName];
+          }
+        }
+      );
+    } catch (error) {
+      console.error(
+        "Restore completion draft failed:",
+        error
+      );
+    }
+  }
+
+  /*
+   * 提交最终完成成果
+   */
+  async function submitFinalCompletion(
+    requestNo
+  ) {
+    const container =
+      getWorkflowContainer(requestNo);
+
+    if (!container) {
+      return;
+    }
+
+    const completionData =
+      collectCompletionInputs(
+        container
+      );
+
+    if (
+      !completionData.completion_summary ||
+      !completionData.worker_signature ||
+      !completionData.completion_time ||
+      !completionData
+        .site_cleanup_confirmed
+    ) {
+      showPageMessage(
+        currentLanguage === "zh"
+          ? "请填写最终完成说明、现场清理情况、工作人员签名和完成时间。"
+          : "Enter the final summary, site cleanup status, worker signature, and completion time.",
+        "error"
+      );
+
+      return;
+    }
+
     const confirmed =
       window.confirm(
-        translate(
-          "confirmComplete"
-        )
+        currentLanguage === "zh"
+          ? "请确认：全部工作已经完成，现在提交客户最终验收。"
+          : "Please confirm that all work is complete and ready for final customer acceptance."
       );
 
     if (!confirmed) {
       return;
     }
-  }
 
-  try {
-    const client =
-      window.echoCitySupabase;
+    completionData.request_no =
+      requestNo;
 
-    if (!client) {
-      throw new Error(
-        "Supabase connection is not available."
-      );
-    }
+    completionData.worker_phone =
+      currentWorkerPhone;
 
-    const now =
+    completionData.submitted_at =
       new Date().toISOString();
 
-    const { data, error } =
-      await client
-        .from("service_requests")
-        .update({
-          status: nextStatus,
-          updated_at: now
-        })
-        .eq(
-          "id",
-          task.id
-        )
-        .select("*")
-        .single();
-
-    if (error) {
-      throw error;
-    }
-
-    task.status =
-      data.status;
-
-    task.updatedAt =
-      data.updated_at;
-
-    if (
-      nextStatus === "accepted"
-    ) {
-      task.acceptedAt = now;
-
-      showStatus(
-        "success",
-        translate("taskAccepted")
-      );
-    }
-
-    if (
-      nextStatus === "arrived"
-    ) {
-      task.arrivedAt = now;
-
-      showStatus(
-        "success",
-        translate("taskArrived")
-      );
-    }
-
-    if (
-      nextStatus === "in_progress"
-    ) {
-      task.startedAt = now;
-
-      showStatus(
-        "success",
-        translate("taskStarted")
-      );
-    }
-
-    if (
-      nextStatus === "completed"
-    ) {
-      task.completedAt = now;
-
-      showStatus(
-        "success",
-        translate("taskCompleted")
-      );
-    }
-
-    visibleTasks =
-      visibleTasks.map(
-        (item) =>
-          String(item.id) ===
-          String(task.id)
-            ? task
-            : item
-      );
-
-    console.log(
-      "Worker task status updated:",
-      data
+    saveCompletionDraftLocally(
+      requestNo,
+      completionData
     );
 
-    renderTasks();
-  } catch (error) {
-    console.error(
-      "Failed to update worker task:",
-      error
-    );
+    const client =
+      getSupabaseClient();
 
-    showStatus(
-      "error",
+    if (
+      !client ||
+      typeof client.from !== "function"
+    ) {
+      showPageMessage(
+        t("supabaseUnavailable"),
+        "error"
+      );
+      return;
+    }
+
+    const submitButton =
+      container.querySelector(
+        ".success-button"
+      );
+
+    if (submitButton) {
+      submitButton.disabled = true;
+
+      submitButton.textContent =
+        currentLanguage === "zh"
+          ? "正在提交……"
+          : "Submitting...";
+    }
+
+    showPageMessage(
       currentLanguage === "zh"
-        ? "任务状态保存失败，请重试。"
-        : "Failed to save task status."
+        ? "正在提交最终成果……"
+        : "Submitting final results...",
+      "info"
     );
-  }
-}
-    function syncRequestStatus(
-      requestId
-    ) {
-      const requests =
-        JSON.parse(
-          localStorage.getItem(
-            "echocity-service-requests"
-          ) || "[]"
-        );
 
-      const request =
-        requests.find(
-          (item) =>
-            item.id === requestId
-        );
-
-      if (!request) {
-        return;
-      }
-
-      const relatedTasks =
-        allTasks.filter(
-          (task) =>
-            task.requestId === requestId
-        );
-
-      const allCompleted =
-        relatedTasks.length > 0 &&
-        relatedTasks.every(
-          (task) =>
-            task.status === "completed"
-        );
-
-      const anyInProgress =
-        relatedTasks.some(
-          (task) =>
-            task.status ===
-              "in_progress" ||
-            task.status ===
-              "arrived"
-        );
-
-      if (allCompleted) {
-        request.status =
-          "completed";
-      } else if (anyInProgress) {
-        request.status =
-          "in_progress";
-      } else {
-        request.status =
-          "assigned";
-      }
-
-      request.updatedAt =
+    try {
+      const submittedAt =
         new Date().toISOString();
 
-      localStorage.setItem(
-        "echocity-service-requests",
-        JSON.stringify(requests)
+      const { error } = await client
+        .from("service_requests")
+        .update({
+          worker_status: "completed",
+
+          completion_summary:
+            completionData
+              .completion_summary,
+
+          completion_evidence:
+            completionData
+              .completion_evidence ||
+            null,
+
+          outstanding_issues:
+            completionData
+              .outstanding_issues ||
+            null,
+
+          site_cleanup_confirmed:
+            completionData
+              .site_cleanup_confirmed ===
+            "yes",
+
+          tools_materials_note:
+            completionData
+              .tools_materials_note ||
+            null,
+
+          completion_worker_signature:
+            completionData
+              .worker_signature,
+
+          customer_acceptance_items:
+            completionData
+              .customer_acceptance_items ||
+            null,
+
+          worker_completed_at:
+            submittedAt,
+
+          updated_at:
+            submittedAt
+        })
+        .eq(
+          "request_no",
+          requestNo
+        );
+
+      if (error) {
+        throw error;
+      }
+
+      updateLocalTaskStatus(
+        requestNo,
+        "completed"
       );
 
-      const latestRequest =
-        JSON.parse(
-          localStorage.getItem(
-            "echocity-last-request"
-          ) || "null"
-        );
+      const task =
+        findLoadedTask(requestNo);
 
-      if (
-        latestRequest &&
-        latestRequest.id === requestId
-      ) {
-        Object.assign(
-          latestRequest,
-          request
-        );
+      if (task) {
+        task.completion_summary =
+          completionData
+            .completion_summary;
 
-        localStorage.setItem(
-          "echocity-last-request",
-          JSON.stringify(
-            latestRequest
-          )
-        );
+        task.worker_completed_at =
+          submittedAt;
+      }
+
+      renderTasks(
+        window.loadedWorkerTasks
+      );
+
+      showPageMessage(
+        currentLanguage === "zh"
+          ? "最终成果已提交，正在等待客户最终验收。"
+          : "Final results were submitted and are awaiting customer acceptance.",
+        "success"
+      );
+    } catch (error) {
+      console.error(
+        "Final completion submission failed:",
+        error
+      );
+
+      showPageMessage(
+        currentLanguage === "zh"
+          ? "最终成果提交失败，请稍后再试。"
+          : "Unable to submit the final results. Please try again.",
+        "error"
+      );
+
+      if (submitButton) {
+        submitButton.disabled = false;
+
+        submitButton.textContent =
+          t("submitFinalCompletion");
       }
     }
+  }
 
-    document.addEventListener(
-      "DOMContentLoaded",
-      () => {
-        loadTasks();
+  /*
+   * 页面启动
+   */
+  function initializeWorkerTasksPage() {
+    applyStaticTranslations();
 
-        const storedPhone =
-          localStorage.getItem(
-            "echocity-worker-phone"
-          );
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
 
-        if (storedPhone) {
-          document.getElementById(
-            "workerPhoneInput"
-          ).value =
-            storedPhone;
+    const phoneFromUrl =
+      params.get("phone");
 
-          const normalizedPhone =
+    const savedPhone =
+      localStorage.getItem(
+        "echocity-worker-phone"
+      );
+
+    const initialPhone =
+      phoneFromUrl ||
+      savedPhone ||
+      "";
+
+    if (initialPhone) {
+      const normalizedPhone =
+        normalizePhone(initialPhone);
+
+      document
+        .getElementById(
+          "workerPhoneInput"
+        )
+        .value = normalizedPhone;
+
+      currentWorkerPhone =
+        normalizedPhone;
+    }
+
+    document
+      .getElementById(
+        "workerPhoneInput"
+      )
+      .addEventListener(
+        "change",
+        function (event) {
+          const phone =
             normalizePhone(
-              storedPhone
+              event.target.value
             );
 
-          visibleTasks =
-            allTasks.filter(
-              (task) =>
-                normalizePhone(
-                  task.workerPhone
-                ) ===
-                normalizedPhone
+          event.target.value = phone;
+
+          if (phone) {
+            localStorage.setItem(
+              "echocity-worker-phone",
+              phone
             );
+          }
         }
+      );
+  }
 
-        applyLanguage();
-      }
-    );
-  </script>
-
+  initializeWorkerTasksPage();
+</script>
 </body>
 </html>
