@@ -1389,8 +1389,6 @@
         .from("service_requests")
         .update({
           worker_status: "arrived",
-          worker_arrived_at:
-            new Date().toISOString(),
           updated_at:
             new Date().toISOString()
         })
@@ -1407,10 +1405,6 @@
 
       const task = findLoadedTask(requestNo);
 
-      if (task) {
-        task.worker_arrived_at =
-          new Date().toISOString();
-      }
 
       renderTasks(
         window.loadedWorkerTasks
