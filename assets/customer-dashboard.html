@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>客户工作台 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+      background:
+        linear-gradient(
+          180deg,
+          #eef5ff 0%,
+          #f8fbff 100%
+        );
+      color: #172033;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .page {
+      width: min(
+        1120px,
+        calc(100% - 28px)
+      );
+      margin: 0 auto;
+      padding: 22px 0 48px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: #1769e0;
+      color: #ffffff;
+      font-weight: 800;
+      box-shadow:
+        0 10px 25px
+        rgba(23, 105, 224, 0.22);
+    }
+
+    .language-button {
+      border: 1px solid #cbd8eb;
+      background: #ffffff;
+      color: #172033;
+      border-radius: 12px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .hero {
+      background: #ffffff;
+      border: 1px solid #dce6f3;
+      border-radius: 24px;
+      padding: 26px;
+      box-shadow:
+        0 16px 38px
+        rgba(40, 72, 120, 0.08);
+      margin-bottom: 20px;
+    }
+
+    .eyebrow {
+      color: #1769e0;
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(
+        30px,
+        5vw,
+        48px
+      );
+      line-height: 1.15;
+    }
+
+    .hero p {
+      margin: 0;
+      color: #627086;
+      font-size: 16px;
+      line-height: 1.75;
+    }
+
+    .phone-panel {
+      display: grid;
+      grid-template-columns:
+        1fr auto;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .phone-input {
+      width: 100%;
+      min-height: 52px;
+      border: 1px solid #cbd8eb;
+      border-radius: 14px;
+      padding: 0 16px;
+      background: #ffffff;
+      outline: none;
+    }
+
+    .phone-input:focus {
+      border-color: #1769e0;
+      box-shadow:
+        0 0 0 4px
+        rgba(23, 105, 224, 0.1);
+    }
+
+    .primary-button {
+      min-height: 52px;
+      border: 0;
+      border-radius: 14px;
+      padding: 0 22px;
+      background: #1769e0;
+      color: #ffffff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .primary-button:hover {
+      background: #0f57c2;
+    }
+
+    .status {
+      display: none;
+      margin-top: 14px;
+      border-radius: 14px;
+      padding: 13px 15px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .status.success {
+      display: block;
+      background: #e9f9ef;
+      color: #16713a;
+      border: 1px solid #bde7ca;
+    }
+
+    .status.error {
+      display: block;
+      background: #fff0f0;
+      color: #b12b2b;
+      border: 1px solid #f1c0c0;
+    }
+
+    .section {
+      margin-top: 20px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .section-heading p {
+      margin: 6px 0 0;
+      color: #6b788d;
+      line-height: 1.6;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns:
+        repeat(
+          3,
+          minmax(0, 1fr)
+        );
+      gap: 16px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #dce6f3;
+      border-radius: 20px;
+      padding: 20px;
+      min-height: 185px;
+      box-shadow:
+        0 12px 28px
+        rgba(40, 72, 120, 0.07);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: #edf4ff;
+      font-size: 23px;
+      margin-bottom: 14px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 19px;
+    }
+
+    .card p {
+      margin: 0 0 18px;
+      color: #6b788d;
+      line-height: 1.65;
+      flex: 1;
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 800;
+      background: #edf4ff;
+      color: #1769e0;
+      border: 1px solid #d3e2fb;
+    }
+
+    .card-link:hover {
+      background: #dfeaff;
+    }
+
+    .summary-panel {
+      margin-top: 20px;
+      background: #ffffff;
+      border: 1px solid #dce6f3;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow:
+        0 12px 28px
+        rgba(40, 72, 120, 0.07);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(
+          4,
+          minmax(0, 1fr)
+        );
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .summary-item {
+      border: 1px solid #e1e8f2;
+      border-radius: 16px;
+      padding: 16px;
+      background: #f9fbff;
+    }
+
+    .summary-label {
+      color: #6b788d;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .summary-value {
+      font-size: 26px;
+      font-weight: 800;
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      text-align: center;
+      color: #7a8798;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    @media (
+      max-width: 860px
+    ) {
+      .grid {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+      }
+
+      .summary-grid {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+      }
+    }
+
+    @media (
+      max-width: 620px
+    ) {
+      .page {
+        width: min(
+          100% - 18px,
+          1120px
+        );
+        padding-top: 12px;
+      }
+
+      .hero {
+        padding: 20px;
+        border-radius: 20px;
+      }
+
+      .phone-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-grid {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+      }
+
+      .topbar {
+        margin-bottom: 12px;
+      }
+
+      .brand {
+        font-size: 19px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">
+          E
+        </div>
+
+        <span>
+          EchoCity
+        </span>
+      </div>
+
+      <button
+        class="language-button"
+        id="languageButton"
+        type="button"
+      >
+        EN
+      </button>
+    </header>
+
+    <section class="hero">
+      <div
+        class="eyebrow"
+        data-i18n="eyebrow"
+      >
+        客户工作台
+      </div>
+
+      <h1
+        data-i18n="title"
+      >
+        我的服务与订单
+      </h1>
+
+      <p
+        data-i18n="description"
+      >
+        客户可以直接下单、查看报价、跟踪服务过程、进行中间验收和最终验收。
+      </p >
+
+      <div class="phone-panel">
+        <input
+          class="phone-input"
+          id="customerPhone"
+          type="tel"
+          placeholder="请输入客户手机号"
+          data-i18n-placeholder=
+            "phonePlaceholder"
+        />
+
+        <button
+          class="primary-button"
+          id="loadButton"
+          type="button"
+          data-i18n="loadButton"
+        >
+          查看我的订单
+        </button>
+      </div>
+
+      <div
+        class="status"
+        id="statusBox"
+      ></div>
+    </section>    <section class="section">
+      <div class="section-heading">
+        <div>
+          <h2
+            data-i18n="servicesTitle"
+          >
+            常用服务
+          </h2>
+
+          <p
+            data-i18n="servicesDescription"
+          >
+            从下单到验收，所有动作都在同一个客户工作台完成。
+          </p >
+        </div>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <div class="card-icon">
+            ＋
+          </div>
+
+          <h3
+            data-i18n="newRequestTitle"
+          >
+            我要找服务
+          </h3>
+
+          <p
+            data-i18n="newRequestText"
+          >
+            提交维修、清洁、照护、安装或其他服务需求。
+          </p >
+
+          <a
+            class="card-link"
+            href=" "
+            data-i18n="newRequestButton"
+          >
+            立即下单
+          </a >
+        </article>
+
+        <article class="card">
+          <div class="card-icon">
+            📋
+          </div>
+
+          <h3
+            data-i18n="ordersTitle"
+          >
+            我的订单
+          </h3>
+
+          <p
+            data-i18n="ordersText"
+          >
+            查看全部订单、当前状态、报价和服务进度。
+          </p >
+
+          <a
+            class="card-link"
+            href="customer-my-requests.html"
+            data-i18n="ordersButton"
+          >
+            查看订单
+          </a >
+        </article>
+
+        <article class="card">
+          <div class="card-icon">
+            💬
+          </div>
+
+          <h3
+            data-i18n="quoteTitle"
+          >
+            确认报价
+          </h3>
+
+          <p
+            data-i18n="quoteText"
+          >
+            查看平台报价、服务范围和预计完成时间。
+          </p >
+
+          <a
+            class="card-link"
+            href="service-quote-confirmation.html"
+            data-i18n="quoteButton"
+          >
+            查看报价
+          </a >
+        </article>
+
+        <article class="card">
+          <div class="card-icon">
+            ✅
+          </div>
+
+          <h3
+            data-i18n="milestoneTitle"
+          >
+            中间验收
+          </h3>
+
+          <p
+            data-i18n="milestoneText"
+          >
+            查看工作人员提交的节点成果，并进行阶段性验收。
+          </p >
+
+          <a
+            class="card-link"
+            href="customer-milestone-evaluation.html"
+            data-i18n="milestoneButton"
+          >
+            中间验收
+          </a >
+        </article>
+
+        <article class="card">
+          <div class="card-icon">
+            🏁
+          </div>
+
+          <h3
+            data-i18n="finalTitle"
+          >
+            最终验收
+          </h3>
+
+          <p
+            data-i18n="finalText"
+          >
+            确认最终服务结果、评分并正式完成订单。
+          </p >
+
+          <a
+            class="card-link"
+            href="customer-final-acceptance.html"
+            data-i18n="finalButton"
+          >
+            最终验收
+          </a >
+        </article>
+
+        <article class="card">
+          <div class="card-icon">
+            E
+          </div>
+
+          <h3
+            data-i18n="echoTitle"
+          >
+            数字人 Echo
+          </h3>
+
+          <p
+            data-i18n="echoText"
+          >
+            帮助理解服务需求、查看进度并提示下一步操作。
+          </p >
+
+          <a
+            class="card-link"
+            href="service-request.html"
+            data-i18n="echoButton"
+          >
+            告诉 Echo
+          </a >
+        </article>
+      </div>
+    </section>
+
+    <section class="summary-panel">
+      <div class="section-heading">
+        <div>
+          <h2
+            data-i18n="summaryTitle"
+          >
+            我的订单概况
+          </h2>
+
+          <p
+            data-i18n="summaryDescription"
+          >
+            输入手机号后，从 Supabase 读取真实订单数量。
+          </p >
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="totalLabel"
+          >
+            全部订单
+          </div>
+
+          <div
+            class="summary-value"
+            id="totalCount"
+          >
+            0
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="activeLabel"
+          >
+            进行中
+          </div>
+
+          <div
+            class="summary-value"
+            id="activeCount"
+          >
+            0
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="acceptanceLabel"
+          >
+            待验收
+          </div>
+
+          <div
+            class="summary-value"
+            id="acceptanceCount"
+          >
+            0
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="completedLabel"
+          >
+            已完成
+          </div>
+
+          <div
+            class="summary-value"
+            id="completedCount"
+          >
+            0
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div
+      class="footer-note"
+      data-i18n="footer"
+    >
+      一个手机号连接客户、订单、服务过程和验收结果。
+    </div>
+  </main>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  ></script>
+
+  <script
+    src="js/echocity-supabase.js"
+  ></script>
+
+  <script>    const translations = {
+      zh: {
+        eyebrow:
+          "客户工作台",
+
+        title:
+          "我的服务与订单",
+
+        description:
+          "客户可以直接下单、查看报价、跟踪服务过程、进行中间验收和最终验收。",
+
+        phonePlaceholder:
+          "请输入客户手机号",
+
+        loadButton:
+          "查看我的订单",
+
+        servicesTitle:
+          "常用服务",
+
+        servicesDescription:
+          "从下单到验收，所有动作都在同一个客户工作台完成。",
+
+        newRequestTitle:
+          "我要找服务",
+
+        newRequestText:
+          "提交维修、清洁、照护、安装或其他服务需求。",
+
+        newRequestButton:
+          "立即下单",
+
+        ordersTitle:
+          "我的订单",
+
+        ordersText:
+          "查看全部订单、当前状态、报价和服务进度。",
+
+        ordersButton:
+          "查看订单",
+
+        quoteTitle:
+          "确认报价",
+
+        quoteText:
+          "查看平台报价、服务范围和预计完成时间。",
+
+        quoteButton:
+          "查看报价",
+
+        milestoneTitle:
+          "中间验收",
+
+        milestoneText:
+          "查看工作人员提交的节点成果，并进行阶段性验收。",
+
+        milestoneButton:
+          "中间验收",
+
+        finalTitle:
+          "最终验收",
+
+        finalText:
+          "确认最终服务结果、评分并正式完成订单。",
+
+        finalButton:
+          "最终验收",
+
+        echoTitle:
+          "数字人 Echo",
+
+        echoText:
+          "帮助理解服务需求、查看进度并提示下一步操作。",
+
+        echoButton:
+          "告诉 Echo",
+
+        summaryTitle:
+          "我的订单概况",
+
+        summaryDescription:
+          "输入手机号后，从 Supabase 读取真实订单数量。",
+
+        totalLabel:
+          "全部订单",
+
+        activeLabel:
+          "进行中",
+
+        acceptanceLabel:
+          "待验收",
+
+        completedLabel:
+          "已完成",
+
+        footer:
+          "一个手机号连接客户、订单、服务过程和验收结果。",
+
+        phoneRequired:
+          "请输入客户手机号。",
+
+        loading:
+          "正在读取订单数据……",
+
+        loadSuccess:
+          "订单数据读取成功。",
+
+        loadEmpty:
+          "暂时没有找到该手机号对应的订单。",
+
+        loadError:
+          "订单数据读取失败。"
+      },
+
+      en: {
+        eyebrow:
+          "Customer Workspace",
+
+        title:
+          "My Services and Orders",
+
+        description:
+          "Customers can place orders, review quotes, track progress, and complete milestone and final acceptance.",
+
+        phonePlaceholder:
+          "Enter customer phone number",
+
+        loadButton:
+          "View My Orders",
+
+        servicesTitle:
+          "Common Services",
+
+        servicesDescription:
+          "Complete every action from service request to final acceptance in one workspace.",
+
+        newRequestTitle:
+          "Request a Service",
+
+        newRequestText:
+          "Submit repair, cleaning, care, installation, or other service needs.",
+
+        newRequestButton:
+          "Place an Order",
+
+        ordersTitle:
+          "My Orders",
+
+        ordersText:
+          "View all orders, current status, quotes, and service progress.",
+
+        ordersButton:
+          "View Orders",
+
+        quoteTitle:
+          "Confirm Quote",
+
+        quoteText:
+          "Review the platform quote, scope of service, and expected completion time.",
+
+        quoteButton:
+          "View Quote",
+
+        milestoneTitle:
+          "Milestone Acceptance",
+
+        milestoneText:
+          "Review submitted milestone results and complete stage acceptance.",
+
+        milestoneButton:
+          "Review Milestone",
+
+        finalTitle:
+          "Final Acceptance",
+
+        finalText:
+          "Confirm the final service result, provide a rating, and complete the order.",
+
+        finalButton:
+          "Final Acceptance",
+
+        echoTitle:
+          "Digital Human Echo",
+
+        echoText:
+          "Understand service needs, check progress, and guide the next action.",
+
+        echoButton:
+          "Tell Echo",
+
+        summaryTitle:
+          "My Order Summary",
+
+        summaryDescription:
+          "Enter your phone number to load real order data from Supabase.",
+
+        totalLabel:
+          "All Orders",
+
+        activeLabel:
+          "In Progress",
+
+        acceptanceLabel:
+          "Awaiting Acceptance",
+
+        completedLabel:
+          "Completed",
+
+        footer:
+          "One phone number connects the customer, orders, service process, and acceptance results.",
+
+        phoneRequired:
+          "Please enter the customer phone number.",
+
+        loading:
+          "Loading order data...",
+
+        loadSuccess:
+          "Order data loaded successfully.",
+
+        loadEmpty:
+          "No orders were found for this phone number.",
+
+        loadError:
+          "Failed to load order data."
+      }
+    };
+
+    let currentLanguage =
+      localStorage.getItem(
+        "echocity-language"
+      ) || "zh";
+
+    function translate(key) {
+      return (
+        translations[
+          currentLanguage
+        ]?.[key] ||
+        key
+      );
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang =
+        currentLanguage === "zh"
+          ? "zh-CN"
+          : "en";
+
+      document
+        .querySelectorAll(
+          "[data-i18n]"
+        )
+        .forEach(
+          function (element) {
+            const key =
+              element.dataset.i18n;
+
+            element.textContent =
+              translate(key);
+          }
+        );
+
+      document
+        .querySelectorAll(
+          "[data-i18n-placeholder]"
+        )
+        .forEach(
+          function (element) {
+            const key =
+              element.dataset
+                .i18nPlaceholder;
+
+            element.placeholder =
+              translate(key);
+          }
+        );
+
+      document.getElementById(
+        "languageButton"
+      ).textContent =
+        currentLanguage === "zh"
+          ? "EN"
+          : "中文";
+    }
+
+    function normalizePhone(value) {
+      return String(
+        value || ""
+      ).replace(
+        /\D/g,
+        ""
+      );
+    }
+
+    function showStatus(
+      type,
+      message
+    ) {
+      const statusBox =
+        document.getElementById(
+          "statusBox"
+        );
+
+      statusBox.className =
+        "status " + type;
+
+      statusBox.textContent =
+        message;
+    }
+
+    function resetCounts() {
+      document.getElementById(
+        "totalCount"
+      ).textContent = "0";
+
+      document.getElementById(
+        "activeCount"
+      ).textContent = "0";
+
+      document.getElementById(
+        "acceptanceCount"
+      ).textContent = "0";
+
+      document.getElementById(
+        "completedCount"
+      ).textContent = "0";
+    }
+
+    document
+      .getElementById(
+        "languageButton"
+      )
+      .addEventListener(
+        "click",
+        function () {
+          currentLanguage =
+            currentLanguage === "zh"
+              ? "en"
+              : "zh";
+
+          localStorage.setItem(
+            "echocity-language",
+            currentLanguage
+          );
+
+          applyLanguage();
+        }
+      );    async function loadOrderSummary() {
+      const phone =
+        normalizePhone(
+          document.getElementById(
+            "customerPhone"
+          ).value
+        );
+
+      if (!phone) {
+        resetCounts();
+
+        showStatus(
+          "error",
+          translate(
+            "phoneRequired"
+          )
+        );
+
+        return;
+      }
+
+      const client =
+        window.echoCitySupabase;
+
+      if (
+        !client ||
+        typeof client.from !==
+          "function"
+      ) {
+        resetCounts();
+
+        showStatus(
+          "error",
+          translate(
+            "loadError"
+          )
+        );
+
+        return;
+      }
+
+      showStatus(
+        "success",
+        translate(
+          "loading"
+        )
+      );
+
+      try {
+        const { data, error } =
+          await client
+            .from(
+              "service_requests"
+            )
+            .select(
+              "request_no,status,final_acceptance_status"
+            )
+            .eq(
+              "customer_phone",
+              phone
+            );
+
+        if (error) {
+          throw error;
+        }
+
+        const orders =
+          Array.isArray(data)
+            ? data
+            : [];
+
+        const completedStatuses =
+          new Set([
+            "completed",
+            "conditionally_completed"
+          ]);
+
+        const acceptanceStatuses =
+          new Set([
+            "milestone_submitted",
+            "milestone_approved",
+            "waiting_final_acceptance"
+          ]);
+
+        const completedCount =
+          orders.filter(
+            function (order) {
+              return completedStatuses.has(
+                order.status
+              );
+            }
+          ).length;
+
+        const acceptanceCount =
+          orders.filter(
+            function (order) {
+              return (
+                acceptanceStatuses.has(
+                  order.status
+                ) ||
+                (
+                  order.status ===
+                    "completed" &&
+                  !order
+                    .final_acceptance_status
+                )
+              );
+            }
+          ).length;
+
+        const activeCount =
+          orders.filter(
+            function (order) {
+              return (
+                !completedStatuses.has(
+                  order.status
+                ) &&
+                !acceptanceStatuses.has(
+                  order.status
+                )
+              );
+            }
+          ).length;
+
+        document.getElementById(
+          "totalCount"
+        ).textContent =
+          String(
+            orders.length
+          );
+
+        document.getElementById(
+          "activeCount"
+        ).textContent =
+          String(
+            activeCount
+          );
+
+        document.getElementById(
+          "acceptanceCount"
+        ).textContent =
+          String(
+            acceptanceCount
+          );
+
+        document.getElementById(
+          "completedCount"
+        ).textContent =
+          String(
+            completedCount
+          );
+
+        localStorage.setItem(
+          "echocity-customer-phone",
+          phone
+        );
+
+        if (
+          orders.length === 0
+        ) {
+          showStatus(
+            "error",
+            translate(
+              "loadEmpty"
+            )
+          );
+
+          return;
+        }
+
+        showStatus(
+          "success",
+          translate(
+            "loadSuccess"
+          )
+        );
+      } catch (error) {
+        console.error(
+          "Customer dashboard load failed:",
+          error
+        );
+
+        resetCounts();
+
+        showStatus(
+          "error",
+          error?.message ||
+          translate(
+            "loadError"
+          )
+        );
+      }
+    }
+
+    document
+      .getElementById(
+        "loadButton"
+      )
+      .addEventListener(
+        "click",
+        loadOrderSummary
+      );
+
+    document
+      .getElementById(
+        "customerPhone"
+      )
+      .addEventListener(
+        "keydown",
+        function (event) {
+          if (
+            event.key === "Enter"
+          ) {
+            loadOrderSummary();
+          }
+        }
+      );
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      function () {
+        const savedPhone =
+          localStorage.getItem(
+            "echocity-customer-phone"
+          );
+
+        if (savedPhone) {
+          document.getElementById(
+            "customerPhone"
+          ).value =
+            savedPhone;
+        }
+
+        applyLanguage();
+      }
+    );
+  </script>
+</body>
+</html>
