@@ -10,7 +10,23 @@
 
   <title>我的任务 | EchoCity</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
- <script src="../js/echocity-supabase.js"></script>
+ <script>
+  const ECHOCITY_SUPABASE_URL =
+    "https://dpljvspwcfglxfesxdmf.supabase.co";
+
+  const ECHOCITY_SUPABASE_KEY =
+    "sb_publishable_CngX8tJBl6eGAJUWTSt9HA_KtxTvM1-";
+
+  window.echoCitySupabase =
+    window.supabase.createClient(
+      ECHOCITY_SUPABASE_URL,
+      ECHOCITY_SUPABASE_KEY
+    );
+
+  console.log(
+    "EchoCity connected to Supabase."
+  );
+</script>
   <style>
     * {
       box-sizing: border-box;
@@ -1296,9 +1312,9 @@
 
     try {
       const updateData = {
-        worker_status: newStatus,
-        updated_at: new Date().toISOString()
-      };
+  status: newStatus,
+  updated_at: new Date().toISOString()
+};
 
       const { error } = await client
         .from("service_requests")
@@ -1388,10 +1404,9 @@
       const { error } = await client
         .from("service_requests")
         .update({
-          worker_status: "arrived",
-          updated_at:
-            new Date().toISOString()
-        })
+  status: "arrived",
+  updated_at: new Date().toISOString()
+})
         .eq("request_no", requestNo);
 
       if (error) {
@@ -2365,7 +2380,7 @@
       const { error } = await client
         .from("service_requests")
         .update({
-          worker_status:
+          status:
             "agreement_submitted",
 
           prework_confirmed_at:
@@ -2408,15 +2423,35 @@
         "success"
       );
     } catch (error) {
-      console.error(
-        "Pre-work agreement submission failed:",
-        error
-      );
+  console.error(
+    "Pre-work agreement submission failed:",
+    error
+  );
 
-      showPageMessage(
-        t("agreementSubmitFailed"),
-        "error"
-      );
+  console.error(
+    "Error message:",
+    error?.message
+  );
+
+  console.error(
+    "Error code:",
+    error?.code
+  );
+
+  console.error(
+    "Error details:",
+    error?.details
+  );
+
+  console.error(
+    "Error hint:",
+    error?.hint
+  );
+
+  showPageMessage(
+    t("agreementSubmitFailed"),
+    "error"
+  );
 
       if (submitButton) {
         submitButton.disabled = false;
@@ -2470,7 +2505,7 @@
       const { error } = await client
         .from("service_requests")
         .update({
-          worker_status: "working",
+          status: "working",
           work_started_at: startedAt,
           updated_at: startedAt
         })
@@ -3356,7 +3391,7 @@
       const { error } = await client
         .from("service_requests")
         .update({
-          worker_status:
+          status:
             "milestone_submitted",
 
           milestone_summary:
@@ -3888,7 +3923,7 @@
       const { error } = await client
         .from("service_requests")
         .update({
-          worker_status: "completed",
+          status: "completed",
 
           completion_summary:
             completionData
@@ -3918,12 +3953,10 @@
             completionData
               .worker_signature,
 
-          customer_acceptance_items:
-            completionData
-              .customer_acceptance_items ||
-            null,
+          customer_acceptance_focus:
+completionData.customer_acceptance_focus || null,
 
-          worker_completed_at:
+          work_completed_at:
             submittedAt,
 
           updated_at:
@@ -3951,8 +3984,8 @@
           completionData
             .completion_summary;
 
-        task.worker_completed_at =
-          submittedAt;
+        task.work_completed_at =
+  submittedAt;
       }
 
       renderTasks(
@@ -3966,10 +3999,30 @@
         "success"
       );
     } catch (error) {
-      console.error(
-        "Final completion submission failed:",
-        error
-      );
+  console.error(
+    "Final completion submission failed:",
+    error
+  );
+
+  console.error(
+    "Final error message:",
+    error?.message
+  );
+
+  console.error(
+    "Final error code:",
+    error?.code
+  );
+
+  console.error(
+    "Final error details:",
+    error?.details
+  );
+
+  console.error(
+    "Final error hint:",
+    error?.hint
+  );
 
       showPageMessage(
         currentLanguage === "zh"

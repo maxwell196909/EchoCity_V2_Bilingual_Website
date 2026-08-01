@@ -8,7 +8,8 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   />
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/echocity-supabase.js"></script>
   <title>最终验收 | EchoCity</title>
 
   <style>
@@ -1952,36 +1953,58 @@
       applyLanguage();
     }
 
-    function loadCurrentRequest() {
-      try {
-        const storedRequest =
-          localStorage.getItem(
-            "echocity-last-request"
-          );
+    async function loadCurrentRequest(customerPhone) {
+  try {
+    const client = window.echoCitySupabase;
 
-        currentRequest =
-          storedRequest
-            ? JSON.parse(storedRequest)
-            : null;
-
-        milestones =
-          Array.isArray(
-            currentRequest
-              ?.milestones
-          )
-            ? currentRequest.milestones
-            : [];
-
-      } catch (error) {
-        console.error(
-          "Failed to load request:",
-          error
-        );
-
-        currentRequest = null;
-        milestones = [];
-      }
+    if (
+      !client ||
+      typeof client.from !== "function"
+    ) {
+      throw new Error("Supabase client unavailable.");
     }
+
+    const normalizedPhone =
+      normalizePhone(customerPhone);
+
+    const { data, error } = await client
+      .from("service_requests")
+      .select("*")
+      .eq("customer_phone", normalizedPhone)
+      .eq("status", "completed")
+      .order("updated_at", {
+        ascending: false
+      })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    currentRequest = data || null;
+
+    milestones =
+      Array.isArray(currentRequest?.milestone_data)
+        ? currentRequest.milestone_data
+        : [];
+
+    if (currentRequest) {
+      localStorage.setItem(
+        "echocity-last-request",
+        JSON.stringify(currentRequest)
+      );
+    }
+  } catch (error) {
+    console.error(
+      "Failed to load final acceptance request:",
+      error
+    );
+
+    currentRequest = null;
+    milestones = [];
+  }
+}
 
     function normalizePhone(value) {
       return String(value || "")
@@ -2070,7 +2093,7 @@
       );
     }
 
-    function searchFinalAcceptance() {
+    async function searchFinalAcceptance() {
       hideStatus();
 
       const phoneInput =
@@ -2095,7 +2118,7 @@
         return;
       }
 
-      loadCurrentRequest();
+     await loadCurrentRequest(enteredPhone);
 
       if (!currentRequest) {
         showStatus(
@@ -2110,23 +2133,26 @@
       }
 
       const customerPhone =
-        getCustomerPhone();
+  normalizePhone(
+    currentRequest.customer_phone ||
+    currentRequest.customerPhone ||
+    ""
+  );
 
-      if (
-        customerPhone &&
-        enteredPhone !==
-          customerPhone
-      ) {
-        showStatus(
-          "error",
-          translate(
-            "customerNotMatched"
-          )
-        );
+if (
+  customerPhone &&
+  enteredPhone !== customerPhone
+) {
+  showStatus(
+    "error",
+    translate(
+      "customerNotMatched"
+    )
+  );
 
-        showEmptyState();
-        return;
-      }
+  showEmptyState();
+  return;
+}
 
       if (!allMilestonesApproved()) {
         showStatus(
@@ -2337,8 +2363,8 @@
             <div class="milestone-title">
               ${
                 currentLanguage === "zh"
-                  ? `第${milestone.sequence}阶段：`
-                  : `Stage ${milestone.sequence}: `
+  ? `第${milestone.sequence || 1}阶段：`
+  : `Stage ${milestone.sequence || 1}:`
               }
 
               ${escapeHTML(
@@ -2478,8 +2504,8 @@
 
       hideStatus();
     }
-
-    function validateFinalAcceptance() {
+function validateFinalAcceptance
+    () {
       const finalResult =
         document.getElementById(
           "finalResult"
@@ -2648,51 +2674,118 @@
       return true;
     }
 
-    function saveCurrentRequest() {
-      if (!currentRequest) {
-        return;
-      }
+   async function saveCurrentRequest() {
+  if (!currentRequest) {
+    return false;
+  }
 
-      currentRequest.updatedAt =
-        new Date().toISOString();
+  const client =
+    window.echoCitySupabase;
 
-      const requests =
-        JSON.parse(
-          localStorage.getItem(
-            "echocity-service-requests"
-          ) || "[]"
-        );
+  if (
+    !client ||
+    typeof client.from !== "function"
+  ) {
+    showStatus(
+      "error",
+      "Supabase connection unavailable."
+    );
 
-      const requestIndex =
-        requests.findIndex(
-          (request) =>
-            request.id ===
-            currentRequest.id
-        );
+    return false;
+  }
 
-      if (requestIndex >= 0) {
-        requests[requestIndex] =
-          currentRequest;
-      } else {
-        requests.unshift(
+  const now =
+    new Date().toISOString();
+
+  currentRequest.updatedAt = now;
+
+  try {
+    const { error } = await client
+      .from("service_requests")
+      .update({
+        status:
+          currentRequest.status,
+
+        final_acceptance_status:
           currentRequest
-        );
-      }
+            .finalAcceptance
+            ?.status ||
+          "submitted",
 
-      localStorage.setItem(
-        "echocity-service-requests",
-        JSON.stringify(requests)
+        final_acceptance_data:
+          currentRequest
+            .finalAcceptance ||
+          null,
+
+        updated_at: now
+      })
+      .eq(
+        "request_no",
+        currentRequest.request_no
       );
 
-      localStorage.setItem(
-        "echocity-last-request",
-        JSON.stringify(
-          currentRequest
-        )
+    if (error) {
+      throw error;
+    }
+
+    const requests =
+      JSON.parse(
+        localStorage.getItem(
+          "echocity-service-requests"
+        ) || "[]"
+      );
+
+    const requestIndex =
+      requests.findIndex(
+        (request) =>
+          request.id ===
+          currentRequest.id
+      );
+
+    if (requestIndex >= 0) {
+      requests[requestIndex] =
+        currentRequest;
+    } else {
+      requests.unshift(
+        currentRequest
       );
     }
 
-    function submitFinalAcceptance() {
+    localStorage.setItem(
+      "echocity-service-requests",
+      JSON.stringify(requests)
+    );
+
+    localStorage.setItem(
+      "echocity-last-request",
+      JSON.stringify(
+        currentRequest
+      )
+    );
+
+    return true;
+  } catch (error) {
+    console.error(
+      "Final acceptance save failed:",
+      error
+    );
+
+    console.error(
+      "Final acceptance error message:",
+      error?.message
+    );
+
+    showStatus(
+      "error",
+      error?.message ||
+      "Final acceptance could not be saved."
+    );
+
+    return false;
+  }
+}
+
+    async function submitFinalAcceptance() {
       if (!currentRequest) {
         showStatus(
           "error",
@@ -2923,7 +3016,12 @@
           true
       };
 
-      saveCurrentRequest();
+      const saved =
+  await saveCurrentRequest();
+
+if (!saved) {
+  return;
+}
 
       document.getElementById(
         "completeButton"
