@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>平台管理工作台 | EchoCity</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+      background:
+        linear-gradient(
+          180deg,
+          #f4f1ff 0%,
+          #faf9ff 100%
+        );
+      color: #172033;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .page {
+      width: min(
+        1180px,
+        calc(100% - 28px)
+      );
+      margin: 0 auto;
+      padding: 22px 0 48px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: #7257d5;
+      color: #ffffff;
+      font-weight: 800;
+      box-shadow:
+        0 10px 25px
+        rgba(114, 87, 213, 0.22);
+    }
+
+    .language-button {
+      border: 1px solid #d5cdee;
+      background: #ffffff;
+      color: #172033;
+      border-radius: 12px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .hero {
+      background: #ffffff;
+      border: 1px solid #e0daf3;
+      border-radius: 24px;
+      padding: 26px;
+      box-shadow:
+        0 16px 38px
+        rgba(82, 64, 145, 0.08);
+      margin-bottom: 20px;
+    }
+
+    .eyebrow {
+      color: #7257d5;
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(
+        30px,
+        5vw,
+        48px
+      );
+      line-height: 1.15;
+    }
+
+    .hero p {
+      margin: 0;
+      color: #687085;
+      font-size: 16px;
+      line-height: 1.75;
+    }
+
+    .admin-panel {
+      display: grid;
+      grid-template-columns:
+        1fr auto;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .admin-input {
+      width: 100%;
+      min-height: 52px;
+      border: 1px solid #d5cdee;
+      border-radius: 14px;
+      padding: 0 16px;
+      background: #ffffff;
+      outline: none;
+    }
+
+    .admin-input:focus {
+      border-color: #7257d5;
+      box-shadow:
+        0 0 0 4px
+        rgba(114, 87, 213, 0.1);
+    }
+
+    .primary-button {
+      min-height: 52px;
+      border: 0;
+      border-radius: 14px;
+      padding: 0 22px;
+      background: #7257d5;
+      color: #ffffff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .primary-button:hover {
+      background: #5e44bd;
+    }
+
+    .status {
+      display: none;
+      margin-top: 14px;
+      border-radius: 14px;
+      padding: 13px 15px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .status.success {
+      display: block;
+      background: #eef7ff;
+      color: #245f8b;
+      border: 1px solid #c8ddf0;
+    }
+
+    .status.error {
+      display: block;
+      background: #fff0f0;
+      color: #b12b2b;
+      border: 1px solid #f1c0c0;
+    }
+
+    .section {
+      margin-top: 20px;
+    }
+
+    .section-heading {
+      margin-bottom: 14px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .section-heading p {
+      margin: 6px 0 0;
+      color: #6b788d;
+      line-height: 1.6;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns:
+        repeat(
+          3,
+          minmax(0, 1fr)
+        );
+      gap: 16px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e0daf3;
+      border-radius: 20px;
+      padding: 20px;
+      min-height: 185px;
+      box-shadow:
+        0 12px 28px
+        rgba(82, 64, 145, 0.07);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: #f0ecff;
+      font-size: 23px;
+      margin-bottom: 14px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 19px;
+    }
+
+    .card p {
+      margin: 0 0 18px;
+      color: #6b788d;
+      line-height: 1.65;
+      flex: 1;
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 800;
+      background: #f0ecff;
+      color: #7257d5;
+      border: 1px solid #ddd3fb;
+    }
+
+    .card-link:hover {
+      background: #e4dcff;
+    }
+
+    .summary-panel {
+      margin-top: 20px;
+      background: #ffffff;
+      border: 1px solid #e0daf3;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow:
+        0 12px 28px
+        rgba(82, 64, 145, 0.07);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(
+          4,
+          minmax(0, 1fr)
+        );
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .summary-item {
+      border: 1px solid #e9e4f5;
+      border-radius: 16px;
+      padding: 16px;
+      background: #fbfaff;
+    }
+
+    .summary-label {
+      color: #6b788d;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .summary-value {
+      font-size: 26px;
+      font-weight: 800;
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      text-align: center;
+      color: #7a8798;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    @media (
+      max-width: 860px
+    ) {
+      .grid {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+      }
+
+      .summary-grid {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+      }
+    }
+
+    @media (
+      max-width: 620px
+    ) {
+      .page {
+        width: min(
+          100% - 18px,
+          1180px
+        );
+        padding-top: 12px;
+      }
+
+      .hero {
+        padding: 20px;
+        border-radius: 20px;
+      }
+
+      .admin-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-grid {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">
+          E
+        </div>
+
+        <span>
+          EchoCity
+        </span>
+      </div>
+
+      <button
+        class="language-button"
+        id="languageButton"
+        type="button"
+      >
+        EN
+      </button>
+    </header>
+
+    <section class="hero">
+      <div
+        class="eyebrow"
+        data-i18n="eyebrow"
+      >
+        平台管理工作台
+      </div>
+
+      <h1
+        data-i18n="title"
+      >
+        订单监管与派工中心
+      </h1>
+
+      <p
+        data-i18n="description"
+      >
+        平台可以统一查看新需求、报价、派工、施工过程、验收和异常订单。
+      </p >
+
+      <div class="admin-panel">
+        <input
+          class="admin-input"
+          id="searchKeyword"
+          type="text"
+          placeholder="输入订单号、客户手机号或工作人员手机号"
+          data-i18n-placeholder=
+            "searchPlaceholder"
+        />
+
+        <button
+          class="primary-button"
+          id="loadButton"
+          type="button"
+          data-i18n="loadButton"
+        >
+          读取平台数据
+        </button>
+      </div>
+
+      <div
+        class="status"
+        id="statusBox"
+      ></div>
+    </section>    <section class="section">
+      <div class="section-heading">
+        <h2
+          data-i18n="toolsTitle"
+        >
+          平台管理功能
+        </h2>
+
+        <p
+          data-i18n="toolsDescription"
+        >
+          从需求审核到最终归档，统一管理整个服务流程。
+        </p >
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <div class="card-icon">
+            📝
+          </div>
+
+          <h3
+            data-i18n="requestsTitle"
+          >
+            新需求与审核
+          </h3>
+
+          <p
+            data-i18n="requestsText"
+          >
+            查看客户新需求，核对信息并决定是否进入报价流程。
+          </p >
+
+          <a
+            class="card-link"
+            href=" "
+            data-i18n="requestsButton"
+          >
+            查看新需求
+          </a >
+        </article>
+
+        <article class="card">
+          <div class="card-icon">
+            💰
+          </div>
+
+          <h3
+            data-i18n="quoteTitle"
+          >
+            平台报价
+          </h3>
+
+          <p
+            data-i18n="quoteText"
+          >
+            制定服务范围、价格、时间和质量标准。
+          </p >
+
+          <a
+            class="card-link"
+            href="admin-service-quote.html"
+            data-i18n="quoteButton"
+          >
+            进入报价
+          </a >
+        </article>
+
+        <article class="card">
+          <div class="card-icon">
+            👷
+          </div>
+
+          <h3
+            data-i18n="assignmentTitle"
+          >
+            派工管理
+          </h3>
+
+          <p
+            data-i18n="assignmentText"
+          >
+            选择工作人员、安排时间并发送任务。
+          </p >
+
+          <a
+            class="card-link"
+            href="admin-service-assignment.html"
+            data-i18n="assignmentButton"
+          >
+            进入派工
+          </a >
+        </article>
+
+        <article class="card">
+          <div class="card-icon">
+            📍
+          </div>
+
+          <h3
+            data-i18n="monitorTitle"
+          >
+            过程监管
+          </h3>
+
+          <p
+            data-i18n="monitorText"
+          >
+            查看到场、开工、工时、材料、照片和现场问题。
+          </p >
+
+          <a
+            class="card-link"
+            href="admin-service-milestones.html"
+            data-i18n="monitorButton"
+          >
+            查看进度
+          </a >
+        </article>
+
+        <article class="card">
+          <div class="card-icon">
+            ✅
+          </div>
+
+          <h3
+            data-i18n="milestoneTitle"
+          >
+            节点审核
+          </h3>
+
+          <p
+            data-i18n="milestoneText"
+          >
+            审核阶段成果，决定通过、条件通过或返工。
+          </p >
+
+          <a
+            class="card-link"
+            href="admin-service-milestones.html"
+            data-i18n="milestoneButton"
+          >
+            审核节点
+          </a >
+        </article>
+
+        <article class="card">
+          <div class="card-icon">
+            ⚠
+          </div>
+
+          <h3
+            data-i18n="exceptionTitle"
+          >
+            异常与争议
+          </h3>
+
+          <p
+            data-i18n="exceptionText"
+          >
+            处理延误、返工、费用争议和客户投诉。
+          </p >
+
+          <a
+            class="card-link"
+            href="admin-service-requests.html"
+            data-i18n="exceptionButton"
+          >
+            查看异常
+          </a >
+        </article>
+      </div>
+    </section>
+
+    <section class="summary-panel">
+      <div class="section-heading">
+        <h2
+          data-i18n="summaryTitle"
+        >
+          平台订单概况
+        </h2>
+
+        <p
+          data-i18n="summaryDescription"
+        >
+          从 Supabase 读取全部服务订单并按状态统计。
+        </p >
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="totalLabel"
+          >
+            全部订单
+          </div>
+
+          <div
+            class="summary-value"
+            id="totalCount"
+          >
+            0
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="pendingLabel"
+          >
+            待处理
+          </div>
+
+          <div
+            class="summary-value"
+            id="pendingCount"
+          >
+            0
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="activeLabel"
+          >
+            进行中
+          </div>
+
+          <div
+            class="summary-value"
+            id="activeCount"
+          >
+            0
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div
+            class="summary-label"
+            data-i18n="completedLabel"
+          >
+            已完成
+          </div>
+
+          <div
+            class="summary-value"
+            id="completedCount"
+          >
+            0
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div
+      class="footer-note"
+      data-i18n="footer"
+    >
+      平台通过同一订单编号监管客户、工作人员、过程、验收和最终结果。
+    </div>
+  </main>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  ></script>
+
+  <script
+    src="js/echocity-supabase.js"
+  ></script>
+
+  <script>    const translations = {
+      zh: {
+        eyebrow:
+          "平台管理工作台",
+
+        title:
+          "订单监管与派工中心",
+
+        description:
+          "平台可以统一查看新需求、报价、派工、施工过程、验收和异常订单。",
+
+        searchPlaceholder:
+          "输入订单号、客户手机号或工作人员手机号",
+
+        loadButton:
+          "读取平台数据",
+
+        toolsTitle:
+          "平台管理功能",
+
+        toolsDescription:
+          "从需求审核到最终归档，统一管理整个服务流程。",
+
+        requestsTitle:
+          "新需求与审核",
+
+        requestsText:
+          "查看客户新需求，核对信息并决定是否进入报价流程。",
+
+        requestsButton:
+          "查看新需求",
+
+        quoteTitle:
+          "平台报价",
+
+        quoteText:
+          "制定服务范围、价格、时间和质量标准。",
+
+        quoteButton:
+          "进入报价",
+
+        assignmentTitle:
+          "派工管理",
+
+        assignmentText:
+          "选择工作人员、安排时间并发送任务。",
+
+        assignmentButton:
+          "进入派工",
+
+        monitorTitle:
+          "过程监管",
+
+        monitorText:
+          "查看到场、开工、工时、材料、照片和现场问题。",
+
+        monitorButton:
+          "查看进度",
+
+        milestoneTitle:
+          "节点审核",
+
+        milestoneText:
+          "审核阶段成果，决定通过、条件通过或返工。",
+
+        milestoneButton:
+          "审核节点",
+
+        exceptionTitle:
+          "异常与争议",
+
+        exceptionText:
+          "处理延误、返工、费用争议和客户投诉。",
+
+        exceptionButton:
+          "查看异常",
+
+        summaryTitle:
+          "平台订单概况",
+
+        summaryDescription:
+          "从 Supabase 读取全部服务订单并按状态统计。",
+
+        totalLabel:
+          "全部订单",
+
+        pendingLabel:
+          "待处理",
+
+        activeLabel:
+          "进行中",
+
+        completedLabel:
+          "已完成",
+
+        footer:
+          "平台通过同一订单编号监管客户、工作人员、过程、验收和最终结果。",
+
+        loading:
+          "正在读取平台数据……",
+
+        loadSuccess:
+          "平台数据读取成功。",
+
+        loadEmpty:
+          "暂时没有找到符合条件的订单。",
+
+        loadError:
+          "平台数据读取失败。"
+      },
+
+      en: {
+        eyebrow:
+          "Platform Management Workspace",
+
+        title:
+          "Order Monitoring and Dispatch Center",
+
+        description:
+          "The platform can manage new requests, quotes, assignments, service progress, acceptance, and exception cases.",
+
+        searchPlaceholder:
+          "Enter order number, customer phone, or worker phone",
+
+        loadButton:
+          "Load Platform Data",
+
+        toolsTitle:
+          "Platform Management Tools",
+
+        toolsDescription:
+          "Manage the complete service process from request review to final archiving.",
+
+        requestsTitle:
+          "New Requests and Review",
+
+        requestsText:
+          "Review customer requests, verify information, and decide whether to begin quoting.",
+
+        requestsButton:
+          "View Requests",
+
+        quoteTitle:
+          "Platform Quote",
+
+        quoteText:
+          "Define service scope, price, timing, and quality standards.",
+
+        quoteButton:
+          "Open Quotes",
+
+        assignmentTitle:
+          "Assignment Management",
+
+        assignmentText:
+          "Select workers, arrange schedules, and send tasks.",
+
+        assignmentButton:
+          "Open Assignment",
+
+        monitorTitle:
+          "Process Monitoring",
+
+        monitorText:
+          "Review arrival, start time, working hours, materials, photos, and site issues.",
+
+        monitorButton:
+          "View Progress",
+
+        milestoneTitle:
+          "Milestone Review",
+
+        milestoneText:
+          "Review stage results and decide approval, conditional approval, or rework.",
+
+        milestoneButton:
+          "Review Milestones",
+
+        exceptionTitle:
+          "Exceptions and Disputes",
+
+        exceptionText:
+          "Handle delays, rework, payment disputes, and customer complaints.",
+
+        exceptionButton:
+          "View Exceptions",
+
+        summaryTitle:
+          "Platform Order Summary",
+
+        summaryDescription:
+          "Load all service orders from Supabase and summarize them by status.",
+
+        totalLabel:
+          "All Orders",
+
+        pendingLabel:
+          "Pending",
+
+        activeLabel:
+          "In Progress",
+
+        completedLabel:
+          "Completed",
+
+        footer:
+          "The platform uses one order number to monitor the customer, worker, process, acceptance, and final result.",
+
+        loading:
+          "Loading platform data...",
+
+        loadSuccess:
+          "Platform data loaded successfully.",
+
+        loadEmpty:
+          "No matching orders were found.",
+
+        loadError:
+          "Failed to load platform data."
+      }
+    };
+
+    let currentLanguage =
+      localStorage.getItem(
+        "echocity-language"
+      ) || "zh";
+
+    function translate(key) {
+      return (
+        translations[
+          currentLanguage
+        ]?.[key] ||
+        key
+      );
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang =
+        currentLanguage === "zh"
+          ? "zh-CN"
+          : "en";
+
+      document
+        .querySelectorAll(
+          "[data-i18n]"
+        )
+        .forEach(
+          function (element) {
+            const key =
+              element.dataset.i18n;
+
+            element.textContent =
+              translate(key);
+          }
+        );
+
+      document
+        .querySelectorAll(
+          "[data-i18n-placeholder]"
+        )
+        .forEach(
+          function (element) {
+            const key =
+              element.dataset
+                .i18nPlaceholder;
+
+            element.placeholder =
+              translate(key);
+          }
+        );
+
+      document.getElementById(
+        "languageButton"
+      ).textContent =
+        currentLanguage === "zh"
+          ? "EN"
+          : "中文";
+    }
+
+    function normalizeValue(value) {
+      return String(
+        value || ""
+      )
+        .trim()
+        .toLowerCase();
+    }
+
+    function showStatus(
+      type,
+      message
+    ) {
+      const statusBox =
+        document.getElementById(
+          "statusBox"
+        );
+
+      statusBox.className =
+        "status " + type;
+
+      statusBox.textContent =
+        message;
+    }
+
+    function resetCounts() {
+      document.getElementById(
+        "totalCount"
+      ).textContent = "0";
+
+      document.getElementById(
+        "pendingCount"
+      ).textContent = "0";
+
+      document.getElementById(
+        "activeCount"
+      ).textContent = "0";
+
+      document.getElementById(
+        "completedCount"
+      ).textContent = "0";
+    }
+
+    document
+      .getElementById(
+        "languageButton"
+      )
+      .addEventListener(
+        "click",
+        function () {
+          currentLanguage =
+            currentLanguage === "zh"
+              ? "en"
+              : "zh";
+
+          localStorage.setItem(
+            "echocity-language",
+            currentLanguage
+          );
+
+          applyLanguage();
+        }
+      );    async function loadPlatformSummary() {
+      const keyword =
+        normalizeValue(
+          document.getElementById(
+            "searchKeyword"
+          ).value
+        );
+
+      const client =
+        window.echoCitySupabase;
+
+      if (
+        !client ||
+        typeof client.from !==
+          "function"
+      ) {
+        resetCounts();
+
+        showStatus(
+          "error",
+          translate(
+            "loadError"
+          )
+        );
+
+        return;
+      }
+
+      showStatus(
+        "success",
+        translate(
+          "loading"
+        )
+      );
+
+      try {
+        const { data, error } =
+          await client
+            .from(
+              "service_requests"
+            )
+            .select(
+              "request_no,status,customer_phone,assigned_worker_phone,updated_at"
+            )
+            .order(
+              "updated_at",
+              {
+                ascending: false
+              }
+            );
+
+        if (error) {
+          throw error;
+        }
+
+        const allOrders =
+          Array.isArray(data)
+            ? data
+            : [];
+
+        const filteredOrders =
+          keyword
+            ? allOrders.filter(
+                function (order) {
+                  const requestNo =
+                    normalizeValue(
+                      order.request_no
+                    );
+
+                  const customerPhone =
+                    normalizeValue(
+                      order.customer_phone
+                    );
+
+                  const workerPhone =
+                    normalizeValue(
+                      order
+                        .assigned_worker_phone
+                    );
+
+                  return (
+                    requestNo.includes(
+                      keyword
+                    ) ||
+                    customerPhone.includes(
+                      keyword
+                    ) ||
+                    workerPhone.includes(
+                      keyword
+                    )
+                  );
+                }
+              )
+            : allOrders;
+
+        const pendingStatuses =
+          new Set([
+            "submitted",
+            "reviewed",
+            "quoted",
+            "quote_confirmed",
+            "assigned"
+          ]);
+
+        const activeStatuses =
+          new Set([
+            "accepted",
+            "arrived",
+            "agreement_submitted",
+            "working",
+            "milestone_submitted",
+            "milestone_approved",
+            "waiting_final_acceptance"
+          ]);
+
+        const completedStatuses =
+          new Set([
+            "completed",
+            "conditionally_completed"
+          ]);
+
+        const pendingCount =
+          filteredOrders.filter(
+            function (order) {
+              return pendingStatuses.has(
+                order.status
+              );
+            }
+          ).length;
+
+        const activeCount =
+          filteredOrders.filter(
+            function (order) {
+              return activeStatuses.has(
+                order.status
+              );
+            }
+          ).length;
+
+        const completedCount =
+          filteredOrders.filter(
+            function (order) {
+              return completedStatuses.has(
+                order.status
+              );
+            }
+          ).length;
+
+        document.getElementById(
+          "totalCount"
+        ).textContent =
+          String(
+            filteredOrders.length
+          );
+
+        document.getElementById(
+          "pendingCount"
+        ).textContent =
+          String(
+            pendingCount
+          );
+
+        document.getElementById(
+          "activeCount"
+        ).textContent =
+          String(
+            activeCount
+          );
+
+        document.getElementById(
+          "completedCount"
+        ).textContent =
+          String(
+            completedCount
+          );
+
+        if (
+          filteredOrders.length === 0
+        ) {
+          showStatus(
+            "error",
+            translate(
+              "loadEmpty"
+            )
+          );
+
+          return;
+        }
+
+        showStatus(
+          "success",
+          translate(
+            "loadSuccess"
+          )
+        );
+      } catch (error) {
+        console.error(
+          "Admin dashboard load failed:",
+          error
+        );
+
+        resetCounts();
+
+        showStatus(
+          "error",
+          error?.message ||
+          translate(
+            "loadError"
+          )
+        );
+      }
+    }
+
+    document
+      .getElementById(
+        "loadButton"
+      )
+      .addEventListener(
+        "click",
+        loadPlatformSummary
+      );
+
+    document
+      .getElementById(
+        "searchKeyword"
+      )
+      .addEventListener(
+        "keydown",
+        function (event) {
+          if (
+            event.key === "Enter"
+          ) {
+            loadPlatformSummary();
+          }
+        }
+      );
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      function () {
+        applyLanguage();
+        loadPlatformSummary();
+      }
+    );
+  </script>
+</body>
+</html>

@@ -1155,7 +1155,19 @@
        */
       const { data, error } = await client
         .from("service_requests")
-        .select("*")
+        .select(`
+  request_no,
+  service_type,
+  description,
+  service_date,
+  status,
+  assigned_worker,
+  assigned_worker_phone,
+  worker_task_scope,
+  assigned_start_time,
+  created_at,
+  updated_at
+`)
        .eq("assigned_worker_phone", phone)
         .order("created_at", {
           ascending: false
@@ -1277,7 +1289,7 @@
     if (!task) {
       return;
     }
-
+    task.status = newStatus;
     task.worker_status = newStatus;
     task.task_status = newStatus;
   }
@@ -1692,14 +1704,15 @@
       );
 
     const workerName =
-      getTaskValue(
-        task,
-        [
-          "worker_name",
-          "assigned_worker_name"
-        ],
-        t("notAvailable")
-      );
+  getTaskValue(
+    task,
+    [
+      "assigned_worker",
+      "worker_name",
+      "assigned_worker_name"
+    ],
+    t("notAvailable")
+  );
 
     const requirements =
       getTaskValue(
@@ -1783,10 +1796,7 @@
             workerName
           )}
 
-          ${buildTaskDetail(
-            t("agreedPrice"),
-            formatPrice(task)
-          )}
+      
 
           ${buildTaskDetail(
             t("customerRequirements"),
@@ -2906,40 +2916,323 @@
    * 保存工作过程记录
    */
   async function saveWorkProgress(
-    requestNo
+  requestNo
+) {
+  const container =
+    getWorkflowContainer(requestNo);
+
+  if (!container) {
+    return;
+  }
+
+  const workData =
+    collectWorkInputs(container);
+
+  if (
+    !workData.work_date ||
+    !workData.work_progress
   ) {
-    const container =
-      getWorkflowContainer(requestNo);
+    showPageMessage(
+      t("progressRequired"),
+      "error"
+    );
+    return;
+  }
 
-    if (!container) {
-      return;
-    }
-
-    const workData =
-      collectWorkInputs(container);
-
-    if (
-      !workData.work_date ||
-      !workData.work_progress
-    ) {
-      showPageMessage(
-        t("progressRequired"),
-        "error"
+  if (
+    !workData.work_hours &&
+    workData.start_time &&
+    workData.end_time
+  ) {
+    workData.work_hours =
+      calculateWorkHours(
+        workData.start_time,
+        workData.end_time
       );
-      return;
+  }
+
+  const recordedAt =
+    new Date().toISOString();
+
+  workData.request_no =
+    requestNo;
+
+  workData.worker_phone =
+    currentWorkerPhone;
+
+  workData.recorded_at =
+    recordedAt;
+
+  saveWorkDraftLocally(
+    requestNo,
+    workData
+  );
+
+  const client =
+    getSupabaseClient();
+
+  if (
+    !client ||
+    typeof client.from !== "function"
+  ) {
+    showPageMessage(
+      t("supabaseUnavailable"),
+      "error"
+    );
+    return;
+  }
+
+  const saveButton =
+    container.querySelector(
+      ".primary-button"
+    );
+
+  if (saveButton) {
+    saveButton.disabled = true;
+
+    saveButton.textContent =
+      currentLanguage === "zh"
+        ? "正在保存……"
+        : "Saving...";
+  }
+
+  showPageMessage(
+    currentLanguage === "zh"
+      ? "正在保存工作记录……"
+      : "Saving the work record...",
+    "info"
+  );
+
+  try {
+    /*
+     * 第一步：
+     * 向 work_records 插入独立工作记录。
+     * 每次保存都会新增一行，
+     * 不会覆盖以前的记录。
+     */
+    const {
+      data: insertedRecord,
+      error: insertError
+    } = await client
+      .from("work_records")
+      .insert({
+        request_no:
+          requestNo,
+
+        worker_phone:
+          currentWorkerPhone || null,
+
+        work_date:
+          workData.work_date,
+
+        start_time:
+          workData.start_time || null,
+
+        end_time:
+          workData.end_time || null,
+
+        work_hours:
+          workData.work_hours
+            ? Number(
+                workData.work_hours
+              )
+            : null,
+
+        work_progress:
+          workData.work_progress,
+
+        materials_used:
+          workData.materials_used ||
+          null,
+
+        issues_found:
+          workData.issues_found ||
+          null,
+
+        photo_record:
+          workData.photo_record ||
+          null,
+
+        video_record:
+          workData.video_record ||
+          null,
+
+        customer_site_comment:
+          workData
+            .customer_site_comment ||
+          null,
+
+        recorded_at:
+          recordedAt
+      })
+      .select("*")
+      .single();
+
+    if (insertError) {
+      throw insertError;
     }
 
-    if (
-      !workData.work_hours &&
-      workData.start_time &&
-      workData.end_time
-    ) {
-      workData.work_hours =
-        calculateWorkHours(
-          workData.start_time,
-          workData.end_time
+    /*
+     * 第二步：
+     * 更新主订单的最新工作状态。
+     * 主表只保留最新摘要，
+     * 完整历史保存在 work_records。
+     */
+    const { error: updateError } =
+      await client
+        .from("service_requests")
+        .update({
+          latest_work_date:
+            workData.work_date,
+
+          latest_work_progress:
+            workData.work_progress,
+
+          latest_work_hours:
+            workData.work_hours
+              ? Number(
+                  workData.work_hours
+                )
+              : null,
+
+          latest_materials_used:
+            workData.materials_used ||
+            null,
+
+          latest_issues_found:
+            workData.issues_found ||
+            null,
+
+          latest_photo_record:
+            workData.photo_record ||
+            null,
+
+          latest_video_record:
+            workData.video_record ||
+            null,
+
+          latest_customer_comment:
+            workData
+              .customer_site_comment ||
+            null,
+
+          latest_work_recorded_at:
+            recordedAt,
+
+          updated_at:
+            recordedAt
+        })
+        .eq(
+          "request_no",
+          requestNo
         );
+
+    if (updateError) {
+      throw updateError;
     }
+
+    const task =
+      findLoadedTask(requestNo);
+
+    if (task) {
+      task.latest_work_record =
+        workData;
+
+      task.latest_work_record_id =
+        insertedRecord?.id || null;
+
+      task.latest_work_date =
+        workData.work_date;
+
+      task.latest_work_progress =
+        workData.work_progress;
+
+      task.updated_at =
+        recordedAt;
+    }
+
+    /*
+     * 保存成功后删除本地草稿，
+     * 避免下次打开仍显示旧记录。
+     */
+    localStorage.removeItem(
+      `echocity-work-draft-${requestNo}`
+    );
+
+    showPageMessage(
+      t("progressSaved"),
+      "success"
+    );
+
+    /*
+     * 清空表单，准备填写下一条记录。
+     */
+    const inputs =
+      container.querySelectorAll(
+        "[data-work-input]"
+      );
+
+    inputs.forEach(
+      function (input) {
+        const fieldName =
+          input.dataset.workInput;
+
+        if (
+          fieldName === "work_date"
+        ) {
+          input.value =
+            new Date()
+              .toISOString()
+              .slice(0, 10);
+        } else {
+          input.value = "";
+        }
+      }
+    );
+
+    console.log(
+      "Work record saved:",
+      insertedRecord
+    );
+  } catch (error) {
+    console.error(
+      "Save work progress failed:",
+      error
+    );
+
+    console.error(
+      "Error message:",
+      error?.message
+    );
+
+    console.error(
+      "Error code:",
+      error?.code
+    );
+
+    console.error(
+      "Error details:",
+      error?.details
+    );
+
+    console.error(
+      "Error hint:",
+      error?.hint
+    );
+
+    showPageMessage(
+      t("progressSaveFailed"),
+      "error"
+    );
+  } finally {
+    if (saveButton) {
+      saveButton.disabled = false;
+
+      saveButton.textContent =
+        t("saveProgress");
+    }
+  }
+}
 
     workData.request_no =
       requestNo;
@@ -3953,8 +4246,8 @@
             completionData
               .worker_signature,
 
-          customer_acceptance_focus:
-completionData.customer_acceptance_focus || null,
+          customer_acceptance_items:
+completionData.customer_acceptance_items || null,
 
           work_completed_at:
             submittedAt,
