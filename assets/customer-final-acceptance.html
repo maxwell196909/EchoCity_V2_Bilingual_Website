@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
   <meta charset="UTF-8" />
 
@@ -8,9 +7,11 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   />
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/echocity-supabase.js"></script>
-  <title>最终验收 | EchoCity</title>
+
+  <title>客户最终验收 | EchoCity</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/echocity-supabase.js"></script>
 
   <style>
     * {
@@ -20,50 +21,50 @@
     }
 
     :root {
-      --primary: #1f6feb;
-      --primary-dark: #1557b0;
-      --primary-soft: #edf5ff;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
 
-      --success: #18864b;
-      --success-soft: #eaf8f0;
+      --success: #15803d;
+      --success-soft: #ecfdf3;
 
-      --warning: #9a6700;
-      --warning-soft: #fff6dc;
+      --danger: #b91c1c;
+      --danger-soft: #fef2f2;
 
-      --danger: #b42318;
-      --danger-soft: #fff0ee;
-
-      --purple: #6941c6;
-      --purple-soft: #f1edff;
+      --info: #1e40af;
+      --info-soft: #eff6ff;
 
       --text: #172033;
-      --text-light: #667085;
+      --muted: #667085;
 
-      --border: #d9e1ec;
-      --background: #f4f7fb;
+      --border: #d8dee9;
+      --background: #f3f6fb;
       --card: #ffffff;
 
       --shadow:
-        0 16px 40px rgba(24, 39, 75, 0.08);
+        0 14px 36px rgba(
+          31,
+          41,
+          55,
+          0.08
+        );
     }
 
     body {
       min-height: 100vh;
 
-      background:
-        linear-gradient(
-          180deg,
-          #edf5ff 0%,
-          #f7f9fc 42%,
-          #f4f7fb 100%
-        );
-
-      color: var(--text);
-
       font-family:
         Arial,
         "Microsoft YaHei",
         sans-serif;
+
+      color: var(--text);
+
+      background:
+        linear-gradient(
+          135deg,
+          #edf5ff,
+          var(--background)
+        );
     }
 
     button,
@@ -77,110 +78,83 @@
       cursor: pointer;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
     .page {
-      width: min(100%, 920px);
+      width:
+        min(
+          960px,
+          calc(100% - 24px)
+        );
+
       margin: 0 auto;
-      padding: 20px 15px 52px;
+      padding: 22px 0 48px;
     }
 
     .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
+      gap: 12px;
 
       margin-bottom: 24px;
     }
 
     .brand {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: 10px;
 
-      font-size: 20px;
+      font-size: 21px;
       font-weight: 800;
     }
 
-    .brand-mark {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+    .logo {
+      display: grid;
+      place-items: center;
 
       width: 38px;
       height: 38px;
 
-      border-radius: 13px;
+      border-radius: 12px;
 
-      background:
-        linear-gradient(
-          135deg,
-          var(--primary),
-          #65a4ff
-        );
-
+      background: var(--primary);
       color: #ffffff;
-      font-weight: 900;
 
-      box-shadow:
-        0 8px 20px rgba(31, 111, 235, 0.22);
+      font-weight: 900;
     }
 
     .language-button {
-      min-width: 58px;
-      min-height: 40px;
-      padding: 0 13px;
+      padding: 8px 14px;
 
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 999px;
 
-      background: rgba(255, 255, 255, 0.9);
+      background: #ffffff;
       color: var(--text);
 
-      font-weight: 800;
+      font-weight: 700;
     }
 
     .hero {
       margin-bottom: 18px;
     }
 
-    .hero-tag {
-      display: inline-flex;
-      align-items: center;
-
-      min-height: 30px;
-      padding: 0 12px;
-
-      border-radius: 999px;
-
-      background: var(--success-soft);
-      color: var(--success);
-
-      font-size: 13px;
-      font-weight: 800;
-    }
-
     .hero h1 {
-      margin-top: 12px;
+      font-size:
+        clamp(
+          30px,
+          6vw,
+          44px
+        );
 
-      font-size: clamp(29px, 7vw, 42px);
-      line-height: 1.15;
-      letter-spacing: -1px;
+      line-height: 1.2;
     }
 
     .hero p {
-      max-width: 790px;
-
       margin-top: 10px;
 
-      color: var(--text-light);
+      color: var(--muted);
 
-      font-size: 15px;
-      line-height: 1.75;
+      line-height: 1.7;
     }
 
     .card {
@@ -194,7 +168,7 @@
       box-shadow: var(--shadow);
     }
 
-    .card-title {
+    .card h2 {
       font-size: 21px;
       line-height: 1.4;
     }
@@ -202,28 +176,27 @@
     .card-description {
       margin-top: 7px;
 
-      color: var(--text-light);
+      color: var(--muted);
 
-      font-size: 14px;
-      line-height: 1.7;
+      line-height: 1.6;
     }
 
     .search-row {
-      display: flex;
+      display: grid;
+      grid-template-columns:
+        1fr auto;
       gap: 10px;
 
       margin-top: 16px;
     }
 
-    .search-input {
-      flex: 1;
-      min-width: 0;
-      min-height: 48px;
-
-      padding: 0 13px;
+    .input,
+    .textarea,
+    .select {
+      width: 100%;
 
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 11px;
 
       background: #ffffff;
       color: var(--text);
@@ -231,34 +204,109 @@
       outline: none;
     }
 
-    .search-input:focus {
+    .input,
+    .select {
+      min-height: 46px;
+      padding: 0 12px;
+    }
+
+    .textarea {
+      min-height: 100px;
+      padding: 12px;
+
+      resize: vertical;
+      line-height: 1.65;
+    }
+
+    .input:focus,
+    .textarea:focus,
+    .select:focus {
       border-color: var(--primary);
 
       box-shadow:
-        0 0 0 3px rgba(31, 111, 235, 0.12);
+        0 0 0 3px
+        rgba(
+          37,
+          99,
+          235,
+          0.12
+        );
     }
 
-    .search-button {
-      min-height: 48px;
+    .primary-button,
+    .secondary-button {
+      min-height: 46px;
       padding: 0 18px;
 
-      border: 0;
-      border-radius: 12px;
-
-      background: var(--primary);
-      color: #ffffff;
+      border-radius: 11px;
 
       font-weight: 800;
     }
 
-    .search-button:hover {
+    .primary-button {
+      border: 0;
+
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .primary-button:hover {
       background: var(--primary-dark);
+    }
+
+    .secondary-button {
+      border: 1px solid var(--border);
+
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+
+      margin-top: 14px;
+      padding: 12px 14px;
+
+      border-radius: 11px;
+
+      line-height: 1.6;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.info {
+      background: var(--info-soft);
+      color: var(--info);
+    }
+
+    .message.success {
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .message.error {
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .hidden {
+      display: none !important;
     }
 
     .summary-grid {
       display: grid;
       grid-template-columns:
-        repeat(4, minmax(0, 1fr));
+        repeat(
+          3,
+          minmax(0, 1fr)
+        );
       gap: 12px;
 
       margin-top: 16px;
@@ -268,13 +316,13 @@
       padding: 14px;
 
       border: 1px solid var(--border);
-      border-radius: 13px;
+      border-radius: 12px;
 
       background: #f8fafc;
     }
 
     .summary-label {
-      color: var(--text-light);
+      color: var(--muted);
 
       font-size: 12px;
       font-weight: 700;
@@ -283,135 +331,87 @@
     .summary-value {
       margin-top: 6px;
 
-      color: var(--text);
-
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 900;
     }
 
-    .milestone-list {
+    .records {
       display: grid;
-      gap: 13px;
+      gap: 12px;
 
       margin-top: 16px;
     }
 
-    .milestone-item {
-      overflow: hidden;
+    .record {
+      padding: 14px;
 
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: 13px;
 
       background: #ffffff;
     }
 
-    .milestone-header {
+    .record-header {
       display: flex;
-      align-items: flex-start;
       justify-content: space-between;
       gap: 12px;
 
-      padding: 14px;
+      margin-bottom: 10px;
 
-      border-bottom: 1px solid var(--border);
-
-      background: #f8fafc;
-    }
-
-    .milestone-title {
-      font-size: 16px;
-      font-weight: 800;
-      line-height: 1.45;
-    }
-
-    .milestone-status {
-      flex-shrink: 0;
-
-      padding: 6px 10px;
-
-      border-radius: 999px;
-
-      background: var(--success-soft);
-      color: var(--success);
-
-      font-size: 11px;
       font-weight: 800;
     }
 
-    .milestone-body {
+    .record-hours {
+      color: var(--primary);
+    }
+
+    .record-grid {
       display: grid;
       grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-      gap: 10px;
-
-      padding: 14px;
+        repeat(
+          2,
+          minmax(0, 1fr)
+        );
+      gap: 9px;
     }
 
-    .detail-item {
-      padding: 12px;
+    .detail {
+      padding: 10px;
 
-      border-radius: 11px;
+      border-radius: 10px;
 
       background: #f8fafc;
     }
 
-    .detail-item.full {
+    .detail.full {
       grid-column: 1 / -1;
     }
 
     .detail-label {
-      color: var(--text-light);
+      color: var(--muted);
 
       font-size: 12px;
       font-weight: 700;
     }
 
     .detail-value {
-      margin-top: 6px;
+      margin-top: 5px;
 
-      color: var(--text);
-
-      font-size: 13px;
-      line-height: 1.65;
+      line-height: 1.55;
       white-space: pre-wrap;
       word-break: break-word;
-    }    .acceptance-section {
-      margin-top: 16px;
-      padding: 16px;
-
-      border: 1px solid #cfe8d8;
-      border-radius: 14px;
-
-      background:
-        linear-gradient(
-          180deg,
-          #f4fcf7 0%,
-          #ffffff 100%
-        );
-    }
-
-    .section-title {
-      font-size: 17px;
-      font-weight: 800;
-      line-height: 1.45;
-    }
-
-    .section-description {
-      margin-top: 6px;
-
-      color: var(--text-light);
-
-      font-size: 13px;
-      line-height: 1.65;
     }
 
     .form-grid {
       display: grid;
       grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+        repeat(
+          2,
+          minmax(0, 1fr)
+        );
       gap: 13px;
 
-      margin-top: 15px;
+      margin-top: 16px;
     }
 
     .form-group {
@@ -424,188 +424,67 @@
     }
 
     .form-label {
-      color: var(--text);
-
       font-size: 13px;
       font-weight: 800;
-    }
-
-    .form-input,
-    .form-textarea,
-    .form-select {
-      width: 100%;
-
-      border: 1px solid var(--border);
-      border-radius: 12px;
-
-      background: #ffffff;
-      color: var(--text);
-
-      outline: none;
-    }
-
-    .form-input,
-    .form-select {
-      min-height: 46px;
-      padding: 0 12px;
-    }
-
-    .form-textarea {
-      min-height: 105px;
-      padding: 12px;
-
-      line-height: 1.65;
-      resize: vertical;
-    }
-
-    .form-input:focus,
-    .form-textarea:focus,
-    .form-select:focus {
-      border-color: var(--primary);
-
-      box-shadow:
-        0 0 0 3px rgba(31, 111, 235, 0.12);
     }
 
     .rating-row {
       display: grid;
       grid-template-columns:
-        repeat(5, minmax(0, 1fr));
+        repeat(
+          5,
+          minmax(0, 1fr)
+        );
       gap: 8px;
     }
 
-    .rating-option {
-      position: relative;
-    }
-
     .rating-option input {
-      position: absolute;
-      opacity: 0;
-      pointer-events: none;
+      display: none;
     }
 
     .rating-option span {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: grid;
+      place-items: center;
 
       min-height: 44px;
 
       border: 1px solid var(--border);
-      border-radius: 11px;
+      border-radius: 10px;
 
       background: #ffffff;
-      color: var(--text-light);
 
-      font-size: 18px;
-      font-weight: 900;
-
-      cursor: pointer;
+      font-weight: 800;
     }
 
-    .rating-option input:checked + span {
+    .rating-option
+    input:checked + span {
       border-color: var(--success);
 
       background: var(--success-soft);
       color: var(--success);
-
-      box-shadow:
-        0 0 0 3px rgba(24, 134, 75, 0.1);
     }
 
-    .checkbox-list {
+    .checks {
       display: grid;
-      gap: 11px;
+      gap: 10px;
 
-      margin-top: 14px;
+      margin-top: 16px;
     }
 
-    .checkbox-item {
+    .check {
       display: flex;
       align-items: flex-start;
       gap: 10px;
-
-      padding: 13px;
-
-      border: 1px solid var(--border);
-      border-radius: 12px;
-
-      background: #ffffff;
     }
 
-    .checkbox-item input {
+    .check input {
       width: 18px;
       height: 18px;
 
       margin-top: 2px;
-      flex-shrink: 0;
     }
 
-    .checkbox-content {
-      display: grid;
-      gap: 4px;
-    }
-
-    .checkbox-title {
-      color: var(--text);
-
-      font-size: 13px;
-      font-weight: 800;
-      line-height: 1.5;
-    }
-
-    .checkbox-description {
-      color: var(--text-light);
-
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
-    .notice-box {
-      margin-top: 15px;
-      padding: 14px;
-
-      border: 1px solid #b9e4c8;
-      border-radius: 13px;
-
-      background: var(--success-soft);
-      color: var(--success);
-
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
-    .status-message {
-      display: none;
-
-      margin-top: 15px;
-      padding: 13px 14px;
-
-      border-radius: 12px;
-
-      font-size: 14px;
-      line-height: 1.65;
-    }
-
-    .status-message.success {
-      display: block;
-
-      border: 1px solid #b9e4c8;
-
-      background: var(--success-soft);
-      color: var(--success);
-    }
-
-    .status-message.error {
-      display: block;
-
-      border: 1px solid #f0c0c0;
-
-      background: var(--danger-soft);
-      color: var(--danger);
-    }
-
-    .action-row {
+    .actions {
       display: flex;
       justify-content: flex-end;
       gap: 10px;
@@ -613,111 +492,28 @@
       margin-top: 18px;
     }
 
-    .secondary-button,
-    .primary-button {
-      min-height: 46px;
-      padding: 0 18px;
-
-      border-radius: 12px;
-
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .secondary-button {
-      border: 1px solid var(--border);
-
-      background: #ffffff;
-      color: var(--text);
-    }
-
-    .primary-button {
-      border: 0;
-
-      background: var(--success);
-      color: #ffffff;
-    }
-
-    .primary-button:hover {
-      background: #126b3b;
-    }
-
-    .primary-button:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-    }
-
-    .empty-state {
-      display: none;
-
-      margin-top: 18px;
-      padding: 30px 20px;
-
-      border: 1px solid var(--border);
-      border-radius: 18px;
-
-      background: #ffffff;
-      box-shadow: var(--shadow);
-
-      text-align: center;
-    }
-
-    .empty-state.show {
-      display: block;
-    }
-
-    .empty-state h2 {
-      font-size: 22px;
-      line-height: 1.4;
-    }
-
-    .empty-state p {
-      margin-top: 9px;
-
-      color: var(--text-light);
-
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    @media (max-width: 760px) {
-      .page {
-        padding: 15px 13px 42px;
-      }
-
-      .search-row {
-        flex-direction: column;
-      }
-
-      .search-button {
-        width: 100%;
-      }
-
-      .summary-grid {
-        grid-template-columns:
-          repeat(2, minmax(0, 1fr));
-      }
-
-      .milestone-header {
-        flex-direction: column;
-      }
-
-      .milestone-body,
+    @media (
+      max-width: 700px
+    ) {
+      .search-row,
+      .summary-grid,
+      .record-grid,
       .form-grid {
         grid-template-columns: 1fr;
       }
 
-      .rating-row {
-        grid-template-columns:
-          repeat(5, minmax(44px, 1fr));
+      .detail.full,
+      .form-group.full {
+        grid-column: 1;
       }
 
-      .action-row {
-        flex-direction: column-reverse;
+      .actions {
+        flex-direction:
+          column-reverse;
       }
 
-      .secondary-button,
-      .primary-button {
+      .actions button,
+      .search-row button {
         width: 100%;
       }
     }
@@ -729,19 +525,15 @@
 
     <header class="topbar">
 
-      <a
-        class="brand"
-        href=" "
-      >
-        <span class="brand-mark">E</span>
+      <div class="brand">
+        <div class="logo">E</div>
         <span>EchoCity</span>
-      </a >
+      </div>
 
       <button
-        class="language-button"
         id="languageButton"
+        class="language-button"
         type="button"
-        onclick="toggleLanguage()"
       >
         EN
       </button>
@@ -750,54 +542,42 @@
 
     <section class="hero">
 
-      <span
-        class="hero-tag"
-        data-i18n="heroTag"
-      >
-        最终验收与服务完成
-      </span>
-
-      <h1 data-i18n="heroTitle">
-        确认全部服务成果并完成订单
+      <h1 id="pageTitle">
+        客户最终验收
       </h1>
 
-      <p data-i18n="heroDescription">
-        当全部关键节点完成中间验收后，客户可以查看完整成果记录、确认最终结果并正式完成服务订单。
-      </p >
+      <p id="pageDescription">
+        查看每日工作记录和最终成果，并确认服务结果。
+      </p>
 
     </section>
 
     <section class="card">
 
-      <h2
-        class="card-title"
-        data-i18n="searchTitle"
-      >
+      <h2 id="searchTitle">
         查询等待最终验收的订单
       </h2>
 
       <p
+        id="searchDescription"
         class="card-description"
-        data-i18n="searchDescription"
       >
-        输入客户手机号，查询所有关键节点已经完成并等待最终验收的服务订单。
-      </p >
+        请输入客户手机号。
+      </p>
 
       <div class="search-row">
 
         <input
-          class="search-input"
           id="customerPhoneInput"
+          class="input"
           type="tel"
-          data-i18n-placeholder="phonePlaceholder"
-          placeholder="请输入客户手机号码"
+          placeholder="请输入客户手机号"
         />
 
         <button
-          class="search-button"
+          id="searchButton"
+          class="primary-button"
           type="button"
-          onclick="searchFinalAcceptance()"
-          data-i18n="searchButton"
         >
           查询最终验收
         </button>
@@ -805,838 +585,508 @@
       </div>
 
       <div
-        class="status-message"
-        id="statusMessage"
+        id="message"
+        class="message"
+        role="status"
       ></div>
 
     </section>
 
     <section
-      class="card"
-      id="acceptanceCard"
-      style="display: none;"
+      id="resultCard"
+      class="card hidden"
     >
 
-      <h2
-        class="card-title"
-        data-i18n="summaryTitle"
-      >
-        全部服务成果汇总
+      <h2 id="summaryTitle">
+        服务成果汇总
       </h2>
-
-      <p
-        class="card-description"
-        data-i18n="summaryDescription"
-      >
-        以下内容汇总全部关键节点的工人成果、客户评价、纸面验收和运营审核记录。
-      </p >
 
       <div class="summary-grid">
 
         <div class="summary-item">
-
           <div
+            id="requestLabel"
             class="summary-label"
-            data-i18n="requestIdLabel"
           >
-            服务需求编号
+            需求编号
           </div>
 
           <div
+            id="requestValue"
             class="summary-value"
-            id="requestId"
           >
-            --
+            —
           </div>
-
         </div>
 
         <div class="summary-item">
-
           <div
+            id="recordCountLabel"
             class="summary-label"
-            data-i18n="totalMilestonesLabel"
           >
-            全部节点
+            工作记录
           </div>
 
           <div
+            id="recordCountValue"
             class="summary-value"
-            id="totalMilestones"
           >
             0
           </div>
-
         </div>
 
         <div class="summary-item">
-
           <div
+            id="totalHoursLabel"
             class="summary-label"
-            data-i18n="approvedMilestonesLabel"
-          >
-            已通过节点
-          </div>
-
-          <div
-            class="summary-value"
-            id="approvedMilestones"
-          >
-            0
-          </div>
-
-        </div>
-
-        <div class="summary-item">
-
-          <div
-            class="summary-label"
-            data-i18n="totalHoursLabel"
           >
             累计工时
           </div>
 
           <div
+            id="totalHoursValue"
             class="summary-value"
-            id="totalHours"
           >
             0
           </div>
+        </div>
+
+      </div>
+
+      <h2
+        id="recordsTitle"
+        style="margin-top: 22px;"
+      >
+        每日工作记录
+      </h2>
+
+      <div
+        id="workRecordList"
+        class="records"
+      ></div>
+
+      <h2
+        id="finalInfoTitle"
+        style="margin-top: 22px;"
+      >
+        工人最终提交
+      </h2>
+
+      <div
+        id="finalInfo"
+        class="records"
+      ></div>
+
+      <h2
+        id="acceptanceTitle"
+        style="margin-top: 22px;"
+      >
+        客户最终验收
+      </h2>
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label
+            id="resultLabel"
+            class="form-label"
+            for="finalResult"
+          >
+            最终验收结果
+          </label>
+
+          <select
+            id="finalResult"
+            class="select"
+          >
+            <option value="">
+              请选择
+            </option>
+
+            <option value="accepted">
+              全部完成，同意验收
+            </option>
+
+            <option value="conditional">
+              有条件完成
+            </option>
+
+            <option value="rework">
+              要求整改
+            </option>
+
+            <option value="disputed">
+              存在争议
+            </option>
+          </select>
+
+        </div>
+
+        <div class="form-group">
+
+          <label
+            id="completedLabel"
+            class="form-label"
+            for="serviceCompleted"
+          >
+            是否确认服务完成
+          </label>
+
+          <select
+            id="serviceCompleted"
+            class="select"
+          >
+            <option value="">
+              请选择
+            </option>
+
+            <option value="yes">
+              是
+            </option>
+
+            <option value="no">
+              否
+            </option>
+          </select>
+
+        </div>
+
+        <div class="form-group full">
+
+          <label
+            id="ratingLabel"
+            class="form-label"
+          >
+            服务评分
+          </label>
+
+          <div class="rating-row">
+
+            <label class="rating-option">
+              <input
+                type="radio"
+                name="rating"
+                value="1"
+              />
+              <span>1</span>
+            </label>
+
+            <label class="rating-option">
+              <input
+                type="radio"
+                name="rating"
+                value="2"
+              />
+              <span>2</span>
+            </label>
+
+            <label class="rating-option">
+              <input
+                type="radio"
+                name="rating"
+                value="3"
+              />
+              <span>3</span>
+            </label>
+
+            <label class="rating-option">
+              <input
+                type="radio"
+                name="rating"
+                value="4"
+              />
+              <span>4</span>
+            </label>
+
+            <label class="rating-option">
+              <input
+                type="radio"
+                name="rating"
+                value="5"
+              />
+              <span>5</span>
+            </label>
+
+          </div>
+
+        </div>
+
+        <div class="form-group full">
+
+          <label
+            id="commentsLabel"
+            class="form-label"
+            for="finalComments"
+          >
+            最终验收意见
+          </label>
+
+          <textarea
+            id="finalComments"
+            class="textarea"
+            placeholder="请填写验收意见"
+          ></textarea>
+
+        </div>
+
+        <div class="form-group full">
+
+          <label
+            id="issuesLabel"
+            class="form-label"
+            for="outstandingDetails"
+          >
+            遗留问题或争议说明
+          </label>
+
+          <textarea
+            id="outstandingDetails"
+            class="textarea"
+            placeholder="如无遗留问题可留空"
+          ></textarea>
 
         </div>
 
       </div>
 
-      <div
-        class="milestone-list"
-        id="milestoneList"
-      ></div>      <section class="acceptance-section">
+      <div class="checks">
 
-        <h3
-          class="section-title"
-          data-i18n="acceptanceTitle"
+        <label class="check">
+          <input
+            id="confirmRecords"
+            type="checkbox"
+          />
+          <span id="confirmRecordsText">
+            我已查看全部工作记录。
+          </span>
+        </label>
+
+        <label class="check">
+          <input
+            id="confirmSite"
+            type="checkbox"
+          />
+          <span id="confirmSiteText">
+            我已确认最终现场情况。
+          </span>
+        </label>
+
+        <label class="check">
+          <input
+            id="confirmTruth"
+            type="checkbox"
+          />
+          <span id="confirmTruthText">
+            我确认以上内容真实准确。
+          </span>
+        </label>
+
+      </div>
+
+      <div class="actions">
+
+        <button
+          id="clearButton"
+          class="secondary-button"
+          type="button"
         >
-          客户最终验收确认
-        </h3>
+          清空填写
+        </button>
 
-        <p
-          class="section-description"
-          data-i18n="acceptanceDescription"
+        <button
+          id="submitButton"
+          class="primary-button"
+          type="button"
         >
-          请根据全部阶段成果和现场最终情况，确认服务是否已经完成。
-        </p >
+          提交最终验收
+        </button>
 
-        <div class="form-grid">
-
-          <div class="form-group">
-
-            <label
-              class="form-label"
-              for="finalResult"
-              data-i18n="finalResultLabel"
-            >
-              最终验收结果
-            </label>
-
-            <select
-              class="form-select"
-              id="finalResult"
-            >
-              <option
-                value=""
-                data-i18n="selectPlaceholder"
-              >
-                请选择
-              </option>
-
-              <option
-                value="accepted"
-                data-i18n="finalAccepted"
-              >
-                全部完成，同意最终验收
-              </option>
-
-              <option
-                value="conditional"
-                data-i18n="finalConditional"
-              >
-                基本完成，保留少量遗留事项
-              </option>
-
-              <option
-                value="rework"
-                data-i18n="finalRework"
-              >
-                尚未完成，要求继续整改
-              </option>
-
-              <option
-                value="disputed"
-                data-i18n="finalDisputed"
-              >
-                存在争议，需要人工处理
-              </option>
-
-            </select>
-
-          </div>
-
-          <div class="form-group">
-
-            <label
-              class="form-label"
-              for="serviceCompleted"
-              data-i18n="serviceCompletedLabel"
-            >
-              是否确认服务完成
-            </label>
-
-            <select
-              class="form-select"
-              id="serviceCompleted"
-            >
-              <option
-                value=""
-                data-i18n="selectPlaceholder"
-              >
-                请选择
-              </option>
-
-              <option
-                value="yes"
-                data-i18n="yesOption"
-              >
-                是
-              </option>
-
-              <option
-                value="no"
-                data-i18n="noOption"
-              >
-                否
-              </option>
-
-            </select>
-
-          </div>
-
-          <div class="form-group full">
-
-            <label
-              class="form-label"
-              data-i18n="finalRatingLabel"
-            >
-              最终服务评分
-            </label>
-
-            <div class="rating-row">
-
-              <label class="rating-option">
-                <input
-                  type="radio"
-                  name="finalRating"
-                  value="1"
-                />
-                <span>1</span>
-              </label>
-
-              <label class="rating-option">
-                <input
-                  type="radio"
-                  name="finalRating"
-                  value="2"
-                />
-                <span>2</span>
-              </label>
-
-              <label class="rating-option">
-                <input
-                  type="radio"
-                  name="finalRating"
-                  value="3"
-                />
-                <span>3</span>
-              </label>
-
-              <label class="rating-option">
-                <input
-                  type="radio"
-                  name="finalRating"
-                  value="4"
-                />
-                <span>4</span>
-              </label>
-
-              <label class="rating-option">
-                <input
-                  type="radio"
-                  name="finalRating"
-                  value="5"
-                />
-                <span>5</span>
-              </label>
-
-            </div>
-
-          </div>
-
-          <div class="form-group">
-
-            <label
-              class="form-label"
-              for="remainingIssueStatus"
-              data-i18n="remainingIssueStatusLabel"
-            >
-              是否仍有遗留问题
-            </label>
-
-            <select
-              class="form-select"
-              id="remainingIssueStatus"
-            >
-              <option
-                value="no"
-                data-i18n="noOption"
-              >
-                否
-              </option>
-
-              <option
-                value="yes"
-                data-i18n="yesOption"
-              >
-                是
-              </option>
-
-            </select>
-
-          </div>
-
-          <div class="form-group">
-
-            <label
-              class="form-label"
-              for="damageStatus"
-              data-i18n="damageStatusLabel"
-            >
-              是否仍有损坏问题
-            </label>
-
-            <select
-              class="form-select"
-              id="damageStatus"
-            >
-              <option
-                value="no"
-                data-i18n="noOption"
-              >
-                否
-              </option>
-
-              <option
-                value="yes"
-                data-i18n="yesOption"
-              >
-                是
-              </option>
-
-            </select>
-
-          </div>
-
-          <div class="form-group">
-
-            <label
-              class="form-label"
-              for="paymentStatus"
-              data-i18n="paymentStatusLabel"
-            >
-              是否存在未结费用
-            </label>
-
-            <select
-              class="form-select"
-              id="paymentStatus"
-            >
-              <option
-                value="no"
-                data-i18n="noOption"
-              >
-                否
-              </option>
-
-              <option
-                value="yes"
-                data-i18n="yesOption"
-              >
-                是
-              </option>
-
-            </select>
-
-          </div>
-
-          <div class="form-group">
-
-            <label
-              class="form-label"
-              for="disputeStatus"
-              data-i18n="disputeStatusLabel"
-            >
-              是否仍有争议
-            </label>
-
-            <select
-              class="form-select"
-              id="disputeStatus"
-            >
-              <option
-                value="no"
-                data-i18n="noOption"
-              >
-                否
-              </option>
-
-              <option
-                value="yes"
-                data-i18n="yesOption"
-              >
-                是
-              </option>
-
-            </select>
-
-          </div>
-
-          <div class="form-group full">
-
-            <label
-              class="form-label"
-              for="finalComments"
-              data-i18n="finalCommentsLabel"
-            >
-              最终验收意见
-            </label>
-
-            <textarea
-              class="form-textarea"
-              id="finalComments"
-              data-i18n-placeholder="finalCommentsPlaceholder"
-              placeholder="请说明最终完成情况、满意程度、遗留事项或整改要求。"
-            ></textarea>
-
-          </div>
-
-          <div class="form-group full">
-
-            <label
-              class="form-label"
-              for="outstandingDetails"
-              data-i18n="outstandingDetailsLabel"
-            >
-              遗留、损坏、费用或争议说明
-            </label>
-
-            <textarea
-              class="form-textarea"
-              id="outstandingDetails"
-              data-i18n-placeholder="outstandingDetailsPlaceholder"
-              placeholder="如仍有遗留问题、损坏、未结费用或争议，请详细说明。"
-            ></textarea>
-
-          </div>
-
-        </div>
-
-        <div class="checkbox-list">
-
-          <label class="checkbox-item">
-
-            <input
-              id="confirmReviewedAll"
-              type="checkbox"
-            />
-
-            <span class="checkbox-content">
-
-              <span
-                class="checkbox-title"
-                data-i18n="confirmReviewedAllTitle"
-              >
-                我已查看全部阶段记录
-              </span>
-
-              <span
-                class="checkbox-description"
-                data-i18n="confirmReviewedAllDescription"
-              >
-                我已查看工人成果、客户阶段评价、纸面验收单和运营审核记录。
-              </span>
-
-            </span>
-
-          </label>
-
-          <label class="checkbox-item">
-
-            <input
-              id="confirmFinalSite"
-              type="checkbox"
-            />
-
-            <span class="checkbox-content">
-
-              <span
-                class="checkbox-title"
-                data-i18n="confirmFinalSiteTitle"
-              >
-                我已确认最终现场情况
-              </span>
-
-              <span
-                class="checkbox-description"
-                data-i18n="confirmFinalSiteDescription"
-              >
-                我已根据现场实际情况确认服务成果和遗留问题。
-              </span>
-
-            </span>
-
-          </label>
-
-          <label class="checkbox-item">
-
-            <input
-              id="confirmTruth"
-              type="checkbox"
-            />
-
-            <span class="checkbox-content">
-
-              <span
-                class="checkbox-title"
-                data-i18n="confirmTruthTitle"
-              >
-                我确认最终验收内容真实
-              </span>
-
-              <span
-                class="checkbox-description"
-                data-i18n="confirmTruthDescription"
-              >
-                我确认最终结果、评分、遗留事项、损坏、费用和争议信息真实准确。
-              </span>
-
-            </span>
-
-          </label>
-
-        </div>
-
-        <div
-          class="notice-box"
-          data-i18n="completionNotice"
-        >
-          最终验收通过后，服务订单将正式完成，全部过程记录将保留为服务成果和履约记录。
-        </div>
-
-        <div class="action-row">
-
-          <button
-            class="secondary-button"
-            type="button"
-            onclick="clearAcceptanceForm()"
-            data-i18n="clearButton"
-          >
-            清空填写
-          </button>
-
-          <button
-            class="primary-button"
-            id="completeButton"
-            type="button"
-            onclick="submitFinalAcceptance()"
-            data-i18n="completeButton"
-          >
-            确认最终验收并完成服务
-          </button>
-
-        </div>
-
-      </section>
+      </div>
 
     </section>
 
-    <section
-      class="empty-state"
-      id="emptyState"
-    >
-
-      <h2 data-i18n="emptyTitle">
-        暂无可最终验收的订单
-      </h2>
-
-      <p data-i18n="emptyDescription">
-        请确认客户手机号正确，并确认全部关键节点已经通过运营审核。
-      </p >
-
-    </section>
-
-  </main>
-
-<script>
+  </main>  <script>
     const translations = {
       zh: {
-        heroTag:
-          "最终验收与服务完成",
+        pageTitle:
+          "客户最终验收",
 
-        heroTitle:
-          "确认全部服务成果并完成订单",
-
-        heroDescription:
-          "当全部关键节点完成中间验收后，客户可以查看完整成果记录、确认最终结果并正式完成服务订单。",
+        pageDescription:
+          "查看每日工作记录和最终成果，并确认服务结果。",
 
         searchTitle:
           "查询等待最终验收的订单",
 
         searchDescription:
-          "输入客户手机号，查询所有关键节点已经完成并等待最终验收的服务订单。",
+          "请输入客户手机号。",
 
         phonePlaceholder:
-          "请输入客户手机号码",
+          "请输入客户手机号",
 
         searchButton:
           "查询最终验收",
 
+        loading:
+          "正在查询，请稍候……",
+
+        notFound:
+          "没有找到等待最终验收的订单。",
+
+        loadFailed:
+          "查询失败，请检查网络或数据库设置。",
+
         summaryTitle:
-          "全部服务成果汇总",
+          "服务成果汇总",
 
-        summaryDescription:
-          "以下内容汇总全部关键节点的工人成果、客户评价、纸面验收和运营审核记录。",
+        requestLabel:
+          "需求编号",
 
-        requestIdLabel:
-          "服务需求编号",
-
-        totalMilestonesLabel:
-          "全部节点",
-
-        approvedMilestonesLabel:
-          "已通过节点",
+        recordCountLabel:
+          "工作记录",
 
         totalHoursLabel:
           "累计工时",
 
+        recordsTitle:
+          "每日工作记录",
+
+        noRecords:
+          "暂无工作记录。",
+
+        finalInfoTitle:
+          "工人最终提交",
+
         acceptanceTitle:
-          "客户最终验收确认",
+          "客户最终验收",
 
-        acceptanceDescription:
-          "请根据全部阶段成果和现场最终情况，确认服务是否已经完成。",
-
-        finalResultLabel:
+        resultLabel:
           "最终验收结果",
 
-        selectPlaceholder:
+        select:
           "请选择",
 
-        finalAccepted:
-          "全部完成，同意最终验收",
+        accepted:
+          "全部完成，同意验收",
 
-        finalConditional:
-          "基本完成，保留少量遗留事项",
+        conditional:
+          "有条件完成",
 
-        finalRework:
-          "尚未完成，要求继续整改",
+        rework:
+          "要求整改",
 
-        finalDisputed:
-          "存在争议，需要人工处理",
+        disputed:
+          "存在争议",
 
-        serviceCompletedLabel:
+        completedLabel:
           "是否确认服务完成",
 
-        yesOption:
+        yes:
           "是",
 
-        noOption:
+        no:
           "否",
 
-        finalRatingLabel:
-          "最终服务评分",
+        ratingLabel:
+          "服务评分",
 
-        remainingIssueStatusLabel:
-          "是否仍有遗留问题",
-
-        damageStatusLabel:
-          "是否仍有损坏问题",
-
-        paymentStatusLabel:
-          "是否存在未结费用",
-
-        disputeStatusLabel:
-          "是否仍有争议",
-
-        finalCommentsLabel:
+        commentsLabel:
           "最终验收意见",
 
-        finalCommentsPlaceholder:
-          "请说明最终完成情况、满意程度、遗留事项或整改要求。",
+        commentsPlaceholder:
+          "请填写验收意见",
 
-        outstandingDetailsLabel:
-          "遗留、损坏、费用或争议说明",
+        issuesLabel:
+          "遗留问题或争议说明",
 
-        outstandingDetailsPlaceholder:
-          "如仍有遗留问题、损坏、未结费用或争议，请详细说明。",
+        issuesPlaceholder:
+          "如无遗留问题可留空",
 
-        confirmReviewedAllTitle:
-          "我已查看全部阶段记录",
+        confirmRecordsText:
+          "我已查看全部工作记录。",
 
-        confirmReviewedAllDescription:
-          "我已查看工人成果、客户阶段评价、纸面验收单和运营审核记录。",
+        confirmSiteText:
+          "我已确认最终现场情况。",
 
-        confirmFinalSiteTitle:
-          "我已确认最终现场情况",
-
-        confirmFinalSiteDescription:
-          "我已根据现场实际情况确认服务成果和遗留问题。",
-
-        confirmTruthTitle:
-          "我确认最终验收内容真实",
-
-        confirmTruthDescription:
-          "我确认最终结果、评分、遗留事项、损坏、费用和争议信息真实准确。",
-
-        completionNotice:
-          "最终验收通过后，服务订单将正式完成，全部过程记录将保留为服务成果和履约记录。",
+        confirmTruthText:
+          "我确认以上内容真实准确。",
 
         clearButton:
           "清空填写",
 
-        completeButton:
-          "确认最终验收并完成服务",
+        submitButton:
+          "提交最终验收",
 
-        emptyTitle:
-          "暂无可最终验收的订单",
+        required:
+          "请完成验收结果、完成状态、评分、验收意见和三项确认。",
 
-        emptyDescription:
-          "请确认客户手机号正确，并确认全部关键节点已经通过运营审核。",
+        acceptedConflict:
+          "选择同意验收时，必须确认服务已经完成。",
 
-        phoneRequired:
-          "请输入客户手机号码。",
+        saveSuccess:
+          "最终验收已经成功提交。",
 
-        requestNotFound:
-          "没有找到当前服务订单。",
+        saveFailed:
+          "最终验收提交失败。",
 
-        customerNotMatched:
-          "该手机号与当前订单客户不一致。",
+        workDate:
+          "工作日期",
 
-        milestonesIncomplete:
-          "全部关键节点尚未通过运营审核，暂时不能进行最终验收。",
+        workTime:
+          "工作时间",
 
-        finalAcceptanceFound:
-          "已经找到等待最终验收的订单，请查看全部成果记录。",
+        workProgress:
+          "工作进展",
 
-        finalResultRequired:
-          "请选择最终验收结果。",
+        materials:
+          "使用材料",
 
-        completionRequired:
-          "请选择是否确认服务完成。",
+        issues:
+          "发现问题",
 
-        ratingRequired:
-          "请选择最终服务评分。",
+        photos:
+          "照片记录",
 
-        commentsRequired:
-          "请填写最终验收意见。",
+        videos:
+          "视频记录",
 
-        outstandingDetailsRequired:
-          "存在遗留问题、损坏、未结费用或争议时，必须填写详细说明。",
+        customerComment:
+          "客户现场意见",
 
-        confirmationRequired:
-          "请完成全部查看、现场和真实性确认。",
+        completionSummary:
+          "最终完成说明",
 
-        acceptedMismatch:
-          "选择最终验收通过时，必须确认服务已经完成。",
+        completionEvidence:
+          "最终成果证据",
 
-        issueMismatch:
-          "仍存在未解决问题时，不能直接确认全部完成。",
+        outstandingIssues:
+          "遗留问题",
 
-        completionSuccess:
-          "最终验收已经完成，服务订单已正式结束，全部过程记录已经保存。",
-
-        conditionalSuccess:
-          "最终验收已记录为有条件完成，遗留事项已纳入后续跟踪。",
-
-        reworkSuccess:
-          "最终验收未通过，订单已进入最终整改状态。",
-
-        disputeSuccess:
-          "最终验收存在争议，订单已进入人工争议处理。",
-
-        milestoneApproved:
-          "中间验收已通过",
-
-        milestoneConditional:
-          "有条件通过",
-
-        workerResultLabel:
-          "工人成果",
-
-        customerEvaluationLabel:
-          "客户阶段评价",
-
-        operationReviewLabel:
-          "运营审核",
-
-        actualHoursLabel:
-          "实际工时",
-
-        customerRatingLabel:
-          "客户评分",
-
-        operationResultLabel:
-          "运营审核结果",
-
-        operationCommentsLabel:
-          "运营审核意见",
-
-        approvedText:
-          "审核通过",
-
-        conditionalText:
-          "有条件通过",
-
-        reworkText:
-          "要求整改",
-
-        disputedText:
-          "争议处理",
-
-        pausedText:
-          "服务暂停",
-
-        hoursUnit:
-          "小时",
-
-        ratingUnit:
-          "分",
+        acceptanceItems:
+          "请客户重点验收内容",
 
         notProvided:
-          "未填写"
+          "未填写",
+
+        hours:
+          "小时",
+
+        orderLoaded:
+          "订单已成功加载。"
       },
 
       en: {
-        heroTag:
-          "Final Acceptance and Service Completion",
+        pageTitle:
+          "Customer Final Acceptance",
 
-        heroTitle:
-          "Confirm All Service Results and Complete the Order",
-
-        heroDescription:
-          "After all milestones complete interim acceptance, the customer can review the full service record, confirm the final result, and formally complete the service order.",
+        pageDescription:
+          "Review daily work records and final results, then confirm the service outcome.",
 
         searchTitle:
           "Find an Order Awaiting Final Acceptance",
 
         searchDescription:
-          "Enter the customer phone number to find a service order whose milestones have all been completed and approved.",
+          "Enter the customer phone number.",
 
         phonePlaceholder:
           "Enter customer phone number",
@@ -1644,218 +1094,152 @@
         searchButton:
           "Find Final Acceptance",
 
+        loading:
+          "Loading. Please wait...",
+
+        notFound:
+          "No order awaiting final acceptance was found.",
+
+        loadFailed:
+          "Unable to load the order. Check the network or database settings.",
+
         summaryTitle:
-          "Complete Service Result Summary",
+          "Service Result Summary",
 
-        summaryDescription:
-          "This section summarizes worker submissions, customer evaluations, paper acceptance forms, and operations reviews for all milestones.",
+        requestLabel:
+          "Request Number",
 
-        requestIdLabel:
-          "Service Request ID",
-
-        totalMilestonesLabel:
-          "All Milestones",
-
-        approvedMilestonesLabel:
-          "Approved Milestones",
+        recordCountLabel:
+          "Work Records",
 
         totalHoursLabel:
-          "Total Labor Hours",
+          "Total Hours",
+
+        recordsTitle:
+          "Daily Work Records",
+
+        noRecords:
+          "No work records are available.",
+
+        finalInfoTitle:
+          "Worker Final Submission",
 
         acceptanceTitle:
           "Customer Final Acceptance",
 
-        acceptanceDescription:
-          "Confirm whether the service has been completed based on all milestone records and final site conditions.",
+        resultLabel:
+          "Final Result",
 
-        finalResultLabel:
-          "Final Acceptance Result",
-
-        selectPlaceholder:
+        select:
           "Select",
 
-        finalAccepted:
+        accepted:
           "Fully Completed — Accept",
 
-        finalConditional:
-          "Mostly Completed — Remaining Items",
+        conditional:
+          "Conditionally Completed",
 
-        finalRework:
-          "Not Completed — Further Rework Required",
+        rework:
+          "Rework Required",
 
-        finalDisputed:
-          "Disputed — Manual Handling Required",
+        disputed:
+          "Disputed",
 
-        serviceCompletedLabel:
+        completedLabel:
           "Confirm Service Completion",
 
-        yesOption:
+        yes:
           "Yes",
 
-        noOption:
+        no:
           "No",
 
-        finalRatingLabel:
-          "Final Service Rating",
+        ratingLabel:
+          "Service Rating",
 
-        remainingIssueStatusLabel:
-          "Any Remaining Issues",
-
-        damageStatusLabel:
-          "Any Unresolved Damage",
-
-        paymentStatusLabel:
-          "Any Outstanding Payment",
-
-        disputeStatusLabel:
-          "Any Remaining Dispute",
-
-        finalCommentsLabel:
+        commentsLabel:
           "Final Acceptance Comments",
 
-        finalCommentsPlaceholder:
-          "Describe final completion, satisfaction, remaining items, or rework requirements.",
+        commentsPlaceholder:
+          "Enter final acceptance comments",
 
-        outstandingDetailsLabel:
-          "Remaining Issue, Damage, Payment, or Dispute Details",
+        issuesLabel:
+          "Outstanding Issues or Dispute Details",
 
-        outstandingDetailsPlaceholder:
-          "Provide details for any remaining issue, damage, unpaid amount, or dispute.",
+        issuesPlaceholder:
+          "Leave blank when there are no outstanding issues",
 
-        confirmReviewedAllTitle:
-          "I reviewed all milestone records",
+        confirmRecordsText:
+          "I reviewed all work records.",
 
-        confirmReviewedAllDescription:
-          "I reviewed worker submissions, customer milestone evaluations, paper acceptance forms, and operations reviews.",
+        confirmSiteText:
+          "I confirmed the final site conditions.",
 
-        confirmFinalSiteTitle:
-          "I confirmed the final site conditions",
-
-        confirmFinalSiteDescription:
-          "I confirmed the service results and remaining issues based on actual final site conditions.",
-
-        confirmTruthTitle:
-          "I confirm the final acceptance information is accurate",
-
-        confirmTruthDescription:
-          "I confirm that the final result, rating, remaining items, damage, payment, and dispute information are accurate.",
-
-        completionNotice:
-          "After final acceptance, the service order will be formally completed and all process records will be retained as service and performance records.",
+        confirmTruthText:
+          "I confirm that the information is accurate.",
 
         clearButton:
           "Clear Form",
 
-        completeButton:
-          "Confirm Final Acceptance and Complete Service",
+        submitButton:
+          "Submit Final Acceptance",
 
-        emptyTitle:
-          "No Order Available for Final Acceptance",
+        required:
+          "Complete the result, completion status, rating, comments, and all confirmations.",
 
-        emptyDescription:
-          "Confirm the customer phone number and make sure all milestones have passed operations review.",
+        acceptedConflict:
+          "Accepted service must also be marked as completed.",
 
-        phoneRequired:
-          "Enter the customer phone number.",
+        saveSuccess:
+          "Final acceptance was submitted successfully.",
 
-        requestNotFound:
-          "No current service order was found.",
+        saveFailed:
+          "Unable to submit final acceptance.",
 
-        customerNotMatched:
-          "This phone number does not match the customer on the current order.",
+        workDate:
+          "Work Date",
 
-        milestonesIncomplete:
-          "Not all milestones have passed operations review. Final acceptance is not available yet.",
+        workTime:
+          "Work Time",
 
-        finalAcceptanceFound:
-          "An order awaiting final acceptance was found. Review all service records.",
+        workProgress:
+          "Work Progress",
 
-        finalResultRequired:
-          "Select the final acceptance result.",
+        materials:
+          "Materials Used",
 
-        completionRequired:
-          "Select whether the service is complete.",
+        issues:
+          "Issues Found",
 
-        ratingRequired:
-          "Select the final service rating.",
+        photos:
+          "Photo Record",
 
-        commentsRequired:
-          "Enter final acceptance comments.",
+        videos:
+          "Video Record",
 
-        outstandingDetailsRequired:
-          "Detailed information is required when there are remaining issues, damage, unpaid amounts, or disputes.",
+        customerComment:
+          "Customer Site Comment",
 
-        confirmationRequired:
-          "Complete all review, site, and truthfulness confirmations.",
+        completionSummary:
+          "Completion Summary",
 
-        acceptedMismatch:
-          "When final acceptance is approved, service completion must be confirmed.",
+        completionEvidence:
+          "Final Evidence",
 
-        issueMismatch:
-          "The service cannot be marked fully completed while unresolved issues remain.",
+        outstandingIssues:
+          "Outstanding Issues",
 
-        completionSuccess:
-          "Final acceptance is complete. The service order has been formally completed and all records were saved.",
-
-        conditionalSuccess:
-          "Final acceptance was recorded as conditionally complete, and remaining items were added to follow-up tracking.",
-
-        reworkSuccess:
-          "Final acceptance was not approved. The order is now in final rework.",
-
-        disputeSuccess:
-          "A dispute was recorded during final acceptance. The order is now awaiting manual dispute handling.",
-
-        milestoneApproved:
-          "Interim Acceptance Approved",
-
-        milestoneConditional:
-          "Conditionally Approved",
-
-        workerResultLabel:
-          "Worker Result",
-
-        customerEvaluationLabel:
-          "Customer Stage Evaluation",
-
-        operationReviewLabel:
-          "Operations Review",
-
-        actualHoursLabel:
-          "Actual Labor Hours",
-
-        customerRatingLabel:
-          "Customer Rating",
-
-        operationResultLabel:
-          "Operations Review Result",
-
-        operationCommentsLabel:
-          "Operations Review Comments",
-
-        approvedText:
-          "Approved",
-
-        conditionalText:
-          "Conditionally Approved",
-
-        reworkText:
-          "Rework Required",
-
-        disputedText:
-          "Dispute Handling",
-
-        pausedText:
-          "Service Paused",
-
-        hoursUnit:
-          "hours",
-
-        ratingUnit:
-          "points",
+        acceptanceItems:
+          "Items Requiring Acceptance",
 
         notProvided:
-          "Not Provided"
+          "Not provided",
+
+        hours:
+          "hours",
+
+        orderLoaded:
+          "The order was loaded successfully."
       }
     };
 
@@ -1865,63 +1249,144 @@
       ) || "zh";
 
     let currentRequest = null;
-    let milestones = [];
+    let workRecords = [];
 
     function translate(key) {
       return (
-        translations[currentLanguage][key] ||
+        translations[currentLanguage]?.[key] ||
         translations.zh[key] ||
         key
       );
-    }    function applyLanguage() {
+    }
+
+    function setText(
+      elementId,
+      translationKey
+    ) {
+      const element =
+        document.getElementById(
+          elementId
+        );
+
+      if (element) {
+        element.textContent =
+          translate(
+            translationKey
+          );
+      }
+    }
+
+    function applyLanguage() {
       document.documentElement.lang =
         currentLanguage === "zh"
           ? "zh-CN"
           : "en";
 
-      document
-        .querySelectorAll(
-          "[data-i18n]"
-        )
-        .forEach((element) => {
-          const key =
-            element.getAttribute(
-              "data-i18n"
-            );
+      document.title =
+        `${translate("pageTitle")} | EchoCity`;
 
-          if (
-            translations[
-              currentLanguage
-            ][key]
-          ) {
-            element.textContent =
-              translations[
-                currentLanguage
-              ][key];
-          }
-        });
+      const textMap = {
+        pageTitle:
+          "pageTitle",
 
-      document
-        .querySelectorAll(
-          "[data-i18n-placeholder]"
-        )
-        .forEach((element) => {
-          const key =
-            element.getAttribute(
-              "data-i18n-placeholder"
-            );
+        pageDescription:
+          "pageDescription",
 
-          if (
-            translations[
-              currentLanguage
-            ][key]
-          ) {
-            element.placeholder =
-              translations[
-                currentLanguage
-              ][key];
-          }
-        });
+        searchTitle:
+          "searchTitle",
+
+        searchDescription:
+          "searchDescription",
+
+        searchButton:
+          "searchButton",
+
+        summaryTitle:
+          "summaryTitle",
+
+        requestLabel:
+          "requestLabel",
+
+        recordCountLabel:
+          "recordCountLabel",
+
+        totalHoursLabel:
+          "totalHoursLabel",
+
+        recordsTitle:
+          "recordsTitle",
+
+        finalInfoTitle:
+          "finalInfoTitle",
+
+        acceptanceTitle:
+          "acceptanceTitle",
+
+        resultLabel:
+          "resultLabel",
+
+        completedLabel:
+          "completedLabel",
+
+        ratingLabel:
+          "ratingLabel",
+
+        commentsLabel:
+          "commentsLabel",
+
+        issuesLabel:
+          "issuesLabel",
+
+        confirmRecordsText:
+          "confirmRecordsText",
+
+        confirmSiteText:
+          "confirmSiteText",
+
+        confirmTruthText:
+          "confirmTruthText",
+
+        clearButton:
+          "clearButton",
+
+        submitButton:
+          "submitButton"
+      };
+
+      Object.entries(
+        textMap
+      ).forEach(
+        ([
+          elementId,
+          translationKey
+        ]) => {
+          setText(
+            elementId,
+            translationKey
+          );
+        }
+      );
+
+      document.getElementById(
+        "customerPhoneInput"
+      ).placeholder =
+        translate(
+          "phonePlaceholder"
+        );
+
+      document.getElementById(
+        "finalComments"
+      ).placeholder =
+        translate(
+          "commentsPlaceholder"
+        );
+
+      document.getElementById(
+        "outstandingDetails"
+      ).placeholder =
+        translate(
+          "issuesPlaceholder"
+        );
 
       document.getElementById(
         "languageButton"
@@ -1930,518 +1395,545 @@
           ? "EN"
           : "中文";
 
-      if (
-        currentRequest &&
-        milestones.length > 0
-      ) {
-        renderSummary();
-        renderMilestones();
+      const resultOptions =
+        document.getElementById(
+          "finalResult"
+        ).options;
+
+      resultOptions[0].text =
+        translate("select");
+
+      resultOptions[1].text =
+        translate("accepted");
+
+      resultOptions[2].text =
+        translate("conditional");
+
+      resultOptions[3].text =
+        translate("rework");
+
+      resultOptions[4].text =
+        translate("disputed");
+
+      const completedOptions =
+        document.getElementById(
+          "serviceCompleted"
+        ).options;
+
+      completedOptions[0].text =
+        translate("select");
+
+      completedOptions[1].text =
+        translate("yes");
+
+      completedOptions[2].text =
+        translate("no");
+
+      if (currentRequest) {
+        renderAllResults();
       }
     }
-
-    function toggleLanguage() {
-      currentLanguage =
-        currentLanguage === "zh"
-          ? "en"
-          : "zh";
-
-      localStorage.setItem(
-        "echocity-language",
-        currentLanguage
-      );
-
-      applyLanguage();
-    }
-
-    async function loadCurrentRequest(customerPhone) {
-  try {
-    const client = window.echoCitySupabase;
-
-    if (
-      !client ||
-      typeof client.from !== "function"
-    ) {
-      throw new Error("Supabase client unavailable.");
-    }
-
-    const normalizedPhone =
-      normalizePhone(customerPhone);
-
-    const { data, error } = await client
-      .from("service_requests")
-      .select("*")
-      .eq("customer_phone", normalizedPhone)
-      .eq("status", "completed")
-      .order("updated_at", {
-        ascending: false
-      })
-      .limit(1)
-      .maybeSingle();
-
-    if (error) {
-      throw error;
-    }
-
-    currentRequest = data || null;
-
-    milestones =
-      Array.isArray(currentRequest?.milestone_data)
-        ? currentRequest.milestone_data
-        : [];
-
-    if (currentRequest) {
-      localStorage.setItem(
-        "echocity-last-request",
-        JSON.stringify(currentRequest)
-      );
-    }
-  } catch (error) {
-    console.error(
-      "Failed to load final acceptance request:",
-      error
-    );
-
-    currentRequest = null;
-    milestones = [];
-  }
-}
 
     function normalizePhone(value) {
-      return String(value || "")
-        .replace(/\s+/g, "")
-        .replace(/-/g, "")
-        .replace(/\(/g, "")
-        .replace(/\)/g, "");
+      return String(
+        value || ""
+      )
+        .trim()
+        .replace(
+          /[^\d+]/g,
+          ""
+        );
     }
 
-    function getCustomerPhone() {
-      return normalizePhone(
-        currentRequest
-          ?.customerPhone ||
-
-        currentRequest
-          ?.customer
-          ?.phone ||
-
-        currentRequest
-          ?.contactPhone ||
-
-        ""
-      );
-    }
-
-    function showStatus(
-      type,
-      message
+    function showMessage(
+      text,
+      type = "info"
     ) {
-      const statusMessage =
+      const messageBox =
         document.getElementById(
-          "statusMessage"
+          "message"
         );
 
-      statusMessage.className =
-        "status-message " + type;
+      messageBox.textContent =
+        text;
 
-      statusMessage.textContent =
-        message;
-    }
-
-    function hideStatus() {
-      const statusMessage =
-        document.getElementById(
-          "statusMessage"
-        );
-
-      statusMessage.className =
-        "status-message";
-
-      statusMessage.textContent =
-        "";
-    }
-
-    function showEmptyState() {
-      document.getElementById(
-        "acceptanceCard"
-      ).style.display =
-        "none";
-
-      document.getElementById(
-        "emptyState"
-      ).classList.add(
-        "show"
-      );
-    }
-
-    function hideEmptyState() {
-      document.getElementById(
-        "emptyState"
-      ).classList.remove(
-        "show"
-      );
-    }
-
-    function allMilestonesApproved() {
-      return (
-        milestones.length > 0 &&
-        milestones.every(
-          (milestone) =>
-            milestone.status ===
-              "approved" ||
-            milestone.status ===
-              "conditional_approved"
-        )
-      );
-    }
-
-    async function searchFinalAcceptance() {
-      hideStatus();
-
-      const phoneInput =
-        document.getElementById(
-          "customerPhoneInput"
-        );
-
-      const enteredPhone =
-        normalizePhone(
-          phoneInput.value
-        );
-
-      if (!enteredPhone) {
-        showStatus(
-          "error",
-          translate(
-            "phoneRequired"
-          )
-        );
-
-        showEmptyState();
-        return;
-      }
-
-     await loadCurrentRequest(enteredPhone);
-
-      if (!currentRequest) {
-        showStatus(
-          "error",
-          translate(
-            "requestNotFound"
-          )
-        );
-
-        showEmptyState();
-        return;
-      }
-
-      const customerPhone =
-  normalizePhone(
-    currentRequest.customer_phone ||
-    currentRequest.customerPhone ||
-    ""
-  );
-
-if (
-  customerPhone &&
-  enteredPhone !== customerPhone
-) {
-  showStatus(
-    "error",
-    translate(
-      "customerNotMatched"
-    )
-  );
-
-  showEmptyState();
-  return;
-}
-
-      if (!allMilestonesApproved()) {
-        showStatus(
-          "error",
-          translate(
-            "milestonesIncomplete"
-          )
-        );
-
-        showEmptyState();
-        return;
-      }
-
-      hideEmptyState();
-
-      document.getElementById(
-        "acceptanceCard"
-      ).style.display =
-        "block";
-
-      renderSummary();
-      renderMilestones();
-
-      showStatus(
-        "success",
-        translate(
-          "finalAcceptanceFound"
-        )
-      );
+      messageBox.className =
+        `message show ${type}`;
     }
 
     function escapeHTML(value) {
-      return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
-    function getOperationResultText(
-      result
-    ) {
-      const resultMap = {
-        approved:
-          "approvedText",
-
-        conditional_approved:
-          "conditionalText",
-
-        rework:
-          "reworkText",
-
-        disputed:
-          "disputedText",
-
-        paused:
-          "pausedText"
-      };
-
-      return translate(
-        resultMap[result] ||
-        "notProvided"
-      );
-    }
-
-    function getMilestoneStatusText(
-      status
-    ) {
-      return status ===
-        "conditional_approved"
-        ? translate(
-            "milestoneConditional"
-          )
-        : translate(
-            "milestoneApproved"
-          );
-    }
-
-    function calculateTotalHours() {
-      return milestones.reduce(
-        (
-          total,
-          milestone
-        ) => {
-          const hours =
-            Number(
-              milestone
-                .workerSubmission
-                ?.actualHours || 0
-            );
-
-          return total + hours;
-        },
-        0
-      );
-    }
-
-    function renderSummary() {
-      document.getElementById(
-        "requestId"
-      ).textContent =
-        currentRequest?.id ||
-        translate(
-          "notProvided"
+      return String(
+        value ?? ""
+      )
+        .replaceAll(
+          "&",
+          "&amp;"
+        )
+        .replaceAll(
+          "<",
+          "&lt;"
+        )
+        .replaceAll(
+          ">",
+          "&gt;"
+        )
+        .replaceAll(
+          '"',
+          "&quot;"
+        )
+        .replaceAll(
+          "'",
+          "&#039;"
         );
-
-      document.getElementById(
-        "totalMilestones"
-      ).textContent =
-        milestones.length;
-
-      document.getElementById(
-        "approvedMilestones"
-      ).textContent =
-        milestones.filter(
-          (milestone) =>
-            milestone.status ===
-              "approved" ||
-            milestone.status ===
-              "conditional_approved"
-        ).length;
-
-      document.getElementById(
-        "totalHours"
-      ).textContent =
-        `${calculateTotalHours()} ${translate(
-          "hoursUnit"
-        )}`;
     }
 
-    function buildDetail(
-      labelKey,
+    function createDetail(
+      label,
       value,
       fullWidth = false
     ) {
-      return `
-        <div class="detail-item ${
-          fullWidth ? "full" : ""
-        }">
+      const displayValue =
+        value === null ||
+        value === undefined ||
+        value === ""
+          ? translate(
+              "notProvided"
+            )
+          : value;
 
+      return `
+        <div class="detail ${
+          fullWidth
+            ? "full"
+            : ""
+        }">
           <div class="detail-label">
-            ${escapeHTML(
-              translate(labelKey)
-            )}
+            ${escapeHTML(label)}
           </div>
 
           <div class="detail-value">
             ${escapeHTML(
-              value ||
+              displayValue
+            )}
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadCurrentOrder(
+      customerPhone
+    ) {
+      const client =
+        window.echoCitySupabase;
+
+      if (
+        !client ||
+        typeof client.from !==
+          "function"
+      ) {
+        throw new Error(
+          "Supabase client unavailable."
+        );
+      }
+
+      const {
+        data: requestData,
+        error: requestError
+      } = await client
+        .from(
+          "service_requests"
+        )
+        .select("*")
+        .eq(
+          "customer_phone",
+          customerPhone
+        )
+        .in(
+          "status",
+          [
+            "completed",
+            "conditionally_completed",
+            "final_rework",
+            "disputed"
+          ]
+        )
+        .order(
+          "updated_at",
+          {
+            ascending: false
+          }
+        )
+        .limit(1)
+        .maybeSingle();
+
+      if (requestError) {
+        throw requestError;
+      }
+
+      currentRequest =
+        requestData || null;
+
+      workRecords = [];
+
+      if (
+        currentRequest?.request_no
+      ) {
+        const {
+          data: recordData,
+          error: recordError
+        } = await client
+          .from(
+            "work_records"
+          )
+          .select("*")
+          .eq(
+            "request_no",
+            currentRequest.request_no
+          )
+          .order(
+            "work_date",
+            {
+              ascending: true
+            }
+          )
+          .order(
+            "created_at",
+            {
+              ascending: true
+            }
+          );
+
+        if (recordError) {
+          throw recordError;
+        }
+
+        workRecords =
+          Array.isArray(
+            recordData
+          )
+            ? recordData
+            : [];
+      }
+    }
+
+    function renderWorkRecords() {
+      const list =
+        document.getElementById(
+          "workRecordList"
+        );
+
+      if (
+        workRecords.length === 0
+      ) {
+        list.innerHTML = `
+          <div class="record">
+            ${escapeHTML(
               translate(
-                "notProvided"
+                "noRecords"
               )
             )}
+          </div>
+        `;
+
+        return;
+      }
+
+      list.innerHTML =
+        workRecords
+          .map(
+            (record) => {
+              const workTime =
+                `${
+                  record.start_time ||
+                  "—"
+                } - ${
+                  record.end_time ||
+                  "—"
+                }`;
+
+              return `
+                <article class="record">
+
+                  <div class="record-header">
+
+                    <span>
+                      ${escapeHTML(
+                        record.work_date ||
+                        translate(
+                          "notProvided"
+                        )
+                      )}
+                    </span>
+
+                    <span class="record-hours">
+                      ${escapeHTML(
+                        record.work_hours ||
+                        0
+                      )}
+                      ${escapeHTML(
+                        translate(
+                          "hours"
+                        )
+                      )}
+                    </span>
+
+                  </div>
+
+                  <div class="record-grid">
+
+                    ${createDetail(
+                      translate(
+                        "workTime"
+                      ),
+                      workTime
+                    )}
+
+                    ${createDetail(
+                      translate(
+                        "materials"
+                      ),
+                      record.materials_used
+                    )}
+
+                    ${createDetail(
+                      translate(
+                        "workProgress"
+                      ),
+                      record.work_progress,
+                      true
+                    )}
+
+                    ${createDetail(
+                      translate(
+                        "issues"
+                      ),
+                      record.issues_found,
+                      true
+                    )}
+
+                    ${createDetail(
+                      translate(
+                        "photos"
+                      ),
+                      record.photo_record,
+                      true
+                    )}
+
+                    ${createDetail(
+                      translate(
+                        "videos"
+                      ),
+                      record.video_record,
+                      true
+                    )}
+
+                    ${createDetail(
+                      translate(
+                        "customerComment"
+                      ),
+                      record.customer_site_comment,
+                      true
+                    )}
+
+                  </div>
+
+                </article>
+              `;
+            }
+          )
+          .join("");
+    }
+
+    function renderFinalInformation() {
+      const finalInformation =
+        document.getElementById(
+          "finalInfo"
+        );
+
+      finalInformation.innerHTML = `
+        <div class="record">
+
+          <div class="record-grid">
+
+            ${createDetail(
+              translate(
+                "completionSummary"
+              ),
+              currentRequest
+                ?.completion_summary,
+              true
+            )}
+
+            ${createDetail(
+              translate(
+                "completionEvidence"
+              ),
+              currentRequest
+                ?.completion_evidence,
+              true
+            )}
+
+            ${createDetail(
+              translate(
+                "outstandingIssues"
+              ),
+              currentRequest
+                ?.outstanding_issues,
+              true
+            )}
+
+            ${createDetail(
+              translate(
+                "acceptanceItems"
+              ),
+              currentRequest
+                ?.customer_acceptance_items,
+              true
+            )}
+
           </div>
 
         </div>
       `;
     }
 
-    function buildMilestoneItem(
-      milestone
-    ) {
-      const workerSubmission =
-        milestone
-          .workerSubmission || {};
+    function renderAllResults() {
+      document.getElementById(
+        "resultCard"
+      ).classList.remove(
+        "hidden"
+      );
 
-      const customerEvaluation =
-        milestone
-          .customerEvaluation || {};
-
-      const operationReview =
-        milestone
-          .operationReview || {};
-
-      const milestoneName =
-        milestone
-          .milestoneName ||
-        milestone
-          .taskName ||
+      document.getElementById(
+        "requestValue"
+      ).textContent =
+        currentRequest
+          ?.request_no ||
         translate(
           "notProvided"
         );
 
-      const hours =
-        workerSubmission.actualHours
-          ? `${workerSubmission.actualHours} ${translate(
-              "hoursUnit"
-            )}`
-          : translate(
-              "notProvided"
-            );
-
-      const customerRating =
-        customerEvaluation.rating
-          ? `${customerEvaluation.rating} ${translate(
-              "ratingUnit"
-            )}`
-          : translate(
-              "notProvided"
-            );
-
-      return `
-        <article class="milestone-item">
-
-          <div class="milestone-header">
-
-            <div class="milestone-title">
-              ${
-                currentLanguage === "zh"
-  ? `第${milestone.sequence || 1}阶段：`
-  : `Stage ${milestone.sequence || 1}:`
-              }
-
-              ${escapeHTML(
-                milestoneName
-              )}
-            </div>
-
-            <span class="milestone-status">
-              ${escapeHTML(
-                getMilestoneStatusText(
-                  milestone.status
-                )
-              )}
-            </span>
-
-          </div>
-
-          <div class="milestone-body">
-
-            ${buildDetail(
-              "workerResultLabel",
-              workerSubmission
-                .completionStatement,
-              true
-            )}
-
-            ${buildDetail(
-              "actualHoursLabel",
-              hours
-            )}
-
-            ${buildDetail(
-              "customerRatingLabel",
-              customerRating
-            )}
-
-            ${buildDetail(
-              "customerEvaluationLabel",
-              customerEvaluation
-                .customerComments,
-              true
-            )}
-
-            ${buildDetail(
-              "operationResultLabel",
-              getOperationResultText(
-                operationReview.result
-              )
-            )}
-
-            ${buildDetail(
-              "operationCommentsLabel",
-              operationReview.comments
-            )}
-
-          </div>
-
-        </article>
-      `;
-    }
-
-    function renderMilestones() {
-      const milestoneList =
-        document.getElementById(
-          "milestoneList"
+      document.getElementById(
+        "recordCountValue"
+      ).textContent =
+        String(
+          workRecords.length
         );
 
-      milestoneList.innerHTML =
-        milestones
-          .map(
-            buildMilestoneItem
-          )
-          .join("");
+      const totalHours =
+        workRecords.reduce(
+          (
+            total,
+            record
+          ) => {
+            const hours =
+              Number(
+                record.work_hours ||
+                0
+              );
+
+            return Number.isNaN(
+              hours
+            )
+              ? total
+              : total + hours;
+          },
+          0
+        );
+
+      document.getElementById(
+        "totalHoursValue"
+      ).textContent =
+        `${totalHours} ${translate(
+          "hours"
+        )}`;
+
+      renderWorkRecords();
+      renderFinalInformation();
+    }
+
+    async function searchFinalAcceptance() {
+      const phone =
+        normalizePhone(
+          document.getElementById(
+            "customerPhoneInput"
+          ).value
+        );
+
+      if (!phone) {
+        showMessage(
+          translate(
+            "phonePlaceholder"
+          ),
+          "error"
+        );
+
+        return;
+      }
+
+      showMessage(
+        translate(
+          "loading"
+        ),
+        "info"
+      );
+
+      document.getElementById(
+        "searchButton"
+      ).disabled = true;
+
+      try {
+        await loadCurrentOrder(
+          phone
+        );
+
+        if (!currentRequest) {
+          document.getElementById(
+            "resultCard"
+          ).classList.add(
+            "hidden"
+          );
+
+          showMessage(
+            translate(
+              "notFound"
+            ),
+            "error"
+          );
+
+          return;
+        }
+
+        renderAllResults();
+
+        showMessage(
+          translate(
+            "orderLoaded"
+          ),
+          "success"
+        );
+      } catch (error) {
+        console.error(
+          "Final acceptance load failed:",
+          error
+        );
+
+        showMessage(
+          error?.message ||
+          translate(
+            "loadFailed"
+          ),
+          "error"
+        );
+      } finally {
+        document.getElementById(
+          "searchButton"
+        ).disabled = false;
+      }
     }    function getSelectedRating() {
       const selected =
         document.querySelector(
-          'input[name="finalRating"]:checked'
+          'input[name="rating"]:checked'
         );
 
       return selected
@@ -2460,27 +1952,13 @@ if (
 
       document
         .querySelectorAll(
-          'input[name="finalRating"]'
+          'input[name="rating"]'
         )
-        .forEach((input) => {
-          input.checked = false;
-        });
-
-      document.getElementById(
-        "remainingIssueStatus"
-      ).value = "no";
-
-      document.getElementById(
-        "damageStatus"
-      ).value = "no";
-
-      document.getElementById(
-        "paymentStatus"
-      ).value = "no";
-
-      document.getElementById(
-        "disputeStatus"
-      ).value = "no";
+        .forEach(
+          (input) => {
+            input.checked = false;
+          }
+        );
 
       document.getElementById(
         "finalComments"
@@ -2491,21 +1969,29 @@ if (
       ).value = "";
 
       document.getElementById(
-        "confirmReviewedAll"
+        "confirmRecords"
       ).checked = false;
 
       document.getElementById(
-        "confirmFinalSite"
+        "confirmSite"
       ).checked = false;
 
       document.getElementById(
         "confirmTruth"
       ).checked = false;
 
-      hideStatus();
+      showMessage(
+        "",
+        "info"
+      );
+
+      document.getElementById(
+        "message"
+      ).className =
+        "message";
     }
-function validateFinalAcceptance
-    () {
+
+    function validateAcceptance() {
       const finalResult =
         document.getElementById(
           "finalResult"
@@ -2519,44 +2005,19 @@ function validateFinalAcceptance
       const finalRating =
         getSelectedRating();
 
-      const remainingIssueStatus =
-        document.getElementById(
-          "remainingIssueStatus"
-        ).value;
-
-      const damageStatus =
-        document.getElementById(
-          "damageStatus"
-        ).value;
-
-      const paymentStatus =
-        document.getElementById(
-          "paymentStatus"
-        ).value;
-
-      const disputeStatus =
-        document.getElementById(
-          "disputeStatus"
-        ).value;
-
       const finalComments =
         document.getElementById(
           "finalComments"
         ).value.trim();
 
-      const outstandingDetails =
+      const confirmRecords =
         document.getElementById(
-          "outstandingDetails"
-        ).value.trim();
-
-      const confirmReviewedAll =
-        document.getElementById(
-          "confirmReviewedAll"
+          "confirmRecords"
         ).checked;
 
-      const confirmFinalSite =
+      const confirmSite =
         document.getElementById(
-          "confirmFinalSite"
+          "confirmSite"
         ).checked;
 
       const confirmTruth =
@@ -2564,108 +2025,36 @@ function validateFinalAcceptance
           "confirmTruth"
         ).checked;
 
-      if (!finalResult) {
-        showStatus(
-          "error",
-          translate(
-            "finalResultRequired"
-          )
-        );
-
-        return false;
-      }
-
-      if (!serviceCompleted) {
-        showStatus(
-          "error",
-          translate(
-            "completionRequired"
-          )
-        );
-
-        return false;
-      }
-
-      if (!finalRating) {
-        showStatus(
-          "error",
-          translate(
-            "ratingRequired"
-          )
-        );
-
-        return false;
-      }
-
-      if (!finalComments) {
-        showStatus(
-          "error",
-          translate(
-            "commentsRequired"
-          )
-        );
-
-        return false;
-      }
-
-      const hasOutstandingIssue =
-        remainingIssueStatus === "yes" ||
-        damageStatus === "yes" ||
-        paymentStatus === "yes" ||
-        disputeStatus === "yes";
-
       if (
-        hasOutstandingIssue &&
-        !outstandingDetails
-      ) {
-        showStatus(
-          "error",
-          translate(
-            "outstandingDetailsRequired"
-          )
-        );
-
-        return false;
-      }
-
-      if (
-        !confirmReviewedAll ||
-        !confirmFinalSite ||
+        !finalResult ||
+        !serviceCompleted ||
+        !finalRating ||
+        !finalComments ||
+        !confirmRecords ||
+        !confirmSite ||
         !confirmTruth
       ) {
-        showStatus(
-          "error",
+        showMessage(
           translate(
-            "confirmationRequired"
-          )
+            "required"
+          ),
+          "error"
         );
 
         return false;
       }
 
       if (
-        finalResult === "accepted" &&
-        serviceCompleted !== "yes"
+        finalResult ===
+          "accepted" &&
+        serviceCompleted !==
+          "yes"
       ) {
-        showStatus(
-          "error",
+        showMessage(
           translate(
-            "acceptedMismatch"
-          )
-        );
-
-        return false;
-      }
-
-      if (
-        finalResult === "accepted" &&
-        hasOutstandingIssue
-      ) {
-        showStatus(
-          "error",
-          translate(
-            "issueMismatch"
-          )
+            "acceptedConflict"
+          ),
+          "error"
         );
 
         return false;
@@ -2674,141 +2063,62 @@ function validateFinalAcceptance
       return true;
     }
 
-   async function saveCurrentRequest() {
-  if (!currentRequest) {
-    return false;
-  }
+    function getFinalStatus(
+      finalResult
+    ) {
+      const statusMap = {
+        accepted:
+          "completed",
 
-  const client =
-    window.echoCitySupabase;
+        conditional:
+          "conditionally_completed",
 
-  if (
-    !client ||
-    typeof client.from !== "function"
-  ) {
-    showStatus(
-      "error",
-      "Supabase connection unavailable."
-    );
+        rework:
+          "final_rework",
 
-    return false;
-  }
+        disputed:
+          "disputed"
+      };
 
-  const now =
-    new Date().toISOString();
-
-  currentRequest.updatedAt = now;
-
-  try {
-    const { error } = await client
-      .from("service_requests")
-      .update({
-        status:
-          currentRequest.status,
-
-        final_acceptance_status:
-          currentRequest
-            .finalAcceptance
-            ?.status ||
-          "submitted",
-
-        final_acceptance_data:
-          currentRequest
-            .finalAcceptance ||
-          null,
-
-        updated_at: now
-      })
-      .eq(
-        "request_no",
-        currentRequest.request_no
-      );
-
-    if (error) {
-      throw error;
-    }
-
-    const requests =
-      JSON.parse(
-        localStorage.getItem(
-          "echocity-service-requests"
-        ) || "[]"
-      );
-
-    const requestIndex =
-      requests.findIndex(
-        (request) =>
-          request.id ===
-          currentRequest.id
-      );
-
-    if (requestIndex >= 0) {
-      requests[requestIndex] =
-        currentRequest;
-    } else {
-      requests.unshift(
-        currentRequest
+      return (
+        statusMap[
+          finalResult
+        ] ||
+        "completed"
       );
     }
-
-    localStorage.setItem(
-      "echocity-service-requests",
-      JSON.stringify(requests)
-    );
-
-    localStorage.setItem(
-      "echocity-last-request",
-      JSON.stringify(
-        currentRequest
-      )
-    );
-
-    return true;
-  } catch (error) {
-    console.error(
-      "Final acceptance save failed:",
-      error
-    );
-
-    console.error(
-      "Final acceptance error message:",
-      error?.message
-    );
-
-    showStatus(
-      "error",
-      error?.message ||
-      "Final acceptance could not be saved."
-    );
-
-    return false;
-  }
-}
 
     async function submitFinalAcceptance() {
       if (!currentRequest) {
-        showStatus(
-          "error",
+        showMessage(
           translate(
-            "requestNotFound"
-          )
+            "notFound"
+          ),
+          "error"
         );
 
         return;
       }
 
-      if (!allMilestonesApproved()) {
-        showStatus(
-          "error",
-          translate(
-            "milestonesIncomplete"
-          )
-        );
-
+      if (
+        !validateAcceptance()
+      ) {
         return;
       }
 
-      if (!validateFinalAcceptance()) {
+      const client =
+        window.echoCitySupabase;
+
+      if (
+        !client ||
+        typeof client.from !==
+          "function"
+      ) {
+        showMessage(
+          "Supabase client unavailable.",
+          "error"
+        );
+
         return;
       }
 
@@ -2825,26 +2135,6 @@ function validateFinalAcceptance
       const finalRating =
         getSelectedRating();
 
-      const remainingIssueStatus =
-        document.getElementById(
-          "remainingIssueStatus"
-        ).value;
-
-      const damageStatus =
-        document.getElementById(
-          "damageStatus"
-        ).value;
-
-      const paymentStatus =
-        document.getElementById(
-          "paymentStatus"
-        ).value;
-
-      const disputeStatus =
-        document.getElementById(
-          "disputeStatus"
-        ).value;
-
       const finalComments =
         document.getElementById(
           "finalComments"
@@ -2855,195 +2145,242 @@ function validateFinalAcceptance
           "outstandingDetails"
         ).value.trim();
 
-      const now =
+      const submittedAt =
         new Date().toISOString();
 
-      currentRequest.finalAcceptance = {
-        id:
-          "FINAL-ACCEPTANCE-" +
-          Date.now(),
+      const finalStatus =
+        getFinalStatus(
+          finalResult
+        );
 
-        requestId:
-          currentRequest.id,
+      const acceptanceData = {
+        request_no:
+          currentRequest.request_no,
 
-        submittedAt: now,
+        customer_phone:
+          normalizePhone(
+            document.getElementById(
+              "customerPhoneInput"
+            ).value
+          ),
 
-        customerPhone:
-          document.getElementById(
-            "customerPhoneInput"
-          ).value.trim(),
+        submitted_at:
+          submittedAt,
 
-        finalResult,
+        final_result:
+          finalResult,
 
-        serviceCompleted:
-          serviceCompleted === "yes",
+        service_completed:
+          serviceCompleted ===
+          "yes",
 
-        finalRating,
+        final_rating:
+          finalRating,
 
-        remainingIssueStatus:
-          remainingIssueStatus === "yes",
-
-        damageStatus:
-          damageStatus === "yes",
-
-        paymentStatus:
-          paymentStatus === "yes",
-
-        disputeStatus:
-          disputeStatus === "yes",
-
-        finalComments,
-        outstandingDetails,
-
-        totalMilestones:
-          milestones.length,
-
-        approvedMilestones:
-          milestones.filter(
-            (milestone) =>
-              milestone.status ===
-                "approved" ||
-              milestone.status ===
-                "conditional_approved"
-          ).length,
-
-        totalHours:
-          calculateTotalHours(),
-
-        confirmations: {
-          reviewedAllRecords: true,
-          confirmedFinalSite: true,
-          truthConfirmed: true
-        },
-
-        status:
-          "submitted"
-      };
-
-      let successMessage =
-        "completionSuccess";
-
-      if (
-        finalResult === "accepted"
-      ) {
-        currentRequest.status =
-          "completed";
-
-        currentRequest.completedAt =
-          now;
-
-        currentRequest
-          .finalAcceptance
-          .status =
-          "accepted";
-      }
-
-      if (
-        finalResult ===
-        "conditional"
-      ) {
-        currentRequest.status =
-          "conditionally_completed";
-
-        currentRequest.completedAt =
-          now;
-
-        currentRequest
-          .finalAcceptance
-          .status =
-          "conditional";
-
-        successMessage =
-          "conditionalSuccess";
-      }
-
-      if (
-        finalResult === "rework"
-      ) {
-        currentRequest.status =
-          "final_rework";
-
-        currentRequest
-          .finalAcceptance
-          .status =
-          "rework";
-
-        successMessage =
-          "reworkSuccess";
-      }
-
-      if (
-        finalResult ===
-        "disputed"
-      ) {
-        currentRequest.status =
-          "disputed";
-
-        currentRequest
-          .finalAcceptance
-          .status =
-          "disputed";
-
-        successMessage =
-          "disputeSuccess";
-      }
-
-      currentRequest.serviceOutcome = {
-        requestId:
-          currentRequest.id,
-
-        completedAt:
-          currentRequest.completedAt ||
-          null,
-
-        finalStatus:
-          currentRequest.status,
-
-        totalMilestones:
-          milestones.length,
-
-        totalHours:
-          calculateTotalHours(),
-
-        finalRating,
-
-        customerComments:
+        final_comments:
           finalComments,
 
-        outstandingDetails,
+        outstanding_details:
+          outstandingDetails ||
+          null,
 
-        retainedRecord:
-          true
+        reviewed_all_records:
+          true,
+
+        confirmed_final_site:
+          true,
+
+        truth_confirmed:
+          true,
+
+        work_record_count:
+          workRecords.length,
+
+        total_work_hours:
+          workRecords.reduce(
+            (
+              total,
+              record
+            ) => {
+              const hours =
+                Number(
+                  record.work_hours ||
+                  0
+                );
+
+              return Number.isNaN(
+                hours
+              )
+                ? total
+                : total + hours;
+            },
+            0
+          )
       };
 
-      const saved =
-  await saveCurrentRequest();
+      const submitButton =
+        document.getElementById(
+          "submitButton"
+        );
 
-if (!saved) {
-  return;
-}
+      submitButton.disabled =
+        true;
 
-      document.getElementById(
-        "completeButton"
-      ).disabled = true;
+      submitButton.textContent =
+        currentLanguage === "zh"
+          ? "正在提交……"
+          : "Submitting...";
 
-      showStatus(
-        "success",
-        translate(
-          successMessage
-        )
+      showMessage(
+        currentLanguage === "zh"
+          ? "正在提交最终验收……"
+          : "Submitting final acceptance...",
+        "info"
       );
+
+      try {
+        const { error } =
+          await client
+            .from(
+              "service_requests"
+            )
+            .update({
+              status:
+                finalStatus,
+
+              final_acceptance_status:
+                finalResult,
+
+              final_acceptance_data:
+                acceptanceData,
+
+              updated_at:
+                submittedAt
+            })
+            .eq(
+              "request_no",
+              currentRequest
+                .request_no
+            );
+
+        if (error) {
+          throw error;
+        }
+
+        currentRequest.status =
+          finalStatus;
+
+        currentRequest
+          .final_acceptance_status =
+          finalResult;
+
+        currentRequest
+          .final_acceptance_data =
+          acceptanceData;
+
+        showMessage(
+          translate(
+            "saveSuccess"
+          ),
+          "success"
+        );
+
+        submitButton.textContent =
+          translate(
+            "submitButton"
+          );
+      } catch (error) {
+        console.error(
+          "Final acceptance save failed:",
+          error
+        );
+
+        showMessage(
+          error?.message ||
+          translate(
+            "saveFailed"
+          ),
+          "error"
+        );
+
+        submitButton.disabled =
+          false;
+
+        submitButton.textContent =
+          translate(
+            "submitButton"
+          );
+      }
     }
 
-    document.addEventListener(
-      "DOMContentLoaded",
-      () => {
-        loadCurrentRequest();
-        applyLanguage();
-      }
-    );
-  </script>
+    function changeLanguage() {
+      currentLanguage =
+        currentLanguage ===
+          "zh"
+          ? "en"
+          : "zh";
 
+      localStorage.setItem(
+        "echocity-language",
+        currentLanguage
+      );
+
+      applyLanguage();
+    }
+
+    document
+      .getElementById(
+        "languageButton"
+      )
+      .addEventListener(
+        "click",
+        changeLanguage
+      );
+
+    document
+      .getElementById(
+        "searchButton"
+      )
+      .addEventListener(
+        "click",
+        searchFinalAcceptance
+      );
+
+    document
+      .getElementById(
+        "clearButton"
+      )
+      .addEventListener(
+        "click",
+        clearAcceptanceForm
+      );
+
+    document
+      .getElementById(
+        "submitButton"
+      )
+      .addEventListener(
+        "click",
+        submitFinalAcceptance
+      );
+
+    document
+      .getElementById(
+        "customerPhoneInput"
+      )
+      .addEventListener(
+        "keydown",
+        (event) => {
+          if (
+            event.key ===
+            "Enter"
+          ) {
+            searchFinalAcceptance();
+          }
+        }
+      );
+
+    applyLanguage();
+  </script>
 </body>
 </html>
-  
