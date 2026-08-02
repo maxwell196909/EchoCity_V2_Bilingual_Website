@@ -1,12 +1,27 @@
-const CACHE_NAME = "echocity-v4";
+const CACHE_NAME = "echocity-v5";
 
 const APP_FILES = [
   "./",
   "./index.html",
   "./manifest.json",
+  "./images/echocity-home-bg.png",
+  "./images/echocity-app-icon-192.png",
+  "./images/echocity-app-icon-512.png",
+  "./js/echocity-supabase.js",
+  "./js/echocity-store.js",
+  "./js/echocity-services.js",
+  "./assets/customer-dashboard.html",
+  "./assets/customer-my-requests.html",
   "./assets/service-request.html",
+  "./assets/service-request-confirmation.html",
+  "./assets/service-quote-confirmation.html",
+  "./assets/worker-dashboard.html",
   "./assets/worker-tasks.html",
   "./assets/worker-milestone-submission.html",
+  "./assets/admin-dashboard.html",
+  "./assets/admin-service-quote.html",
+  "./assets/admin-service-assignment.html",
+  "./assets/admin-service-milestones.html",
   "./assets/customer-milestone-evaluation.html",
   "./assets/customer-milestone-paper.html",
   "./assets/customer-final-acceptance.html"
@@ -41,14 +56,16 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match("./index.html"))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      return (
-        cachedResponse ||
-        fetch(event.request).catch(() => {
-          return caches.match("./index.html");
-        })
-      );
+      return cachedResponse || fetch(event.request);
     })
   );
 });
