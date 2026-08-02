@@ -1,63 +1,89 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
 
   <meta
     name="theme-color"
-    content="#0b1730"
-  />
+    content="#0f2747"
+  >
 
-  <title>EchoCity 服务平台</title>
+  <title>EchoCity｜可信社区服务</title>
 
   <style>
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --white: #ffffff;
+      --text-soft: rgba(255, 255, 255, 0.86);
+      --glass: rgba(8, 24, 48, 0.62);
+      --glass-light: rgba(255, 255, 255, 0.14);
+      --border: rgba(255, 255, 255, 0.27);
+      --shadow: 0 22px 55px rgba(0, 0, 0, 0.30);
     }
 
     html {
-      scroll-behavior: smooth;
+      min-height: 100%;
     }
 
     body {
-      margin: 0;
       min-height: 100vh;
+      min-height: 100dvh;
+
       font-family:
         Arial,
         "Microsoft YaHei",
         sans-serif;
+
+      color: var(--white);
+
       background:
         linear-gradient(
-          160deg,
-          #071327 0%,
-          #102445 55%,
-          #17365e 100%
-        );
-      color: #ffffff;
+          180deg,
+          rgba(5, 20, 43, 0.18) 0%,
+          rgba(5, 20, 43, 0.46) 48%,
+          rgba(5, 20, 43, 0.83) 100%
+        ),
+        url("assets/images/echocity-home-bg.jpeg")
+        center center / cover
+        no-repeat;
+
+      background-attachment: fixed;
     }
 
     button,
-    input {
+    a {
       font: inherit;
     }
 
-    a {
-      color: inherit;
+    button {
+      cursor: pointer;
     }
 
     .page {
-      width: min(
-        1120px,
-        calc(100% - 28px)
-      );
+      width: min(100% - 24px, 980px);
+      min-height: 100vh;
+      min-height: 100dvh;
+
       margin: 0 auto;
-      padding: 22px 0 48px;
+      padding:
+        max(20px, env(safe-area-inset-top))
+        0
+        max(28px, env(safe-area-inset-bottom));
+
+      display: flex;
+      flex-direction: column;
     }
 
     .topbar {
@@ -65,713 +91,719 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      margin-bottom: 34px;
     }
 
     .brand {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 12px;
+      gap: 11px;
+
+      color: var(--white);
+      text-decoration: none;
+
       font-size: 23px;
-      font-weight: 800;
+      font-weight: 900;
     }
 
-    .brand-logo {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+
       display: grid;
       place-items: center;
-      background: linear-gradient(
-        135deg,
-        #4d83ff,
-        #775cff
-      );
+
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      border-radius: 13px;
+
+      background: var(--primary);
+
       box-shadow:
-        0 12px 28px
-        rgba(78, 124, 255, 0.35);
+        0 10px 25px
+        rgba(37, 99, 235, 0.35);
     }
 
     .language-button {
-      min-height: 42px;
+      min-height: 40px;
       padding: 0 16px;
-      border-radius: 12px;
-      border:
-        1px solid
-        rgba(255, 255, 255, 0.22);
-      background:
-        rgba(255, 255, 255, 0.08);
-      color: #ffffff;
-      cursor: pointer;
-      font-weight: 800;
+
+      border: 1px solid var(--border);
+      border-radius: 999px;
+
+      color: var(--white);
+      background: rgba(5, 20, 43, 0.48);
+
+      font-weight: 900;
+      backdrop-filter: blur(12px);
     }
 
-    .language-button:hover {
-      background:
-        rgba(255, 255, 255, 0.14);
+    .main-content {
+      flex: 1;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+
+      padding-top: 44px;
     }
 
     .hero {
-      display: grid;
-      grid-template-columns:
-        minmax(0, 1.2fr)
-        minmax(320px, 0.8fr);
-      gap: 24px;
-      align-items: stretch;
-    }
-
-    .hero-main,
-    .echo-panel {
-      border:
-        1px solid
-        rgba(255, 255, 255, 0.14);
-      background:
-        rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(16px);
-      border-radius: 26px;
-      box-shadow:
-        0 20px 55px
-        rgba(0, 0, 0, 0.2);
-    }
-
-    .hero-main {
-      padding: 34px;
+      max-width: 760px;
+      margin-bottom: 22px;
     }
 
     .eyebrow {
       display: inline-flex;
       align-items: center;
-      min-height: 32px;
-      padding: 0 12px;
-      margin-bottom: 18px;
+
+      min-height: 34px;
+      padding: 5px 12px;
+
+      border: 1px solid var(--border);
       border-radius: 999px;
-      background:
-        rgba(93, 137, 255, 0.18);
-      color: #b9ccff;
+
+      background: rgba(5, 20, 43, 0.42);
+
+      color: var(--text-soft);
+
       font-size: 14px;
       font-weight: 800;
+
+      backdrop-filter: blur(12px);
     }
 
-    .hero h1 {
-      margin: 0;
-      font-size: clamp(
-        38px,
-        7vw,
-        68px
-      );
-      line-height: 1.05;
+    .hero-title {
+      margin-top: 16px;
+
+      font-size:
+        clamp(
+          39px,
+          8vw,
+          72px
+        );
+
+      line-height: 1.03;
+      letter-spacing: -2px;
+
+      text-shadow:
+        0 6px 24px
+        rgba(0, 0, 0, 0.48);
     }
 
     .hero-description {
-      max-width: 680px;
-      margin: 18px 0 0;
-      color:
-        rgba(255, 255, 255, 0.76);
-      font-size: 17px;
-      line-height: 1.8;
+      max-width: 700px;
+      margin-top: 16px;
+
+      color: var(--text-soft);
+
+      font-size:
+        clamp(
+          17px,
+          2.8vw,
+          21px
+        );
+
+      line-height: 1.75;
+
+      text-shadow:
+        0 3px 14px
+        rgba(0, 0, 0, 0.45);
     }
 
-    .request-form {
+    .main-panel {
+      padding: 18px;
+
+      border: 1px solid var(--border);
+      border-radius: 22px;
+
+      background: var(--glass);
+      box-shadow: var(--shadow);
+
+      backdrop-filter: blur(18px);
+    }
+
+    .panel-title {
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .panel-description {
+      margin-top: 7px;
+
+      color: var(--text-soft);
+
+      line-height: 1.65;
+    }
+
+    .entry-grid {
       display: grid;
       grid-template-columns:
-        minmax(0, 1fr)
-        auto;
+        repeat(3, minmax(0, 1fr));
+
       gap: 12px;
-      margin-top: 28px;
+      margin-top: 16px;
     }
 
-    .request-input {
-      width: 100%;
-      min-height: 56px;
-      padding: 0 18px;
-      border-radius: 15px;
-      border:
-        1px solid
-        rgba(255, 255, 255, 0.22);
-      background:
-        rgba(255, 255, 255, 0.1);
-      color: #ffffff;
-      outline: none;
-    }
+    .entry-card {
+      min-height: 138px;
+      padding: 17px;
 
-    .request-input::placeholder {
-      color:
-        rgba(255, 255, 255, 0.6);
-    }
-
-    .request-input:focus {
-      border-color: #7298ff;
-      box-shadow:
-        0 0 0 4px
-        rgba(93, 137, 255, 0.16);
-    }
-
-    .start-button {
-      min-height: 56px;
-      padding: 0 24px;
-      border: 0;
-      border-radius: 15px;
-      background:
-        linear-gradient(
-          135deg,
-          #4f82ff,
-          #735cff
-        );
-      color: #ffffff;
-      cursor: pointer;
-      font-weight: 800;
-      box-shadow:
-        0 12px 25px
-        rgba(80, 112, 255, 0.35);
-    }
-
-    .start-button:hover {
-      transform: translateY(-1px);
-    }
-
-    .echo-panel {
-      padding: 28px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+
+      border: 1px solid var(--border);
+      border-radius: 17px;
+
+      color: var(--white);
+      background: var(--glass-light);
+
+      text-decoration: none;
+
+      transition:
+        transform 0.18s ease,
+        background 0.18s ease,
+        border-color 0.18s ease;
     }
 
-    .echo-avatar {
-      width: 64px;
-      height: 64px;
-      border-radius: 20px;
-      display: grid;
-      place-items: center;
-      background:
-        linear-gradient(
-          135deg,
-          #57a6ff,
-          #825dff
-        );
+    .entry-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.52);
+      background: rgba(255, 255, 255, 0.21);
+    }
+
+    .entry-icon {
       font-size: 28px;
-      font-weight: 800;
-      margin-bottom: 20px;
     }
 
-    .echo-panel h2 {
-      margin: 0 0 12px;
-      font-size: 27px;
+    .entry-title {
+      margin-top: 16px;
+
+      font-size: 19px;
+      font-weight: 900;
     }
 
-    .echo-panel p {
-      margin: 0;
-      color:
-        rgba(255, 255, 255, 0.76);
-      line-height: 1.75;
-    }
+    .entry-description {
+      margin-top: 6px;
 
-    .echo-points {
-      display: grid;
-      gap: 10px;
-      margin-top: 22px;
-    }
+      color: var(--text-soft);
 
-    .echo-point {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color:
-        rgba(255, 255, 255, 0.88);
       font-size: 14px;
+      line-height: 1.55;
     }
 
-    .echo-point::before {
-      content: "✓";
-      width: 24px;
-      height: 24px;
-      border-radius: 8px;
-      display: grid;
-      place-items: center;
-      background:
-        rgba(90, 219, 160, 0.16);
-      color: #65e0a5;
-      font-weight: 800;
+    .assisted-panel {
+      margin-top: 14px;
+      padding: 16px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: rgba(5, 20, 43, 0.48);
+
+      backdrop-filter: blur(15px);
     }
 
-    .section {
-      margin-top: 28px;
+    .assisted-title {
+      font-size: 18px;
+      font-weight: 900;
     }
 
-    .section-heading {
-      margin-bottom: 16px;
+    .assisted-description {
+      margin-top: 6px;
+
+      color: var(--text-soft);
+
+      line-height: 1.55;
     }
 
-    .section-heading h2 {
-      margin: 0;
-      font-size: 28px;
-    }
-
-    .section-heading p {
-      margin: 8px 0 0;
-      color:
-        rgba(255, 255, 255, 0.68);
-      line-height: 1.7;
-    }
-
-    .workspace-grid {
+    .assisted-grid {
       display: grid;
       grid-template-columns:
-        repeat(
-          3,
-          minmax(0, 1fr)
-        );
-      gap: 18px;
+        repeat(4, minmax(0, 1fr));
+
+      gap: 9px;
+      margin-top: 13px;
     }
 
-    .workspace-card {
-      padding: 24px;
-      min-height: 250px;
-      border-radius: 22px;
-      border:
-        1px solid
-        rgba(255, 255, 255, 0.14);
-      background:
-        rgba(255, 255, 255, 0.08);
-      display: flex;
-      flex-direction: column;
-      box-shadow:
-        0 16px 36px
-        rgba(0, 0, 0, 0.16);
-    }
+    .assisted-button {
+      min-height: 50px;
+      padding: 9px 10px;
 
-    .workspace-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 15px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.11);
+
+      text-decoration: none;
+      text-align: center;
+
       display: grid;
       place-items: center;
-      margin-bottom: 18px;
-      background:
-        rgba(255, 255, 255, 0.1);
-      font-size: 24px;
-    }
 
-    .workspace-card h3 {
-      margin: 0 0 10px;
-      font-size: 22px;
-    }
-
-    .workspace-card p {
-      margin: 0 0 20px;
-      color:
-        rgba(255, 255, 255, 0.68);
-      line-height: 1.7;
-      flex: 1;
-    }
-
-    .workspace-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 46px;
-      border-radius: 13px;
-      background:
-        rgba(255, 255, 255, 0.12);
-      border:
-        1px solid
-        rgba(255, 255, 255, 0.16);
-      text-decoration: none;
+      font-size: 14px;
       font-weight: 800;
+      line-height: 1.4;
     }
 
-    .workspace-link:hover {
-      background:
-        rgba(255, 255, 255, 0.2);
+    .trust-row {
+      display: grid;
+      grid-template-columns:
+        repeat(5, minmax(0, 1fr));
+
+      gap: 8px;
+      margin-top: 14px;
     }
 
-    @media (
-      max-width: 860px
-    ) {
-      .hero {
-        grid-template-columns: 1fr;
+    .trust-item {
+      min-height: 58px;
+      padding: 9px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 12px;
+
+      background: rgba(255, 255, 255, 0.09);
+      color: var(--text-soft);
+
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+
+      color: rgba(255, 255, 255, 0.72);
+
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 760px) {
+      body {
+        background-attachment: scroll;
+        background-position: 58% center;
       }
 
-      .workspace-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (
-      max-width: 620px
-    ) {
       .page {
-        width: min(
-          100% - 18px,
-          1120px
-        );
-        padding-top: 12px;
+        width: min(100% - 18px, 980px);
       }
 
-      .hero-main,
-      .echo-panel {
-        padding: 22px;
-        border-radius: 20px;
+      .main-content {
+        padding-top: 52px;
       }
 
-      .request-form {
+      .hero-title {
+        letter-spacing: -1px;
+      }
+
+      .entry-grid {
         grid-template-columns: 1fr;
       }
 
-      .start-button {
-        width: 100%;
+      .entry-card {
+        min-height: 112px;
+      }
+
+      .assisted-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .trust-row {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .trust-item:last-child {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .assisted-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 
 <body>
-  <main class="page">    <header class="topbar">
-      <div class="brand">
-        <div class="brand-logo">
-          E
-        </div>
+  <main class="page">
 
-        <span>
-          EchoCity
-        </span>
-      </div>
+    <header class="topbar">
+
+      <a
+        class="brand"
+        href="index.html"
+      >
+        <span class="brand-mark">E</span>
+        <span>EchoCity</span>
+      </a>
 
       <button
-        class="language-button"
         id="languageButton"
+        class="language-button"
         type="button"
       >
         EN
       </button>
+
     </header>
 
-    <section class="hero">
-      <div class="hero-main">
+    <section class="main-content">
+
+      <div class="hero">
+
         <div
+          id="eyebrow"
           class="eyebrow"
-          data-i18n="eyebrow"
         >
-          数字文明服务平台
+          可信社区服务
         </div>
 
-        <h1>
-          EchoCity
+        <h1
+          id="heroTitle"
+          class="hero-title"
+        >
+          今天需要什么帮助？
         </h1>
 
         <p
+          id="heroDescription"
           class="hero-description"
-          data-i18n="heroDescription"
         >
-          连接客户、工作人员和平台管理，让需求、派工、服务过程和验收结果形成完整记录。
-        </p >
+          我们不只是介绍服务人员，而是陪你完成需求、报价、开工、过程记录和最终验收。
+        </p>
 
-        <form
-          class="request-form"
-          id="requestForm"
-        >
-          <input
-            class="request-input"
-            id="requestInput"
-            type="text"
-            autocomplete="off"
-            placeholder="告诉我，你需要什么服务？"
-            data-i18n-placeholder=
-              "requestPlaceholder"
-          />
-
-          <button
-            class="start-button"
-            type="submit"
-            data-i18n="startButton"
-          >
-            开始
-          </button>
-        </form>
       </div>
 
-      <aside class="echo-panel">
-        <div>
-          <div class="echo-avatar">
-            E
-          </div>
+      <section class="main-panel">
 
-          <h2
-            data-i18n="echoTitle"
-          >
-            数字人 Echo
-          </h2>
-
-          <p
-            data-i18n="echoDescription"
-          >
-            Echo 帮助理解需求、匹配人员、提醒流程、记录过程并整理服务成果。
-          </p >
-        </div>
-
-        <div class="echo-points">
-          <div
-            class="echo-point"
-            data-i18n="echoPoint1"
-          >
-            理解客户服务需求
-          </div>
-
-          <div
-            class="echo-point"
-            data-i18n="echoPoint2"
-          >
-            连接合适的工作人员
-          </div>
-
-          <div
-            class="echo-point"
-            data-i18n="echoPoint3"
-          >
-            保留过程和验收记录
-          </div>
-        </div>
-      </aside>
-    </section>
-
-    <section class="section">
-      <div class="section-heading">
         <h2
-          data-i18n="workspaceTitle"
+          id="panelTitle"
+          class="panel-title"
         >
-          选择工作台
+          请选择你的入口
         </h2>
 
         <p
-          data-i18n="workspaceDescription"
+          id="panelDescription"
+          class="panel-description"
         >
-          根据你的角色进入对应工作台。
-        </p >
-      </div>
+          无需先注册。先告诉我们你需要什么，或者进入自己的工作区域。
+        </p>
 
-      <div class="workspace-grid">
-        <article class="workspace-card">
-          <div class="workspace-icon">
-            👤
-          </div>
+        <div class="entry-grid">
+
+          <a
+            class="entry-card"
+            href="assets/customer-service.html"
+          >
+            <div class="entry-icon">🏠</div>
+
+            <div>
+              <div
+                id="customerTitle"
+                class="entry-title"
+              >
+                我需要服务
+              </div>
+
+              <div
+                id="customerDescription"
+                class="entry-description"
+              >
+                维修、清洁、生活帮助和社区支持
+              </div>
+            </div>
+          </a>
+
+          <a
+            class="entry-card"
+            href="assets/worker-tasks.html"
+          >
+            <div class="entry-icon">🧰</div>
+
+            <div>
+              <div
+                id="workerTitle"
+                class="entry-title"
+              >
+                我愿意提供服务
+              </div>
+
+              <div
+                id="workerDescription"
+                class="entry-description"
+              >
+                查询任务、到达、记录工作和提交成果
+              </div>
+            </div>
+          </a>
+
+          <a
+            class="entry-card"
+            href="assets/admin-dashboard.html"
+          >
+            <div class="entry-icon">📋</div>
+
+            <div>
+              <div
+                id="adminTitle"
+                class="entry-title"
+              >
+                平台服务管理
+              </div>
+
+              <div
+                id="adminDescription"
+                class="entry-description"
+              >
+                审核需求、报价、派工和全过程监管
+              </div>
+            </div>
+          </a>
+
+        </div>
+
+        <section class="assisted-panel">
 
           <h3
-            data-i18n="customerTitle"
+            id="assistedTitle"
+            class="assisted-title"
           >
-            客户工作台
+            使用手机有困难？
           </h3>
 
           <p
-            data-i18n="customerDescription"
+            id="assistedDescription"
+            class="assisted-description"
           >
-            下单、查看报价、跟踪服务过程、进行中间验收和最终验收。
-          </p >
+            老人、行动不便者或不熟悉网络操作的人，也可以获得帮助。
+          </p>
 
-          <a
-            class="workspace-link"
-            href=" "
-            data-i18n="customerButton"
-          >
-            进入客户工作台
-          </a >
-        </article>
+          <div class="assisted-grid">
 
-        <article class="workspace-card">
-          <div class="workspace-icon">
-            👷
+            <a
+              id="voiceButton"
+              class="assisted-button"
+              href="assets/customer-service.html?intake=voice"
+            >
+              说出我的需要
+            </a>
+
+            <a
+              id="callbackButton"
+              class="assisted-button"
+              href="assets/customer-service.html?intake=callback"
+            >
+              请求电话帮助
+            </a>
+
+            <a
+              id="representativeButton"
+              class="assisted-button"
+              href="assets/customer-service.html?intake=representative"
+            >
+              请他人代我提交
+            </a>
+
+            <a
+              id="inPersonButton"
+              class="assisted-button"
+              href="assets/customer-service.html?intake=in_person"
+            >
+              申请上门协助
+            </a>
+
           </div>
 
-          <h3
-            data-i18n="workerTitle"
-          >
-            工人工作台
-          </h3>
+        </section>
 
-          <p
-            data-i18n="workerDescription"
-          >
-            查看派工任务、记录工作过程、填写工时并提交节点成果。
-          </p >
+        <div class="trust-row">
 
-          <a
-            class="workspace-link"
-            href="./assets/worker-dashboard.html"
-            data-i18n="workerButton"
-          >
-            进入工人工作台
-          </a >
-        </article>
-
-        <article class="workspace-card">
-          <div class="workspace-icon">
-            🛠
+          <div id="trustOne" class="trust-item">
+            确认报价后才派工
           </div>
 
-          <h3
-            data-i18n="adminTitle"
-          >
-            平台管理工作台
-          </h3>
+          <div id="trustTwo" class="trust-item">
+            客户授权后才开工
+          </div>
 
-          <p
-            data-i18n="adminDescription"
-          >
-            审核需求、制定报价、安排派工、监管过程并处理异常订单。
-          </p >
+          <div id="trustThree" class="trust-item">
+            每一步都有记录
+          </div>
 
-          <a
-            class="workspace-link"
-            href="./assets/admin-dashboard.html"
-            data-i18n="adminButton"
-          >
-            进入平台管理
-          </a >
-        </article>
-      </div>
+          <div id="trustFour" class="trust-item">
+            不满意可以暂停
+          </div>
+
+          <div id="trustFive" class="trust-item">
+            最终由客户验收
+          </div>
+
+        </div>
+
+      </section>
+
+      <footer
+        id="footerNote"
+        class="footer-note"
+      >
+        EchoCity · 使命驱动型社区服务平台
+      </footer>
+
     </section>
 
-    <div
-      class="footer-note"
-      data-i18n="footer"
-    >
-      EchoCity 用一个订单编号连接客户、工作人员、平台管理和完整服务记录。
-    </div>
   </main>
 
-  <script>    const translations = {
+  <script>
+    const translations = {
       zh: {
         eyebrow:
-          "数字文明服务平台",
+          "可信社区服务",
+
+        heroTitle:
+          "今天需要什么帮助？",
 
         heroDescription:
-          "连接客户、工作人员和平台管理，让需求、派工、服务过程和验收结果形成完整记录。",
+          "我们不只是介绍服务人员，而是陪你完成需求、报价、开工、过程记录和最终验收。",
 
-        requestPlaceholder:
-          "告诉我，你需要什么服务？",
+        panelTitle:
+          "请选择你的入口",
 
-        startButton:
-          "开始",
-
-        echoTitle:
-          "数字人 Echo",
-
-        echoDescription:
-          "Echo 帮助理解需求、匹配人员、提醒流程、记录过程并整理服务成果。",
-
-        echoPoint1:
-          "理解客户服务需求",
-
-        echoPoint2:
-          "连接合适的工作人员",
-
-        echoPoint3:
-          "保留过程和验收记录",
-
-        workspaceTitle:
-          "选择工作台",
-
-        workspaceDescription:
-          "根据你的角色进入对应工作台。",
+        panelDescription:
+          "无需先注册。先告诉我们你需要什么，或者进入自己的工作区域。",
 
         customerTitle:
-          "客户工作台",
+          "我需要服务",
 
         customerDescription:
-          "下单、查看报价、跟踪服务过程、进行中间验收和最终验收。",
-
-        customerButton:
-          "进入客户工作台",
+          "维修、清洁、生活帮助和社区支持",
 
         workerTitle:
-          "工人工作台",
+          "我愿意提供服务",
 
         workerDescription:
-          "查看派工任务、记录工作过程、填写工时并提交节点成果。",
-
-        workerButton:
-          "进入工人工作台",
+          "查询任务、到达、记录工作和提交成果",
 
         adminTitle:
-          "平台管理工作台",
+          "平台服务管理",
 
         adminDescription:
-          "审核需求、制定报价、安排派工、监管过程并处理异常订单。",
+          "审核需求、报价、派工和全过程监管",
 
-        adminButton:
-          "进入平台管理",
+        assistedTitle:
+          "使用手机有困难？",
 
-        footer:
-          "EchoCity 用一个订单编号连接客户、工作人员、平台管理和完整服务记录。",
+        assistedDescription:
+          "老人、行动不便者或不熟悉网络操作的人，也可以获得帮助。",
 
-        requestRequired:
-          "请输入你的服务需求。"
+        voiceButton:
+          "说出我的需要",
+
+        callbackButton:
+          "请求电话帮助",
+
+        representativeButton:
+          "请他人代我提交",
+
+        inPersonButton:
+          "申请上门协助",
+
+        trustOne:
+          "确认报价后才派工",
+
+        trustTwo:
+          "客户授权后才开工",
+
+        trustThree:
+          "每一步都有记录",
+
+        trustFour:
+          "不满意可以暂停",
+
+        trustFive:
+          "最终由客户验收",
+
+        footerNote:
+          "EchoCity · 使命驱动型社区服务平台"
       },
 
       en: {
         eyebrow:
-          "Digital Civilization Service Platform",
+          "Trusted Community Service",
+
+        heroTitle:
+          "How can we help you today?",
 
         heroDescription:
-          "Connect customers, workers, and platform management so that requests, assignments, service progress, and acceptance results form a complete record.",
+          "We do more than introduce service providers. We help manage the request, proposal, authorization, work records, and final acceptance.",
 
-        requestPlaceholder:
-          "Tell me what service you need.",
+        panelTitle:
+          "Choose your service area",
 
-        startButton:
-          "Start",
-
-        echoTitle:
-          "Digital Human Echo",
-
-        echoDescription:
-          "Echo helps understand needs, match workers, remind each step, record progress, and organize service results.",
-
-        echoPoint1:
-          "Understand customer service needs",
-
-        echoPoint2:
-          "Connect suitable workers",
-
-        echoPoint3:
-          "Preserve progress and acceptance records",
-
-        workspaceTitle:
-          "Choose a Workspace",
-
-        workspaceDescription:
-          "Enter the workspace that matches your role.",
+        panelDescription:
+          "Registration is not required to begin. Tell us what you need or enter your work area.",
 
         customerTitle:
-          "Customer Workspace",
+          "I Need Help",
 
         customerDescription:
-          "Place orders, review quotes, track progress, and complete milestone and final acceptance.",
-
-        customerButton:
-          "Enter Customer Workspace",
+          "Repairs, cleaning, daily assistance, and community support",
 
         workerTitle:
-          "Worker Workspace",
+          "I Want to Work",
 
         workerDescription:
-          "View assigned tasks, record work progress, enter working hours, and submit milestone results.",
-
-        workerButton:
-          "Enter Worker Workspace",
+          "View tasks, arrive on site, record work, and submit results",
 
         adminTitle:
-          "Platform Management Workspace",
+          "Manage Services",
 
         adminDescription:
-          "Review requests, prepare quotes, assign workers, monitor progress, and handle exception cases.",
+          "Review requests, prepare proposals, assign workers, and supervise service delivery",
 
-        adminButton:
-          "Enter Platform Management",
+        assistedTitle:
+          "Need help using this app?",
 
-        footer:
-          "EchoCity uses one order number to connect customers, workers, platform management, and the complete service record.",
+        assistedDescription:
+          "Older adults, people with mobility limitations, and those unfamiliar with online services can receive assistance.",
 
-        requestRequired:
-          "Please enter your service request."
+        voiceButton:
+          "Describe My Need by Voice",
+
+        callbackButton:
+          "Request a Phone Call",
+
+        representativeButton:
+          "Let Someone Submit for Me",
+
+        inPersonButton:
+          "Request In-Person Help",
+
+        trustOne:
+          "Assignment after price approval",
+
+        trustTwo:
+          "Work starts after authorization",
+
+        trustThree:
+          "Every step is documented",
+
+        trustFour:
+          "Customers may pause the work",
+
+        trustFive:
+          "Customers make final acceptance",
+
+        footerNote:
+          "EchoCity · Mission-Driven Community Service Platform"
       }
     };
 
@@ -780,11 +812,36 @@
         "echocity-language"
       ) || "zh";
 
+    const textIds = [
+      "eyebrow",
+      "heroTitle",
+      "heroDescription",
+      "panelTitle",
+      "panelDescription",
+      "customerTitle",
+      "customerDescription",
+      "workerTitle",
+      "workerDescription",
+      "adminTitle",
+      "adminDescription",
+      "assistedTitle",
+      "assistedDescription",
+      "voiceButton",
+      "callbackButton",
+      "representativeButton",
+      "inPersonButton",
+      "trustOne",
+      "trustTwo",
+      "trustThree",
+      "trustFour",
+      "trustFive",
+      "footerNote"
+    ];
+
     function translate(key) {
       return (
-        translations[
-          currentLanguage
-        ]?.[key] ||
+        translations[currentLanguage]?.[key] ||
+        translations.zh[key] ||
         key
       );
     }
@@ -795,255 +852,29 @@
           ? "zh-CN"
           : "en";
 
-      document
-        .querySelectorAll(
-          "[data-i18n]"
-        )
-        .forEach(
-          function (element) {
-            const key =
-              element.dataset.i18n;
+      textIds.forEach((id) => {
+        const element =
+          document.getElementById(id);
 
-            element.textContent =
-              translate(key);
-          }
-        );
-
-      document
-        .querySelectorAll(
-          "[data-i18n-placeholder]"
-        )
-        .forEach(
-          function (element) {
-            const key =
-              element.dataset
-                .i18nPlaceholder;
-
-            element.placeholder =
-              translate(key);
-          }
-        );
-
-      document.getElementById(
-        "languageButton"
-      ).textContent =
-        currentLanguage === "zh"
-          ? "EN"
-          : "中文";
-    }
-
-    document
-      .getElementById(
-        "languageButton"
-      )
-      .addEventListener(
-        "click",
-        function () {
-          currentLanguage =
-            currentLanguage === "zh"
-              ? "en"
-              : "zh";
-
-          localStorage.setItem(
-            "echocity-language",
-            currentLanguage
-          );
-
-          applyLanguage();
+        if (element) {
+          element.textContent =
+            translate(id);
         }
-      );    const translations = {
-      zh: {
-        eyebrow:
-          "数字文明服务平台",
-
-        heroDescription:
-          "连接客户、工作人员和平台管理，让需求、派工、服务过程和验收结果形成完整记录。",
-
-        requestPlaceholder:
-          "告诉我，你需要什么服务？",
-
-        startButton:
-          "开始",
-
-        echoTitle:
-          "数字人 Echo",
-
-        echoDescription:
-          "Echo 帮助理解需求、匹配人员、提醒流程、记录过程并整理服务成果。",
-
-        echoPoint1:
-          "理解客户服务需求",
-
-        echoPoint2:
-          "连接合适的工作人员",
-
-        echoPoint3:
-          "保留过程和验收记录",
-
-        workspaceTitle:
-          "选择工作台",
-
-        workspaceDescription:
-          "根据你的角色进入对应工作台。",
-
-        customerTitle:
-          "客户工作台",
-
-        customerDescription:
-          "下单、查看报价、跟踪服务过程、进行中间验收和最终验收。",
-
-        customerButton:
-          "进入客户工作台",
-
-        workerTitle:
-          "工人工作台",
-
-        workerDescription:
-          "查看派工任务、记录工作过程、填写工时并提交节点成果。",
-
-        workerButton:
-          "进入工人工作台",
-
-        adminTitle:
-          "平台管理工作台",
-
-        adminDescription:
-          "审核需求、制定报价、安排派工、监管过程并处理异常订单。",
-
-        adminButton:
-          "进入平台管理",
-
-        footer:
-          "EchoCity 用一个订单编号连接客户、工作人员、平台管理和完整服务记录。",
-
-        requestRequired:
-          "请输入你的服务需求。"
-      },
-
-      en: {
-        eyebrow:
-          "Digital Civilization Service Platform",
-
-        heroDescription:
-          "Connect customers, workers, and platform management so that requests, assignments, service progress, and acceptance results form a complete record.",
-
-        requestPlaceholder:
-          "Tell me what service you need.",
-
-        startButton:
-          "Start",
-
-        echoTitle:
-          "Digital Human Echo",
-
-        echoDescription:
-          "Echo helps understand needs, match workers, remind each step, record progress, and organize service results.",
-
-        echoPoint1:
-          "Understand customer service needs",
-
-        echoPoint2:
-          "Connect suitable workers",
-
-        echoPoint3:
-          "Preserve progress and acceptance records",
-
-        workspaceTitle:
-          "Choose a Workspace",
-
-        workspaceDescription:
-          "Enter the workspace that matches your role.",
-
-        customerTitle:
-          "Customer Workspace",
-
-        customerDescription:
-          "Place orders, review quotes, track progress, and complete milestone and final acceptance.",
-
-        customerButton:
-          "Enter Customer Workspace",
-
-        workerTitle:
-          "Worker Workspace",
-
-        workerDescription:
-          "View assigned tasks, record work progress, enter working hours, and submit milestone results.",
-
-        workerButton:
-          "Enter Worker Workspace",
-
-        adminTitle:
-          "Platform Management Workspace",
-
-        adminDescription:
-          "Review requests, prepare quotes, assign workers, monitor progress, and handle exception cases.",
-
-        adminButton:
-          "Enter Platform Management",
-
-        footer:
-          "EchoCity uses one order number to connect customers, workers, platform management, and the complete service record.",
-
-        requestRequired:
-          "Please enter your service request."
-      }
-    };
-
-    let currentLanguage =
-      localStorage.getItem(
-        "echocity-language"
-      ) || "zh";
-
-    function translate(key) {
-      return (
-        translations[
-          currentLanguage
-        ]?.[key] ||
-        key
-      );
-    }
-
-    function applyLanguage() {
-      document.documentElement.lang =
-        currentLanguage === "zh"
-          ? "zh-CN"
-          : "en";
+      });
 
       document
-        .querySelectorAll(
-          "[data-i18n]"
+        .getElementById(
+          "languageButton"
         )
-        .forEach(
-          function (element) {
-            const key =
-              element.dataset.i18n;
+        .textContent =
+          currentLanguage === "zh"
+            ? "EN"
+            : "中文";
 
-            element.textContent =
-              translate(key);
-          }
-        );
-
-      document
-        .querySelectorAll(
-          "[data-i18n-placeholder]"
-        )
-        .forEach(
-          function (element) {
-            const key =
-              element.dataset
-                .i18nPlaceholder;
-
-            element.placeholder =
-              translate(key);
-          }
-        );
-
-      document.getElementById(
-        "languageButton"
-      ).textContent =
+      document.title =
         currentLanguage === "zh"
-          ? "EN"
-          : "中文";
+          ? "EchoCity｜可信社区服务"
+          : "EchoCity | Trusted Community Service";
     }
 
     document
@@ -1052,7 +883,7 @@
       )
       .addEventListener(
         "click",
-        function () {
+        () => {
           currentLanguage =
             currentLanguage === "zh"
               ? "en"
@@ -1066,3 +897,8 @@
           applyLanguage();
         }
       );
+
+    applyLanguage();
+  </script>
+</body>
+</html>

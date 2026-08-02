@@ -1,1915 +1,848 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
 
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
-  />
+  >
 
-  <title>服务需求管理 | EchoCity</title>
+  <title>提交服务需求 | EchoCity</title>
+
+  <link
+    rel="stylesheet"
+    href="echocity-ui.css"
+  >
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/echocity-supabase.js"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --primary: #1f6feb;
-      --primary-dark: #1557b0;
-      --primary-soft: #edf5ff;
-
-      --success: #18864b;
-      --success-soft: #eaf8f0;
-
-      --warning: #9a6700;
-      --warning-soft: #fff6dc;
-
-      --danger: #b42318;
-      --danger-soft: #fff0ee;
-
-      --text: #172033;
-      --text-light: #667085;
-
-      --border: #d9e1ec;
-      --background: #f4f7fb;
-      --card: #ffffff;
-
-      --shadow:
-        0 16px 40px rgba(24, 39, 75, 0.08);
-    }
-
-    body {
-      min-height: 100vh;
-
-      background:
-        linear-gradient(
-          180deg,
-          #edf5ff 0%,
-          #f7f9fc 38%,
-          #f4f7fb 100%
-        );
-
-      color: var(--text);
-
-      font-family:
-        Arial,
-        "Microsoft YaHei",
-        sans-serif;
-    }
-
-    button,
-    input,
-    select {
-      font: inherit;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .page {
-      width: min(100%, 1180px);
-      margin: 0 auto;
-      padding: 22px 18px 50px;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-
-      margin-bottom: 26px;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -0.4px;
-    }
-
-    .brand-mark {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      width: 38px;
-      height: 38px;
-
-      border-radius: 13px;
-
-      background:
-        linear-gradient(
-          135deg,
-          var(--primary),
-          #65a4ff
-        );
-
-      color: #ffffff;
-      font-weight: 900;
-
-      box-shadow:
-        0 8px 20px rgba(31, 111, 235, 0.22);
-    }
-
-    .topbar-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .topbar-button {
-      min-height: 40px;
-      padding: 0 14px;
-
-      border: 1px solid var(--border);
-      border-radius: 12px;
-
-      background: rgba(255, 255, 255, 0.88);
-      color: var(--text);
-
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .topbar-button:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .hero {
-      margin-bottom: 20px;
-    }
-
-    .hero-tag {
-      display: inline-flex;
-      align-items: center;
-
-      min-height: 30px;
-      padding: 0 12px;
-
-      border-radius: 999px;
-
-      background: var(--primary-soft);
-      color: var(--primary-dark);
-
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .hero h1 {
-      margin-top: 12px;
-
-      font-size: clamp(29px, 6vw, 44px);
-      line-height: 1.16;
-      letter-spacing: -1px;
-    }
-
-    .hero p {
-      max-width: 760px;
-
-      margin-top: 10px;
-
-      color: var(--text-light);
-
-      font-size: 15px;
-      line-height: 1.7;
-    }
-
-    .stats-grid {
+    .service-types {
       display: grid;
-      grid-template-columns:
-        repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .service-option {
+      position: relative;
+    }
+
+    .service-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .service-option span {
+      display: grid;
+      place-items: center;
+      min-height: 90px;
+      padding: 14px;
+      border: 1px solid var(--echo-border);
+      border-radius: 14px;
+      background: #fff;
+      text-align: center;
+      font-weight: 800;
+      transition: 0.2s ease;
+    }
+
+    .service-option span:hover {
+      border-color: var(--echo-primary);
+      transform: translateY(-1px);
+    }
+
+    .service-option input:checked + span {
+      border-color: var(--echo-primary);
+      background: var(--echo-info-soft);
+      color: var(--echo-primary);
+    }
+
+    .form-section {
+      margin-top: 24px;
+    }
+
+    .form-title {
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .form-description {
+      margin-top: 6px;
+      color: var(--echo-muted);
+      line-height: 1.6;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
-
-      margin-bottom: 18px;
+      margin-top: 14px;
     }
 
-    .stat-card {
-      padding: 17px;
-
-      border: 1px solid var(--border);
-      border-radius: 16px;
-
-      background: var(--card);
-      box-shadow: var(--shadow);
+    .form-group {
+      display: grid;
+      gap: 7px;
     }
 
-    .stat-label {
-      color: var(--text-light);
-      font-size: 13px;
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .required {
+      color: var(--echo-danger);
+    }
+
+    .contact-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .contact-options label {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 46px;
+      padding: 0 13px;
+      border: 1px solid var(--echo-border);
+      border-radius: var(--echo-radius-small);
+      background: #fff;
       font-weight: 700;
     }
 
-    .stat-value {
-      margin-top: 7px;
-
-      font-size: 27px;
-      font-weight: 900;
-      line-height: 1;
+    .contact-options input,
+    .agreement input {
+      width: 18px;
+      height: 18px;
     }
 
-    .toolbar {
-      display: grid;
-      grid-template-columns:
-        minmax(220px, 1fr)
-        190px
-        170px;
-      gap: 12px;
-
-      margin-bottom: 18px;
-      padding: 15px;
-
-      border: 1px solid var(--border);
-      border-radius: 16px;
-
-      background: rgba(255, 255, 255, 0.9);
-      box-shadow: var(--shadow);
-    }
-
-    .search-input,
-    .filter-select {
-      width: 100%;
-      min-height: 46px;
-
-      border: 1px solid var(--border);
-      border-radius: 12px;
-
-      background: #ffffff;
-      color: var(--text);
-
-      padding: 0 13px;
-      outline: none;
-    }
-
-    .search-input:focus,
-    .filter-select:focus {
-      border-color: var(--primary);
-
-      box-shadow:
-        0 0 0 3px rgba(31, 111, 235, 0.12);
-    }
-
-    .request-list {
-      display: grid;
-      gap: 14px;
-    }
-
-    .request-card {
-      padding: 18px;
-
-      border: 1px solid var(--border);
-      border-radius: 18px;
-
-      background: var(--card);
-      box-shadow: var(--shadow);
-    }
-
-    .request-card-header {
+    .agreement {
       display: flex;
       align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .request-main {
-      min-width: 0;
-    }
-
-    .request-number {
-      color: var(--primary-dark);
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .request-title {
-      margin-top: 5px;
-
-      font-size: 20px;
-      line-height: 1.4;
-      word-break: break-word;
-    }
-
-    .request-time {
-      margin-top: 5px;
-
-      color: var(--text-light);
-      font-size: 13px;
-      line-height: 1.5;
-    }    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      min-height: 32px;
-      padding: 0 12px;
-
-      border-radius: 999px;
-
-      font-size: 13px;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
-    .status-new {
-      background: var(--warning-soft);
-      color: var(--warning);
-    }
-
-    .status-quoted {
-      background: var(--primary-soft);
-      color: var(--primary-dark);
-    }
-    .status-confirmed {
-      background: var(--success-soft);
-      color: var(--success);
-    }
-
-    .status-declined {
-      background: var(--danger-soft);
-      color: var(--danger);
-    }
-    .status-assigned {
-      background: #eef0ff;
-      color: #4b4fa8;
-    }
-
-    .status-progress {
-      background: #e8f7ff;
-      color: #146a8a;
-    }
-
-    .status-completed {
-      background: var(--success-soft);
-      color: var(--success);
-    }
-
-    .status-cancelled {
-      background: var(--danger-soft);
-      color: var(--danger);
-    }
-
-    .request-details {
-      display: grid;
-      grid-template-columns:
-        repeat(4, minmax(0, 1fr));
-      gap: 12px;
-
-      margin-top: 16px;
-    }
-
-    .detail-item {
-      padding: 12px;
-
-      border-radius: 12px;
-
-      background: #f8fafc;
-    }
-
-    .detail-label {
-      color: var(--text-light);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .detail-value {
-      margin-top: 5px;
-
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 1.5;
-      word-break: break-word;
-    }
-
-    .request-description {
-      margin-top: 14px;
+      gap: 10px;
+      margin-top: 20px;
       padding: 14px;
-
       border-radius: 13px;
-
       background: #f8fafc;
-      color: var(--text);
-
-      font-size: 14px;
-      line-height: 1.7;
-      white-space: pre-wrap;
+      line-height: 1.65;
     }
 
-    .request-actions {
+    .agreement input {
+      margin-top: 3px;
+      flex: 0 0 auto;
+    }
+
+    .actions {
       display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-
-      margin-top: 16px;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 18px;
     }
 
-    .action-button {
-      min-height: 40px;
-      padding: 0 14px;
-
-      border: 1px solid var(--border);
-      border-radius: 11px;
-
-      background: #ffffff;
-      color: var(--text);
-
-      font-size: 13px;
-      font-weight: 800;
-
-      cursor: pointer;
-    }
-
-    .action-button:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .action-button.primary {
-      border-color: var(--primary);
-
-      background: var(--primary);
-      color: #ffffff;
-    }
-
-    .action-button.primary:hover {
-      background: var(--primary-dark);
-      color: #ffffff;
-    }
-
-    .status-select {
-      min-height: 40px;
-      padding: 0 12px;
-
-      border: 1px solid var(--border);
-      border-radius: 11px;
-
-      background: #ffffff;
-      color: var(--text);
-
-      font-size: 13px;
-      font-weight: 700;
-
-      outline: none;
-    }
-
-    .empty-state {
+    .result-box {
       display: none;
-
-      padding: 34px 20px;
-
-      border: 1px solid var(--border);
-      border-radius: 18px;
-
-      background: #ffffff;
-      box-shadow: var(--shadow);
-
-      text-align: center;
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid var(--echo-border);
+      border-radius: 14px;
+      background: #f8fafc;
     }
 
-    .empty-state.show {
+    .result-box.show {
       display: block;
     }
 
-    .empty-state h2 {
-      font-size: 22px;
-      line-height: 1.4;
+    .request-number {
+      margin-top: 8px;
+      color: var(--echo-primary);
+      font-size: 24px;
+      font-weight: 900;
+      word-break: break-word;
     }
 
-    .empty-state p {
-      max-width: 560px;
-
-      margin: 10px auto 0;
-
-      color: var(--text-light);
-
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    @media (max-width: 860px) {
-      .stats-grid {
-        grid-template-columns:
-          repeat(2, minmax(0, 1fr));
-      }
-
-      .toolbar {
+    @media (max-width: 700px) {
+      .service-types,
+      .form-grid,
+      .contact-options {
         grid-template-columns: 1fr;
       }
 
-      .request-details {
-        grid-template-columns:
-          repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 560px) {
-      .page {
-        padding:
-          15px
-          13px
-          40px;
+      .form-group.full {
+        grid-column: 1;
       }
 
-      .topbar {
-        align-items: flex-start;
-      }
-
-      .topbar-actions {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .topbar-button {
-        min-width: 64px;
-      }
-
-      .stats-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-      }
-
-      .stat-card {
-        padding: 14px;
-      }
-
-      .stat-value {
-        font-size: 23px;
-      }
-
-      .request-card {
-        padding: 15px;
-      }
-
-      .request-card-header {
-        flex-direction: column;
-      }
-
-      .request-details {
-        grid-template-columns: 1fr;
-      }
-
-      .request-actions {
-        display: grid;
-        grid-template-columns: 1fr;
-      }
-
-      .action-button,
-      .status-select {
-        width: 100%;
+      .actions {
+        flex-direction: column-reverse;
       }
     }
   </style>
 </head>
 
 <body>
-  <main class="page">
+  <main class="echo-page">
 
-    <header class="topbar">
-
-      <a
-        class="brand"
-        href=" "
-      >
-        <span class="brand-mark">E</span>
-        <span>EchoCity</span>
-      </a >
-
-      <div class="topbar-actions">
+    <header class="echo-header">
+      <div class="echo-brand-row">
+        <a class="echo-brand" href="../index.html">
+          <span class="echo-logo">E</span>
+          <span>EchoCity</span>
+        </a>
 
         <button
-          class="topbar-button"
-          type="button"
-          onclick="openRequestPage()"
-          data-i18n="newRequestButton"
-        >
-          新建需求
-        </button>
-
-        <button
-          class="topbar-button"
           id="languageButton"
+          class="echo-language-button"
           type="button"
-          onclick="toggleLanguage()"
         >
           EN
         </button>
-
       </div>
 
+      <div class="echo-title-area">
+        <div id="pageEyebrow" class="echo-eyebrow">
+          本地人员与生活服务
+        </div>
+
+        <h1 id="pageTitle" class="echo-page-title">
+          你好，我能帮你什么？
+        </h1>
+
+        <p id="pageDescription" class="echo-page-description">
+          告诉数字人 Echo 你的需要。我们会组织合适的人员和资源，在确认范围、价格和时间后开始服务。
+        </p>
+      </div>
     </header>
 
-    <section class="hero">
-
-      <span
-        class="hero-tag"
-        data-i18n="heroTag"
-      >
-        运营管理后台
-      </span>
-
-      <h1 data-i18n="heroTitle">
-        服务需求管理
-      </h1>
-
-      <p data-i18n="heroDescription">
-        查看客户提交的需求，完成人工确认、报价、派工、
-        服务跟踪和订单状态管理。
-      </p >
-
-    </section>
-
-    <section class="stats-grid">
-
-      <div class="stat-card">
-        <div
-          class="stat-label"
-          data-i18n="totalRequests"
-        >
-          全部需求
-        </div>
-
-        <div
-          class="stat-value"
-          id="totalCount"
-        >
-          0
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div
-          class="stat-label"
-          data-i18n="newRequests"
-        >
-          待确认
-        </div>
-
-        <div
-          class="stat-value"
-          id="newCount"
-        >
-          0
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div
-          class="stat-label"
-          data-i18n="activeRequests"
-        >
-          进行中
-        </div>
-
-        <div
-          class="stat-value"
-          id="activeCount"
-        >
-          0
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div
-          class="stat-label"
-          data-i18n="completedRequests"
-        >
-          已完成
-        </div>
-
-        <div
-          class="stat-value"
-          id="completedCount"
-        >
-          0
-        </div>
-      </div>
-
-    </section>
-
-    <section class="toolbar">
-
-      <input
-        class="search-input"
-        id="searchInput"
-        type="search"
-        data-i18n-placeholder="searchPlaceholder"
-        placeholder="搜索编号、姓名、电话、地址或需求"
-        oninput="renderRequests()"
-      />
-
-      <select
-        class="filter-select"
-        id="statusFilter"
-        onchange="renderRequests()"
-      >
-        <option
-          value="all"
-          data-i18n="filterAll"
-        >
-          全部状态
-        </option>
-
-        <option
-          value="new"
-          data-i18n="statusNew"
-        >
-          待人工确认
-        </option>
-<option
-  value="reviewed"
-  data-i18n="statusReviewed"
->
-  需求已确认
-</option>
-        <option
-          value="quoted"
-          data-i18n="statusQuoted"
-        >
-          已报价
-        </option>
-        <option
-          value="confirmed"
-          data-i18n="statusConfirmed"
-        >
-          客户已确认
-        </option>
-
-        <option
-          value="quote_declined"
-          data-i18n="statusDeclined"
-        >
-          客户暂不接受
-        </option>
-        <option
-          value="assigned"
-          data-i18n="statusAssigned"
-        >
-          已派工
-        </option>
-
-        <option
-          value="in_progress"
-          data-i18n="statusProgress"
-        >
-          服务进行中
-        </option>
-
-        <option
-          value="completed"
-          data-i18n="statusCompleted"
-        >
-          已完成
-        </option>
-
-        <option
-          value="cancelled"
-          data-i18n="statusCancelled"
-        >
-          已取消
-        </option>
-      </select>
-
-      <select
-        class="filter-select"
-        id="serviceFilter"
-        onchange="renderRequests()"
-      >
-        <option
-          value="all"
-          data-i18n="serviceAll"
-        >
-          全部服务
-        </option>
-
-        <option
-          value="workers"
-          data-i18n="serviceWorkers"
-        >
-          需要人手
-        </option>
-
-        <option
-          value="repair"
-          data-i18n="serviceRepair"
-        >
-          维修或清洁
-        </option>
-
-        <option
-          value="support"
-          data-i18n="serviceSupport"
-        >
-          生活帮助
-        </option>
-      </select>
-
-    </section>
-
-    <section
-      class="request-list"
-      id="requestList"
-    ></section>
-
-    <section
-      class="empty-state"
-      id="emptyState"
-    >
-      <h2 data-i18n="emptyTitle">
-        暂时没有服务需求
+    <section class="echo-card">
+      <h2 id="serviceTypeTitle" class="echo-card-title">
+        你需要哪一类服务？
       </h2>
 
-      <p data-i18n="emptyDescription">
-        客户提交需求后，订单会自动显示在这里。
-      </p >
-    </section>
+      <p id="serviceTypeDescription" class="echo-card-description">
+        选择最接近的类型，再填写具体需求。
+      </p>
 
+      <div class="service-types">
+        <label class="service-option">
+          <input
+            type="radio"
+            name="serviceType"
+            value="temporary_worker"
+          >
+          <span id="temporaryWorkerText">需要人手</span>
+        </label>
+
+        <label class="service-option">
+          <input
+            type="radio"
+            name="serviceType"
+            value="repair_cleaning"
+          >
+          <span id="repairCleaningText">维修或清洁</span>
+        </label>
+
+        <label class="service-option">
+          <input
+            type="radio"
+            name="serviceType"
+            value="life_support"
+          >
+          <span id="lifeSupportText">生活帮助</span>
+        </label>
+      </div>
+
+      <div class="form-section">
+        <h3 id="needTitle" class="form-title">
+          请告诉我具体需要什么
+        </h3>
+
+        <p id="needDescription" class="form-description">
+          请说明服务内容、人数、地点和大概时间。
+        </p>
+
+        <div class="form-grid">
+          <div class="form-group full">
+            <label id="detailsLabel" class="form-label" for="requestDetails">
+              需求说明 <span class="required">*</span>
+            </label>
+
+            <textarea
+              id="requestDetails"
+              class="echo-textarea"
+              placeholder="例如：明天下午需要两个人帮我搬家具，大约工作3小时。"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label id="addressLabel" class="form-label" for="serviceAddress">
+              服务地址 <span class="required">*</span>
+            </label>
+
+            <input
+              id="serviceAddress"
+              class="echo-input"
+              type="text"
+              placeholder="请输入服务地址"
+            >
+          </div>
+
+          <div class="form-group">
+            <label id="timeLabel" class="form-label" for="preferredTime">
+              期望服务时间
+            </label>
+
+            <input
+              id="preferredTime"
+              class="echo-input"
+              type="datetime-local"
+            >
+          </div>
+
+          <div class="form-group">
+            <label id="countryLabel" class="form-label" for="country">
+              国家或地区
+            </label>
+
+            <input
+              id="country"
+              class="echo-input"
+              type="text"
+              placeholder="例如：中国、美国"
+            >
+          </div>
+
+          <div class="form-group">
+            <label id="durationLabel" class="form-label" for="estimatedDuration">
+              预计服务时长
+            </label>
+
+            <input
+              id="estimatedDuration"
+              class="echo-input"
+              type="text"
+              placeholder="例如：3小时、2天"
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3 id="contactTitle" class="form-title">
+          请留下联系方式
+        </h3>
+
+        <p id="contactDescription" class="form-description">
+          手机号和邮箱至少填写一项，不需要注册。
+        </p>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label id="phoneLabel" class="form-label" for="customerPhone">
+              手机号
+            </label>
+
+            <input
+              id="customerPhone"
+              class="echo-input"
+              type="tel"
+              placeholder="请输入手机号"
+            >
+          </div>
+
+          <div class="form-group">
+            <label id="emailLabel" class="form-label" for="customerEmail">
+              邮箱
+            </label>
+
+            <input
+              id="customerEmail"
+              class="echo-input"
+              type="email"
+              placeholder="请输入邮箱"
+            >
+          </div>
+
+          <div class="form-group full">
+            <label id="preferenceLabel" class="form-label">
+              首选联系方式
+            </label>
+
+            <div class="contact-options">
+              <label>
+                <input
+                  type="radio"
+                  name="contactPreference"
+                  value="phone"
+                  checked
+                >
+                <span id="phonePreferenceText">电话或短信</span>
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  name="contactPreference"
+                  value="email"
+                >
+                <span id="emailPreferenceText">邮件</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <label class="agreement">
+        <input id="agreementCheckbox" type="checkbox">
+
+        <span id="agreementText">
+          我确认以上信息真实，并同意 EchoCity 联系我核实需求、报价和服务安排。
+        </span>
+      </label>
+
+      <div
+        id="message"
+        class="echo-message"
+        role="status"
+      ></div>
+
+      <div class="actions">
+        <button
+          id="clearButton"
+          class="echo-button echo-button-secondary"
+          type="button"
+        >
+          清空
+        </button>
+
+        <button
+          id="submitButton"
+          class="echo-button echo-button-primary"
+          type="button"
+        >
+          提交需求
+        </button>
+      </div>
+
+      <div id="requestResult" class="result-box">
+        <h3 id="resultTitle" class="form-title">
+          需求已提交
+        </h3>
+
+        <p id="resultDescription" class="form-description">
+          请保存需求编号，后续可以查询报价和服务进度。
+        </p>
+
+        <div id="requestNumber" class="request-number">—</div>
+      </div>
+    </section>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/echocity-store.js"></script>
-<script src="../js/echocity-supabase.js"></script>
-<script src="../js/echocity-services.js?v=2"></script>
-
-  <script>    const translations = {
+  <script>
+    const translations = {
       zh: {
-        newRequestButton: "新建需求",
-
-        heroTag: "运营管理后台",
-        heroTitle: "服务需求管理",
-        heroDescription:
-          "查看客户提交的需求，完成人工确认、报价、派工、服务跟踪和订单状态管理。",
-
-        totalRequests: "全部需求",
-        newRequests: "待确认",
-        activeRequests: "进行中",
-        completedRequests: "已完成",
-
-        searchPlaceholder:
-          "搜索编号、姓名、电话、地址或需求",
-
-        filterAll: "全部状态",
-        serviceAll: "全部服务",
-
-        statusNew: "待人工确认",
-        statusQuoted: "已报价",
-                statusConfirmed: "客户已确认",
-        statusDeclined: "客户暂不接受",
-        statusAssigned: "已派工",
-        statusProgress: "服务进行中",
-        statusCompleted: "已完成",
-        statusCancelled: "已取消",
-
-        serviceWorkers: "需要人手",
-        serviceRepair: "维修或清洁",
-        serviceSupport: "生活帮助",
-        serviceUnknown: "未选择服务",
-
-        requestNumber: "需求编号",
-        submittedAt: "提交时间",
-        serviceTime: "服务时间",
-        customer: "客户",
-        phone: "电话",
-        address: "地址",
-        workersAndHours: "人数与时长",
-        requestDetails: "具体需求",
-
-        workerUnit: "人",
-        workersUnit: "人",
-        hourUnit: "小时",
-        hoursUnit: "小时",
-        fivePlusWorkers: "5人以上",
-        unknownHours: "时长未确定",
-
-        changeStatus: "修改状态",
-        viewLatest: "设为最近需求",
-        callCustomer: "联系客户",
-        deleteRequest: "删除需求",
-
-        emptyTitle: "暂时没有服务需求",
-        emptyDescription:
-          "客户提交需求后，订单会自动显示在这里。",
-
-        noMatchTitle: "没有找到符合条件的需求",
-        noMatchDescription:
-          "请修改搜索内容或筛选条件。",
-
-        confirmDelete:
-          "确定要删除这条需求记录吗？",
-        deleteSuccess:
-          "需求记录已删除。",
-
-        statusUpdated:
-          "订单状态已经更新。",
-
-        notProvided: "未填写"
+        pageEyebrow: "本地人员与生活服务",
+        pageTitle: "你好，我能帮你什么？",
+        pageDescription: "告诉数字人 Echo 你的需要。我们会组织合适的人员和资源，在确认范围、价格和时间后开始服务。",
+        serviceTypeTitle: "你需要哪一类服务？",
+        serviceTypeDescription: "选择最接近的类型，再填写具体需求。",
+        temporaryWorkerText: "需要人手",
+        repairCleaningText: "维修或清洁",
+        lifeSupportText: "生活帮助",
+        needTitle: "请告诉我具体需要什么",
+        needDescription: "请说明服务内容、人数、地点和大概时间。",
+        detailsLabel: "需求说明 *",
+        detailsPlaceholder: "例如：明天下午需要两个人帮我搬家具，大约工作3小时。",
+        addressLabel: "服务地址 *",
+        addressPlaceholder: "请输入服务地址",
+        timeLabel: "期望服务时间",
+        countryLabel: "国家或地区",
+        countryPlaceholder: "例如：中国、美国",
+        durationLabel: "预计服务时长",
+        durationPlaceholder: "例如：3小时、2天",
+        contactTitle: "请留下联系方式",
+        contactDescription: "手机号和邮箱至少填写一项，不需要注册。",
+        phoneLabel: "手机号",
+        phonePlaceholder: "请输入手机号",
+        emailLabel: "邮箱",
+        emailPlaceholder: "请输入邮箱",
+        preferenceLabel: "首选联系方式",
+        phonePreferenceText: "电话或短信",
+        emailPreferenceText: "邮件",
+        agreementText: "我确认以上信息真实，并同意 EchoCity 联系我核实需求、报价和服务安排。",
+        clearButton: "清空",
+        submitButton: "提交需求",
+        submitting: "正在提交……",
+        resultTitle: "需求已提交",
+        resultDescription: "请保存需求编号，后续可以查询报价和服务进度。",
+        requiredType: "请选择服务类型。",
+        requiredDetails: "请填写具体需求。",
+        requiredAddress: "请填写服务地址。",
+        requiredContact: "手机号和邮箱至少填写一项。",
+        invalidEmail: "请输入正确的邮箱地址。",
+        requiredAgreement: "请先勾选确认。",
+        success: "需求提交成功。",
+        failed: "需求提交失败。",
+        noClient: "Supabase 连接不可用。",
+        clearConfirm: "确认清空已经填写的内容吗？"
       },
 
       en: {
-        newRequestButton: "New Request",
-
-        heroTag: "Operations Dashboard",
-        heroTitle: "Service Request Management",
-        heroDescription:
-          "Review customer requests, confirm details, prepare quotes, assign workers, track service, and manage order status.",
-
-        totalRequests: "All Requests",
-        newRequests: "Awaiting Review",
-        activeRequests: "Active",
-        completedRequests: "Completed",
-
-        searchPlaceholder:
-          "Search ID, name, phone, address, or request",
-
-        filterAll: "All Statuses",
-        serviceAll: "All Services",
-
-        statusNew: "Awaiting Review",
-        statusQuoted: "Quoted",
-        statusConfirmed: "Confirmed by Customer",
-        statusDeclined: "Not Accepted by Customer",
-        statusAssigned: "Assigned",
-        statusProgress: "In Progress",
-        statusCompleted: "Completed",
-        statusCancelled: "Cancelled",
-
-        serviceWorkers: "Need Workers",
-        serviceRepair: "Repair or Cleaning",
-        serviceSupport: "Daily Support",
-        serviceUnknown: "Service Not Selected",
-
-        requestNumber: "Request ID",
-        submittedAt: "Submitted",
-        serviceTime: "Service Time",
-        customer: "Customer",
-        phone: "Phone",
-        address: "Address",
-        workersAndHours: "Workers and Duration",
-        requestDetails: "Request Details",
-
-        workerUnit: "worker",
-        workersUnit: "workers",
-        hourUnit: "hour",
-        hoursUnit: "hours",
-        fivePlusWorkers: "5 or more workers",
-        unknownHours: "Duration not confirmed",
-
-        changeStatus: "Change Status",
-        viewLatest: "Set as Latest Request",
-        callCustomer: "Contact Customer",
-        deleteRequest: "Delete Request",
-
-        emptyTitle: "No Service Requests Yet",
-        emptyDescription:
-          "Customer requests will appear here after submission.",
-
-        noMatchTitle: "No Matching Requests Found",
-        noMatchDescription:
-          "Please change the search terms or filters.",
-
-        confirmDelete:
-          "Are you sure you want to delete this request?",
-        deleteSuccess:
-          "The request has been deleted.",
-
-        statusUpdated:
-          "The order status has been updated.",
-
-        notProvided: "Not provided"
+        pageEyebrow: "Local Workforce and Life Services",
+        pageTitle: "Hello, how can I help you?",
+        pageDescription: "Tell Echo what you need. We will organize suitable people and resources, then confirm the scope, price, and schedule before work begins.",
+        serviceTypeTitle: "What type of service do you need?",
+        serviceTypeDescription: "Choose the closest category and enter the details below.",
+        temporaryWorkerText: "Extra Help",
+        repairCleaningText: "Repair or Cleaning",
+        lifeSupportText: "Life Support",
+        needTitle: "Tell us what you need",
+        needDescription: "Describe the work, number of people, location, and approximate time.",
+        detailsLabel: "Request Details *",
+        detailsPlaceholder: "Example: I need two people tomorrow afternoon to move furniture for about three hours.",
+        addressLabel: "Service Address *",
+        addressPlaceholder: "Enter the service address",
+        timeLabel: "Preferred Service Time",
+        countryLabel: "Country or Region",
+        countryPlaceholder: "Example: United States or China",
+        durationLabel: "Estimated Duration",
+        durationPlaceholder: "Example: 3 hours or 2 days",
+        contactTitle: "Leave your contact details",
+        contactDescription: "Enter at least a phone number or email. Registration is not required.",
+        phoneLabel: "Phone Number",
+        phonePlaceholder: "Enter phone number",
+        emailLabel: "Email",
+        emailPlaceholder: "Enter email address",
+        preferenceLabel: "Preferred Contact Method",
+        phonePreferenceText: "Phone or Text",
+        emailPreferenceText: "Email",
+        agreementText: "I confirm that the information is accurate and agree that EchoCity may contact me about the request, quotation, and service arrangements.",
+        clearButton: "Clear",
+        submitButton: "Submit Request",
+        submitting: "Submitting...",
+        resultTitle: "Request Submitted",
+        resultDescription: "Save the request number to check the quotation and service progress.",
+        requiredType: "Select a service type.",
+        requiredDetails: "Enter the request details.",
+        requiredAddress: "Enter the service address.",
+        requiredContact: "Enter at least a phone number or email.",
+        invalidEmail: "Enter a valid email address.",
+        requiredAgreement: "Confirm the agreement before submitting.",
+        success: "The request was submitted successfully.",
+        failed: "Unable to submit the request.",
+        noClient: "Supabase connection is unavailable.",
+        clearConfirm: "Clear all information entered in the form?"
       }
     };
 
     let currentLanguage =
       localStorage.getItem("echocity-language") || "zh";
 
-    let serviceRequests = [];
+    const textIds = [
+      "pageEyebrow",
+      "pageTitle",
+      "pageDescription",
+      "serviceTypeTitle",
+      "serviceTypeDescription",
+      "temporaryWorkerText",
+      "repairCleaningText",
+      "lifeSupportText",
+      "needTitle",
+      "needDescription",
+      "detailsLabel",
+      "addressLabel",
+      "timeLabel",
+      "countryLabel",
+      "durationLabel",
+      "contactTitle",
+      "contactDescription",
+      "phoneLabel",
+      "emailLabel",
+      "preferenceLabel",
+      "phonePreferenceText",
+      "emailPreferenceText",
+      "agreementText",
+      "clearButton",
+      "submitButton",
+      "resultTitle",
+      "resultDescription"
+    ];
 
-    function translate(key) {
-      return (
-        translations[currentLanguage][key] ||
+    function t(key) {
+      return translations[currentLanguage]?.[key] ||
         translations.zh[key] ||
-        key
-      );
+        key;
     }
 
     function applyLanguage() {
       document.documentElement.lang =
-        currentLanguage === "zh"
-          ? "zh-CN"
-          : "en";
+        currentLanguage === "zh" ? "zh-CN" : "en";
 
-      document
-        .querySelectorAll("[data-i18n]")
-        .forEach((element) => {
-          const key =
-            element.getAttribute("data-i18n");
+      textIds.forEach((id) => {
+        const element = document.getElementById(id);
 
-          if (translations[currentLanguage][key]) {
-            element.textContent =
-              translations[currentLanguage][key];
-          }
-        });
-
-      document
-        .querySelectorAll("[data-i18n-placeholder]")
-        .forEach((element) => {
-          const key =
-            element.getAttribute(
-              "data-i18n-placeholder"
-            );
-
-          if (translations[currentLanguage][key]) {
-            element.placeholder =
-              translations[currentLanguage][key];
-          }
-        });
-
-      document.getElementById(
-        "languageButton"
-      ).textContent =
-        currentLanguage === "zh"
-          ? "EN"
-          : "中文";
-    }
-
-    function toggleLanguage() {
-      currentLanguage =
-        currentLanguage === "zh"
-          ? "en"
-          : "zh";
-
-      localStorage.setItem(
-        "echocity-language",
-        currentLanguage
-      );
-
-      applyLanguage();
-      renderRequests();
-    }
-
-    function openRequestPage() {
-      window.location.href =
-        "service-request.html";
-    }
-
-    async function loadRequests() {
-  try {
-    const supabaseClient = window.echoCitySupabase;
-
-    if (!supabaseClient) {
-      throw new Error("Supabase connection is not available.");
-    }
-
-    const { data, error } = await supabaseClient
-      .from("service_requests")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      throw error;
-    }
-
-    serviceRequests = (data || []).map((item) => ({
-      id: item.request_no,
-      requestId: item.request_no,
-      requestNo: item.request_no,
-
-      serviceType: item.service_type,
-      type: item.service_type,
-
-      description: item.description,
-      request: item.description,
-      details: item.description,
-
-      serviceDate: item.service_date,
-      date: item.service_date,
-
-      startTime: item.start_time,
-      time: item.start_time,
-
-      workers: item.workers || 1,
-      workerCount: item.workers || 1,
-      duration: item.duration || "",
-
-      postalCode: item.postal_code || "",
-      zipCode: item.postal_code || "",
-      address: item.address || "",
-
-      customerName: item.customer_name || "",
-      name: item.customer_name || "",
-
-      customerPhone: item.customer_phone || "",
-      phone: item.customer_phone || "",
-
-      status: item.status || "submitted",
-
-      quoteAmount: item.quote_amount,
-      quoteNote: item.quote_note || "",
-      quoteConfirmed: item.quote_confirmed || false,
-      assignedWorker: item.assigned_worker || "",
-
-      createdAt: item.created_at,
-      updatedAt: item.updated_at
-    }));
-
-    renderRequests();
-
-    console.log(
-      "Service requests loaded from Supabase:",
-      serviceRequests
-    );
-  } catch (error) {
-    console.error(
-      "Failed to load service requests from Supabase:",
-      error
-    );
-
-    serviceRequests = [];
-    renderRequests();
-  }
-}
-    function saveRequests() {
-      localStorage.setItem(
-        "echocity-service-requests",
-        JSON.stringify(serviceRequests)
-      );
-    }
-
-    function getServiceName(serviceType) {
-      const serviceMap = {
-        workers: "serviceWorkers",
-        repair: "serviceRepair",
-        support: "serviceSupport"
-      };
-
-      return translate(
-        serviceMap[serviceType] ||
-        "serviceUnknown"
-      );
-    }
-
-    function getStatusName(status) {
-      const statusMap = {
-  new: "statusNew",
-  quoted: "statusQuoted",
-  confirmed: "statusConfirmed",
-  quote_declined: "statusDeclined",
-  assigned: "statusAssigned",
-  in_progress: "statusProgress",
-  completed: "statusCompleted",
-  cancelled: "statusCancelled"
-};
-
-      return translate(
-        statusMap[status] ||
-        "statusNew"
-      );
-    }
-
-    function getStatusClass(status) {
-      const classMap = {
-  new: "status-new",
-  quoted: "status-quoted",
-  confirmed: "status-confirmed",
-  quote_declined: "status-declined",
-  assigned: "status-assigned",
-  in_progress: "status-progress",
-  completed: "status-completed",
-  cancelled: "status-cancelled"
-};
-      return (
-        classMap[status] ||
-        "status-new"
-      );
-    }
-
-    function formatDateTime(
-      serviceDate,
-      serviceTime
-    ) {
-      if (!serviceDate && !serviceTime) {
-        return translate("notProvided");
-      }
-
-      let dateText =
-        serviceDate || "";
-
-      if (serviceDate) {
-        const date =
-          new Date(
-            serviceDate + "T00:00:00"
-          );
-
-        dateText =
-          date.toLocaleDateString(
-            currentLanguage === "zh"
-              ? "zh-CN"
-              : "en-US",
-            {
-              year: "numeric",
-              month: "long",
-              day: "numeric"
-            }
-          );
-      }
-
-      return serviceTime
-        ? `${dateText} ${serviceTime}`
-        : dateText;
-    }
-
-    function formatSubmittedTime(createdAt) {
-      if (!createdAt) {
-        return translate("notProvided");
-      }
-
-      const date =
-        new Date(createdAt);
-
-      if (Number.isNaN(date.getTime())) {
-        return createdAt;
-      }
-
-      return date.toLocaleString(
-        currentLanguage === "zh"
-          ? "zh-CN"
-          : "en-US"
-      );
-    }
-
-    function formatWorkersAndHours(
-      workerCount,
-      estimatedHours
-    ) {
-      let workerText = "";
-
-      if (workerCount === "5plus") {
-        workerText =
-          translate("fivePlusWorkers");
-      } else {
-        const count =
-          Number(workerCount || 1);
-
-        const unit =
-          count === 1
-            ? translate("workerUnit")
-            : translate("workersUnit");
-
-        workerText =
-          `${count} ${unit}`;
-      }
-
-      let hourText = "";
-
-      if (
-        !estimatedHours ||
-        estimatedHours === "unknown"
-      ) {
-        hourText =
-          translate("unknownHours");
-      } else {
-        const hours =
-          Number(estimatedHours);
-
-        const unit =
-          hours === 1
-            ? translate("hourUnit")
-            : translate("hoursUnit");
-
-        hourText =
-          `${hours} ${unit}`;
-      }
-
-      return `${workerText} · ${hourText}`;
-    }
-
-    function escapeHTML(value) {
-      return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }    function getFilteredRequests() {
-      const searchValue =
-        document
-          .getElementById("searchInput")
-          .value
-          .trim()
-          .toLowerCase();
-
-      const statusValue =
-        document
-          .getElementById("statusFilter")
-          .value;
-
-      const serviceValue =
-        document
-          .getElementById("serviceFilter")
-          .value;
-
-      return serviceRequests.filter((request) => {
-        const searchableText = [
-          request.id,
-          request.customerName,
-          request.customerPhone,
-          request.customerEmail,
-          request.serviceAddress,
-          request.description
-        ]
-          .join(" ")
-          .toLowerCase();
-
-        const matchesSearch =
-          !searchValue ||
-          searchableText.includes(searchValue);
-
-        const matchesStatus =
-          statusValue === "all" ||
-          request.status === statusValue;
-
-        const matchesService =
-          serviceValue === "all" ||
-          request.serviceType === serviceValue;
-
-        return (
-          matchesSearch &&
-          matchesStatus &&
-          matchesService
-        );
+        if (element) {
+          element.textContent = t(id);
+        }
       });
+
+      document.getElementById("requestDetails").placeholder =
+        t("detailsPlaceholder");
+
+      document.getElementById("serviceAddress").placeholder =
+        t("addressPlaceholder");
+
+      document.getElementById("country").placeholder =
+        t("countryPlaceholder");
+
+      document.getElementById("estimatedDuration").placeholder =
+        t("durationPlaceholder");
+
+      document.getElementById("customerPhone").placeholder =
+        t("phonePlaceholder");
+
+      document.getElementById("customerEmail").placeholder =
+        t("emailPlaceholder");
+
+      document.getElementById("languageButton").textContent =
+        currentLanguage === "zh" ? "EN" : "中文";
+
+      document.title = `${t("pageTitle")} | EchoCity`;
     }
 
-    function updateStatistics() {
-      const total =
-        serviceRequests.length;
-
-      const newTotal =
-        serviceRequests.filter(
-          (request) =>
-            (request.status || "new") === "new"
-        ).length;
-
-      const activeTotal =
-        serviceRequests.filter(
-          (request) =>
-            [
-  "quoted",
-  "confirmed",
-  "assigned",
-  "in_progress"
-].includes(request.status)
-        ).length;
-
-      const completedTotal =
-        serviceRequests.filter(
-          (request) =>
-            request.status === "completed"
-        ).length;
-
-      document.getElementById(
-        "totalCount"
-      ).textContent = total;
-
-      document.getElementById(
-        "newCount"
-      ).textContent = newTotal;
-
-      document.getElementById(
-        "activeCount"
-      ).textContent = activeTotal;
-
-      document.getElementById(
-        "completedCount"
-      ).textContent = completedTotal;
+    function showMessage(text, type = "info") {
+      const box = document.getElementById("message");
+      box.textContent = text;
+      box.className = `echo-message show ${type}`;
     }
 
-    function buildStatusOptions(
-      currentStatus
-    ) {
-      const statuses = [
-  ["new", "statusNew"],
-  ["reviewed", "statusReviewed"],
-  ["quoted", "statusQuoted"],
-  ["confirmed", "statusConfirmed"],
-  ["quote_declined", "statusDeclined"],
-  ["assigned", "statusAssigned"],
-  ["in_progress", "statusInProgress"],
-  ["completed", "statusCompleted"],
-  ["cancelled", "statusCancelled"]
-];
-
-      return statuses
-        .map(([value, labelKey]) => {
-          const selected =
-            value === currentStatus
-              ? "selected"
-              : "";
-
-          return `
-            <option
-              value="${value}"
-              ${selected}
-            >
-              ${escapeHTML(
-                translate(labelKey)
-              )}
-            </option>
-          `;
-        })
-        .join("");
+    function clearMessage() {
+      const box = document.getElementById("message");
+      box.textContent = "";
+      box.className = "echo-message";
     }
 
-    function createRequestCard(request) {
-      const status =
-        request.status || "new";
-
-      const requestId =
-        request.id || "--";
-
-      const customerName =
-        request.customerName ||
-        translate("notProvided");
-
-      const customerPhone =
-        request.customerPhone ||
-        translate("notProvided");
-
-      const address =
-        request.serviceAddress ||
-        translate("notProvided");
-
-      const description =
-        request.description ||
-        translate("notProvided");
-
-      return `
-        <article class="request-card">
-
-          <div class="request-card-header">
-
-            <div class="request-main">
-
-              <div class="request-number">
-                ${escapeHTML(
-                  translate("requestNumber")
-                )}：
-                ${escapeHTML(requestId)}
-              </div>
-
-              <h2 class="request-title">
-                ${escapeHTML(
-                  getServiceName(
-                    request.serviceType
-                  )
-                )}
-              </h2>
-
-              <div class="request-time">
-                ${escapeHTML(
-                  translate("submittedAt")
-                )}：
-                ${escapeHTML(
-                  formatSubmittedTime(
-                    request.createdAt
-                  )
-                )}
-              </div>
-
-            </div>
-
-            <span
-              class="status-badge
-              ${getStatusClass(status)}"
-            >
-              ${escapeHTML(
-                getStatusName(status)
-              )}
-            </span>
-
-          </div>
-
-          <div class="request-details">
-
-            <div class="detail-item">
-              <div class="detail-label">
-                ${escapeHTML(
-                  translate("serviceTime")
-                )}
-              </div>
-
-              <div class="detail-value">
-                ${escapeHTML(
-                  formatDateTime(
-                    request.serviceDate,
-                    request.serviceTime
-                  )
-                )}
-              </div>
-            </div>
-
-            <div class="detail-item">
-              <div class="detail-label">
-                ${escapeHTML(
-                  translate("customer")
-                )}
-              </div>
-
-              <div class="detail-value">
-                ${escapeHTML(
-                  customerName
-                )}
-              </div>
-            </div>
-
-            <div class="detail-item">
-              <div class="detail-label">
-                ${escapeHTML(
-                  translate("phone")
-                )}
-              </div>
-
-              <div class="detail-value">
-                ${escapeHTML(
-                  customerPhone
-                )}
-              </div>
-            </div>
-
-            <div class="detail-item">
-              <div class="detail-label">
-                ${escapeHTML(
-                  translate(
-                    "workersAndHours"
-                  )
-                )}
-              </div>
-
-              <div class="detail-value">
-                ${escapeHTML(
-                  formatWorkersAndHours(
-                    request.workerCount,
-                    request.estimatedHours
-                  )
-                )}
-              </div>
-            </div>
-
-            <div class="detail-item">
-              <div class="detail-label">
-                ${escapeHTML(
-                  translate("address")
-                )}
-              </div>
-
-              <div class="detail-value">
-                ${escapeHTML(address)}
-              </div>
-            </div>
-
-          </div>
-
-          <div class="request-description">
-            <strong>
-              ${escapeHTML(
-                translate("requestDetails")
-              )}：
-            </strong>
-
-            <br />
-
-            ${escapeHTML(description)}
-          </div>
-
-          <div class="request-actions">
-
-            <select
-              class="status-select"
-              onchange="
-                updateRequestStatus(
-                  '${escapeHTML(requestId)}',
-                  this.value
-                )
-              "
-              aria-label="${escapeHTML(
-                translate("changeStatus")
-              )}"
-            >
-              ${buildStatusOptions(status)}
-            </select>
-
-            <button
-              class="action-button primary"
-              type="button"
-              onclick="
-                setAsLatestRequest(
-                  '${escapeHTML(requestId)}'
-                )
-              "
-            >
-              ${escapeHTML(
-                translate("viewLatest")
-              )}
-            </button>
-
-            <button
-              class="action-button"
-              type="button"
-              onclick="
-                contactCustomer(
-                  '${escapeHTML(
-                    customerPhone
-                  )}'
-                )
-              "
-            >
-              ${escapeHTML(
-                translate("callCustomer")
-              )}
-            </button>
-
-            <button
-              class="action-button"
-              type="button"
-              onclick="
-                deleteRequest(
-                  '${escapeHTML(requestId)}'
-                )
-              "
-            >
-              ${escapeHTML(
-                translate("deleteRequest")
-              )}
-            </button>
-
-          </div>
-
-        </article>
-      `;
+    function selectedValue(name) {
+      return document.querySelector(
+        `input[name="${name}"]:checked`
+      )?.value || "";
     }
 
-    function renderRequests() {
-      const requestList =
-        document.getElementById(
-          "requestList"
-        );
+    function normalizePhone(value) {
+      return String(value || "")
+        .trim()
+        .replace(/[^\d+]/g, "");
+    }
 
-      const emptyState =
-        document.getElementById(
-          "emptyState"
-        );
+    function generateRequestNumber() {
+      const now = new Date();
+      const number =
+        now.getFullYear().toString() +
+        String(now.getMonth() + 1).padStart(2, "0") +
+        String(now.getDate()).padStart(2, "0") +
+        String(now.getHours()).padStart(2, "0") +
+        String(now.getMinutes()).padStart(2, "0") +
+        String(now.getSeconds()).padStart(2, "0") +
+        String(Math.floor(1000 + Math.random() * 9000));
 
-      const filteredRequests =
-        getFilteredRequests();
+      return `REQ-${number}`;
+    }
 
-      updateStatistics();
+    function readForm() {
+      return {
+        serviceType: selectedValue("serviceType"),
+        requestDetails:
+          document.getElementById("requestDetails").value.trim(),
+        serviceAddress:
+          document.getElementById("serviceAddress").value.trim(),
+        preferredTime:
+          document.getElementById("preferredTime").value,
+        country:
+          document.getElementById("country").value.trim(),
+        estimatedDuration:
+          document.getElementById("estimatedDuration").value.trim(),
+        customerPhone:
+          normalizePhone(
+            document.getElementById("customerPhone").value
+          ),
+        customerEmail:
+          document.getElementById("customerEmail")
+            .value.trim().toLowerCase(),
+        contactPreference:
+          selectedValue("contactPreference"),
+        agreement:
+          document.getElementById("agreementCheckbox").checked
+      };
+    }
 
-      if (serviceRequests.length === 0) {
-        requestList.innerHTML = "";
-
-        emptyState.classList.add("show");
-
-        emptyState.querySelector(
-          "h2"
-        ).textContent =
-          translate("emptyTitle");
-
-        emptyState.querySelector(
-          "p"
-        ).textContent =
-          translate("emptyDescription");
-
-        return;
+    function validateForm(values) {
+      if (!values.serviceType) {
+        showMessage(t("requiredType"), "error");
+        return false;
       }
 
-      if (filteredRequests.length === 0) {
-        requestList.innerHTML = "";
-
-        emptyState.classList.add("show");
-
-        emptyState.querySelector(
-          "h2"
-        ).textContent =
-          translate("noMatchTitle");
-
-        emptyState.querySelector(
-          "p"
-        ).textContent =
-          translate("noMatchDescription");
-
-        return;
+      if (!values.requestDetails) {
+        showMessage(t("requiredDetails"), "error");
+        return false;
       }
 
-      emptyState.classList.remove("show");
-
-      requestList.innerHTML =
-        filteredRequests
-          .map(createRequestCard)
-          .join("");
-    }
-
-    async function updateRequestStatus(
-  requestId,
-  newStatus
-) {
-  const request = serviceRequests.find(
-    (item) =>
-      item.requestId === requestId ||
-      item.requestNo === requestId ||
-      item.id === requestId
-  );
-
-  if (!request) {
-    console.error(
-      "Service request not found:",
-      requestId
-    );
-    return;
-  }
-
-  try {
-    const client =
-      window.echoCitySupabase;
-
-    if (!client) {
-      throw new Error(
-        "Supabase connection is not available."
-      );
-    }
-
-    const updatedAt =
-      new Date().toISOString();
-
-    const { data, error } =
-      await client
-        .from("service_requests")
-        .update({
-          status: newStatus,
-          updated_at: updatedAt
-        })
-        .eq(
-          "request_no",
-          requestId
-        )
-        .select()
-        .single();
-
-    if (error) {
-      throw error;
-    }
-
-    request.status = data.status;
-    request.updatedAt = data.updated_at;
-
-    renderRequests();
-
-    console.log(
-      "Service request status updated:",
-      data
-    );
-  } catch (error) {
-    console.error(
-      "Failed to update service request status:",
-      error
-    );
-
-    window.alert(
-      currentLanguage === "zh"
-        ? "状态更新失败，请检查网络后重试。"
-        : "Status update failed. Please try again."
-    );
-
-    await loadRequests();
-  }
-}
-
-
-    function setAsLatestRequest(
-      requestId
-    ) {
-      const request =
-        serviceRequests.find(
-          (item) =>
-            item.id === requestId
-        );
-
-      if (!request) {
-        return;
-      }
-request.status = "quote_pending";
-request.quoteStatus = "pending";
-request.updatedAt = new Date().toISOString();
-
-const requestIndex =
-  serviceRequests.findIndex(
-    (item) => item.id === request.id
-  );
-
-if (requestIndex >= 0) {
-  serviceRequests[requestIndex] = request;
-}
-
-localStorage.setItem(
-  "echocity-service-requests",
-  JSON.stringify(serviceRequests)
-);
-      localStorage.setItem(
-        "echocity-last-request",
-        JSON.stringify(request)
-      );
-
-      window.location.href =
-  "admin-service-quote.html";
-    }
-
-    function contactCustomer(
-      phoneNumber
-    ) {
-      if (
-        !phoneNumber ||
-        phoneNumber ===
-          translate("notProvided")
-      ) {
-        return;
+      if (!values.serviceAddress) {
+        showMessage(t("requiredAddress"), "error");
+        return false;
       }
 
-      const cleanNumber =
-        String(phoneNumber)
-          .replace(
-            /[^0-9+]/g,
-            ""
-          );
-
-      if (!cleanNumber) {
-        return;
+      if (!values.customerPhone && !values.customerEmail) {
+        showMessage(t("requiredContact"), "error");
+        return false;
       }
-
-      window.location.href =
-        `tel:${cleanNumber}`;
-    }
-
-    function deleteRequest(
-      requestId
-    ) {
-      const confirmed =
-        window.confirm(
-          translate("confirmDelete")
-        );
-
-      if (!confirmed) {
-        return;
-      }
-
-      serviceRequests =
-        serviceRequests.filter(
-          (item) =>
-            item.id !== requestId
-        );
-
-      saveRequests();
-
-      const latestRequest =
-        JSON.parse(
-          localStorage.getItem(
-            "echocity-last-request"
-          ) || "null"
-        );
 
       if (
-        latestRequest &&
-        latestRequest.id === requestId
+        values.customerEmail &&
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.customerEmail)
       ) {
-        localStorage.removeItem(
-          "echocity-last-request"
-        );
+        showMessage(t("invalidEmail"), "error");
+        return false;
       }
 
-      renderRequests();
+      if (!values.agreement) {
+        showMessage(t("requiredAgreement"), "error");
+        return false;
+      }
 
-      window.alert(
-        translate("deleteSuccess")
-      );
+      return true;
     }
 
-    document.addEventListener(
-      "DOMContentLoaded",
-      () => {
-        loadRequests();
+    function resetForm() {
+      document
+        .querySelectorAll('input[name="serviceType"]')
+        .forEach((input) => input.checked = false);
+
+      [
+        "requestDetails",
+        "serviceAddress",
+        "preferredTime",
+        "country",
+        "estimatedDuration",
+        "customerPhone",
+        "customerEmail"
+      ].forEach((id) => {
+        document.getElementById(id).value = "";
+      });
+
+      document.getElementById("agreementCheckbox").checked = false;
+      document.getElementById("requestResult").classList.remove("show");
+      clearMessage();
+    }
+
+    async function submitRequest() {
+      const values = readForm();
+
+      if (!validateForm(values)) {
+        return;
+      }
+
+      const client = window.echoCitySupabase;
+
+      if (!client || typeof client.from !== "function") {
+        showMessage(t("noClient"), "error");
+        return;
+      }
+
+      const requestNumber = generateRequestNumber();
+      const now = new Date().toISOString();
+      const submitButton = document.getElementById("submitButton");
+
+      submitButton.disabled = true;
+      submitButton.textContent = t("submitting");
+      clearMessage();
+
+      try {
+        const requestData = {
+          request_no: requestNumber,
+          service_type: values.serviceType,
+          request_details: values.requestDetails,
+          service_address: values.serviceAddress,
+          preferred_time: values.preferredTime
+            ? new Date(values.preferredTime).toISOString()
+            : null,
+          country: values.country || null,
+          estimated_duration: values.estimatedDuration || null,
+          customer_phone: values.customerPhone || null,
+          customer_email: values.customerEmail || null,
+          contact_preference:
+            values.contactPreference ||
+            (values.customerPhone ? "phone" : "email"),
+          status: "submitted",
+          created_at: now,
+          updated_at: now
+        };
+
+        const { data, error } = await client
+          .from("service_requests")
+          .insert(requestData)
+          .select("*")
+          .maybeSingle();
+
+        if (error) {
+          throw error;
+        }
+
+        const saved = data || requestData;
+
+        document.getElementById("requestNumber").textContent =
+          saved.request_no;
+
+        document.getElementById("requestResult")
+          .classList.add("show");
+
+        showMessage(t("success"), "success");
+
+        localStorage.setItem(
+          "echocity-last-request",
+          JSON.stringify(saved)
+        );
+      } catch (error) {
+        console.error("Service request submission failed:", error);
+        showMessage(error?.message || t("failed"), "error");
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = t("submitButton");
+      }
+    }
+
+    document
+      .getElementById("languageButton")
+      .addEventListener("click", () => {
+        currentLanguage =
+          currentLanguage === "zh" ? "en" : "zh";
+
+        localStorage.setItem(
+          "echocity-language",
+          currentLanguage
+        );
+
         applyLanguage();
-        renderRequests();
-      }
-    );
-  </script>
+      });
 
+    document
+      .getElementById("clearButton")
+      .addEventListener("click", () => {
+        if (window.confirm(t("clearConfirm"))) {
+          resetForm();
+        }
+      });
+
+    document
+      .getElementById("submitButton")
+      .addEventListener("click", submitRequest);
+
+    applyLanguage();
+  </script>
 </body>
 </html>
