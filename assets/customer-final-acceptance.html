@@ -1551,6 +1551,7 @@
         .in(
           "status",
           [
+            "awaiting_final_acceptance",
             "completed",
             "conditionally_completed",
             "final_rework",
@@ -1787,7 +1788,7 @@
                 "acceptanceItems"
               ),
               currentRequest
-                ?.customer_acceptance_items,
+                ?.customer_acceptance_focus,
               true
             )}
 
