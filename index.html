@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -75,11 +75,11 @@
     }
 
     .page {
-      width: min(100% - 24px, 980px);
+      width: calc(100% - 24px);
       min-height: 100vh;
       min-height: 100dvh;
 
-      margin: 0 auto;
+      margin: 0 12px;
       padding:
         max(20px, env(safe-area-inset-top))
         0
@@ -213,6 +213,8 @@
     }
 
     .main-panel {
+      width: min(100%, 390px);
+      margin-left: 0;
       padding: 18px;
 
       border: 1px solid var(--border);
@@ -222,6 +224,12 @@
       box-shadow: var(--shadow);
 
       backdrop-filter: blur(18px);
+    }
+
+    @media (max-width: 1220px) {
+      .main-panel {
+        margin-left: 0;
+      }
     }
 
     .panel-title {
@@ -239,15 +247,14 @@
 
     .entry-grid {
       display: grid;
-      grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+      grid-template-columns: 1fr;
 
       gap: 12px;
       margin-top: 16px;
     }
 
     .entry-card {
-      min-height: 138px;
+      min-height: 108px;
       padding: 17px;
 
       display: flex;
@@ -322,7 +329,7 @@
     .assisted-grid {
       display: grid;
       grid-template-columns:
-        repeat(4, minmax(0, 1fr));
+        repeat(2, minmax(0, 1fr));
 
       gap: 9px;
       margin-top: 13px;
@@ -460,31 +467,6 @@
 
     <section class="main-content">
 
-      <div class="hero">
-
-        <div
-          id="eyebrow"
-          class="eyebrow"
-        >
-          可信社区服务
-        </div>
-
-        <h1
-          id="heroTitle"
-          class="hero-title"
-        >
-          今天需要什么帮助？
-        </h1>
-
-        <p
-          id="heroDescription"
-          class="hero-description"
-        >
-          我们不只是介绍服务人员，而是陪你完成需求、报价、开工、过程记录和最终验收。
-        </p>
-
-      </div>
-
       <section class="main-panel">
 
         <h2
@@ -493,13 +475,6 @@
         >
           请选择你的入口
         </h2>
-
-        <p
-          id="panelDescription"
-          class="panel-description"
-        >
-          无需先注册。先告诉我们你需要什么，或者进入自己的工作区域。
-        </p>
 
         <div class="entry-grid">
 
@@ -583,13 +558,6 @@
             使用手机有困难？
           </h3>
 
-          <p
-            id="assistedDescription"
-            class="assisted-description"
-          >
-            老人、行动不便者或不熟悉网络操作的人，也可以获得帮助。
-          </p>
-
           <div class="assisted-grid">
 
             <a
@@ -628,30 +596,6 @@
 
         </section>
 
-        <div class="trust-row">
-
-          <div id="trustOne" class="trust-item">
-            确认报价后才派工
-          </div>
-
-          <div id="trustTwo" class="trust-item">
-            客户授权后才开工
-          </div>
-
-          <div id="trustThree" class="trust-item">
-            每一步都有记录
-          </div>
-
-          <div id="trustFour" class="trust-item">
-            不满意可以暂停
-          </div>
-
-          <div id="trustFive" class="trust-item">
-            最终由客户验收
-          </div>
-
-        </div>
-
       </section>
 
       <footer
@@ -668,20 +612,8 @@
   <script>
     const translations = {
       zh: {
-        eyebrow:
-          "可信社区服务",
-
-        heroTitle:
-          "今天需要什么帮助？",
-
-        heroDescription:
-          "我们不只是介绍服务人员，而是陪你完成需求、报价、开工、过程记录和最终验收。",
-
         panelTitle:
           "请选择你的入口",
-
-        panelDescription:
-          "无需先注册。先告诉我们你需要什么，或者进入自己的工作区域。",
 
         customerTitle:
           "我需要服务",
@@ -704,9 +636,6 @@
         assistedTitle:
           "使用手机有困难？",
 
-        assistedDescription:
-          "老人、行动不便者或不熟悉网络操作的人，也可以获得帮助。",
-
         voiceButton:
           "说出我的需要",
 
@@ -719,40 +648,13 @@
         inPersonButton:
           "申请上门协助",
 
-        trustOne:
-          "确认报价后才派工",
-
-        trustTwo:
-          "客户授权后才开工",
-
-        trustThree:
-          "每一步都有记录",
-
-        trustFour:
-          "不满意可以暂停",
-
-        trustFive:
-          "最终由客户验收",
-
         footerNote:
           "EchoCity · 使命驱动型社区服务平台"
       },
 
       en: {
-        eyebrow:
-          "Trusted Community Service",
-
-        heroTitle:
-          "How can we help you today?",
-
-        heroDescription:
-          "We do more than introduce service providers. We help manage the request, proposal, authorization, work records, and final acceptance.",
-
         panelTitle:
           "Choose your service area",
-
-        panelDescription:
-          "Registration is not required to begin. Tell us what you need or enter your work area.",
 
         customerTitle:
           "I Need Help",
@@ -775,9 +677,6 @@
         assistedTitle:
           "Need help using this app?",
 
-        assistedDescription:
-          "Older adults, people with mobility limitations, and those unfamiliar with online services can receive assistance.",
-
         voiceButton:
           "Describe My Need by Voice",
 
@@ -790,21 +689,6 @@
         inPersonButton:
           "Request In-Person Help",
 
-        trustOne:
-          "Assignment after price approval",
-
-        trustTwo:
-          "Work starts after authorization",
-
-        trustThree:
-          "Every step is documented",
-
-        trustFour:
-          "Customers may pause the work",
-
-        trustFive:
-          "Customers make final acceptance",
-
         footerNote:
           "EchoCity · Mission-Driven Community Service Platform"
       }
@@ -816,11 +700,7 @@
       ) || "zh";
 
     const textIds = [
-      "eyebrow",
-      "heroTitle",
-      "heroDescription",
       "panelTitle",
-      "panelDescription",
       "customerTitle",
       "customerDescription",
       "workerTitle",
@@ -828,16 +708,10 @@
       "adminTitle",
       "adminDescription",
       "assistedTitle",
-      "assistedDescription",
       "voiceButton",
       "callbackButton",
       "representativeButton",
       "inPersonButton",
-      "trustOne",
-      "trustTwo",
-      "trustThree",
-      "trustFour",
-      "trustFive",
       "footerNote"
     ];
 

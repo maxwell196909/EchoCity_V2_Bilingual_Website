@@ -222,6 +222,16 @@
       line-height: 1.65;
     }
 
+    .file-input {
+      width: 100%;
+      margin-bottom: 9px;
+      padding: 10px;
+      border: 1px dashed var(--border);
+      border-radius: 11px;
+      background: #ffffff;
+      color: var(--text);
+    }
+
     .input:focus,
     .textarea:focus,
     .select:focus {
@@ -653,15 +663,15 @@
         issuesFound: "发现问题",
         photoRecord: "照片记录",
         videoRecord: "视频记录",
+        choosePhotos: "选择照片（可多选）",
+        chooseVideos: "选择视频（可多选）",
+        optionalMediaUrl: "可选：也可以粘贴已有文件链接",
+        uploadingMedia: "正在上传图片和视频……",
+        mediaTooLarge: "单个文件不能超过 50MB。",
         customerSiteComment: "客户现场意见",
         finalCompletionTitle: "最终完成说明",
         completionSummary: "完成情况说明",
-        completionEvidence: "工作完成照片",
-        choosePhotos: "选择照片或拍照（1—6张，每张不超过8MB）",
-        uploadingPhotos: "正在上传照片，请稍候……",
-        photoCountError: "请选择1—6张工作完成照片。",
-        photoSizeError: "每张照片不得超过8MB。",
-        photoTypeError: "只能上传图片文件。",
+        completionEvidence: "成果证据",
         outstandingIssues: "遗留问题",
         customerAcceptanceItems: "请客户重点验收内容",
         requiredWorkFields: "请填写工作日期和工作进展。",
@@ -729,15 +739,15 @@
         issuesFound: "Issues Found",
         photoRecord: "Photo Record",
         videoRecord: "Video Record",
+        choosePhotos: "Choose Photos (multiple allowed)",
+        chooseVideos: "Choose Videos (multiple allowed)",
+        optionalMediaUrl: "Optional: paste existing file links",
+        uploadingMedia: "Uploading photos and videos...",
+        mediaTooLarge: "Each file must be 50MB or smaller.",
         customerSiteComment: "Customer Site Comment",
         finalCompletionTitle: "Final Completion",
         completionSummary: "Completion Summary",
-        completionEvidence: "Work Completion Photos",
-        choosePhotos: "Choose photos or take pictures (1–6, max 8 MB each)",
-        uploadingPhotos: "Uploading photos, please wait...",
-        photoCountError: "Choose 1–6 work-completion photos.",
-        photoSizeError: "Each photo must be no larger than 8 MB.",
-        photoTypeError: "Only image files can be uploaded.",
+        completionEvidence: "Completion Evidence",
         outstandingIssues: "Outstanding Issues",
         customerAcceptanceItems: "Items Requiring Customer Acceptance",
         requiredWorkFields: "Enter the work date and work progress.",
@@ -1670,6 +1680,21 @@
               )}
             </label>
 
+            <input
+              id="photoFiles-${escapeHTML(
+                requestNo
+              )}"
+              class="file-input"
+              type="file"
+              accept="image/*"
+              multiple
+              aria-label="${escapeHTML(
+                translate(
+                  "choosePhotos"
+                )
+              )}"
+            >
+
             <textarea
               id="workProgress-${escapeHTML(
                 requestNo
@@ -1732,7 +1757,11 @@
                 requestNo
               )}"
               class="textarea"
-              placeholder="Photo URL / 照片链接"
+              placeholder="${escapeHTML(
+                translate(
+                  "optionalMediaUrl"
+                )
+              )}"
             ></textarea>
 
           </div>
@@ -1747,12 +1776,31 @@
               )}
             </label>
 
+            <input
+              id="videoFiles-${escapeHTML(
+                requestNo
+              )}"
+              class="file-input"
+              type="file"
+              accept="video/*"
+              multiple
+              aria-label="${escapeHTML(
+                translate(
+                  "chooseVideos"
+                )
+              )}"
+            >
+
             <textarea
               id="videoRecord-${escapeHTML(
                 requestNo
               )}"
               class="textarea"
-              placeholder="Video URL / 视频链接"
+              placeholder="${escapeHTML(
+                translate(
+                  "optionalMediaUrl"
+                )
+              )}"
             ></textarea>
 
           </div>
@@ -1877,6 +1925,77 @@
       );
     }
 
+    async function uploadEvidenceFiles(
+      client,
+      requestNo,
+      workerPhone,
+      files,
+      mediaType
+    ) {
+      const uploadedUrls = [];
+
+      for (const file of files) {
+        if (file.size > 50 * 1024 * 1024) {
+          throw new Error(
+            translate(
+              "mediaTooLarge"
+            )
+          );
+        }
+
+        const safeName =
+          file.name.replace(
+            /[^a-zA-Z0-9._-]/g,
+            "_"
+          );
+
+        const objectPath = [
+          requestNo,
+          workerPhone,
+          mediaType,
+          `${Date.now()}-${crypto.randomUUID()}-${safeName}`
+        ].join("/");
+
+        const {
+          error: uploadError
+        } = await client.storage
+          .from(
+            "work-evidence"
+          )
+          .upload(
+            objectPath,
+            file,
+            {
+              cacheControl: "3600",
+              contentType:
+                file.type ||
+                undefined,
+              upsert: false
+            }
+          );
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        const {
+          data: publicData
+        } = client.storage
+          .from(
+            "work-evidence"
+          )
+          .getPublicUrl(
+            objectPath
+          );
+
+        uploadedUrls.push(
+          publicData.publicUrl
+        );
+      }
+
+      return uploadedUrls;
+    }
+
     async function saveWorkRecord(
       requestNo
     ) {
@@ -1927,15 +2046,29 @@
           `issuesFound-${requestNo}`
         ).value.trim();
 
-      const photoRecord =
+      let photoRecord =
         document.getElementById(
           `photoRecord-${requestNo}`
         ).value.trim();
 
-      const videoRecord =
+      let videoRecord =
         document.getElementById(
           `videoRecord-${requestNo}`
         ).value.trim();
+
+      const photoFiles =
+        Array.from(
+          document.getElementById(
+            `photoFiles-${requestNo}`
+          ).files || []
+        );
+
+      const videoFiles =
+        Array.from(
+          document.getElementById(
+            `videoFiles-${requestNo}`
+          ).files || []
+        );
 
       const customerComment =
         document.getElementById(
@@ -1979,6 +2112,46 @@
               "workerPhoneInput"
             ).value
           );
+
+        if (
+          photoFiles.length ||
+          videoFiles.length
+        ) {
+          showMessage(
+            translate(
+              "uploadingMedia"
+            ),
+            "info"
+          );
+        }
+
+        const uploadedPhotos =
+          await uploadEvidenceFiles(
+            client,
+            task.request_no,
+            workerPhone,
+            photoFiles,
+            "photos"
+          );
+
+        const uploadedVideos =
+          await uploadEvidenceFiles(
+            client,
+            task.request_no,
+            workerPhone,
+            videoFiles,
+            "videos"
+          );
+
+        photoRecord = [
+          photoRecord,
+          ...uploadedPhotos
+        ].filter(Boolean).join("\n");
+
+        videoRecord = [
+          videoRecord,
+          ...uploadedVideos
+        ].filter(Boolean).join("\n");
 
         const recordData = {
           request_no:
@@ -2129,23 +2302,13 @@
               )}
             </label>
 
-            <input
-              id="completionPhotos-${escapeHTML(
+            <textarea
+              id="completionEvidence-${escapeHTML(
                 requestNo
               )}"
-              class="input"
-              type="file"
-              accept="image/*"
-              multiple
-            />
-
-            <div class="card-description">
-              ${escapeHTML(
-                translate(
-                  "choosePhotos"
-                )
-              )}
-            </div>
+              class="textarea"
+              placeholder="Photo URL / Video URL / 照片或视频链接"
+            ></textarea>
 
           </div>
 
@@ -2206,9 +2369,6 @@
           </button>
 
           <button
-            id="submitCompletion-${escapeHTML(
-              requestNo
-            )}"
             class="success-button"
             type="button"
             onclick="submitFinalCompletion('${escapeHTML(
@@ -2247,15 +2407,10 @@
           `completionSummary-${requestNo}`
         ).value.trim();
 
-      const photoInput =
+      const completionEvidence =
         document.getElementById(
-          `completionPhotos-${requestNo}`
-        );
-
-      const photos =
-        Array.from(
-          photoInput?.files || []
-        );
+          `completionEvidence-${requestNo}`
+        ).value.trim();
 
       const outstandingIssues =
         document.getElementById(
@@ -2281,43 +2436,6 @@
         return;
       }
 
-      if (
-        photos.length < 1 ||
-        photos.length > 6
-      ) {
-        showMessage(
-          translate("photoCountError"),
-          "error"
-        );
-        return;
-      }
-
-      if (
-        photos.some(
-          (file) =>
-            !file.type.startsWith("image/")
-        )
-      ) {
-        showMessage(
-          translate("photoTypeError"),
-          "error"
-        );
-        return;
-      }
-
-      if (
-        photos.some(
-          (file) =>
-            file.size > 8 * 1024 * 1024
-        )
-      ) {
-        showMessage(
-          translate("photoSizeError"),
-          "error"
-        );
-        return;
-      }
-
       const confirmed =
         window.confirm(
           currentLanguage ===
@@ -2338,67 +2456,6 @@
           new Date()
             .toISOString();
 
-        const submitButton =
-          document.getElementById(
-            `submitCompletion-${requestNo}`
-          );
-
-        if (submitButton) {
-          submitButton.disabled = true;
-        }
-
-        showMessage(
-          translate("uploadingPhotos"),
-          "info"
-        );
-
-        const photoUrls = [];
-
-        for (const [index, file] of photos.entries()) {
-          const extension =
-            (file.name.split(".").pop() ||
-              file.type.split("/").pop() ||
-              "jpg")
-              .toLowerCase()
-              .replace(/[^a-z0-9]/g, "") || "jpg";
-
-          const randomId =
-            crypto.randomUUID
-              ? crypto.randomUUID()
-              : `${Date.now()}-${index}-${Math.random()
-                  .toString(36)
-                  .slice(2)}`;
-
-          const safeRequestNo =
-            String(requestNo).replace(
-              /[^a-zA-Z0-9_-]/g,
-              "_"
-            );
-
-          const filePath =
-            `${safeRequestNo}/${Date.now()}-${randomId}.${extension}`;
-
-          const { error: uploadError } =
-            await client.storage
-              .from("work-completion-images")
-              .upload(filePath, file, {
-                cacheControl: "3600",
-                upsert: false,
-                contentType: file.type
-              });
-
-          if (uploadError) {
-            throw uploadError;
-          }
-
-          const { data: publicUrlData } =
-            client.storage
-              .from("work-completion-images")
-              .getPublicUrl(filePath);
-
-          photoUrls.push(publicUrlData.publicUrl);
-        }
-
         const updateData = {
           status:
             "awaiting_final_acceptance",
@@ -2407,13 +2464,14 @@
             completionSummary,
 
           completion_evidence:
-            photoUrls.join("\n"),
+            completionEvidence ||
+            null,
 
           outstanding_issues:
             outstandingIssues ||
             null,
 
-          customer_acceptance_focus:
+          customer_acceptance_items:
             acceptanceItems,
 
           work_completed_at:
@@ -2490,15 +2548,6 @@
           ),
           "error"
         );
-      } finally {
-        const submitButton =
-          document.getElementById(
-            `submitCompletion-${requestNo}`
-          );
-
-        if (submitButton) {
-          submitButton.disabled = false;
-        }
       }
     }
 

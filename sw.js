@@ -1,8 +1,9 @@
-const CACHE_NAME = "echocity-v5";
+const CACHE_NAME = "echocity-v6-client";
 
 const APP_FILES = [
   "./",
   "./index.html",
+  "./app.html",
   "./manifest.json",
   "./images/echocity-home-bg.png",
   "./images/echocity-app-icon-192.png",

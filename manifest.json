@@ -3,7 +3,7 @@
   "short_name": "EchoCity",
   "description": "A digital city connecting people, services, work, community activities, and shared outcomes.",
   "lang": "zh-CN",
-  "start_url": "./index.html",
+  "start_url": "./app.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
