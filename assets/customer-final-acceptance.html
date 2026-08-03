@@ -2286,10 +2286,30 @@
           "success"
         );
 
-        submitButton.textContent =
-          translate(
-            "submitButton"
+        const customerPhone =
+          normalizePhone(
+            document.getElementById(
+              "customerPhoneInput"
+            ).value
           );
+
+        localStorage.setItem(
+          "echocity-customer-phone",
+          customerPhone
+        );
+
+        submitButton.textContent =
+          currentLanguage === "zh"
+            ? "验收成功，正在进入已完成订单……"
+            : "Accepted. Opening the completed order...";
+
+        window.setTimeout(
+          () => {
+            window.location.href =
+              "customer-my-requests.html";
+          },
+          1200
+        );
       } catch (error) {
         console.error(
           "Final acceptance save failed:",
