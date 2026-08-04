@@ -1,0 +1,9 @@
+{
+  "appId": "com.echocity.mobile",
+  "appName": "EchoCity",
+  "webDir": "www",
+  "backgroundColor": "#f4f7fb",
+  "android": {
+    "allowMixedContent": false
+  }
+}
