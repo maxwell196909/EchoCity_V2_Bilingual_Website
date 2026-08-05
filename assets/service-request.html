@@ -114,6 +114,10 @@
       border-radius: 20px;
     }
 
+    .topbar {
+      justify-content: flex-end;
+    }
+
     .hero {
       margin-bottom: 22px;
       padding: 4px 3px 0;
@@ -247,6 +251,38 @@
       color: var(--primary);
     }
 
+    .service-guidance {
+      display: none;
+      margin-top: 12px;
+      padding: 13px 14px;
+      color: var(--primary-dark);
+      font-size: 14px;
+      line-height: 1.6;
+      background: var(--primary-light);
+      border: 1px solid #cee6df;
+      border-radius: 12px;
+    }
+
+    .service-guidance.visible {
+      display: block;
+    }
+
+    .address-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    .navigation-button {
+      min-width: 96px;
+      padding: 0 14px;
+      color: #ffffff;
+      font-weight: 750;
+      background: var(--primary);
+      border: 0;
+      border-radius: 12px;
+    }
+
     .form-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -373,6 +409,14 @@
         grid-template-columns: 1fr;
       }
 
+      .address-row {
+        grid-template-columns: 1fr;
+      }
+
+      .navigation-button {
+        min-height: 46px;
+      }
+
       .submit-row {
         flex-direction: column;
       }
@@ -388,11 +432,6 @@
   <main class="page">
 
     <header class="topbar">
-      <a class="brand" href="../index.html">
-        <span class="brand-mark">E</span>
-        <span>EchoCity</span>
-      </a >
-
       <button
         class="language-button"
         id="languageButton"
@@ -404,18 +443,9 @@
     </header>
 
     <section class="hero">
-      <span class="hero-tag" data-i18n="tag">
-        本地人员与生活服务
-      </span>
-
       <h1 data-i18n="title">
         你好，我能帮你什么？
       </h1>
-
-      <p data-i18n="subtitle">
-        告诉数字人 Echo 你的需要，我们会组织合适的人员和资源，
-        确认服务范围、价格和时间后再开始。
-      </p >
     </section>
 
     <section class="request-card">
@@ -453,6 +483,13 @@
             <span data-i18n="support">生活帮助</span>
           </button>
         </div>
+
+        <div
+          class="service-guidance"
+          id="serviceGuidance"
+          role="status"
+          aria-live="polite"
+        ></div>
 
         <input
           id="serviceType"
@@ -594,29 +631,23 @@
             </option>
           </select>
         </div>
-<!-- ZIP Code -->
-<div class="form-group full-width">
-  <label
-    class="form-label"
-    for="zipCode"
-    data-i18n="zipCodeLabel"
-  >
-    ZIP Code
-    <span class="required">*</span>
-  </label>
+        <div class="form-group full-width">
+          <label
+            class="form-label"
+            for="serviceRequirements"
+            data-i18n="requirementsLabel"
+          >
+            服务要求：服务范围、内容、质量标准等特殊要求
+          </label>
 
-  <input
-    class="form-input"
-    id="zipCode"
-    name="zipCode"
-    type="text"
-    inputmode="numeric"
-    maxlength="10"
-    data-i18n-placeholder="zipCodePlaceholder"
-    placeholder="Enter ZIP Code"
-    required
-  />
-</div>
+          <textarea
+            class="form-textarea"
+            id="serviceRequirements"
+            name="serviceRequirements"
+            data-i18n-placeholder="requirementsPlaceholder"
+            placeholder="请输入服务范围、具体内容、质量标准及其他特殊要求"
+          ></textarea>
+        </div>
         <div class="form-group full-width">
           <label
             class="form-label"
@@ -627,15 +658,25 @@
             <span class="required">*</span>
           </label>
 
-          <input
-            class="form-input"
-            id="serviceAddress"
-            name="serviceAddress"
-            type="text"
-            data-i18n-placeholder="addressPlaceholder"
-            placeholder="请输入街道、城市和邮政编码"
-            required
-          />
+          <div class="address-row">
+            <input
+              class="form-input"
+              id="serviceAddress"
+              name="serviceAddress"
+              type="text"
+              data-i18n-placeholder="addressPlaceholder"
+              placeholder="请输入街道、城市和邮政编码"
+              required
+            />
+            <button
+              class="navigation-button"
+              type="button"
+              onclick="navigateToAddress()"
+              data-i18n="navigationButton"
+            >
+              导航地址
+            </button>
+          </div>
         </div>
 
         <div class="form-group">
@@ -705,7 +746,7 @@
             for="requestPhoto"
             data-i18n="photoLabel"
           >
-            上传现场照片
+            现场服务需求图片
           </label>
 
           <label class="photo-upload" for="requestPhoto">
@@ -778,6 +819,12 @@
         workers: "需要人手",
         repair: "维修或清洁",
         support: "生活帮助",
+        serviceGuidance_workers:
+          "人手服务：请填写人数、工作内容、工具、楼梯、重物及安全要求。",
+        serviceGuidance_repair:
+          "维修或清洁：请说明区域、故障或清洁内容、材料、质量标准及完成要求。",
+        serviceGuidance_support:
+          "生活帮助：请说明服务对象、具体事项、时间、陪同方式及其他特殊要求。",
 
         requestLabel: "请告诉我具体需要什么",
         requestPlaceholder:
@@ -789,10 +836,12 @@
         timeLabel: "开始时间",
         workerCountLabel: "需要人数",
         hoursLabel: "预计时长",
-        zipCodeLabel: "邮政编码",
-zipCodePlaceholder: "请输入 ZIP Code",
+        requirementsLabel: "服务要求：服务范围、内容、质量标准等特殊要求",
+        requirementsPlaceholder: "请输入服务范围、具体内容、质量标准及其他特殊要求",
         addressLabel: "服务地址",
         addressPlaceholder: "请输入街道、城市和邮政编码",
+        navigationButton: "导航地址",
+        navigationAddressError: "请先填写服务地址。",
 
         nameLabel: "你的姓名",
         namePlaceholder: "请输入姓名",
@@ -813,7 +862,7 @@ zipCodePlaceholder: "请输入 ZIP Code",
         fullDay: "约8小时",
         unknownHours: "暂不确定",
 
-        photoLabel: "上传现场照片",
+        photoLabel: "现场服务需求图片",
         photoUpload: "点击选择照片，帮助我们更准确地了解需求",
         selectedPhoto: "已选择 {count} 张照片",
 
@@ -850,6 +899,12 @@ zipCodePlaceholder: "请输入 ZIP Code",
         workers: "Need Workers",
         repair: "Repair or Cleaning",
         support: "Daily Support",
+        serviceGuidance_workers:
+          "Workers: specify headcount, tasks, tools, stairs, heavy items, and safety requirements.",
+        serviceGuidance_repair:
+          "Repair or cleaning: specify the area, issue or cleaning tasks, materials, quality standards, and completion requirements.",
+        serviceGuidance_support:
+          "Daily support: specify who needs help, the tasks, timing, accompaniment, and any special requirements.",
 
         requestLabel: "Tell us what you need",
         requestPlaceholder:
@@ -861,10 +916,12 @@ zipCodePlaceholder: "请输入 ZIP Code",
         timeLabel: "Start Time",
         workerCountLabel: "Number of Workers",
         hoursLabel: "Estimated Duration",
-zipCodeLabel: "ZIP Code",
-zipCodePlaceholder: "Enter ZIP Code", 
+        requirementsLabel: "Service Requirements: scope, content, quality standards, and special requirements",
+        requirementsPlaceholder: "Describe the service scope, work content, quality standards, and any special requirements",
         addressLabel: "Service Address",
         addressPlaceholder: "Enter street, city, and ZIP code",
+        navigationButton: "Navigate",
+        navigationAddressError: "Please enter the service address first.",
 
         nameLabel: "Your Name",
         namePlaceholder: "Enter your name",
@@ -885,7 +942,7 @@ zipCodePlaceholder: "Enter ZIP Code",
         fullDay: "About 8 hours",
         unknownHours: "Not sure yet",
 
-        photoLabel: "Upload Site Photos",
+        photoLabel: "Service Request Photos",
         photoUpload:
           "Select photos to help us understand the request more accurately",
         selectedPhoto: "{count} photo(s) selected",
@@ -982,6 +1039,33 @@ zipCodePlaceholder: "Enter ZIP Code",
 
       document.getElementById("serviceType").value =
         button.dataset.service;
+
+      const guidance = document.getElementById("serviceGuidance");
+      const key = `serviceGuidance_${button.dataset.service}`;
+      guidance.textContent = translate(key);
+      guidance.classList.add("visible");
+    }
+
+    function navigateToAddress() {
+      const address = document
+        .getElementById("serviceAddress")
+        .value.trim();
+
+      if (!address) {
+        showStatus("error", translate("navigationAddressError"));
+        return;
+      }
+
+      const isAppleDevice = /iPad|iPhone|Macintosh/.test(
+        navigator.userAgent
+      );
+
+      const mapsUrl = isAppleDevice
+        ? "https://maps.apple.com/?daddr=" + encodeURIComponent(address)
+        : "https://www.google.com/maps/dir/?api=1&destination=" +
+          encodeURIComponent(address);
+
+      window.open(mapsUrl, "_blank", "noopener,noreferrer");
     }
 
     function showSelectedPhotos() {
@@ -1121,6 +1205,14 @@ zipCodePlaceholder: "Enter ZIP Code",
     }
 
     function createRequestData() {
+      const description = document
+        .getElementById("requestDescription")
+        .value.trim();
+
+      const serviceRequirements = document
+        .getElementById("serviceRequirements")
+        .value.trim();
+
       return {
         id:
           "REQ-" +
@@ -1129,10 +1221,11 @@ zipCodePlaceholder: "Enter ZIP Code",
         serviceType:
           document.getElementById("serviceType").value,
 
-        description:
-          document
-            .getElementById("requestDescription")
-            .value.trim(),
+        description: serviceRequirements
+          ? `${description}\n\n${translate("requirementsLabel")}: ${serviceRequirements}`
+          : description,
+
+        serviceRequirements,
 
         serviceDate:
           document.getElementById("serviceDate").value,
@@ -1299,6 +1392,9 @@ zipCodePlaceholder: "Enter ZIP Code",
 
       document.getElementById("serviceType").value =
         "";
+
+      document.getElementById("serviceGuidance")
+        .classList.remove("visible");
 
       document.getElementById("requestPhoto").value =
         "";
