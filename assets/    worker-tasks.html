@@ -1,0 +1,2622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>我的任务 | EchoCity</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/echocity-supabase.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+
+      --success: #15803d;
+      --success-soft: #ecfdf3;
+
+      --warning: #a16207;
+      --warning-soft: #fff7ed;
+
+      --danger: #b91c1c;
+      --danger-soft: #fef2f2;
+
+      --info: #1e40af;
+      --info-soft: #eff6ff;
+
+      --text: #172033;
+      --muted: #667085;
+
+      --border: #d8dee9;
+      --background: #f3f6fb;
+      --card: #ffffff;
+
+      --shadow:
+        0 14px 36px
+        rgba(
+          31,
+          41,
+          55,
+          0.08
+        );
+    }
+
+    body {
+      min-height: 100vh;
+
+      font-family:
+        Arial,
+        "Microsoft YaHei",
+        sans-serif;
+
+      color: var(--text);
+
+      background:
+        linear-gradient(
+          135deg,
+          #edf5ff,
+          var(--background)
+        );
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .page {
+      width:
+        min(
+          980px,
+          calc(100% - 24px)
+        );
+
+      margin: 0 auto;
+      padding: 22px 0 48px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .logo {
+      display: grid;
+      place-items: center;
+
+      width: 38px;
+      height: 38px;
+
+      border-radius: 12px;
+
+      background: var(--primary);
+      color: #ffffff;
+
+      font-weight: 900;
+    }
+
+    .back-button,
+    .language-button {
+      padding: 8px 14px;
+
+      border: 1px solid var(--border);
+      border-radius: 999px;
+
+      background: #ffffff;
+      color: var(--text);
+
+      font-weight: 700;
+    }
+
+    .hero {
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size:
+        clamp(
+          30px,
+          6vw,
+          44px
+        );
+
+      line-height: 1.2;
+    }
+
+    .hero p {
+      margin-top: 10px;
+
+      color: var(--muted);
+
+      line-height: 1.7;
+    }
+
+    .card {
+      margin-top: 16px;
+      padding: 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .card h2 {
+      font-size: 21px;
+      line-height: 1.4;
+    }
+
+    .card-description {
+      margin-top: 7px;
+
+      color: var(--muted);
+
+      line-height: 1.6;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns:
+        1fr auto;
+      gap: 10px;
+
+      margin-top: 16px;
+    }
+
+    .input,
+    .textarea,
+    .select {
+      width: 100%;
+
+      border: 1px solid var(--border);
+      border-radius: 11px;
+
+      background: #ffffff;
+      color: var(--text);
+
+      outline: none;
+    }
+
+    .input,
+    .select {
+      min-height: 46px;
+      padding: 0 12px;
+    }
+
+    .textarea {
+      min-height: 100px;
+      padding: 12px;
+
+      resize: vertical;
+      line-height: 1.65;
+    }
+
+    .file-input {
+      width: 100%;
+      margin-bottom: 9px;
+      padding: 10px;
+      border: 1px dashed var(--border);
+      border-radius: 11px;
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    .input:focus,
+    .textarea:focus,
+    .select:focus {
+      border-color: var(--primary);
+
+      box-shadow:
+        0 0 0 3px
+        rgba(
+          37,
+          99,
+          235,
+          0.12
+        );
+    }
+
+    .primary-button,
+    .secondary-button,
+    .success-button,
+    .warning-button,
+    .danger-button {
+      min-height: 44px;
+      padding: 0 16px;
+
+      border-radius: 11px;
+
+      font-weight: 800;
+    }
+
+    .primary-button {
+      border: 0;
+
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .primary-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .secondary-button {
+      border: 1px solid var(--border);
+
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    .success-button {
+      border: 0;
+
+      background: var(--success);
+      color: #ffffff;
+    }
+
+    .warning-button {
+      border: 0;
+
+      background: var(--warning);
+      color: #ffffff;
+    }
+
+    .danger-button {
+      border: 0;
+
+      background: var(--danger);
+      color: #ffffff;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+
+      margin-top: 14px;
+      padding: 12px 14px;
+
+      border-radius: 11px;
+
+      line-height: 1.6;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.info {
+      background: var(--info-soft);
+      color: var(--info);
+    }
+
+    .message.success {
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .message.warning {
+      background: var(--warning-soft);
+      color: var(--warning);
+    }
+
+    .message.error {
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .task-list {
+      display: grid;
+      gap: 16px;
+
+      margin-top: 16px;
+    }
+
+    .task-card {
+      padding: 18px;
+
+      border: 1px solid var(--border);
+      border-radius: 16px;
+
+      background: #ffffff;
+    }
+
+    .task-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .task-number {
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+
+      min-height: 30px;
+      padding: 4px 11px;
+
+      border-radius: 999px;
+
+      background: var(--info-soft);
+      color: var(--info);
+
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .task-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(
+          2,
+          minmax(0, 1fr)
+        );
+      gap: 10px;
+
+      margin-top: 14px;
+    }
+
+    .detail {
+      padding: 11px;
+
+      border-radius: 11px;
+
+      background: #f8fafc;
+    }
+
+    .detail.full {
+      grid-column: 1 / -1;
+    }
+
+    .detail-label {
+      color: var(--muted);
+
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .detail-value {
+      margin-top: 5px;
+
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .task-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+
+      margin-top: 16px;
+    }
+
+    .work-panel {
+      margin-top: 16px;
+      padding: 16px;
+
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+
+      background: #fafcff;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(
+          2,
+          minmax(0, 1fr)
+        );
+      gap: 13px;
+
+      margin-top: 14px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 7px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .panel-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+
+      margin-top: 15px;
+    }
+
+    @media (
+      max-width: 700px
+    ) {
+      .search-row,
+      .task-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail.full,
+      .form-group.full {
+        grid-column: 1;
+      }
+
+      .task-header {
+        flex-direction: column;
+      }
+
+      .task-actions,
+      .panel-actions {
+        flex-direction: column;
+      }
+
+      .task-actions button,
+      .panel-actions button,
+      .search-row button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <header class="topbar">
+
+      <button id="backButton" class="back-button" type="button">← 返回</button>
+
+      <div class="brand">
+        <div class="logo">E</div>
+        <span>EchoCity</span>
+      </div>
+
+      <button
+        id="languageButton"
+        class="language-button"
+        type="button"
+      >
+        EN
+      </button>
+
+    </header>
+
+    <section class="hero">
+
+      <h1 id="pageTitle">
+        我的任务
+      </h1>
+
+      <p id="pageDescription">
+        查询并处理已经分配给你的服务任务。
+      </p>
+
+    </section>
+
+    <section class="card">
+
+      <h2 id="searchTitle">
+        查询工人任务
+      </h2>
+
+      <p
+        id="searchDescription"
+        class="card-description"
+      >
+        请输入管理员派工时填写的工人手机号。
+      </p>
+
+      <div class="search-row">
+
+        <input
+          id="workerPhoneInput"
+          class="input"
+          type="tel"
+          placeholder="请输入工人手机号"
+        />
+
+        <button
+          id="searchButton"
+          class="primary-button"
+          type="button"
+        >
+          查询任务
+        </button>
+
+      </div>
+
+      <div
+        id="message"
+        class="message"
+        role="status"
+      ></div>
+
+    </section>
+
+    <section
+      id="taskSection"
+      class="card hidden"
+    >
+
+      <h2 id="taskListTitle">
+        我的服务任务
+      </h2>
+
+      <p
+        id="taskListDescription"
+        class="card-description"
+      >
+        按照任务状态逐步完成接单、到达、开工和完工。
+      </p>
+
+      <div
+        id="taskList"
+        class="task-list"
+      ></div>
+
+    </section>
+
+  </main>  <script>
+    const translations = {
+      zh: {
+        backButton: "← 返回",
+        pageTitle: "我的任务",
+        pageDescription: "查询并处理已经分配给你的服务任务。",
+        searchTitle: "查询工人任务",
+        searchDescription: "请输入管理员派工时填写的工人手机号。",
+        workerPhonePlaceholder: "请输入工人手机号",
+        searchButton: "查询任务",
+        searching: "正在查询任务……",
+        noTasks: "没有找到分配给该手机号的任务。",
+        taskListTitle: "我的服务任务",
+        taskListDescription: "按照任务状态逐步完成接单、到达、开工和完工。",
+        loadSuccess: "任务加载成功。",
+        loadFailed: "任务查询失败，请检查网络或数据库。",
+        supabaseUnavailable: "Supabase 连接不可用。",
+        requestNumber: "需求编号",
+        status: "任务状态",
+        customerPhone: "客户电话",
+        serviceAddress: "服务地址",
+        meetingDate: "集合日期",
+        meetingTime: "集合时间",
+        siteManager: "现场负责人",
+        siteManagerPhone: "负责人电话",
+        assignmentNotes: "派工说明",
+        estimatedDuration: "预计工期",
+        workerName: "工人姓名",
+        workerPhone: "工人电话",
+        workerRole: "工作岗位",
+        workerPay: "工人报酬",
+        notProvided: "未填写",
+        statusAssigned: "已派工",
+        statusAccepted: "已接单",
+        statusArrived: "已到达",
+        statusWorking: "工作中",
+        statusCompleted: "已提交完工",
+        statusConditional: "有条件完成",
+        statusRework: "需要整改",
+        statusDisputed: "存在争议",
+        acceptTask: "接收任务",
+        confirmArrival: "确认到达",
+        startWork: "开始工作",
+        saveWork: "保存工作记录",
+        submitCompletion: "提交最终完成",
+        taskAccepted: "任务已成功接收。",
+        arrivalConfirmed: "已确认到达现场。",
+        workStarted: "工作已经开始。",
+        statusUpdateFailed: "任务状态更新失败。",
+        workPanelTitle: "每日工作记录",
+        workDate: "工作日期",
+        startTime: "开始时间",
+        endTime: "结束时间",
+        workHours: "工作小时",
+        workProgress: "工作进展",
+        materialsUsed: "使用材料",
+        issuesFound: "发现问题",
+        photoRecord: "照片记录",
+        videoRecord: "视频记录",
+        choosePhotos: "选择照片（可多选）",
+        chooseVideos: "选择视频（可多选）",
+        optionalMediaUrl: "可选：也可以粘贴已有文件链接",
+        uploadingMedia: "正在上传图片和视频……",
+        mediaTooLarge: "单个文件不能超过 50MB。",
+        customerSiteComment: "客户现场意见",
+        finalCompletionTitle: "最终完成说明",
+        completionSummary: "完成情况说明",
+        completionEvidence: "成果证据",
+        outstandingIssues: "遗留问题",
+        customerAcceptanceItems: "请客户重点验收内容",
+        requiredWorkFields: "请填写工作日期和工作进展。",
+        requiredCompletionFields: "请填写完成情况说明和验收重点。",
+        recordSaved: "工作记录已保存。",
+        recordSaveFailed: "工作记录保存失败。",
+        completionSubmitted: "最终完成已提交，等待客户最终验收。",
+        completionFailed: "最终完成提交失败。",
+        closePanel: "关闭"
+      },
+
+      en: {
+        backButton: "← Back",
+        pageTitle: "My Tasks",
+        pageDescription: "Find and process service tasks assigned to you.",
+        searchTitle: "Find Worker Tasks",
+        searchDescription: "Enter the worker phone number used by the administrator.",
+        workerPhonePlaceholder: "Enter worker phone number",
+        searchButton: "Find Tasks",
+        searching: "Searching for tasks...",
+        noTasks: "No tasks were found for this phone number.",
+        taskListTitle: "My Service Tasks",
+        taskListDescription: "Complete acceptance, arrival, start, work records, and completion in order.",
+        loadSuccess: "Tasks loaded successfully.",
+        loadFailed: "Unable to load tasks. Check the network or database.",
+        supabaseUnavailable: "Supabase connection is unavailable.",
+        requestNumber: "Request Number",
+        status: "Task Status",
+        customerPhone: "Customer Phone",
+        serviceAddress: "Service Address",
+        meetingDate: "Meeting Date",
+        meetingTime: "Meeting Time",
+        siteManager: "Site Manager",
+        siteManagerPhone: "Manager Phone",
+        assignmentNotes: "Assignment Notes",
+        estimatedDuration: "Estimated Duration",
+        workerName: "Worker Name",
+        workerPhone: "Worker Phone",
+        workerRole: "Worker Role",
+        workerPay: "Worker Pay",
+        notProvided: "Not provided",
+        statusAssigned: "Assigned",
+        statusAccepted: "Accepted",
+        statusArrived: "Arrived",
+        statusWorking: "Work in Progress",
+        statusCompleted: "Completion Submitted",
+        statusConditional: "Conditionally Completed",
+        statusRework: "Rework Required",
+        statusDisputed: "Disputed",
+        acceptTask: "Accept Task",
+        confirmArrival: "Confirm Arrival",
+        startWork: "Start Work",
+        saveWork: "Save Work Record",
+        submitCompletion: "Submit Final Completion",
+        taskAccepted: "The task has been accepted.",
+        arrivalConfirmed: "Arrival at the site has been confirmed.",
+        workStarted: "The work has started.",
+        statusUpdateFailed: "Unable to update the task status.",
+        workPanelTitle: "Daily Work Record",
+        workDate: "Work Date",
+        startTime: "Start Time",
+        endTime: "End Time",
+        workHours: "Work Hours",
+        workProgress: "Work Progress",
+        materialsUsed: "Materials Used",
+        issuesFound: "Issues Found",
+        photoRecord: "Photo Record",
+        videoRecord: "Video Record",
+        choosePhotos: "Choose Photos (multiple allowed)",
+        chooseVideos: "Choose Videos (multiple allowed)",
+        optionalMediaUrl: "Optional: paste existing file links",
+        uploadingMedia: "Uploading photos and videos...",
+        mediaTooLarge: "Each file must be 50MB or smaller.",
+        customerSiteComment: "Customer Site Comment",
+        finalCompletionTitle: "Final Completion",
+        completionSummary: "Completion Summary",
+        completionEvidence: "Completion Evidence",
+        outstandingIssues: "Outstanding Issues",
+        customerAcceptanceItems: "Items Requiring Customer Acceptance",
+        requiredWorkFields: "Enter the work date and work progress.",
+        requiredCompletionFields: "Enter the completion summary and acceptance items.",
+        recordSaved: "The work record was saved.",
+        recordSaveFailed: "Unable to save the work record.",
+        completionSubmitted: "Final completion was submitted for customer acceptance.",
+        completionFailed: "Unable to submit final completion.",
+        closePanel: "Close"
+      }
+    };
+
+    let currentLanguage =
+      localStorage.getItem(
+        "echocity-language"
+      ) || "zh";
+
+    let loadedTasks = [];
+
+    function translate(key) {
+      return (
+        translations[currentLanguage]?.[key] ||
+        translations.zh[key] ||
+        key
+      );
+    }
+
+    function setText(
+      elementId,
+      translationKey
+    ) {
+      const element =
+        document.getElementById(
+          elementId
+        );
+
+      if (element) {
+        element.textContent =
+          translate(
+            translationKey
+          );
+      }
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang =
+        currentLanguage === "zh"
+          ? "zh-CN"
+          : "en";
+
+      document.title =
+        `${translate("pageTitle")} | EchoCity`;
+
+      const textMap = {
+        backButton: "backButton",
+        pageTitle: "pageTitle",
+        pageDescription: "pageDescription",
+        searchTitle: "searchTitle",
+        searchDescription: "searchDescription",
+        searchButton: "searchButton",
+        taskListTitle: "taskListTitle",
+        taskListDescription: "taskListDescription"
+      };
+
+      Object.entries(
+        textMap
+      ).forEach(
+        ([
+          elementId,
+          translationKey
+        ]) => {
+          setText(
+            elementId,
+            translationKey
+          );
+        }
+      );
+
+      document.getElementById(
+        "workerPhoneInput"
+      ).placeholder =
+        translate(
+          "workerPhonePlaceholder"
+        );
+
+      document.getElementById(
+        "languageButton"
+      ).textContent =
+        currentLanguage === "zh"
+          ? "EN"
+          : "中文";
+
+      if (
+        loadedTasks.length > 0
+      ) {
+        renderTasks();
+      }
+    }
+
+    function normalizePhone(value) {
+      return String(
+        value || ""
+      )
+        .trim()
+        .replace(
+          /[^\d+]/g,
+          ""
+        );
+    }
+
+    function escapeHTML(value) {
+      return String(
+        value ?? ""
+      )
+        .replaceAll(
+          "&",
+          "&amp;"
+        )
+        .replaceAll(
+          "<",
+          "&lt;"
+        )
+        .replaceAll(
+          ">",
+          "&gt;"
+        )
+        .replaceAll(
+          '"',
+          "&quot;"
+        )
+        .replaceAll(
+          "'",
+          "&#039;"
+        );
+    }
+
+    function showMessage(
+      text,
+      type = "info"
+    ) {
+      const messageBox =
+        document.getElementById(
+          "message"
+        );
+
+      messageBox.textContent =
+        text;
+
+      messageBox.className =
+        `message show ${type}`;
+    }
+
+    function clearMessage() {
+      const messageBox =
+        document.getElementById(
+          "message"
+        );
+
+      messageBox.textContent =
+        "";
+
+      messageBox.className =
+        "message";
+    }
+
+    function getSupabaseClient() {
+      const client =
+        window.echoCitySupabase;
+
+      if (
+        !client ||
+        typeof client.from !==
+          "function"
+      ) {
+        throw new Error(
+          translate(
+            "supabaseUnavailable"
+          )
+        );
+      }
+
+      return client;
+    }
+
+    function getStatusText(status) {
+      const statusMap = {
+        assigned:
+          "statusAssigned",
+
+        accepted:
+          "statusAccepted",
+
+        arrived:
+          "statusArrived",
+
+        working:
+          "statusWorking",
+
+        in_progress:
+          "statusWorking",
+
+        completed:
+          "statusCompleted",
+
+        awaiting_final_acceptance:
+          "statusCompleted",
+
+        conditionally_completed:
+          "statusConditional",
+
+        final_rework:
+          "statusRework",
+
+        disputed:
+          "statusDisputed"
+      };
+
+      return translate(
+        statusMap[status] ||
+        "status"
+      );
+    }
+
+    function createDetail(
+      label,
+      value,
+      fullWidth = false
+    ) {
+      const displayValue =
+        value === null ||
+        value === undefined ||
+        value === ""
+          ? translate(
+              "notProvided"
+            )
+          : value;
+
+      return `
+        <div class="detail ${
+          fullWidth
+            ? "full"
+            : ""
+        }">
+          <div class="detail-label">
+            ${escapeHTML(label)}
+          </div>
+
+          <div class="detail-value">
+            ${escapeHTML(
+              displayValue
+            )}
+          </div>
+        </div>
+      `;
+    }
+
+    async function searchWorkerTasks() {
+      const phone =
+        normalizePhone(
+          document.getElementById(
+            "workerPhoneInput"
+          ).value
+        );
+
+      if (!phone) {
+        showMessage(
+          translate(
+            "workerPhonePlaceholder"
+          ),
+          "error"
+        );
+
+        return;
+      }
+
+      const searchButton =
+        document.getElementById(
+          "searchButton"
+        );
+
+      searchButton.disabled =
+        true;
+
+      showMessage(
+        translate(
+          "searching"
+        ),
+        "info"
+      );
+
+      try {
+        const client =
+          getSupabaseClient();
+
+        const {
+          data,
+          error
+        } = await client
+          .from(
+            "service_requests"
+          )
+          .select("*")
+          .eq(
+            "assigned_worker_phone",
+            phone
+          )
+          .order(
+            "updated_at",
+            {
+              ascending: false
+            }
+          );
+
+        if (error) {
+          throw error;
+        }
+
+        loadedTasks =
+          Array.isArray(data)
+            ? data
+            : [];
+
+        if (
+          loadedTasks.length === 0
+        ) {
+          document.getElementById(
+            "taskSection"
+          ).classList.add(
+            "hidden"
+          );
+
+          showMessage(
+            translate(
+              "noTasks"
+            ),
+            "warning"
+          );
+
+          return;
+        }
+
+        document.getElementById(
+          "taskSection"
+        ).classList.remove(
+          "hidden"
+        );
+
+        renderTasks();
+
+        showMessage(
+          translate(
+            "loadSuccess"
+          ),
+          "success"
+        );
+      } catch (error) {
+        console.error(
+          "Worker task search failed:",
+          error
+        );
+
+        loadedTasks = [];
+
+        document.getElementById(
+          "taskSection"
+        ).classList.add(
+          "hidden"
+        );
+
+        showMessage(
+          error?.message ||
+          translate(
+            "loadFailed"
+          ),
+          "error"
+        );
+      } finally {
+        searchButton.disabled =
+          false;
+      }
+    }
+
+    function findTask(requestNo) {
+      return loadedTasks.find(
+        (task) =>
+          String(
+            task.request_no
+          ) ===
+          String(
+            requestNo
+          )
+      );
+    }
+
+    function getTaskActionButton(task) {
+      const requestNo =
+        escapeHTML(
+          task.request_no
+        );
+
+      if (
+        task.status ===
+        "assigned"
+      ) {
+        return `
+          <button
+            class="primary-button"
+            type="button"
+            onclick="acceptTask('${requestNo}')"
+          >
+            ${escapeHTML(
+              translate(
+                "acceptTask"
+              )
+            )}
+          </button>
+        `;
+      }
+
+      if (
+        task.status ===
+        "accepted"
+      ) {
+        return `
+          <button
+            class="primary-button"
+            type="button"
+            onclick="confirmArrival('${requestNo}')"
+          >
+            ${escapeHTML(
+              translate(
+                "confirmArrival"
+              )
+            )}
+          </button>
+        `;
+      }
+
+      if (
+        task.status ===
+        "arrived"
+      ) {
+        return `
+          <button
+            class="success-button"
+            type="button"
+            onclick="startWork('${requestNo}')"
+          >
+            ${escapeHTML(
+              translate(
+                "startWork"
+              )
+            )}
+          </button>
+        `;
+      }
+
+      if (
+        task.status ===
+          "working" ||
+        task.status ===
+          "in_progress"
+      ) {
+        return `
+          <button
+            class="secondary-button"
+            type="button"
+            onclick="openWorkPanel('${requestNo}')"
+          >
+            ${escapeHTML(
+              translate(
+                "saveWork"
+              )
+            )}
+          </button>
+
+          <button
+            class="success-button"
+            type="button"
+            onclick="openCompletionPanel('${requestNo}')"
+          >
+            ${escapeHTML(
+              translate(
+                "submitCompletion"
+              )
+            )}
+          </button>
+        `;
+      }
+
+      return "";
+    }
+
+    function renderTasks() {
+      const taskList =
+        document.getElementById(
+          "taskList"
+        );
+
+      taskList.innerHTML =
+        loadedTasks
+          .map(
+            (task) => {
+              return `
+                <article class="task-card">
+
+                  <div class="task-header">
+
+                    <div>
+                      <div class="task-number">
+                        ${escapeHTML(
+                          task.request_no ||
+                          translate(
+                            "notProvided"
+                          )
+                        )}
+                      </div>
+                    </div>
+
+                    <span class="status-badge">
+                      ${escapeHTML(
+                        getStatusText(
+                          task.status
+                        )
+                      )}
+                    </span>
+
+                  </div>
+
+                  <div class="task-grid">
+
+                    ${createDetail(
+                      translate(
+                        "customerPhone"
+                      ),
+                      task.customer_phone
+                    )}
+
+                    ${createDetail(
+                      translate(
+                        "serviceAddress"
+                      ),
+                      task.service_address ||
+                      task.address
+                    )}
+
+                    ${createDetail(
+                      translate(
+                        "meetingDate"
+                      ),
+                      task.meeting_date
+                    )}
+
+                    ${createDetail(
+                      translate(
+                        "meetingTime"
+                      ),
+                      task.meeting_time
+                    )}
+
+                    ${createDetail(
+                      translate(
+                        "siteManager"
+                      ),
+                      task.site_manager
+                    )}
+
+                    ${createDetail(
+                      translate(
+                        "siteManagerPhone"
+                      ),
+                      task.site_manager_phone
+                    )}
+
+                    ${createDetail(
+                      translate(
+                        "estimatedDuration"
+                      ),
+                      task.estimated_duration
+                    )}
+
+                    ${createDetail(
+                      translate(
+                        "assignmentNotes"
+                      ),
+                      task.assignment_notes,
+                      true
+                    )}
+
+                  </div>
+
+                  <div class="task-actions">
+                    ${getTaskActionButton(
+                      task
+                    )}
+                  </div>
+
+                  <div
+                    id="panel-${escapeHTML(
+                      task.request_no
+                    )}"
+                    class="work-panel hidden"
+                  ></div>
+
+                </article>
+              `;
+            }
+          )
+          .join("");
+    }    async function updateTaskStatus(
+      requestNo,
+      newStatus,
+      successMessage
+    ) {
+      try {
+        const client =
+          getSupabaseClient();
+
+        const updatedAt =
+          new Date().toISOString();
+
+        const updateData = {
+          status: newStatus,
+          updated_at: updatedAt
+        };
+
+        if (
+          newStatus ===
+          "accepted"
+        ) {
+          updateData.accepted_at =
+            updatedAt;
+        }
+
+        if (
+          newStatus ===
+          "arrived"
+        ) {
+          updateData.arrived_at =
+            updatedAt;
+        }
+
+        if (
+          newStatus ===
+          "in_progress"
+        ) {
+          updateData.work_started_at =
+            updatedAt;
+        }
+
+        const {
+          data,
+          error
+        } = await client
+          .from(
+            "service_requests"
+          )
+          .update(
+            updateData
+          )
+          .eq(
+            "request_no",
+            requestNo
+          )
+          .select("*")
+          .maybeSingle();
+
+        if (error) {
+          throw error;
+        }
+
+        const taskIndex =
+          loadedTasks.findIndex(
+            (task) =>
+              String(
+                task.request_no
+              ) ===
+              String(
+                requestNo
+              )
+          );
+
+        if (
+          taskIndex >= 0
+        ) {
+          loadedTasks[
+            taskIndex
+          ] =
+            data || {
+              ...loadedTasks[
+                taskIndex
+              ],
+              ...updateData
+            };
+        }
+
+        renderTasks();
+
+        showMessage(
+          translate(
+            successMessage
+          ),
+          "success"
+        );
+
+        return true;
+      } catch (error) {
+        console.error(
+          "Task status update failed:",
+          error
+        );
+
+        showMessage(
+          error?.message ||
+          translate(
+            "statusUpdateFailed"
+          ),
+          "error"
+        );
+
+        return false;
+      }
+    }
+
+    async function acceptTask(
+      requestNo
+    ) {
+
+      await updateTaskStatus(
+        requestNo,
+        "accepted",
+        "taskAccepted"
+      );
+    }
+
+    async function confirmArrival(
+      requestNo
+    ) {
+
+      await updateTaskStatus(
+        requestNo,
+        "arrived",
+        "arrivalConfirmed"
+      );
+    }
+
+    async function startWork(
+      requestNo
+    ) {
+
+      await updateTaskStatus(
+        requestNo,
+        "in_progress",
+        "workStarted"
+      );
+    }
+
+    function closeTaskPanel(
+      requestNo
+    ) {
+      const panel =
+        document.getElementById(
+          `panel-${requestNo}`
+        );
+
+      if (panel) {
+        panel.classList.add(
+          "hidden"
+        );
+
+        panel.innerHTML =
+          "";
+      }
+    }
+
+    function openWorkPanel(
+      requestNo
+    ) {
+      const task =
+        findTask(
+          requestNo
+        );
+
+      if (!task) {
+        return;
+      }
+
+      const panel =
+        document.getElementById(
+          `panel-${requestNo}`
+        );
+
+      if (!panel) {
+        return;
+      }
+
+      panel.innerHTML = `
+        <h3>
+          ${escapeHTML(
+            translate(
+              "workPanelTitle"
+            )
+          )}
+        </h3>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label class="form-label">
+              ${escapeHTML(
+                translate(
+                  "workDate"
+                )
+              )}
+            </label>
+
+            <input
+              id="workDate-${escapeHTML(
+                requestNo
+              )}"
+              class="input"
+              type="date"
+            />
+
+          </div>
+
+          <div class="form-group">
+
+            <label class="form-label">
+              ${escapeHTML(
+                translate(
+                  "workHours"
+                )
+              )}
+            </label>
+
+            <input
+              id="workHours-${escapeHTML(
+                requestNo
+              )}"
+              class="input"
+              type="number"
+              min="0"
+              step="0.25"
+              placeholder="0"
+            />
+
+          </div>
+
+          <div class="form-group">
+
+            <label class="form-label">
+              ${escapeHTML(
+                translate(
+                  "startTime"
+                )
+              )}
+            </label>
+
+            <input
+              id="startTime-${escapeHTML(
+                requestNo
+              )}"
+              class="input"
+              type="time"
+            />
+
+          </div>
+
+          <div class="form-group">
+
+            <label class="form-label">
+              ${escapeHTML(
+                translate(
+                  "endTime"
+                )
+              )}
+            </label>
+
+            <input
+              id="endTime-${escapeHTML(
+                requestNo
+              )}"
+              class="input"
+              type="time"
+            />
+
+          </div>
+
+          <div class="form-group full">
+
+            <label class="form-label">
+              ${escapeHTML(
+                translate(
+                  "workProgress"
+                )
+              )}
+            </label>
+
+            <input
+              id="photoFiles-${escapeHTML(
+                requestNo
+              )}"
+              class="file-input"
+              type="file"
+              accept="image/*"
+              multiple
+              aria-label="${escapeHTML(
+                translate(
+                  "choosePhotos"
+                )
+              )}"
+            >
+
+            <textarea
+              id="workProgress-${escapeHTML(
+                requestNo
+              )}"
+              class="textarea"
+            ></textarea>
+
+          </div>
+
+          <div class="form-group full">
+
+            <label class="form-label">
+              ${escapeHTML(
+                translate(
+                  "materialsUsed"
+                )
+              )}
+            </label>
+
+            <textarea
+              id="materialsUsed-${escapeHTML(
+                requestNo
+              )}"
+              class="textarea"
+            ></textarea>
+
+          </div>
+
+          <div class="form-group full">
+
+            <label class="form-label">
+              ${escapeHTML(
+                translate(
+                  "issuesFound"
+                )
+              )}
+            </label>
+
+            <textarea
+              id="issuesFound-${escapeHTML(
+                requestNo
+              )}"
+              class="textarea"
+            ></textarea>
+
+          </div>
+
+          <div class="form-group full">
+
+            <label class="form-label">
+              ${escapeHTML(
+                translate(
+                  "photoRecord"
+                )
+              )}
+            </label>
+
+            <textarea
+              id="photoRecord-${escapeHTML(
+                requestNo
+              )}"
+              class="textarea"
+              placeholder="${escapeHTML(
+                translate(
+                  "optionalMediaUrl"
+                )
+              )}"
+            ></textarea>
+
+          </div>
+
+          <div class="form-group full">
+
+            <label class="form-label">
+              ${escapeHTML(
+                translate(
+                  "videoRecord"
+                )
+              )}
+            </label>
+
+            <input
+              id="videoFiles-${escapeHTML(
+                requestNo
+              )}"
+              class="file-input"
+              type="file"
+              accept="video/*"
+              multiple
+              aria-label="${escapeHTML(
+                translate(
+                  "chooseVideos"
+                )
+              )}"
+            >
+
+            <textarea
+              id="videoRecord-${escapeHTML(
+                requestNo
+              )}"
+              class="textarea"
+              placeholder="${escapeHTML(
+                translate(
+                  "optionalMediaUrl"
+                )
+              )}"
+            ></textarea>
+
+          </div>
+
+          <div class="form-group full">
+
+            <label class="form-label">
+              ${escapeHTML(
+                translate(
+                  "customerSiteComment"
+                )
+              )}
+            </label>
+
+            <textarea
+              id="customerComment-${escapeHTML(
+                requestNo
+              )}"
+              class="textarea"
+            ></textarea>
+
+          </div>
+
+        </div>
+
+        <div class="panel-actions">
+
+          <button
+            class="secondary-button"
+            type="button"
+            onclick="closeTaskPanel('${escapeHTML(
+              requestNo
+            )}')"
+          >
+            ${escapeHTML(
+              translate(
+                "closePanel"
+              )
+            )}
+          </button>
+
+          <button
+            class="primary-button"
+            type="button"
+            onclick="saveWorkRecord('${escapeHTML(
+              requestNo
+            )}')"
+          >
+            ${escapeHTML(
+              translate(
+                "saveWork"
+              )
+            )}
+          </button>
+
+        </div>
+      `;
+
+      panel.classList.remove(
+        "hidden"
+      );
+
+      document.getElementById(
+        `workDate-${requestNo}`
+      ).value =
+        new Date()
+          .toISOString()
+          .slice(
+            0,
+            10
+          );
+    }
+
+    function calculateWorkHours(
+      startTime,
+      endTime
+    ) {
+      if (
+        !startTime ||
+        !endTime
+      ) {
+        return null;
+      }
+
+      const [
+        startHour,
+        startMinute
+      ] =
+        startTime
+          .split(":")
+          .map(Number);
+
+      const [
+        endHour,
+        endMinute
+      ] =
+        endTime
+          .split(":")
+          .map(Number);
+
+      let minutes =
+        (
+          endHour * 60 +
+          endMinute
+        ) -
+        (
+          startHour * 60 +
+          startMinute
+        );
+
+      if (
+        minutes < 0
+      ) {
+        minutes +=
+          24 * 60;
+      }
+
+      return Number(
+        (
+          minutes / 60
+        ).toFixed(2)
+      );
+    }
+
+    async function uploadEvidenceFiles(
+      client,
+      requestNo,
+      workerPhone,
+      files,
+      mediaType
+    ) {
+      const uploadedUrls = [];
+
+      for (const file of files) {
+        if (file.size > 50 * 1024 * 1024) {
+          throw new Error(
+            translate(
+              "mediaTooLarge"
+            )
+          );
+        }
+
+        const safeName =
+          file.name.replace(
+            /[^a-zA-Z0-9._-]/g,
+            "_"
+          );
+
+        const objectPath = [
+          requestNo,
+          workerPhone,
+          mediaType,
+          `${Date.now()}-${crypto.randomUUID()}-${safeName}`
+        ].join("/");
+
+        const {
+          error: uploadError
+        } = await client.storage
+          .from(
+            "work-evidence"
+          )
+          .upload(
+            objectPath,
+            file,
+            {
+              cacheControl: "3600",
+              contentType:
+                file.type ||
+                undefined,
+              upsert: false
+            }
+          );
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        const {
+          data: publicData
+        } = client.storage
+          .from(
+            "work-evidence"
+          )
+          .getPublicUrl(
+            objectPath
+          );
+
+        uploadedUrls.push(
+          publicData.publicUrl
+        );
+      }
+
+      return uploadedUrls;
+    }
+
+    async function saveWorkRecord(
+      requestNo
+    ) {
+      const task =
+        findTask(
+          requestNo
+        );
+
+      if (!task) {
+        return;
+      }
+
+      const workDate =
+        document.getElementById(
+          `workDate-${requestNo}`
+        ).value;
+
+      const startTime =
+        document.getElementById(
+          `startTime-${requestNo}`
+        ).value;
+
+      const endTime =
+        document.getElementById(
+          `endTime-${requestNo}`
+        ).value;
+
+      let workHours =
+        Number(
+          document.getElementById(
+            `workHours-${requestNo}`
+          ).value ||
+          0
+        );
+
+      const workProgress =
+        document.getElementById(
+          `workProgress-${requestNo}`
+        ).value.trim();
+
+      const materialsUsed =
+        document.getElementById(
+          `materialsUsed-${requestNo}`
+        ).value.trim();
+
+      const issuesFound =
+        document.getElementById(
+          `issuesFound-${requestNo}`
+        ).value.trim();
+
+      let photoRecord =
+        document.getElementById(
+          `photoRecord-${requestNo}`
+        ).value.trim();
+
+      let videoRecord =
+        document.getElementById(
+          `videoRecord-${requestNo}`
+        ).value.trim();
+
+      const photoFiles =
+        Array.from(
+          document.getElementById(
+            `photoFiles-${requestNo}`
+          ).files || []
+        );
+
+      const videoFiles =
+        Array.from(
+          document.getElementById(
+            `videoFiles-${requestNo}`
+          ).files || []
+        );
+
+      const customerComment =
+        document.getElementById(
+          `customerComment-${requestNo}`
+        ).value.trim();
+
+      if (
+        !workDate ||
+        !workProgress
+      ) {
+        showMessage(
+          translate(
+            "requiredWorkFields"
+          ),
+          "error"
+        );
+
+        return;
+      }
+
+      if (
+        !workHours &&
+        startTime &&
+        endTime
+      ) {
+        workHours =
+          calculateWorkHours(
+            startTime,
+            endTime
+          ) || 0;
+      }
+
+      try {
+        const client =
+          getSupabaseClient();
+
+        const workerPhone =
+          normalizePhone(
+            task.assigned_worker_phone ||
+            document.getElementById(
+              "workerPhoneInput"
+            ).value
+          );
+
+        if (
+          photoFiles.length ||
+          videoFiles.length
+        ) {
+          showMessage(
+            translate(
+              "uploadingMedia"
+            ),
+            "info"
+          );
+        }
+
+        const uploadedPhotos =
+          await uploadEvidenceFiles(
+            client,
+            task.request_no,
+            workerPhone,
+            photoFiles,
+            "photos"
+          );
+
+        const uploadedVideos =
+          await uploadEvidenceFiles(
+            client,
+            task.request_no,
+            workerPhone,
+            videoFiles,
+            "videos"
+          );
+
+        photoRecord = [
+          photoRecord,
+          ...uploadedPhotos
+        ].filter(Boolean).join("\n");
+
+        videoRecord = [
+          videoRecord,
+          ...uploadedVideos
+        ].filter(Boolean).join("\n");
+
+        const recordData = {
+          request_no:
+            task.request_no,
+
+          worker_phone:
+            workerPhone,
+
+          work_date:
+            workDate,
+
+          start_time:
+            startTime ||
+            null,
+
+          end_time:
+            endTime ||
+            null,
+
+          work_hours:
+            workHours ||
+            0,
+
+          work_progress:
+            workProgress,
+
+          materials_used:
+            materialsUsed ||
+            null,
+
+          issues_found:
+            issuesFound ||
+            null,
+
+          photo_record:
+            photoRecord ||
+            null,
+
+          video_record:
+            videoRecord ||
+            null,
+
+          customer_site_comment:
+            customerComment ||
+            null,
+
+          recorded_at:
+            new Date()
+              .toISOString()
+        };
+
+        const {
+          error
+        } = await client
+          .from(
+            "work_records"
+          )
+          .insert(
+            recordData
+          );
+
+        if (error) {
+          throw error;
+        }
+
+        showMessage(
+          translate(
+            "recordSaved"
+          ),
+          "success"
+        );
+
+        closeTaskPanel(
+          requestNo
+        );
+      } catch (error) {
+        console.error(
+          "Work record save failed:",
+          error
+        );
+
+        showMessage(
+          error?.message ||
+          translate(
+            "recordSaveFailed"
+          ),
+          "error"
+        );
+      }
+    }    function openCompletionPanel(
+      requestNo
+    ) {
+      const task =
+        findTask(
+          requestNo
+        );
+
+      if (!task) {
+        return;
+      }
+
+      const panel =
+        document.getElementById(
+          `panel-${requestNo}`
+        );
+
+      if (!panel) {
+        return;
+      }
+
+      panel.innerHTML = `
+        <h3>
+          ${escapeHTML(
+            translate(
+              "finalCompletionTitle"
+            )
+          )}
+        </h3>
+
+        <div class="form-grid">
+
+          <div class="form-group full">
+
+            <label class="form-label">
+              ${escapeHTML(
+                translate(
+                  "completionSummary"
+                )
+              )}
+            </label>
+
+            <textarea
+              id="completionSummary-${escapeHTML(
+                requestNo
+              )}"
+              class="textarea"
+            ></textarea>
+
+          </div>
+
+          <div class="form-group full">
+
+            <label class="form-label">
+              ${escapeHTML(
+                translate(
+                  "completionEvidence"
+                )
+              )}
+            </label>
+
+            <input
+              id="finalPhotoFiles-${escapeHTML(requestNo)}"
+              class="file-input"
+              type="file"
+              accept="image/*"
+              multiple
+              aria-label="${escapeHTML(translate("choosePhotos"))}"
+            >
+
+            <input
+              id="finalVideoFiles-${escapeHTML(requestNo)}"
+              class="file-input"
+              type="file"
+              accept="video/*"
+              multiple
+              aria-label="${escapeHTML(translate("chooseVideos"))}"
+            >
+
+            <textarea
+              id="completionEvidence-${escapeHTML(
+                requestNo
+              )}"
+              class="textarea"
+              placeholder="Photo URL / Video URL / 照片或视频链接"
+            ></textarea>
+
+          </div>
+
+          <div class="form-group full">
+
+            <label class="form-label">
+              ${escapeHTML(
+                translate(
+                  "outstandingIssues"
+                )
+              )}
+            </label>
+
+            <textarea
+              id="outstandingIssues-${escapeHTML(
+                requestNo
+              )}"
+              class="textarea"
+            ></textarea>
+
+          </div>
+
+          <div class="form-group full">
+
+            <label class="form-label">
+              ${escapeHTML(
+                translate(
+                  "customerAcceptanceItems"
+                )
+              )}
+            </label>
+
+            <textarea
+              id="acceptanceItems-${escapeHTML(
+                requestNo
+              )}"
+              class="textarea"
+            ></textarea>
+
+          </div>
+
+        </div>
+
+        <div class="panel-actions">
+
+          <button
+            class="secondary-button"
+            type="button"
+            onclick="closeTaskPanel('${escapeHTML(
+              requestNo
+            )}')"
+          >
+            ${escapeHTML(
+              translate(
+                "closePanel"
+              )
+            )}
+          </button>
+
+          <button
+            class="success-button"
+            type="button"
+            onclick="submitFinalCompletion('${escapeHTML(
+              requestNo
+            )}')"
+          >
+            ${escapeHTML(
+              translate(
+                "submitCompletion"
+              )
+            )}
+          </button>
+
+        </div>
+      `;
+
+      panel.classList.remove(
+        "hidden"
+      );
+    }
+
+    async function submitFinalCompletion(
+      requestNo
+    ) {
+      const task =
+        findTask(
+          requestNo
+        );
+
+      if (!task) {
+        return;
+      }
+
+      const completionSummary =
+        document.getElementById(
+          `completionSummary-${requestNo}`
+        ).value.trim();
+
+      let completionEvidence =
+        document.getElementById(
+          `completionEvidence-${requestNo}`
+        ).value.trim();
+
+      const finalPhotoFiles = Array.from(
+        document.getElementById(`finalPhotoFiles-${requestNo}`).files || []
+      );
+
+      const finalVideoFiles = Array.from(
+        document.getElementById(`finalVideoFiles-${requestNo}`).files || []
+      );
+
+      const outstandingIssues =
+        document.getElementById(
+          `outstandingIssues-${requestNo}`
+        ).value.trim();
+
+      const acceptanceItems =
+        document.getElementById(
+          `acceptanceItems-${requestNo}`
+        ).value.trim();
+
+      if (
+        !completionSummary ||
+        !acceptanceItems
+      ) {
+        showMessage(
+          translate(
+            "requiredCompletionFields"
+          ),
+          "error"
+        );
+
+        return;
+      }
+
+
+      try {
+        const client =
+          getSupabaseClient();
+
+        const workerPhone = normalizePhone(
+          task.assigned_worker_phone || document.getElementById("workerPhoneInput").value
+        );
+
+        if (finalPhotoFiles.length || finalVideoFiles.length) {
+          showMessage(translate("uploadingMedia"), "info");
+        }
+
+        const uploadedPhotos = await uploadEvidenceFiles(
+          client, task.request_no, workerPhone, finalPhotoFiles, "completion-photos"
+        );
+        const uploadedVideos = await uploadEvidenceFiles(
+          client, task.request_no, workerPhone, finalVideoFiles, "completion-videos"
+        );
+        completionEvidence = [completionEvidence, ...uploadedPhotos, ...uploadedVideos]
+          .filter(Boolean).join("\n");
+
+        const submittedAt =
+          new Date()
+            .toISOString();
+
+        const updateData = {
+          status:
+            "awaiting_final_acceptance",
+
+          completion_summary:
+            completionSummary,
+
+          completion_evidence:
+            completionEvidence ||
+            null,
+
+          outstanding_issues:
+            outstandingIssues ||
+            null,
+
+          customer_acceptance_focus:
+            acceptanceItems,
+
+          work_completed_at:
+            submittedAt,
+
+          updated_at:
+            submittedAt
+        };
+
+        const {
+          data,
+          error
+        } = await client
+          .from(
+            "service_requests"
+          )
+          .update(
+            updateData
+          )
+          .eq(
+            "request_no",
+            requestNo
+          )
+          .select("*")
+          .maybeSingle();
+
+        if (error) {
+          throw error;
+        }
+
+        const taskIndex =
+          loadedTasks.findIndex(
+            (item) =>
+              String(
+                item.request_no
+              ) ===
+              String(
+                requestNo
+              )
+          );
+
+        if (
+          taskIndex >= 0
+        ) {
+          loadedTasks[
+            taskIndex
+          ] =
+            data || {
+              ...loadedTasks[
+                taskIndex
+              ],
+              ...updateData
+            };
+        }
+
+        renderTasks();
+
+        showMessage(
+          translate(
+            "completionSubmitted"
+          ),
+          "success"
+        );
+      } catch (error) {
+        console.error(
+          "Final completion submit failed:",
+          error
+        );
+
+        showMessage(
+          error?.message ||
+          translate(
+            "completionFailed"
+          ),
+          "error"
+        );
+      }
+    }
+
+    function changeLanguage() {
+      currentLanguage =
+        currentLanguage ===
+          "zh"
+          ? "en"
+          : "zh";
+
+      localStorage.setItem(
+        "echocity-language",
+        currentLanguage
+      );
+
+      applyLanguage();
+    }
+
+    document
+      .getElementById("backButton")
+      .addEventListener("click", () => {
+        if (window.history.length > 1) {
+          window.history.back();
+        } else {
+          window.location.href = "worker-dashboard.html";
+        }
+      });
+
+    document
+      .getElementById(
+        "languageButton"
+      )
+      .addEventListener(
+        "click",
+        changeLanguage
+      );
+
+    document
+      .getElementById(
+        "searchButton"
+      )
+      .addEventListener(
+        "click",
+        searchWorkerTasks
+      );
+
+    document
+      .getElementById(
+        "workerPhoneInput"
+      )
+      .addEventListener(
+        "keydown",
+        (event) => {
+          if (
+            event.key ===
+            "Enter"
+          ) {
+            searchWorkerTasks();
+          }
+        }
+      );
+
+    applyLanguage();
+  </script>
+</body>
+</html>
+
