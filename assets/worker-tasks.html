@@ -435,6 +435,53 @@
       margin-top: 16px;
     }
 
+    .readiness-panel {
+      grid-column: 1 / -1;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .readiness-title {
+      margin: 0 0 10px;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .readiness-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .readiness-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.5;
+    }
+
+    .readiness-item.pass {
+      color: #16713a;
+    }
+
+    .readiness-item.fail {
+      color: #a33a28;
+    }
+
+    .prestart-checks {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .prestart-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      line-height: 1.5;
+    }
+
     .work-panel {
       margin-top: 16px;
       padding: 16px;
@@ -1080,6 +1127,43 @@
             ? data
             : [];
 
+        const requestNumbers =
+          loadedTasks
+            .map((task) => task.request_no)
+            .filter(Boolean);
+
+        if (requestNumbers.length) {
+          const {
+            data: plans,
+            error: planError
+          } = await client
+            .from("implementation_plans")
+            .select("*")
+            .in("request_no", requestNumbers)
+            .order("version", { ascending: false });
+
+          if (planError) {
+            console.warn(
+              "Implementation plans could not be loaded:",
+              planError
+            );
+          } else {
+            const latestPlans = new Map();
+
+            (plans || []).forEach((plan) => {
+              if (!latestPlans.has(plan.request_no)) {
+                latestPlans.set(plan.request_no, plan);
+              }
+            });
+
+            loadedTasks = loadedTasks.map((task) => ({
+              ...task,
+              implementation_plan:
+                latestPlans.get(task.request_no) || null
+            }));
+          }
+        }
+
         if (
           loadedTasks.length === 0
         ) {
@@ -1106,6 +1190,8 @@
         );
 
         renderTasks();
+
+        handleWorkspaceMode();
 
         showMessage(
           translate(
@@ -1150,6 +1236,57 @@
             requestNo
           )
       );
+    }
+
+    function handleWorkspaceMode() {
+      const mode = new URLSearchParams(
+        window.location.search
+      ).get("mode");
+
+      if (!mode || mode === "tasks" || mode === "progress") {
+        return;
+      }
+
+      if (mode === "reminders") {
+        const blockedCount = loadedTasks.filter(
+          (item) => getReadiness(item).some((check) => !check.pass)
+        ).length;
+
+        showMessage(
+          bi(
+            `Echo 提醒：共有 ${blockedCount} 个任务存在未完成的开工条件，请查看任务卡中的检查清单。`,
+            `Echo reminder: ${blockedCount} task(s) have incomplete pre-start conditions. Review the checklist in each task card.`
+          ),
+          blockedCount ? "warning" : "success"
+        );
+        return;
+      }
+
+      const task =
+        mode === "start"
+          ? loadedTasks.find((item) => item.status === "arrived")
+          : loadedTasks.find((item) =>
+              ["working", "in_progress"].includes(item.status)
+            );
+
+      if (!task) {
+        showMessage(
+          bi(
+            "当前没有符合该操作阶段的任务，请查看任务状态和开工条件。",
+            "No task is currently at this action stage. Review its status and readiness."
+          ),
+          "warning"
+        );
+        return;
+      }
+
+      if (mode === "start") {
+        openPrestartPanel(task.request_no);
+      } else if (mode === "records") {
+        openWorkPanel(task.request_no);
+      } else if (mode === "milestones") {
+        openCompletionPanel(task.request_no);
+      }
     }
 
     function getTaskActionButton(task) {
@@ -1204,7 +1341,7 @@
           <button
             class="success-button"
             type="button"
-            onclick="startWork('${requestNo}')"
+            onclick="openPrestartPanel('${requestNo}')"
           >
             ${escapeHTML(
               translate(
@@ -1251,6 +1388,91 @@
       return "";
     }
 
+    function bi(zh, en) {
+      return currentLanguage === "zh" ? zh : en;
+    }
+
+    function yesNo(value) {
+      return value
+        ? bi("已完成", "Completed")
+        : bi("未完成", "Missing");
+    }
+
+    function formatPlanContent(plan) {
+      if (!plan?.content) {
+        return "";
+      }
+
+      if (typeof plan.content === "string") {
+        return plan.content;
+      }
+
+      const content = plan.content;
+      return [
+        content.scope || content.work_scope,
+        content.quality_requirements || content.quality,
+        content.completion_standard || content.standard,
+        content.method || content.construction_method
+      ].filter(Boolean).join("\n");
+    }
+
+    function getReadiness(task) {
+      const plan = task.implementation_plan;
+      const agreement = task.prework_agreement || {};
+      const preworkPhotos =
+        agreement.photo_urls ||
+        agreement.photos ||
+        agreement.evidence_urls ||
+        [];
+
+      return [
+        {
+          label: bi("客户已确认报价及工作", "Customer approved quote and work"),
+          pass: task.quote_confirmed === true
+        },
+        {
+          label: bi("施工方案已由平台审批", "Implementation plan approved by platform"),
+          pass: Boolean(plan?.approved_at) ||
+            ["approved", "customer_confirmed"].includes(plan?.status)
+        },
+        {
+          label: bi("客户已确认施工方案", "Customer confirmed implementation plan"),
+          pass: Boolean(plan?.customer_confirmed_at)
+        },
+        {
+          label: bi("现场关键条件已确认", "Critical site conditions confirmed"),
+          pass: Boolean(task.prework_confirmed_at) ||
+            agreement.site_conditions_confirmed === true
+        },
+        {
+          label: bi("开工前照片已回传平台", "Pre-start photos uploaded"),
+          pass: Array.isArray(preworkPhotos)
+            ? preworkPhotos.length > 0
+            : Boolean(preworkPhotos)
+        }
+      ];
+    }
+
+    function createReadinessPanel(task) {
+      const items = getReadiness(task);
+
+      return `
+        <div class="readiness-panel">
+          <div class="readiness-title">
+            ${escapeHTML(bi("开工条件检查", "Pre-start readiness"))}
+          </div>
+          <div class="readiness-list">
+            ${items.map((item) => `
+              <div class="readiness-item ${item.pass ? "pass" : "fail"}">
+                <span>${item.pass ? "✅" : "⚠️"}</span>
+                <span>${escapeHTML(item.label)}：${escapeHTML(yesNo(item.pass))}</span>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
     function renderTasks() {
       const taskList =
         document.getElementById(
@@ -1290,6 +1512,17 @@
                   <div class="task-grid">
 
                     ${createDetail(
+                      bi("任务内容", "Task Description"),
+                      task.description,
+                      true
+                    )}
+
+                    ${createDetail(
+                      bi("服务类型", "Service Type"),
+                      task.service_type
+                    )}
+
+                    ${createDetail(
                       translate(
                         "customerPhone"
                       ),
@@ -1305,16 +1538,14 @@
                     )}
 
                     ${createDetail(
-                      translate(
-                        "meetingDate"
-                      ),
-                      task.meeting_date
+                      bi("计划服务日期", "Planned Service Date"),
+                      task.service_date || task.meeting_date
                     )}
 
                     ${createDetail(
-                      translate(
-                        "meetingTime"
-                      ),
+                      bi("计划开始时间", "Planned Start Time"),
+                      task.assigned_start_time ||
+                      task.start_time ||
                       task.meeting_time
                     )}
 
@@ -1333,19 +1564,39 @@
                     )}
 
                     ${createDetail(
-                      translate(
-                        "estimatedDuration"
-                      ),
-                      task.estimated_duration
+                      bi("预计工期", "Estimated Duration"),
+                      task.estimated_duration || task.duration
                     )}
 
                     ${createDetail(
-                      translate(
-                        "assignmentNotes"
-                      ),
-                      task.assignment_notes,
+                      bi("任务范围", "Task Scope"),
+                      task.worker_task_scope ||
+                      task.assignment_notes ||
+                      task.quote_note,
                       true
                     )}
+
+                    ${createDetail(
+                      bi("质量标准与施工要求", "Quality Standards and Requirements"),
+                      formatPlanContent(task.implementation_plan) ||
+                      task.customer_acceptance_focus ||
+                      task.customer_acceptance_items,
+                      true
+                    )}
+
+                    ${createDetail(
+                      bi("风险等级", "Risk Level"),
+                      task.risk_level
+                    )}
+
+                    ${createDetail(
+                      bi("施工方案版本/状态", "Plan Version / Status"),
+                      task.implementation_plan
+                        ? `V${task.implementation_plan.version || 1} · ${task.implementation_plan.status || bi("待审批", "Pending")}`
+                        : bi("尚未提交施工方案", "No implementation plan submitted")
+                    )}
+
+                    ${createReadinessPanel(task)}
 
                   </div>
 
@@ -1507,12 +1758,144 @@
     async function startWork(
       requestNo
     ) {
+      openPrestartPanel(requestNo);
+    }
 
-      await updateTaskStatus(
-        requestNo,
-        "in_progress",
-        "workStarted"
+    function openPrestartPanel(requestNo) {
+      const task = findTask(requestNo);
+      const panel = document.getElementById(`panel-${requestNo}`);
+
+      if (!task || !panel) {
+        return;
+      }
+
+      const readiness = getReadiness(task);
+      const blocked = readiness.slice(0, 3).some((item) => !item.pass);
+
+      panel.innerHTML = `
+        <h3>${escapeHTML(bi("开工前确认", "Pre-start Confirmation"))}</h3>
+        ${blocked ? `
+          <div class="message show error">
+            ${escapeHTML(bi(
+              "客户确认、施工方案平台审批和客户确认尚未全部完成，暂不能开工。",
+              "Customer approval and implementation-plan approvals must be completed before work starts."
+            ))}
+          </div>
+        ` : ""}
+        <div class="prestart-checks">
+          <label class="prestart-check">
+            <input id="siteCondition-${escapeHTML(requestNo)}" type="checkbox">
+            <span>${escapeHTML(bi("已与客户确认现场施工关键条件、水电、出入和安全要求", "Critical site, utility, access, and safety conditions confirmed with customer"))}</span>
+          </label>
+          <label class="prestart-check">
+            <input id="scopeCondition-${escapeHTML(requestNo)}" type="checkbox">
+            <span>${escapeHTML(bi("已核对任务范围、质量标准、完成时间和验收要求", "Task scope, quality, deadline, and acceptance requirements reviewed"))}</span>
+          </label>
+          <label class="form-label">
+            ${escapeHTML(bi("上传开工前现场照片（至少1张）", "Upload at least one pre-start site photo"))}
+          </label>
+          <input
+            id="prestartPhotos-${escapeHTML(requestNo)}"
+            class="file-input"
+            type="file"
+            accept="image/*"
+            multiple
+          >
+        </div>
+        <div class="panel-actions">
+          <button class="secondary-button" type="button"
+            onclick="closeTaskPanel('${escapeHTML(requestNo)}')">
+            ${escapeHTML(translate("closePanel"))}
+          </button>
+          <button class="success-button" type="button"
+            ${blocked ? "disabled" : ""}
+            onclick="confirmPrestartAndStart('${escapeHTML(requestNo)}')">
+            ${escapeHTML(bi("确认并开始工作", "Confirm and Start Work"))}
+          </button>
+        </div>
+      `;
+
+      panel.classList.remove("hidden");
+      panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    async function confirmPrestartAndStart(requestNo) {
+      const task = findTask(requestNo);
+      const siteConfirmed = document.getElementById(`siteCondition-${requestNo}`)?.checked;
+      const scopeConfirmed = document.getElementById(`scopeCondition-${requestNo}`)?.checked;
+      const photoFiles = Array.from(
+        document.getElementById(`prestartPhotos-${requestNo}`)?.files || []
       );
+
+      if (!siteConfirmed || !scopeConfirmed || photoFiles.length === 0) {
+        showMessage(
+          bi("请完成两项确认并至少上传一张开工前照片。", "Complete both confirmations and upload at least one photo."),
+          "error"
+        );
+        return;
+      }
+
+      try {
+        const client = getSupabaseClient();
+        const workerPhone = normalizePhone(
+          task.assigned_worker_phone ||
+          document.getElementById("workerPhoneInput").value
+        );
+
+        showMessage(translate("uploadingMedia"), "info");
+
+        const photoUrls = await uploadEvidenceFiles(
+          client,
+          requestNo,
+          workerPhone,
+          photoFiles,
+          "prestart-photos"
+        );
+
+        const confirmedAt = new Date().toISOString();
+        const preworkAgreement = {
+          ...(task.prework_agreement || {}),
+          site_conditions_confirmed: true,
+          scope_and_quality_reviewed: true,
+          photo_urls: photoUrls,
+          confirmed_at: confirmedAt
+        };
+
+        const { data, error } = await client
+          .from("service_requests")
+          .update({
+            prework_agreement: preworkAgreement,
+            prework_confirmed_at: confirmedAt,
+            status: "in_progress",
+            work_started_at: confirmedAt,
+            updated_at: confirmedAt
+          })
+          .eq("request_no", requestNo)
+          .select("*")
+          .maybeSingle();
+
+        if (error) {
+          throw error;
+        }
+
+        const taskIndex = loadedTasks.findIndex(
+          (item) => String(item.request_no) === String(requestNo)
+        );
+
+        if (taskIndex >= 0) {
+          loadedTasks[taskIndex] = {
+            ...loadedTasks[taskIndex],
+            ...(data || {}),
+            implementation_plan: task.implementation_plan
+          };
+        }
+
+        renderTasks();
+        showMessage(translate("workStarted"), "success");
+      } catch (error) {
+        console.error("Pre-start confirmation failed:", error);
+        showMessage(error?.message || translate("statusUpdateFailed"), "error");
+      }
     }
 
     function closeTaskPanel(
@@ -2652,4 +3035,3 @@
   </script>
 </body>
 </html>
-
