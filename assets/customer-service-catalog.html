@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>专业服务目录 | EchoCity</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:Arial,"Microsoft YaHei",sans-serif;color:#172033;background:linear-gradient(180deg,#eef7f2,#f8fbf9)}button{font:inherit}.page{width:min(1120px,calc(100% - 28px));margin:auto;padding:22px 0 48px}.topbar{display:flex;justify-content:space-between;align-items:center}.back,.lang{border:1px solid #c9ddd3;background:#fff;border-radius:999px;padding:11px 16px;font-weight:800;color:#172033;text-decoration:none}.hero{margin:22px 0;background:#fff;border:1px solid #d8e8df;border-radius:24px;padding:28px;box-shadow:0 16px 38px rgba(40,100,74,.08)}.eyebrow{color:#16845b;font-weight:900}.hero h1{margin:10px 0;font-size:clamp(32px,6vw,54px)}.hero p{color:#637268;line-height:1.7}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{display:flex;flex-direction:column;min-height:260px;padding:24px;border:1px solid #d8e8df;border-radius:22px;background:#fff;box-shadow:0 12px 30px rgba(40,100,74,.07)}.icon{font-size:34px}.card h2{margin:14px 0 8px}.card p{margin:0;color:#637268;line-height:1.7}.steps{margin:14px 0 20px;padding-left:20px;color:#42534a;line-height:1.7}.action{margin-top:auto;display:block;text-align:center;padding:13px;border-radius:14px;background:#16845b;color:#fff;text-decoration:none;font-weight:900}.primary{grid-column:1/-1;border-color:#a8d7c1;background:linear-gradient(135deg,#fff,#edf9f3)}@media(max-width:720px){.grid{grid-template-columns:1fr}.primary{grid-column:auto}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar"><a class="back" href="../index.html">← 返回咨询</a><button id="languageButton" class="lang">EN</button></header>
+    <section class="hero"><div class="eyebrow">EchoCity 专业服务</div><h1>请选择您要办理的业务</h1><p id="queryText">Echo 已将您带到客户服务目录。选择业务后，我们会继续询问材料、地址、联系人和办理要求。</p></section>
+    <section class="grid">
+      <article class="card primary"><div class="icon">🏢</div><h2>住宅专项维修资金全流程申报</h2><p>面向业主、业委会、物业和项目管理单位，协助完成从问题发现到资金结算归档的全过程。</p><ol class="steps"><li>现场勘察与维修范围确认</li><li>预算、技术方案与业主表决</li><li>申报审核、招标与合同管理</li><li>施工监管、验收、结算与归档</li></ol><a class="action" href="service-request.html?business=repair_fund">开始维修资金申报</a></article>
+      <article class="card"><div class="icon">📐</div><h2>工程项目管理与全过程咨询</h2><p>项目策划、设计管理、招标采购、进度质量、投资控制及验收移交。</p><a class="action" href="service-request.html?business=project_management">提交项目需求</a></article>
+      <article class="card"><div class="icon">📄</div><h2>投标与技术咨询</h2><p>投标文件制作、技术方案编写、技术答辩模拟和投标风险审查。</p><a class="action" href="service-request.html?business=tender_consulting">提交咨询需求</a></article>
+      <article class="card"><div class="icon">🌍</div><h2>海外工程管理咨询</h2><p>项目前期调查、属地风险分析、承包商管理、进度成本控制和验收移交。</p><a class="action" href="service-request.html?business=overseas_project">提交海外项目需求</a></article>
+      <article class="card"><div class="icon">🛠️</div><h2>社区维修与生活服务</h2><p>维修、清洁、临时用工、生活帮助及其他社区服务需求。</p><a class="action" href="service-request.html?business=community_service">发布服务需求</a></article>
+    </section>
+  </main>
+  <script>
+    const q=new URLSearchParams(location.search).get("q");if(q)document.getElementById("queryText").textContent=`您刚才咨询：“${q}”。请选择最符合的业务，Echo 将继续协助您。`;
+    languageButton.addEventListener("click",()=>{const en=document.documentElement.lang==="en";document.documentElement.lang=en?"zh-CN":"en";languageButton.textContent=en?"EN":"中文"});
+  </script>
+</body>
+</html>
