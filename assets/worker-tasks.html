@@ -1028,6 +1028,11 @@
         return;
       }
 
+      localStorage.setItem(
+        "echocity-worker-phone",
+        phone
+      );
+
       const searchButton =
         document.getElementById(
           "searchButton"
@@ -2615,7 +2620,35 @@
         }
       );
 
-    applyLanguage();
+    document.addEventListener(
+      "DOMContentLoaded",
+      function () {
+        applyLanguage();
+
+        const params =
+          new URLSearchParams(
+            window.location.search
+          );
+
+        const phone =
+          normalizePhone(
+            params.get(
+              "worker_phone"
+            ) ||
+            localStorage.getItem(
+              "echocity-worker-phone"
+            )
+          );
+
+        if (phone) {
+          document.getElementById(
+            "workerPhoneInput"
+          ).value = phone;
+
+          searchWorkerTasks();
+        }
+      }
+    );
   </script>
 </body>
 </html>
