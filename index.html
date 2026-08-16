@@ -26,9 +26,13 @@
     .lead{margin:22px auto 0;color:var(--soft);font-size:clamp(18px,3vw,25px)}
     .chat{position:relative;margin:34px auto 0;padding:14px;border:1px solid rgba(255,255,255,.48);border-radius:28px;background:rgba(255,255,255,.94);box-shadow:0 22px 70px rgba(0,0,0,.38),0 0 42px rgba(103,232,208,.14);backdrop-filter:blur(24px)}
     .chat::before{content:"";position:absolute;inset:-1px;border-radius:28px;padding:1px;background:linear-gradient(90deg,var(--cyan),transparent 38%,var(--gold));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;pointer-events:none}
-    .input-row{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px}
+    .input-row{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:10px}
     .echo-icon{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:#e9f5f1;color:#176b5b;font-size:22px}
     #question{width:100%;min-height:52px;border:0;outline:0;background:transparent;color:#172033;font-size:18px}
+    .voice{width:46px;height:46px;border:0;border-radius:50%;display:grid;place-items:center;background:#eaf5f2;color:#176b5b;font-size:21px;transition:.2s transform,.2s background,.2s color}
+    .voice:hover{transform:scale(1.06)}
+    .voice.listening{color:#fff;background:#e05454;animation:pulse 1.15s ease-in-out infinite}
+    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(224,84,84,.36)}50%{box-shadow:0 0 0 12px rgba(224,84,84,0)}}
     .send{width:48px;height:48px;border:0;border-radius:50%;background:linear-gradient(145deg,#f7c66f,#d99b34);color:#fff;font-size:22px;font-weight:900;box-shadow:0 8px 22px rgba(217,155,52,.38);transition:.2s transform}
     .send:hover{transform:scale(1.06) rotate(-5deg)}
     .answer{display:none;margin-top:12px;padding:14px 16px;border-radius:16px;background:#edf7f3;color:#155c47;text-align:left;line-height:1.65}
@@ -54,6 +58,7 @@
           <div class="input-row">
             <span class="echo-icon">💬</span>
             <input id="question" autocomplete="off" placeholder="请描述您的需求、任务或管理工作" aria-label="请输入问题">
+            <button id="voiceButton" class="voice" type="button" aria-label="语音输入" title="语音输入">🎙</button>
             <button class="send" type="submit" aria-label="发送">➤</button>
           </div>
           <div id="answer" class="answer"></div>
@@ -69,12 +74,16 @@
     </section>
   </main>
   <script>
-    const copy={zh:{lead:"您好，您需要什么服务？",placeholder:"请描述您的需求、任务或管理工作",hint:"您也可以直接输入问题，Echo 将自动识别并带您进入相应页面。",routing:"Echo 已理解您的需要，正在为您打开相应服务页面……",quick:["申请住宅专项维修资金","查看全部专业服务","查询我的工作任务","平台审核、报价与派工"]},en:{lead:"Hello, what service do you need?",placeholder:"Describe your service, work task, or management request",hint:"Ask directly and Echo will guide you to the correct workspace.",routing:"Echo understands your request and is opening the right service page…",quick:["Housing repair fund application","View professional services","Find my work tasks","Platform review, quote and dispatch"]}};
+    const copy={zh:{lead:"您好，您需要什么服务？",placeholder:"请描述您的需求、任务或管理工作",hint:"您可以打字或点击麦克风说出需求，Echo 会带您进入相应页面。",routing:"Echo 已理解您的需要，正在为您打开相应服务页面……",listening:"正在聆听，请开始说话……",voiceError:"没有听清，请再点击麦克风重试。",voiceUnsupported:"当前浏览器不支持网页语音识别，请使用iPad键盘上的麦克风听写。",quick:["申请住宅专项维修资金","查看全部专业服务","查询我的工作任务","平台审核、报价与派工"]},en:{lead:"Hello, what service do you need?",placeholder:"Describe your service, work task, or management request",hint:"Type or tap the microphone to speak. Echo will guide you to the right workspace.",routing:"Echo understands your request and is opening the right service page…",listening:"Listening… start speaking.",voiceError:"I could not hear that. Tap the microphone and try again.",voiceUnsupported:"Voice recognition is unavailable in this browser. Use your keyboard microphone for dictation.",quick:["Housing repair fund application","View professional services","Find my work tasks","Platform review, quote and dispatch"]}};
     let language=localStorage.getItem("echocity-language")||"zh";
     const destinations={customer:"assets/customer-service-catalog.html",worker:"assets/worker-dashboard.html",admin:"assets/admin-dashboard.html"};
     function applyLanguage(){document.documentElement.lang=language==="zh"?"zh-CN":"en";lead.textContent=copy[language].lead;question.placeholder=copy[language].placeholder;hint.textContent=copy[language].hint;languageButton.textContent=language==="zh"?"EN":"中文";document.querySelectorAll(".quick button").forEach((button,index)=>button.textContent=copy[language].quick[index]);}
     function detectRoute(text){const value=text.toLowerCase();if(/工人|师傅|服务人员|接单|到达|开工|工作任务|worker|task/.test(value))return"worker";if(/平台|管理|监管|审核|报价|派工|验收|admin|quote|dispatch/.test(value))return"admin";return"customer";}
     function routeTo(role,text){answer.textContent=copy[language].routing;answer.classList.add("show");const url=new URL(destinations[role],window.location.href);if(text)url.searchParams.set("q",text);setTimeout(()=>window.location.href=url.toString(),650);}
+    const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+    let recognition=null;
+    if(SpeechRecognition){recognition=new SpeechRecognition();recognition.continuous=false;recognition.interimResults=true;recognition.onstart=()=>{voiceButton.classList.add("listening");voiceButton.textContent="■";question.placeholder=copy[language].listening;answer.classList.remove("show")};recognition.onresult=event=>{let transcript="";for(let i=event.resultIndex;i<event.results.length;i++)transcript+=event.results[i][0].transcript;question.value=transcript;question.focus()};recognition.onerror=()=>{answer.textContent=copy[language].voiceError;answer.classList.add("show")};recognition.onend=()=>{voiceButton.classList.remove("listening");voiceButton.textContent="🎙";question.placeholder=copy[language].placeholder}};
+    voiceButton.addEventListener("click",()=>{if(!recognition){answer.textContent=copy[language].voiceUnsupported;answer.classList.add("show");return}recognition.lang=language==="zh"?"zh-CN":"en-US";if(voiceButton.classList.contains("listening"))recognition.stop();else recognition.start()});
     echoForm.addEventListener("submit",event=>{event.preventDefault();const text=question.value.trim();if(!text){question.focus();return}routeTo(detectRoute(text),text)});
     document.querySelectorAll("[data-route]").forEach(button=>button.addEventListener("click",()=>routeTo(button.dataset.route,button.textContent.trim())));
     languageButton.addEventListener("click",()=>{language=language==="zh"?"en":"zh";localStorage.setItem("echocity-language",language);applyLanguage()});
