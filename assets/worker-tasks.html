@@ -126,6 +126,7 @@
       font-weight: 900;
     }
 
+    .back-button,
     .language-button {
       padding: 8px 14px;
 
@@ -515,6 +516,8 @@
 
     <header class="topbar">
 
+      <button id="backButton" class="back-button" type="button">← 返回</button>
+
       <div class="brand">
         <div class="logo">E</div>
         <span>EchoCity</span>
@@ -608,6 +611,7 @@
   </main>  <script>
     const translations = {
       zh: {
+        backButton: "← 返回",
         pageTitle: "我的任务",
         pageDescription: "查询并处理已经分配给你的服务任务。",
         searchTitle: "查询工人任务",
@@ -684,6 +688,7 @@
       },
 
       en: {
+        backButton: "← Back",
         pageTitle: "My Tasks",
         pageDescription: "Find and process service tasks assigned to you.",
         searchTitle: "Find Worker Tasks",
@@ -802,6 +807,7 @@
         `${translate("pageTitle")} | EchoCity`;
 
       const textMap = {
+        backButton: "backButton",
         pageTitle: "pageTitle",
         pageDescription: "pageDescription",
         searchTitle: "searchTitle",
@@ -1474,17 +1480,6 @@
     async function acceptTask(
       requestNo
     ) {
-      const confirmed =
-        window.confirm(
-          currentLanguage ===
-            "zh"
-            ? "确认接收这项任务吗？"
-            : "Accept this task?"
-        );
-
-      if (!confirmed) {
-        return;
-      }
 
       await updateTaskStatus(
         requestNo,
@@ -1496,17 +1491,6 @@
     async function confirmArrival(
       requestNo
     ) {
-      const confirmed =
-        window.confirm(
-          currentLanguage ===
-            "zh"
-            ? "确认你已经到达服务现场吗？"
-            : "Confirm that you have arrived at the service location?"
-        );
-
-      if (!confirmed) {
-        return;
-      }
 
       await updateTaskStatus(
         requestNo,
@@ -1518,17 +1502,6 @@
     async function startWork(
       requestNo
     ) {
-      const confirmed =
-        window.confirm(
-          currentLanguage ===
-            "zh"
-            ? "确认现在开始工作吗？"
-            : "Confirm that the work is starting now?"
-        );
-
-      if (!confirmed) {
-        return;
-      }
 
       await updateTaskStatus(
         requestNo,
@@ -2302,6 +2275,24 @@
               )}
             </label>
 
+            <input
+              id="finalPhotoFiles-${escapeHTML(requestNo)}"
+              class="file-input"
+              type="file"
+              accept="image/*"
+              multiple
+              aria-label="${escapeHTML(translate("choosePhotos"))}"
+            >
+
+            <input
+              id="finalVideoFiles-${escapeHTML(requestNo)}"
+              class="file-input"
+              type="file"
+              accept="video/*"
+              multiple
+              aria-label="${escapeHTML(translate("chooseVideos"))}"
+            >
+
             <textarea
               id="completionEvidence-${escapeHTML(
                 requestNo
@@ -2407,10 +2398,18 @@
           `completionSummary-${requestNo}`
         ).value.trim();
 
-      const completionEvidence =
+      let completionEvidence =
         document.getElementById(
           `completionEvidence-${requestNo}`
         ).value.trim();
+
+      const finalPhotoFiles = Array.from(
+        document.getElementById(`finalPhotoFiles-${requestNo}`).files || []
+      );
+
+      const finalVideoFiles = Array.from(
+        document.getElementById(`finalVideoFiles-${requestNo}`).files || []
+      );
 
       const outstandingIssues =
         document.getElementById(
@@ -2436,21 +2435,27 @@
         return;
       }
 
-      const confirmed =
-        window.confirm(
-          currentLanguage ===
-            "zh"
-            ? "确认已经完成全部服务，并提交客户最终验收吗？"
-            : "Confirm that all work is complete and submit it for customer final acceptance?"
-        );
-
-      if (!confirmed) {
-        return;
-      }
 
       try {
         const client =
           getSupabaseClient();
+
+        const workerPhone = normalizePhone(
+          task.assigned_worker_phone || document.getElementById("workerPhoneInput").value
+        );
+
+        if (finalPhotoFiles.length || finalVideoFiles.length) {
+          showMessage(translate("uploadingMedia"), "info");
+        }
+
+        const uploadedPhotos = await uploadEvidenceFiles(
+          client, task.request_no, workerPhone, finalPhotoFiles, "completion-photos"
+        );
+        const uploadedVideos = await uploadEvidenceFiles(
+          client, task.request_no, workerPhone, finalVideoFiles, "completion-videos"
+        );
+        completionEvidence = [completionEvidence, ...uploadedPhotos, ...uploadedVideos]
+          .filter(Boolean).join("\n");
 
         const submittedAt =
           new Date()
@@ -2471,7 +2476,7 @@
             outstandingIssues ||
             null,
 
-          customer_acceptance_items:
+          customer_acceptance_focus:
             acceptanceItems,
 
           work_completed_at:
@@ -2567,6 +2572,16 @@
     }
 
     document
+      .getElementById("backButton")
+      .addEventListener("click", () => {
+        if (window.history.length > 1) {
+          window.history.back();
+        } else {
+          window.location.href = "worker-dashboard.html";
+        }
+      });
+
+    document
       .getElementById(
         "languageButton"
       )
@@ -2604,3 +2619,4 @@
   </script>
 </body>
 </html>
+
