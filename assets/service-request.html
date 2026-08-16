@@ -86,13 +86,16 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 42px;
+      gap: 7px;
+      min-width: 96px;
       height: 42px;
+      padding: 0 14px;
       color: var(--text);
       background: rgba(255, 255, 255, 0.88);
       border: 1px solid var(--border);
-      border-radius: 50%;
+      border-radius: 21px;
       text-decoration: none;
+      font-weight: 700;
       box-shadow: 0 5px 16px rgba(20, 55, 48, 0.06);
     }
 
@@ -112,10 +115,6 @@
       background: rgba(255, 255, 255, 0.9);
       border: 1px solid var(--border);
       border-radius: 20px;
-    }
-
-    .topbar {
-      justify-content: flex-end;
     }
 
     .hero {
@@ -432,6 +431,16 @@
   <main class="page">
 
     <header class="topbar">
+      <button
+        class="back-button"
+        type="button"
+        onclick="goBackToHome()"
+        aria-label="返回首页"
+      >
+        <span aria-hidden="true">←</span>
+        <span data-i18n="backHome">返回首页</span>
+      </button>
+
       <button
         class="language-button"
         id="languageButton"
@@ -810,6 +819,7 @@
 
   <script>    const translations = {
       zh: {
+        backHome: "返回首页",
         tag: "本地人员与生活服务",
         title: "你好，我能帮你什么？",
         subtitle:
@@ -890,6 +900,7 @@
       },
 
       en: {
+        backHome: "Home",
         tag: "Local Workforce & Daily Support",
         title: "How can I help you today?",
         subtitle:
@@ -1026,6 +1037,10 @@
       );
 
       applyLanguage();
+    }
+
+    function goBackToHome() {
+      window.location.href = "../index.html";
     }
 
     function selectService(button) {
