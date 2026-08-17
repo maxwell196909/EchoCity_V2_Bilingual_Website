@@ -1433,11 +1433,15 @@
         {
           label: bi("施工方案已由平台审批", "Implementation plan approved by platform"),
           pass: Boolean(plan?.approved_at) ||
-            ["approved", "customer_confirmed"].includes(plan?.status)
+            ["approved", "customer_confirmed"].includes(plan?.status) ||
+            Boolean(agreement.plan_approved_at) ||
+            ["approved", "customer_confirmed"].includes(agreement.plan_status)
         },
         {
           label: bi("客户已确认施工方案", "Customer confirmed implementation plan"),
-          pass: Boolean(plan?.customer_confirmed_at)
+          pass: Boolean(plan?.customer_confirmed_at) ||
+            Boolean(agreement.plan_customer_confirmed_at) ||
+            agreement.plan_status === "customer_confirmed"
         },
         {
           label: bi("现场关键条件已确认", "Critical site conditions confirmed"),
@@ -1599,7 +1603,9 @@
                       bi("施工方案版本/状态", "Plan Version / Status"),
                       task.implementation_plan
                         ? `V${task.implementation_plan.version || 1} · ${task.implementation_plan.status || bi("待审批", "Pending")}`
-                        : bi("尚未提交施工方案", "No implementation plan submitted")
+                        : task.prework_agreement?.plan_version
+                          ? `V${task.prework_agreement.plan_version} · ${task.prework_agreement.plan_status || bi("待审批", "Pending")}`
+                          : bi("尚未提交施工方案", "No implementation plan submitted")
                     )}
 
                     ${createReadinessPanel(task)}
@@ -3041,4 +3047,5 @@
   </script>
 </body>
 </html>
+
 
