@@ -2251,6 +2251,39 @@ async function saveAssignment() {
           assigned_worker_phone:
             workerPhone.trim(),
 
+          start_time:
+            assignmentData.meetingTime || null,
+
+          assigned_start_time:
+            assignmentData.meetingDate && assignmentData.meetingTime
+              ? new Date(
+                  assignmentData.meetingDate +
+                  "T" +
+                  assignmentData.meetingTime +
+                  ":00+08:00"
+                ).toISOString()
+              : null,
+
+          worker_pay:
+            Number(firstWorker?.pay || 0),
+
+          worker_task_scope:
+            assignmentData.notes ||
+            currentRequest.worker_task_scope ||
+            null,
+
+          prework_agreement: {
+            ...(currentRequest.prework_agreement || {}),
+            site_manager:
+              assignmentData.siteManager,
+            site_manager_phone:
+              assignmentData.siteManagerPhone,
+            assignment_notes:
+              assignmentData.notes
+          },
+
+          current_actor: "worker",
+          next_action: "accept_task",
           status: "assigned",
           updated_at: updatedAt
         })
@@ -2348,3 +2381,4 @@ async function saveAssignment() {
 
 </body>
 </html>
+

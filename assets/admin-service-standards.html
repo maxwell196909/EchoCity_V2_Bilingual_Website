@@ -925,6 +925,8 @@
 
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/echocity-supabase.js"></script>
   <script>    const translations = {
       zh: {
         backButton: "返回订单",
@@ -2199,6 +2201,95 @@
           standardsDocument
         );
 
+        const client =
+          window.echoCitySupabase;
+
+        if (
+          !client ||
+          typeof client.from !== "function"
+        ) {
+          throw new Error(
+            "Supabase connection is not available."
+          );
+        }
+
+        const requestNo =
+          currentRequest.request_no ||
+          currentRequest.requestNo ||
+          currentRequest.requestId ||
+          currentRequest.id;
+
+        if (!requestNo) {
+          throw new Error(
+            "Request number is missing."
+          );
+        }
+
+        const taskScope =
+          standardsDocument.tasks
+            .map((task, index) => {
+              const excluded =
+                task.excludedScope
+                  ? "\n不包含：" + task.excludedScope
+                  : "";
+
+              return (
+                (index + 1) +
+                ". " +
+                task.taskName +
+                "\n范围：" +
+                task.workScope +
+                excluded
+              );
+            })
+            .join("\n\n");
+
+        const acceptanceItems =
+          standardsDocument.tasks
+            .map((task, index) => {
+              return [
+                (index + 1) + ". " + task.taskName,
+                "完成标准：" + task.completionStandard,
+                "检查方法：" + task.inspectionMethod,
+                "证据要求：" + task.evidenceRequirement
+              ]
+                .filter(Boolean)
+                .join("\n");
+            })
+            .join("\n\n");
+
+        const { data, error } =
+          await client
+            .from("service_requests")
+            .update({
+              worker_task_scope:
+                taskScope || null,
+
+              customer_acceptance_items:
+                acceptanceItems || null,
+
+              current_actor: "platform",
+              next_action:
+                "prepare_implementation_plan",
+
+              updated_at:
+                new Date().toISOString()
+            })
+            .eq("request_no", requestNo)
+            .select("*")
+            .single();
+
+        if (error) {
+          throw error;
+        }
+
+        currentRequest = data;
+
+        localStorage.setItem(
+          "echocity-last-request",
+          JSON.stringify(data)
+        );
+
         showStatus(
           "success",
           translate("saved")
@@ -2257,3 +2348,4 @@
 
 </body>
 </html>
+

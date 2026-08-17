@@ -1553,14 +1553,18 @@
                       translate(
                         "siteManager"
                       ),
-                      task.site_manager
+                      task.site_manager ||
+                      task.prework_agreement?.site_manager ||
+                      task.customer_name
                     )}
 
                     ${createDetail(
                       translate(
                         "siteManagerPhone"
                       ),
-                      task.site_manager_phone
+                      task.site_manager_phone ||
+                      task.prework_agreement?.site_manager_phone ||
+                      task.customer_phone
                     )}
 
                     ${createDetail(
@@ -1572,6 +1576,8 @@
                       bi("任务范围", "Task Scope"),
                       task.worker_task_scope ||
                       task.assignment_notes ||
+                      task.prework_agreement?.assignment_notes ||
+                      task.description ||
                       task.quote_note,
                       true
                     )}
@@ -3035,3 +3041,4 @@
   </script>
 </body>
 </html>
+
