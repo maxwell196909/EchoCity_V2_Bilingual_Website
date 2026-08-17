@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v7-echo-ai";
+const CACHE_NAME = "echocity-v11-ai-voice-addon";
 
 const APP_FILES = [
   "./",
