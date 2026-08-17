@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>EchoCity | 专用任务链接</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/echocity-supabase.js"></script>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:Arial,"Microsoft YaHei",sans-serif;background:#eef4fb;color:#152238}
+    .page{width:min(920px,calc(100% - 24px));margin:auto;padding:18px 0 44px}
+    .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.nav-left{display:flex;align-items:center;gap:12px}.brand{font-size:22px;font-weight:900}
+    button{border:1px solid #ccd6e3;background:#fff;border-radius:999px;padding:9px 15px;font-weight:700}
+    .hero,.card{background:#fff;border:1px solid #d8e1ec;border-radius:18px;box-shadow:0 12px 32px rgba(35,55,80,.08)}
+    .hero{padding:24px;background:linear-gradient(135deg,#0e4d70,#11835d);color:#fff}.hero h1{margin:0 0 8px;font-size:clamp(28px,6vw,42px)}
+    .hero p{margin:0;line-height:1.65;opacity:.9}.card{margin-top:15px;padding:19px}.hidden{display:none}.status{line-height:1.65}
+    .error{background:#fff0f0;color:#a71d2a;border-color:#f2c8cc}.badge{display:inline-block;padding:5px 11px;border-radius:999px;background:#e8f2ff;color:#1555a2;font-size:13px;font-weight:800}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:14px}.item{padding:13px;border-radius:12px;background:#f6f8fb}
+    .item.full{grid-column:1/-1}.label{font-size:12px;color:#64748b;font-weight:700}.value{margin-top:6px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+    .section-title{margin:0 0 12px;font-size:19px}.counts{display:flex;gap:10px;flex-wrap:wrap}.count{padding:10px 13px;background:#eef7f3;border-radius:10px;color:#176440;font-weight:700}
+    .notice{margin-top:14px;padding:12px;border-radius:11px;background:#fff8df;color:#775800;line-height:1.55}
+    @media(max-width:650px){.grid{grid-template-columns:1fr}.item.full{grid-column:1}.top{align-items:flex-start}}
+  </style>
+</head>
+<body>
+<main class="page">
+  <header class="top"><div class="nav-left"><button id="backButton" type="button">← 返回</button><div class="brand">EchoCity</div></div><button id="langButton" type="button">EN</button></header>
+  <section class="hero">
+    <h1 id="title">任务协同页面</h1>
+    <p id="subtitle">客户、工人和平台围绕同一任务查看实时信息。</p>
+  </section>
+  <section id="loadingCard" class="card"><div id="loadingText" class="status">正在安全读取任务信息……</div></section>
+  <section id="errorCard" class="card error hidden"><div id="errorText" class="status"></div></section>
+  <section id="taskCard" class="card hidden">
+    <span id="roleBadge" class="badge"></span>
+    <div class="grid">
+      <div class="item"><div id="requestLabel" class="label"></div><div id="requestNo" class="value"></div></div>
+      <div class="item"><div id="statusLabel" class="label"></div><div id="status" class="value"></div></div>
+      <div class="item"><div id="typeLabel" class="label"></div><div id="serviceType" class="value"></div></div>
+      <div class="item"><div id="dateLabel" class="label"></div><div id="serviceDate" class="value"></div></div>
+      <div class="item full"><div id="descriptionLabel" class="label"></div><div id="description" class="value"></div></div>
+      <div class="item full"><div id="addressLabel" class="label"></div><div id="address" class="value"></div></div>
+      <div class="item"><div id="actorLabel" class="label"></div><div id="currentActor" class="value"></div></div>
+      <div class="item"><div id="actionLabel" class="label"></div><div id="nextAction" class="value"></div></div>
+      <div class="item"><div id="workerLabel" class="label"></div><div id="worker" class="value"></div></div>
+      <div class="item"><div id="startLabel" class="label"></div><div id="startAt" class="value"></div></div>
+    </div>
+  </section>
+  <section id="recordsCard" class="card hidden">
+    <h2 id="recordsTitle" class="section-title"></h2>
+    <div class="counts">
+      <div id="planCount" class="count"></div><div id="inspectionCount" class="count"></div><div id="evidenceCount" class="count"></div>
+    </div>
+    <div id="readOnlyNotice" class="notice"></div>
+  </section>
+</main>
+<script>
+  const text={
+    zh:{back:"← 返回",title:"任务协同页面",subtitle:"客户、工人和平台围绕同一任务查看实时信息。",loading:"正在安全读取任务信息……",invalid:"链接缺少必要信息，请联系平台重新发送。",expired:"链接无效或已经过期，请联系平台重新发送。",request:"任务编号",status:"当前状态",type:"服务类型",date:"计划日期",description:"任务内容",address:"服务地址",actor:"当前责任方",action:"下一步工作",worker:"服务人员",start:"计划开始时间",records:"任务资料",plans:"方案",inspections:"验收",evidence:"证据",notice:"当前为安全只读测试页面。确认三方读取正常后，将继续接入确认、上传照片、验收和状态更新功能。",none:"未填写",roles:{customer:"客户",worker:"工人",platform:"平台"}},
+    en:{back:"← Back",title:"Task Collaboration",subtitle:"Customer, worker and platform view the same live task data.",loading:"Securely loading task data...",invalid:"This link is incomplete. Ask the platform to send a new one.",expired:"This link is invalid or expired. Ask the platform to send a new one.",request:"Request number",status:"Status",type:"Service type",date:"Service date",description:"Task description",address:"Service address",actor:"Current actor",action:"Next action",worker:"Worker",start:"Planned start",records:"Task records",plans:"Plans",inspections:"Inspections",evidence:"Evidence",notice:"This is a secure read-only test page. After three-party reading is verified, confirmations, photo upload, inspections and status actions will be connected.",none:"Not provided",roles:{customer:"Customer",worker:"Worker",platform:"Platform"}}
+  };
+  let lang=localStorage.getItem("echocity-language")||"zh";let task=null;let role="";
+  const $=id=>document.getElementById(id);const show=id=>$(id).classList.remove("hidden");const hide=id=>$(id).classList.add("hidden");
+  function value(v){return v===null||v===undefined||v===""?text[lang].none:String(v)}
+  function dateTime(v){if(!v)return text[lang].none;const d=new Date(v);return Number.isNaN(d.getTime())?String(v):d.toLocaleString(lang==="zh"?"zh-CN":"en-US")}
+  function applyLanguage(){const t=text[lang];document.documentElement.lang=lang==="zh"?"zh-CN":"en";$("backButton").textContent=t.back;$("langButton").textContent=lang==="zh"?"EN":"中文";$("title").textContent=t.title;$("subtitle").textContent=t.subtitle;$("loadingText").textContent=t.loading;
+    [["requestLabel",t.request],["statusLabel",t.status],["typeLabel",t.type],["dateLabel",t.date],["descriptionLabel",t.description],["addressLabel",t.address],["actorLabel",t.actor],["actionLabel",t.action],["workerLabel",t.worker],["startLabel",t.start],["recordsTitle",t.records],["readOnlyNotice",t.notice]].forEach(([id,v])=>$(id).textContent=v);if(task)render();}
+  function render(){const t=text[lang];$("roleBadge").textContent=t.roles[role]||role;$("requestNo").textContent=value(task.request_no);$("status").textContent=value(task.status);$("serviceType").textContent=value(task.service_type);$("serviceDate").textContent=value(task.service_date);$("description").textContent=value(task.description);$("address").textContent=value(task.address);$("currentActor").textContent=value(task.current_actor);$("nextAction").textContent=value(task.next_action);$("worker").textContent=value(task.assigned_worker);$("startAt").textContent=dateTime(task.assigned_start_time);$("planCount").textContent=`${t.plans}: ${(task.plans||[]).length}`;$("inspectionCount").textContent=`${t.inspections}: ${(task.inspections||[]).length}`;$("evidenceCount").textContent=`${t.evidence}: ${(task.evidence||[]).length}`;}
+  async function load(){const query=new URLSearchParams(location.search);const secret=new URLSearchParams(location.hash.slice(1));const requestNo=query.get("request");role=query.get("role")||"";const token=secret.get("token");if(!requestNo||!token||!["customer","worker","platform"].includes(role)){hide("loadingCard");$("errorText").textContent=text[lang].invalid;show("errorCard");return;}
+    try{const client=window.echoCitySupabase;if(!client)throw new Error("NO_CLIENT");const {data,error}=await client.rpc("read_task_with_token",{p_request_no:requestNo,p_token:token,p_role:role});if(error)throw error;task=data;render();hide("loadingCard");show("taskCard");show("recordsCard");}catch(error){console.error(error);hide("loadingCard");$("errorText").textContent=text[lang].expired;show("errorCard");}}
+  $("backButton").addEventListener("click",()=>{if(history.length>1){history.back();}else{location.href="../index.html";}});
+  $("langButton").addEventListener("click",()=>{lang=lang==="zh"?"en":"zh";localStorage.setItem("echocity-language",lang);applyLanguage();});applyLanguage();load();
+</script>
+</body>
+</html>
