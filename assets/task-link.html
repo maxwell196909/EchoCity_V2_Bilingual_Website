@@ -88,5 +88,6 @@
   ["siteCheck","scopeCheck"].forEach(id=>$(id).addEventListener("change",refreshStartButton));$("prestartPhoto").addEventListener("change",()=>{$("selectedFileName").textContent=$("prestartPhoto").files[0]?.name||"尚未选择照片";refreshStartButton();});$("startWorkButton").addEventListener("click",startWork);
   $("langButton").addEventListener("click",()=>{lang=lang==="zh"?"en":"zh";localStorage.setItem("echocity-language",lang);applyLanguage();});applyLanguage();load();
 </script>
+<script src="../js/task-work-record.js"></script>
 </body>
 </html>
