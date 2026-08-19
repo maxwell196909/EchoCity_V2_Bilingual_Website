@@ -1,5 +1,4 @@
-const CACHE_NAME = "echocity-v11-ai-voice-addon";
-
+const CACHE_NAME = "echocity-v12-photo-picker-fix";
 const APP_FILES = [
   "./",
   "./index.html",
