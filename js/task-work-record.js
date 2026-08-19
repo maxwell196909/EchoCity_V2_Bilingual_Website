@@ -78,8 +78,7 @@
     const materials = el("textarea", { id: "wrMaterials", maxlength: "1000" });
     const issues = el("textarea", { id: "wrIssues", maxlength: "1000" });
     const hours = el("input", { id: "wrHours", type: "number", min: "0", max: "24", step: "0.5" });
-    const photo = el("input", { id: "wrPhoto", type: "file", accept: "image/*", capture: "environment" });
-    const fileName = el("div", { id: "wrFileName", className: "wr-file", text: t.none });
+    const photo = el("input", { id: "wrPhoto", type: "file", accept: "image/*" });    const fileName = el("div", { id: "wrFileName", className: "wr-file", text: t.none });
     const button = el("button", { id: "wrSave", className: "primary", type: "button", disabled: "disabled" });
     button.textContent = t.save;
     const status = el("div", { id: "wrStatus", className: "wr-status" });
