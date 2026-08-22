@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v13-request-submit-fix";
+const CACHE_NAME = "echocity-v14-request-submit-minimal";
 const APP_FILES = [
   "./",
   "./index.html",
