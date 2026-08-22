@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v12-photo-picker-fix";
+const CACHE_NAME = "echocity-v13-request-submit-fix";
 const APP_FILES = [
   "./",
   "./index.html",
