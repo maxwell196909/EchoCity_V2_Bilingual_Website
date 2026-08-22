@@ -427,6 +427,23 @@
     <section class="search-card">
       <label
         class="field-label"
+        for="requestNoInput"
+        data-i18n="requestNoLabel"
+      >
+        需求编号
+      </label>
+
+      <input
+        class="phone-input"
+        id="requestNoInput"
+        type="text"
+        autocomplete="off"
+        placeholder="例如 REQ-1787384098770"
+        data-i18n-placeholder="requestNoPlaceholder"
+      />
+
+      <label
+        class="field-label"
         for="phoneInput"
         data-i18n="phoneLabel"
       >
@@ -491,7 +508,10 @@
         label: "客户服务记录",
         title: "我的需求",
         subtitle:
-          "输入提交需求时使用的手机号，查看服务进度、报价和派工状态。",
+          "输入需求编号和提交时使用的手机号，安全查看服务进度、报价和派工状态。",
+
+        requestNoLabel: "需求编号",
+        requestNoPlaceholder: "例如 REQ-1787384098770",
 
         phoneLabel: "手机号码",
         phonePlaceholder:
@@ -501,8 +521,9 @@
         searching: "正在查询云端需求……",
 
         noPhone: "请输入手机号码。",
+        noRequestNo: "请输入需求编号。",
         noRequests:
-          "没有找到该手机号提交的需求。",
+          "需求编号或手机号不正确，未找到对应需求。",
 
         found: "已找到 {count} 条需求。",
         loadError:
@@ -526,7 +547,7 @@
 
         emptyTitle: "尚未查询需求",
         emptyText:
-          "输入手机号后，可以查看对应的云端服务记录。",
+          "输入需求编号和手机号后，可以安全查看对应的云端服务记录。",
 
         unknownService: "其他服务",
 
@@ -545,7 +566,10 @@
         title: "My Requests",
 
         subtitle:
-          "Enter the phone number used when submitting the request to view progress, quotes, and assignment status.",
+          "Enter the request number and phone used at submission to securely view progress, quotes, and assignment status.",
+
+        requestNoLabel: "Request number",
+        requestNoPlaceholder: "Example: REQ-1787384098770",
 
         phoneLabel: "Phone number",
         phonePlaceholder:
@@ -555,9 +579,10 @@
         searching: "Loading cloud requests...",
 
         noPhone: "Please enter your phone number.",
+        noRequestNo: "Please enter the request number.",
 
         noRequests:
-          "No requests were found for this phone number.",
+          "The request number or phone did not match.",
 
         found: "{count} request(s) found.",
 
@@ -583,7 +608,7 @@
         emptyTitle: "No search yet",
 
         emptyText:
-          "Enter your phone number to view your cloud service records.",
+          "Enter the request number and phone to securely view the service record.",
 
         unknownService: "Other service",
 
@@ -601,6 +626,9 @@
     let currentLanguage =
       localStorage.getItem("echocity-language") ||
       "zh";
+
+    const requestNoInput =
+      document.getElementById("requestNoInput");
 
     const phoneInput =
       document.getElementById("phoneInput");
@@ -892,8 +920,18 @@
     }
 
     async function loadRequests() {
+      const requestNo =
+        requestNoInput.value.trim().toUpperCase();
+
       const phone =
         phoneInput.value.trim();
+
+      if (!requestNo) {
+        message.textContent =
+          t("noRequestNo");
+
+        return;
+      }
 
       if (!phone) {
         message.textContent =
@@ -905,6 +943,11 @@
       localStorage.setItem(
         "echocity-customer-phone",
         phone
+      );
+
+      localStorage.setItem(
+        "echocity-customer-request-no",
+        requestNo
       );
 
       message.textContent =
@@ -923,19 +966,13 @@
         }
 
         const { data, error } =
-          await client
-            .from("service_requests")
-            .select("*")
-            .eq(
-              "customer_phone",
-              phone
-            )
-            .order(
-              "created_at",
-              {
-                ascending: false
-              }
-            );
+          await client.rpc(
+            "lookup_customer_request",
+            {
+              p_request_no: requestNo,
+              p_customer_phone: phone
+            }
+          );
 
         if (error) {
           throw error;
@@ -1010,6 +1047,15 @@
       }
     );
 
+    requestNoInput.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Enter") {
+          loadRequests();
+        }
+      }
+    );
+
     document.addEventListener(
       "DOMContentLoaded",
       () => {
@@ -1020,10 +1066,18 @@
             "echocity-customer-phone"
           ) || "";
 
+        const savedRequestNo =
+          localStorage.getItem(
+            "echocity-customer-request-no"
+          ) || new URLSearchParams(window.location.search).get("request_no") || "";
+
         phoneInput.value =
           savedPhone;
 
-        if (savedPhone) {
+        requestNoInput.value =
+          savedRequestNo;
+
+        if (savedPhone && savedRequestNo) {
           loadRequests();
         } else {
           renderEmpty();
