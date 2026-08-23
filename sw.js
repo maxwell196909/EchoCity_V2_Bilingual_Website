@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v19-plan-confirmation";
+const CACHE_NAME = "echocity-v20-worker-link-reissue";
 const APP_FILES = [
   "./",
   "./index.html",
