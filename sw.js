@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v24-overdue-alerts";
+const CACHE_NAME = "echocity-v25-worker-credit";
 const APP_FILES = [
   "./",
   "./index.html",
