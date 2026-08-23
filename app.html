@@ -53,8 +53,8 @@
 
     <nav class="nav" aria-label="EchoCity 主导航">
       <button class="nav-button active" type="button" data-page="home" data-src="index.html"><span>🏠</span><b data-zh="首页" data-en="Home">首页</b></button>
-      <button class="nav-button" type="button" data-page="customer" data-src="assets/customer-dashboard.html"><span>🙋</span><b data-zh="客户" data-en="Customer">客户</b></button>
-      <button class="nav-button" type="button" data-page="worker" data-src="assets/worker-dashboard.html"><span>🧰</span><b data-zh="服务人员" data-en="Worker">服务人员</b></button>
+      <button class="nav-button" type="button" data-page="customer" data-src="assets/customer-role-home.html"><span>🙋</span><b data-zh="客户" data-en="Customer">客户</b></button>
+      <button class="nav-button" type="button" data-page="worker" data-src="assets/worker-role-home.html"><span>🧰</span><b data-zh="服务人员" data-en="Worker">服务人员</b></button>
       <button class="nav-button" type="button" data-page="admin" data-src="assets/admin-dashboard.html"><span>📋</span><b data-zh="平台" data-en="Platform">平台</b></button>
     </nav>
   </main>
@@ -79,7 +79,7 @@
       buttons.forEach(item=>item.classList.toggle("active",item===button));
       loading.classList.remove("hidden");
       const target=new URL(button.dataset.src,location.href);
-      target.searchParams.set("app_v","43");
+      target.searchParams.set("app_v","44");
       if(button.dataset.page==="admin"){
         const token=localStorage.getItem("echocity-platform-token")||sessionStorage.getItem("echocity-platform-token");
         if(token)target.hash="platform_token="+encodeURIComponent(token);
