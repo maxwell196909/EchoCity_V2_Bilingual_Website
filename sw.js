@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v23-operations-overview";
+const CACHE_NAME = "echocity-v24-overdue-alerts";
 const APP_FILES = [
   "./",
   "./index.html",
