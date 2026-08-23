@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v35-customer-warranty";
+const CACHE_NAME = "echocity-v36-after-sales-evidence";
 const APP_FILES = [
   "./",
   "./index.html",
