@@ -1054,11 +1054,13 @@
       <div id="workerLinkBox" class="status-message success" style="display:none">
         <strong>工人专用任务链接</strong>
         <input id="workerTaskLink" class="input" type="text" readonly style="margin-top:10px">
+        <button class="primary-button" type="button" onclick="openWorkerTaskLink()" style="margin-top:10px">打开链接</button>
         <button class="secondary-button" type="button" onclick="copyWorkerTaskLink()" style="margin-top:10px">复制链接</button>
       </div>
       <div id="customerPlanLinkBox" class="status-message success" style="display:none">
         <strong>客户确认施工方案链接</strong>
         <input id="customerPlanLink" class="input" type="text" readonly style="margin-top:10px">
+        <button class="primary-button" type="button" onclick="openCustomerPlanLink()" style="margin-top:10px">打开链接</button>
         <button class="secondary-button" type="button" onclick="copyCustomerPlanLink()" style="margin-top:10px">复制链接</button>
       </div>
       <button id="reissueWorkerLinkButton" class="secondary-button" type="button" onclick="reissueWorkerLink()" style="margin-top:12px">重新签发工人链接</button>
@@ -1412,10 +1414,18 @@ const translations = {
       await navigator.clipboard.writeText(input.value);
       showStatus("success", currentLanguage === "zh" ? "工人链接已复制。" : "Worker link copied.");
     }
+    function openWorkerTaskLink() {
+      const url = document.getElementById("workerTaskLink").value;
+      if (url) window.location.href = url;
+    }
     async function copyCustomerPlanLink() {
       const input = document.getElementById("customerPlanLink");
       await navigator.clipboard.writeText(input.value);
       showStatus("success", currentLanguage === "zh" ? "客户确认链接已复制。" : "Customer confirmation link copied.");
+    }
+    function openCustomerPlanLink() {
+      const url = document.getElementById("customerPlanLink").value;
+      if (url) window.location.href = url;
     }
     async function reissueWorkerLink() {
       const requestNo = new URLSearchParams(location.search).get("request_no") || "";
