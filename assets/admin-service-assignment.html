@@ -1061,6 +1061,7 @@
         <input id="customerPlanLink" class="input" type="text" readonly style="margin-top:10px">
         <button class="secondary-button" type="button" onclick="copyCustomerPlanLink()" style="margin-top:10px">复制链接</button>
       </div>
+      <button id="reissueWorkerLinkButton" class="secondary-button" type="button" onclick="reissueWorkerLink()" style="margin-top:12px">重新签发工人链接</button>
 
     </section>
 
@@ -1415,6 +1416,25 @@ const translations = {
       const input = document.getElementById("customerPlanLink");
       await navigator.clipboard.writeText(input.value);
       showStatus("success", currentLanguage === "zh" ? "客户确认链接已复制。" : "Customer confirmation link copied.");
+    }
+    async function reissueWorkerLink() {
+      const requestNo = new URLSearchParams(location.search).get("request_no") || "";
+      const bytes = new Uint8Array(32);
+      crypto.getRandomValues(bytes);
+      const newToken = Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("");
+      const { error } = await window.echoCitySupabase.rpc("set_worker_link_with_platform_token", {
+        p_request_no: requestNo,
+        p_platform_token: getPlatformToken(),
+        p_new_token: newToken
+      });
+      if (error) {
+        showStatus("error", currentLanguage === "zh" ? "签发失败，请重试。" : "Unable to issue link.");
+        return;
+      }
+      const workerLink = `${location.origin}${location.pathname.replace("admin-service-assignment.html", "task-link.html")}?request=${encodeURIComponent(requestNo)}&role=worker#token=${newToken}`;
+      document.getElementById("workerTaskLink").value = workerLink;
+      document.getElementById("workerLinkBox").style.display = "block";
+      showStatus("success", currentLanguage === "zh" ? "新工人链接已签发，旧链接已作废。" : "New worker link issued; old links revoked.");
     }
 
     function getServiceName(serviceType) {
