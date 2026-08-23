@@ -24,7 +24,7 @@
     const $=id=>document.getElementById(id);
     const esc=v=>String(v??'—').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     function token(){const p=new URLSearchParams(location.search),x=p.get('platform_token');if(x){sessionStorage.setItem('echocity-platform-token',x);p.delete('platform_token');history.replaceState(null,'',location.pathname)}return x||sessionStorage.getItem('echocity-platform-token')||''}
-    function orderHref(requestNo){return `admin-service-requests.html?request_no=${encodeURIComponent(requestNo)}`}
+    function orderHref(requestNo){return `admin-order-360.html?request_no=${encodeURIComponent(requestNo)}`}
     async function load(){
       try{
         const platformToken=token();
