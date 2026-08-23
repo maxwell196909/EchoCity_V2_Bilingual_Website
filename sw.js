@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v23-customer-milestone-review";
+const CACHE_NAME = "echocity-v24-platform-milestone-review";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -16,6 +16,7 @@ const APP_FILES = [
   "./assets/service-request-confirmation.html",
   "./assets/service-quote-confirmation.html",
   "./assets/task-link.html",
+  "./assets/admin-milestone-review.html",
   "./assets/worker-dashboard.html",
   "./assets/worker-tasks.html",
   "./assets/worker-milestone-submission.html",
