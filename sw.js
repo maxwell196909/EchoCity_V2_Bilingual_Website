@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v36-after-sales-evidence";
+const CACHE_NAME = "echocity-v37-platform-evidence-review";
 const APP_FILES = [
   "./",
   "./index.html",
