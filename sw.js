@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v30-new-request-routing";
+const CACHE_NAME = "echocity-v31-assignment-open-links";
 const APP_FILES = [
   "./",
   "./index.html",
