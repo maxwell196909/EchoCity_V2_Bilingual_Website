@@ -1082,9 +1082,10 @@
           ) || "";
 
         const savedRequestNo =
+          new URLSearchParams(window.location.search).get("request_no") ||
           localStorage.getItem(
             "echocity-customer-request-no"
-          ) || new URLSearchParams(window.location.search).get("request_no") || "";
+          ) || "";
 
         phoneInput.value =
           savedPhone;
