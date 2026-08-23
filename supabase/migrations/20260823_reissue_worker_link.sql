@@ -9,7 +9,9 @@ begin
   if v_no is null then raise exception 'ACTIVE_TASK_NOT_FOUND'; end if;
   update public.task_access_tokens set revoked_at=now() where request_no=v_no and role='worker' and revoked_at is null;
   v_token:=encode(extensions.gen_random_bytes(32),'hex');
-  insert into public.task_access_tokens(request_no,role,token_hash,expires_at) values(v_no,'worker',encode(extensions.digest(v_token,'sha256'),'hex'),now()+interval '30 days');
+  insert into public.task_access_tokens(request_no,role,token_hash,expires_at,revoked_at)
+  values(v_no,'worker',encode(extensions.digest(v_token,'sha256'),'hex'),now()+interval '30 days',null)
+  on conflict(request_no,role) do update set token_hash=excluded.token_hash,expires_at=excluded.expires_at,revoked_at=null;
   return jsonb_build_object('request_no',v_no,'worker_token',v_token);
 end;$function$;
 revoke all on function public.reissue_worker_link_with_platform_token(text,text) from public,anon,authenticated;
@@ -27,7 +29,9 @@ begin
   select request_no into v_no from public.service_requests where request_no=upper(trim(p_request_no)) and status in ('assigned','accepted','arrived','in_progress');
   if v_no is null then raise exception 'ACTIVE_TASK_NOT_FOUND'; end if;
   update public.task_access_tokens set revoked_at=now() where request_no=v_no and role='worker' and revoked_at is null;
-  insert into public.task_access_tokens(request_no,role,token_hash,expires_at) values(v_no,'worker',encode(extensions.digest(p_new_token,'sha256'),'hex'),now()+interval '30 days');
+  insert into public.task_access_tokens(request_no,role,token_hash,expires_at,revoked_at)
+  values(v_no,'worker',encode(extensions.digest(p_new_token,'sha256'),'hex'),now()+interval '30 days',null)
+  on conflict(request_no,role) do update set token_hash=excluded.token_hash,expires_at=excluded.expires_at,revoked_at=null;
   return true;
 end;$function$;
 revoke all on function public.set_worker_link_with_platform_token(text,text,text) from public,anon,authenticated;
