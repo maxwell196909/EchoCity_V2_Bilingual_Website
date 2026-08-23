@@ -327,11 +327,21 @@ window.EchoCityServices = {
       status: "submitted"
     };
 
-    const { data, error } = await supabaseClient
-      .from("service_requests")
-      .insert(payload)
-      .select()
-      .single();
+    const { data, error } = await supabaseClient.rpc(
+      "submit_customer_service_request",
+      {
+        p_service_type: payload.service_type,
+        p_description: payload.description,
+        p_service_date: payload.service_date,
+        p_start_time: payload.start_time,
+        p_workers: payload.workers,
+        p_duration: payload.duration,
+        p_postal_code: payload.postal_code,
+        p_address: payload.address,
+        p_customer_name: payload.customer_name,
+        p_customer_phone: payload.customer_phone
+      }
+    );
 
     if (error) {
       console.error("Supabase request insert failed:", error);
