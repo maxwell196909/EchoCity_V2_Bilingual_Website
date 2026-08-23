@@ -54,8 +54,8 @@
     <nav class="nav" aria-label="EchoCity 主导航">
       <button class="nav-button active" type="button" data-page="home" data-src="index.html"><span>🏠</span><b data-zh="首页" data-en="Home">首页</b></button>
       <button class="nav-button" type="button" data-page="customer" data-src="assets/customer-dashboard.html"><span>🙋</span><b data-zh="客户" data-en="Customer">客户</b></button>
-      <button class="nav-button" type="button" data-page="worker" data-src="assets/worker-dashboard.html"><span>🧰</span><b data-zh="工人" data-en="Worker">工人</b></button>
-      <button class="nav-button" type="button" data-page="admin" data-src="assets/admin-dashboard.html"><span>📋</span><b data-zh="管理" data-en="Manage">管理</b></button>
+      <button class="nav-button" type="button" data-page="worker" data-src="assets/worker-dashboard.html"><span>🧰</span><b data-zh="服务人员" data-en="Worker">服务人员</b></button>
+      <button class="nav-button" type="button" data-page="admin" data-src="assets/admin-dashboard.html"><span>📋</span><b data-zh="平台" data-en="Platform">平台</b></button>
     </nav>
   </main>
 
@@ -65,10 +65,25 @@
     const buttons=Array.from(document.querySelectorAll(".nav-button"));
     let language=localStorage.getItem("echocity-language")||"zh";
 
+    function capturePlatformToken(){
+      const query=new URLSearchParams(location.search);
+      const hash=new URLSearchParams(location.hash.replace(/^#/,""));
+      const token=query.get("platform_token")||hash.get("platform_token");
+      if(token){
+        localStorage.setItem("echocity-platform-token",token);
+        sessionStorage.setItem("echocity-platform-token",token);
+      }
+    }
+
     function openPage(button,remember=true){
       buttons.forEach(item=>item.classList.toggle("active",item===button));
       loading.classList.remove("hidden");
-      frame.src=button.dataset.src;
+      const target=new URL(button.dataset.src,location.href);
+      if(button.dataset.page==="admin"){
+        const token=localStorage.getItem("echocity-platform-token")||sessionStorage.getItem("echocity-platform-token");
+        if(token)target.hash="platform_token="+encodeURIComponent(token);
+      }
+      frame.src=target.href;
       if(remember)localStorage.setItem("echocity-client-page",button.dataset.page);
     }
 
@@ -86,6 +101,7 @@
     document.getElementById("reloadButton").addEventListener("click",()=>{loading.classList.remove("hidden");frame.contentWindow.location.reload();});
     document.getElementById("languageButton").addEventListener("click",()=>{language=language==="zh"?"en":"zh";localStorage.setItem("echocity-language",language);applyLanguage();frame.contentWindow.location.reload();});
 
+    capturePlatformToken();
     applyLanguage();
     const savedPage=localStorage.getItem("echocity-client-page")||"home";
     openPage(buttons.find(item=>item.dataset.page===savedPage)||buttons[0],false);
