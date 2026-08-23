@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v17-secure-quote-workflow";
+const CACHE_NAME = "echocity-v18-secure-worker-flow";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -15,6 +15,7 @@ const APP_FILES = [
   "./assets/service-request.html",
   "./assets/service-request-confirmation.html",
   "./assets/service-quote-confirmation.html",
+  "./assets/task-link.html",
   "./assets/worker-dashboard.html",
   "./assets/worker-tasks.html",
   "./assets/worker-milestone-submission.html",
