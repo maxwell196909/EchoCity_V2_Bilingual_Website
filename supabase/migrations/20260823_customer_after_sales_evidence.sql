@@ -72,3 +72,15 @@ begin
 end;$$;
 revoke all on function public.get_customer_after_sales_evidence_with_token(text,text) from public;
 grant execute on function public.get_customer_after_sales_evidence_with_token(text,text) to anon,authenticated,service_role;
+
+create or replace function public.get_platform_after_sales_evidence_with_token(p_platform_token text)
+returns jsonb language plpgsql stable security definer set search_path=''
+as $$
+begin
+  if p_platform_token is null or length(p_platform_token)<64 or length(p_platform_token)>128 then raise exception 'INVALID_PLATFORM_LINK'; end if;
+  if not exists(select 1 from private.platform_dashboard_tokens t where t.token_hash=encode(extensions.digest(p_platform_token,'sha256'),'hex') and t.revoked_at is null and t.expires_at>now()) then raise exception 'PLATFORM_LINK_EXPIRED_OR_INVALID'; end if;
+  return coalesce((select jsonb_agg(jsonb_build_object('id',e.id,'case_no',c.case_no,'request_no',e.request_no,'file_name',e.original_file_name,'mime_type',e.mime_type,'file_size',e.file_size,'review_status',e.review_status,'uploaded_at',e.uploaded_at,'reviewed_at',e.reviewed_at,'review_note',e.review_note) order by case e.review_status when 'pending_review' then 0 else 1 end,e.uploaded_at desc)
+    from public.after_sales_evidence e join public.after_sales_cases c on c.id=e.case_id),'[]'::jsonb);
+end;$$;
+revoke all on function public.get_platform_after_sales_evidence_with_token(text) from public;
+grant execute on function public.get_platform_after_sales_evidence_with_token(text) to anon,authenticated,service_role;
