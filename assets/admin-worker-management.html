@@ -23,7 +23,7 @@ async function rpc(name,body){
   if(!response.ok)throw new Error(payload?.message||payload?.hint||`API ${response.status}`);
   return payload;
 }
-function token(){const p=new URLSearchParams(location.search),x=p.get('platform_token');if(x){sessionStorage.setItem('echocity-platform-token',x);p.delete('platform_token');history.replaceState(null,'',location.pathname)}return x||sessionStorage.getItem('echocity-platform-token')||''}
+function token(){const q=new URLSearchParams(location.search),h=new URLSearchParams(location.hash.replace(/^#/,'')),x=q.get('platform_token')||h.get('platform_token');if(x){localStorage.setItem('echocity-platform-token',x);sessionStorage.setItem('echocity-platform-token',x)}return x||localStorage.getItem('echocity-platform-token')||sessionStorage.getItem('echocity-platform-token')||''}
 function maskPhone(v){if(!v)return '未登记手机号';return v.length>7?`${v.slice(0,3)}****${v.slice(-4)}`:v}
 async function setStatus(id,status,button){
   if(!confirm(`确认将该服务人员调整为“${statusText[status]}”吗？`))return;
@@ -31,10 +31,34 @@ async function setStatus(id,status,button){
   try{await rpc('update_platform_worker_status_with_token',{p_token:platformToken,p_worker_id:id,p_status:status})}catch(e){alert(`操作失败：${e.message}`)}
   await load();
 }
+async function reviewQualification(id,decision,button){
+  let skills=[],identity=false,phone=false,safety=false,note='';
+  if(decision==='approved'){
+    const skillText=prompt('请输入已经核验的服务技能，多个技能用逗号分隔：');if(skillText===null)return;skills=skillText.split(/[,，]/).map(x=>x.trim()).filter(Boolean);if(!skills.length)return alert('至少需要登记一项已核验技能。');
+    identity=confirm('是否已经人工核对本人身份信息？');if(!identity)return alert('身份未核对，不能批准准入。');
+    phone=confirm('是否已经核对该手机号由本人使用？');if(!phone)return alert('手机号未核对，不能批准准入。');
+    safety=confirm('是否已经完成基础安全交底？');if(!safety)return alert('安全交底未完成，不能批准准入。');
+    note=prompt('请输入审核依据或备注（至少3个字）：')||'';if(note.trim().length<3)return alert('请填写审核依据。');
+    if(!confirm(`确认批准准入？\n技能：${skills.join('、')}\n审核记录将永久保存。`))return;
+  }else{note=prompt('请输入不予准入原因（至少3个字）：')||'';if(note.trim().length<3)return alert('请填写原因。')}
+  button.disabled=true;button.textContent='正在保存…';
+  try{await rpc('review_platform_worker_qualification_with_token',{p_token:platformToken,p_worker_id:id,p_decision:decision,p_identity_checked:identity,p_phone_checked:phone,p_safety_briefed:safety,p_skills:skills,p_note:note});await load()}catch(e){alert(`审核失败：${e.message}`);button.disabled=false}
+}
+async function setAvailability(id,value,button){
+  const note=prompt(value==='available'?'请输入确认其当前可接单的依据：':'请输入设置离线的原因：')||'';if(note.trim().length<2)return;
+  button.disabled=true;try{await rpc('set_platform_worker_availability_with_token',{p_token:platformToken,p_worker_id:id,p_availability:value,p_note:note});await load()}catch(e){alert(`操作失败：${e.message}`);button.disabled=false}
+}
+function workerActions(w){
+  const parts=[];
+  if(['unverified','pending'].includes(w.verification_status)){parts.push(`<button class="btn btn-primary" onclick="reviewQualification('${esc(w.id)}','approved',this)">审核准入</button><button class="btn btn-warn" onclick="reviewQualification('${esc(w.id)}','rejected',this)">不予准入</button>`)}
+  if(w.verification_status==='verified'&&w.status==='active'){parts.push(w.availability_status==='available'?`<button class="btn btn-warn" onclick="setAvailability('${esc(w.id)}','offline',this)">设为离线</button>`:`<button class="btn btn-primary" onclick="setAvailability('${esc(w.id)}','available',this)">设为可接单</button>`)}
+  parts.push(`<button class="btn btn-primary" ${w.status==='active'?'disabled':''} onclick="setStatus('${esc(w.id)}','active',this)">恢复在岗</button><button class="btn btn-warn" ${w.status==='paused'?'disabled':''} onclick="setStatus('${esc(w.id)}','paused',this)">暂停接单</button>`);
+  return parts.join('');
+}
 async function load(){
   try{platformToken=token();if(!platformToken)throw new Error('链接缺少平台访问凭证');const d=await rpc('get_platform_worker_roster_with_token',{p_token:platformToken});
     const s=d.summary||{};$('metrics').innerHTML=[['人员总数',s.total],['在岗人员',s.active],['当前可接单',s.available],['待资格核验',s.pending_verification]].map(x=>`<div class="metric"><div class="number">${esc(x[1])}</div><div class="label">${esc(x[0])}</div></div>`).join('');
-    const workers=d.workers||[];$('workers').innerHTML=workers.length?workers.map(w=>`<article class="worker"><div><div class="name">${esc(w.full_name)}</div><div class="muted">${esc(maskPhone(w.phone))}${w.city?` · ${esc(w.city)}`:''}</div><div class="tags"><span class="tag ${esc(w.status)}">${esc(statusText[w.status]||w.status)}</span><span class="tag">${esc(verifyText[w.verification_status]||w.verification_status)}</span><span class="tag">${esc(availabilityText[w.availability_status]||w.availability_status)}</span></div></div><div><div class="score">${esc(w.credit_score)} 分</div><div class="muted">服务信用</div></div><div><strong>${esc(w.completed_orders)}</strong> 完成 · <strong>${esc(w.rework_count)}</strong> 返工 · <strong>${esc(w.dispute_count)}</strong> 争议</div><div class="actions"><button class="btn btn-primary" ${w.status==='active'?'disabled':''} onclick="setStatus('${esc(w.id)}','active',this)">恢复在岗</button><button class="btn btn-warn" ${w.status==='paused'?'disabled':''} onclick="setStatus('${esc(w.id)}','paused',this)">暂停接单</button></div></article>`).join(''):'<div class="empty">暂无服务人员，请先完成一次派工。</div>';
+    const workers=d.workers||[];$('workers').innerHTML=workers.length?workers.map(w=>`<article class="worker"><div><div class="name">${esc(w.full_name)}</div><div class="muted">${esc(maskPhone(w.phone))}${w.city?` · ${esc(w.city)}`:''}</div><div class="tags"><span class="tag ${esc(w.status)}">${esc(statusText[w.status]||w.status)}</span><span class="tag">${esc(verifyText[w.verification_status]||w.verification_status)}</span><span class="tag">${esc(availabilityText[w.availability_status]||w.availability_status)}</span>${(w.skills||[]).map(s=>`<span class="tag">${esc(s)}</span>`).join('')}</div></div><div><div class="score">${esc(w.credit_score)} 分</div><div class="muted">服务信用</div></div><div><strong>${esc(w.completed_orders)}</strong> 完成 · <strong>${esc(w.rework_count)}</strong> 返工 · <strong>${esc(w.dispute_count)}</strong> 争议</div><div class="actions">${workerActions(w)}</div></article>`).join(''):'<div class="empty">暂无服务人员，请先完成一次派工。</div>';
     $('message').hidden=true;$('content').hidden=false;
   }catch(e){console.error(e);$('message').hidden=false;$('message').textContent=`人员数据读取失败：${e.message}`;$('message').className='message error'}
 }
