@@ -703,6 +703,18 @@
       return t(statusKey);
     }
 
+    function customerNextAction(item) {
+      const status = String(item.status || "");
+      const requestNo = encodeURIComponent(item.request_no || "");
+      if (["awaiting_final_acceptance", "waiting_final_acceptance"].includes(status)) {
+        return `<a class="primary-link" href="./customer-final-acceptance.html?request_no=${requestNo}">${currentLanguage === "en" ? "Complete final acceptance" : "进入最终验收"}</a>`;
+      }
+      if (["completed", "conditionally_completed", "closed"].includes(status)) {
+        return `<a class="primary-link" href="./customer-final-acceptance.html?request_no=${requestNo}">${currentLanguage === "en" ? "View acceptance result" : "查看验收结果"}</a>`;
+      }
+      return "";
+    }
+
     function getServiceName(serviceType) {
       const names = {
         repair:
@@ -913,6 +925,7 @@
     : ""
 }
               </div>
+              ${customerNextAction(item)}
             </article>
           `;
         })
