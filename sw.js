@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v40-order-360";
+const CACHE_NAME = "echocity-v41-horizontal-interconnection";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -35,6 +35,7 @@ const APP_FILES = [
   "./assets/admin-service-quote.html",
   "./assets/admin-order-archive.html",
   "./assets/admin-order-360.html",
+  "./assets/admin-cross-module-center.html",
   "./assets/admin-service-assignment.html",
   "./assets/admin-service-milestones.html",
   "./assets/customer-milestone-evaluation.html",
