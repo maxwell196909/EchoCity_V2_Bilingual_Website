@@ -1,0 +1,160 @@
+-- Secure platform quoting and customer quote confirmation for the no-login MVP.
+
+begin;
+
+create or replace function public.get_platform_request_with_token(
+  p_request_no text,
+  p_token text
+)
+returns jsonb
+language plpgsql
+security definer
+stable
+set search_path = ''
+as $function$
+declare
+  v_request public.service_requests%rowtype;
+begin
+  if p_token is null or length(p_token) < 64 or length(p_token) > 128 then
+    raise exception 'INVALID_PLATFORM_LINK';
+  end if;
+  if not exists (
+    select 1 from private.platform_dashboard_tokens access_token
+    where access_token.token_hash = encode(extensions.digest(p_token, 'sha256'), 'hex')
+      and access_token.revoked_at is null and access_token.expires_at > now()
+  ) then
+    raise exception 'PLATFORM_LINK_EXPIRED_OR_INVALID';
+  end if;
+
+  select * into v_request from public.service_requests request
+  where request.request_no = upper(trim(p_request_no)) limit 1;
+  if not found then raise exception 'REQUEST_NOT_FOUND'; end if;
+
+  return jsonb_build_object(
+    'id', v_request.request_no, 'requestNo', v_request.request_no,
+    'request_no', v_request.request_no, 'serviceType', v_request.service_type,
+    'customerName', v_request.customer_name, 'customerPhone', v_request.customer_phone,
+    'serviceDate', v_request.service_date, 'serviceTime', v_request.start_time,
+    'serviceAddress', v_request.address, 'description', v_request.description,
+    'status', v_request.status, 'quoteAmount', v_request.quote_amount,
+    'quoteNote', v_request.quote_note, 'updatedAt', v_request.updated_at
+  );
+end;
+$function$;
+
+create or replace function public.save_platform_quote_with_token(
+  p_request_no text,
+  p_token text,
+  p_quote_amount numeric,
+  p_quote_note text
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $function$
+declare
+  v_request public.service_requests%rowtype;
+begin
+  if p_token is null or length(p_token) < 64 or length(p_token) > 128 then
+    raise exception 'INVALID_PLATFORM_LINK';
+  end if;
+  if not exists (
+    select 1 from private.platform_dashboard_tokens access_token
+    where access_token.token_hash = encode(extensions.digest(p_token, 'sha256'), 'hex')
+      and access_token.revoked_at is null and access_token.expires_at > now()
+  ) then
+    raise exception 'PLATFORM_LINK_EXPIRED_OR_INVALID';
+  end if;
+  if p_quote_amount is null or p_quote_amount < 0 or p_quote_amount > 1000000000 then
+    raise exception 'INVALID_QUOTE_AMOUNT';
+  end if;
+  if length(coalesce(p_quote_note, '')) > 5000 then raise exception 'QUOTE_NOTE_TOO_LONG'; end if;
+
+  update public.service_requests request
+  set quote_amount = p_quote_amount, quote_note = nullif(trim(p_quote_note), ''),
+      status = 'quoted', quote_confirmed = false, updated_at = now()
+  where request.request_no = upper(trim(p_request_no))
+    and request.status in ('submitted', 'reviewed', 'quoted', 'quote_declined')
+  returning * into v_request;
+  if not found then raise exception 'REQUEST_NOT_QUOTABLE'; end if;
+
+  return jsonb_build_object('request_no', v_request.request_no,
+    'quote_amount', v_request.quote_amount, 'quote_note', v_request.quote_note,
+    'status', v_request.status, 'updated_at', v_request.updated_at);
+end;
+$function$;
+
+create or replace function public.get_customer_quote_with_phone(
+  p_request_no text,
+  p_customer_phone text
+)
+returns jsonb
+language sql
+security definer
+stable
+set search_path = ''
+as $function$
+  select jsonb_build_object(
+    'request_no', request.request_no, 'service_type', request.service_type,
+    'description', request.description, 'service_date', request.service_date,
+    'start_time', request.start_time, 'workers', request.workers,
+    'address', request.address, 'status', request.status,
+    'quote_amount', request.quote_amount, 'quote_note', request.quote_note,
+    'quote_confirmed', request.quote_confirmed
+  )
+  from public.service_requests request
+  where request.request_no = upper(trim(p_request_no))
+    and regexp_replace(coalesce(request.customer_phone, ''), '[^0-9]', '', 'g') =
+        regexp_replace(coalesce(p_customer_phone, ''), '[^0-9]', '', 'g')
+    and length(regexp_replace(coalesce(p_customer_phone, ''), '[^0-9]', '', 'g')) between 7 and 20
+    and request.quote_amount is not null
+  limit 1;
+$function$;
+
+create or replace function public.submit_customer_quote_decision(
+  p_request_no text,
+  p_customer_phone text,
+  p_accept boolean
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $function$
+declare
+  v_request public.service_requests%rowtype;
+begin
+  update public.service_requests request
+  set status = case when p_accept then 'quote_confirmed' else 'quote_declined' end,
+      quote_confirmed = p_accept, updated_at = now()
+  where request.request_no = upper(trim(p_request_no))
+    and regexp_replace(coalesce(request.customer_phone, ''), '[^0-9]', '', 'g') =
+        regexp_replace(coalesce(p_customer_phone, ''), '[^0-9]', '', 'g')
+    and length(regexp_replace(coalesce(p_customer_phone, ''), '[^0-9]', '', 'g')) between 7 and 20
+    and request.quote_amount is not null
+    and request.status in ('quoted', 'quote_confirmed', 'quote_declined')
+  returning * into v_request;
+  if not found then raise exception 'QUOTE_NOT_FOUND_OR_NOT_ACTIONABLE'; end if;
+
+  return jsonb_build_object(
+    'request_no', v_request.request_no, 'service_type', v_request.service_type,
+    'description', v_request.description, 'service_date', v_request.service_date,
+    'start_time', v_request.start_time, 'workers', v_request.workers,
+    'address', v_request.address, 'status', v_request.status,
+    'quote_amount', v_request.quote_amount, 'quote_note', v_request.quote_note,
+    'quote_confirmed', v_request.quote_confirmed
+  );
+end;
+$function$;
+
+revoke all on function public.get_platform_request_with_token(text, text) from public, anon, authenticated;
+revoke all on function public.save_platform_quote_with_token(text, text, numeric, text) from public, anon, authenticated;
+revoke all on function public.get_customer_quote_with_phone(text, text) from public, anon, authenticated;
+revoke all on function public.submit_customer_quote_decision(text, text, boolean) from public, anon, authenticated;
+grant execute on function public.get_platform_request_with_token(text, text) to anon, authenticated, service_role;
+grant execute on function public.save_platform_quote_with_token(text, text, numeric, text) to anon, authenticated, service_role;
+grant execute on function public.get_customer_quote_with_phone(text, text) to anon, authenticated, service_role;
+grant execute on function public.submit_customer_quote_decision(text, text, boolean) to anon, authenticated, service_role;
+
+commit;
