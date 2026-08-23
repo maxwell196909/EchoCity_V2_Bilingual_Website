@@ -1385,27 +1385,28 @@
       applyLanguage();
     }
 
-    function getSelectedRequest() {
-      try {
-        const storedRequest =
-          localStorage.getItem(
-            "echocity-last-request"
-          );
-
-        if (!storedRequest) {
-          return null;
-        }
-
-        return JSON.parse(storedRequest);
-
-      } catch (error) {
-        console.error(
-          "Failed to read selected request:",
-          error
-        );
-
-        return null;
+    function getPlatformToken() {
+      const params = new URLSearchParams(window.location.search);
+      const incomingToken = params.get("platform_token");
+      if (incomingToken) {
+        sessionStorage.setItem("echocity-platform-token", incomingToken);
+        params.delete("platform_token");
+        const query = params.toString();
+        history.replaceState(null, "", `${location.pathname}${query ? `?${query}` : ""}`);
       }
+      return incomingToken || sessionStorage.getItem("echocity-platform-token") || "";
+    }
+
+    async function loadSelectedRequest() {
+      const requestNo = new URLSearchParams(window.location.search).get("request_no") || "";
+      const token = getPlatformToken();
+      if (!requestNo || !token || !window.echoCitySupabase) return null;
+      const { data, error } = await window.echoCitySupabase.rpc(
+        "get_platform_request_with_token",
+        { p_request_no: requestNo, p_token: token }
+      );
+      if (error) throw error;
+      return data;
     }
 
     function getServiceName(serviceType) {
@@ -1845,21 +1846,16 @@ async function saveQuote() {
       quoteData.description ||
       "";
 
-    const updatedAt =
-      new Date().toISOString();
-
     const { data, error } =
-      await client
-        .from("service_requests")
-        .update({
-          quote_amount: quoteAmount,
-          quote_note: quoteNote,
-          status: "quoted",
-          updated_at: updatedAt
-        })
-        .eq("request_no", requestNo)
-        .select()
-        .single();
+      await client.rpc(
+        "save_platform_quote_with_token",
+        {
+          p_request_no: requestNo,
+          p_token: getPlatformToken(),
+          p_quote_amount: quoteAmount,
+          p_quote_note: quoteNote
+        }
+      );
 
     if (error) {
       throw error;
@@ -1953,13 +1949,18 @@ async function saveQuote() {
 
     document.addEventListener(
       "DOMContentLoaded",
-      () => {
-        currentRequest =
-          getSelectedRequest();
-
+      async () => {
         setDefaultValidUntil();
         calculateTotal();
         applyLanguage();
+        try {
+          currentRequest = await loadSelectedRequest();
+          renderRequestSummary();
+        } catch (error) {
+          console.error("Failed to load selected request:", error);
+          currentRequest = null;
+          renderRequestSummary();
+        }
       }
     );
   </script>
