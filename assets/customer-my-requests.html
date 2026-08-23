@@ -558,7 +558,6 @@
         status_assigned: "已派工",
         status_in_progress: "服务进行中",
         status_completed: "已完成",
-        status_closed: "已结算归档",
         status_cancelled: "已取消"
       },
 
@@ -620,7 +619,6 @@
         status_assigned: "Assigned",
         status_in_progress: "In progress",
         status_completed: "Completed",
-        status_closed: "Settled and archived",
         status_cancelled: "Cancelled"
       }
     };
@@ -703,18 +701,6 @@
         `status_${status || "submitted"}`;
 
       return t(statusKey);
-    }
-
-    function customerNextAction(item) {
-      const status = String(item.status || "");
-      const requestNo = encodeURIComponent(item.request_no || "");
-      if (["awaiting_final_acceptance", "waiting_final_acceptance"].includes(status)) {
-        return `<a class="primary-link" href="./customer-final-acceptance.html?request_no=${requestNo}">${currentLanguage === "en" ? "Complete final acceptance" : "进入最终验收"}</a>`;
-      }
-      if (["completed", "conditionally_completed"].includes(status)) {
-        return `<a class="primary-link" href="./customer-final-acceptance.html?request_no=${requestNo}">${currentLanguage === "en" ? "View acceptance result" : "查看验收结果"}</a>`;
-      }
-      return "";
     }
 
     function getServiceName(serviceType) {
@@ -903,6 +889,7 @@
               </div>
 
               <div class="quote-box">
+                <a class="primary-link" href="./customer-order-progress.html?request_no=${encodeURIComponent(item.request_no)}">${currentLanguage === "en" ? "View order progress" : "查看订单进度"}</a>
                 <strong>
                   ${escapeHtml(
                     t("quote")
@@ -927,7 +914,6 @@
     : ""
 }
               </div>
-              ${customerNextAction(item)}
             </article>
           `;
         })
@@ -1082,10 +1068,9 @@
           ) || "";
 
         const savedRequestNo =
-          new URLSearchParams(window.location.search).get("request_no") ||
           localStorage.getItem(
             "echocity-customer-request-no"
-          ) || "";
+          ) || new URLSearchParams(window.location.search).get("request_no") || "";
 
         phoneInput.value =
           savedPhone;
