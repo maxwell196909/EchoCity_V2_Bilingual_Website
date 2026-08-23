@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v42-three-role-app";
+const CACHE_NAME = "echocity-v43-three-role-cache-fix";
 const APP_FILES = [
   "./",
   "./index.html",
