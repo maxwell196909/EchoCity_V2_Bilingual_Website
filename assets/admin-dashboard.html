@@ -470,7 +470,7 @@
 
           <a
             class="card-link"
-            href="admin-service-requests.html"
+            href="admin-operations-overview.html"
             data-i18n="requestsButton"
           >
             查看新需求
@@ -522,7 +522,7 @@
 
           <a
             class="card-link"
-            href="admin-service-assignment.html"
+            href="admin-dispatch-center.html"
             data-i18n="assignmentButton"
           >
             进入派工
@@ -548,7 +548,7 @@
 
           <a
             class="card-link"
-            href="admin-service-milestones.html"
+            href="admin-cross-module-center.html"
             data-i18n="monitorButton"
           >
             查看进度
@@ -574,7 +574,7 @@
 
           <a
             class="card-link"
-            href="admin-service-milestones.html"
+            href="admin-quality-center.html"
             data-i18n="milestoneButton"
           >
             审核节点
@@ -600,7 +600,7 @@
 
           <a
             class="card-link"
-            href="admin-service-requests.html"
+            href="admin-incident-center.html"
             data-i18n="exceptionButton"
           >
             查看异常
@@ -1048,215 +1048,33 @@
           applyLanguage();
         }
       );    async function loadPlatformSummary() {
-      const keyword =
-        normalizeValue(
-          document.getElementById(
-            "searchKeyword"
-          ).value
-        );
-
-      const client =
-        window.echoCitySupabase;
-
-      if (
-        !client ||
-        typeof client.from !==
-          "function"
-      ) {
+      const client=window.echoCitySupabase;
+      const field=document.getElementById("searchKeyword");
+      const entered=normalizeValue(field.value);
+      if(entered.length>=64){
+        localStorage.setItem("echocity-platform-token",entered);
+        sessionStorage.setItem("echocity-platform-token",entered);
+        field.value="";
+      }
+      const token=localStorage.getItem("echocity-platform-token")||sessionStorage.getItem("echocity-platform-token")||"";
+      if(!client||typeof client.rpc!=="function"||!token){
         resetCounts();
-
-        showStatus(
-          "error",
-          translate(
-            "loadError"
-          )
-        );
-
+        showStatus("error","请使用平台专用链接进入，或首次输入平台访问凭证。");
         return;
       }
-
-      showStatus(
-        "success",
-        translate(
-          "loading"
-        )
-      );
-
-      try {
-        const { data, error } =
-          await client
-            .from(
-              "service_requests"
-            )
-            .select(
-              "request_no,status,customer_phone,assigned_worker_phone,updated_at"
-            )
-            .order(
-              "updated_at",
-              {
-                ascending: false
-              }
-            );
-
-        if (error) {
-          throw error;
-        }
-
-        const allOrders =
-          Array.isArray(data)
-            ? data
-            : [];
-
-        const filteredOrders =
-          keyword
-            ? allOrders.filter(
-                function (order) {
-                  const requestNo =
-                    normalizeValue(
-                      order.request_no
-                    );
-
-                  const customerPhone =
-                    normalizeValue(
-                      order.customer_phone
-                    );
-
-                  const workerPhone =
-                    normalizeValue(
-                      order
-                        .assigned_worker_phone
-                    );
-
-                  return (
-                    requestNo.includes(
-                      keyword
-                    ) ||
-                    customerPhone.includes(
-                      keyword
-                    ) ||
-                    workerPhone.includes(
-                      keyword
-                    )
-                  );
-                }
-              )
-            : allOrders;
-
-        const pendingStatuses =
-          new Set([
-            "submitted",
-            "reviewed",
-            "quoted",
-            "quote_confirmed",
-            "assigned"
-          ]);
-
-        const activeStatuses =
-          new Set([
-            "accepted",
-            "arrived",
-            "agreement_submitted",
-            "working",
-            "milestone_submitted",
-            "milestone_approved",
-            "waiting_final_acceptance"
-          ]);
-
-        const completedStatuses =
-          new Set([
-            "completed",
-            "conditionally_completed"
-          ]);
-
-        const pendingCount =
-          filteredOrders.filter(
-            function (order) {
-              return pendingStatuses.has(
-                order.status
-              );
-            }
-          ).length;
-
-        const activeCount =
-          filteredOrders.filter(
-            function (order) {
-              return activeStatuses.has(
-                order.status
-              );
-            }
-          ).length;
-
-        const completedCount =
-          filteredOrders.filter(
-            function (order) {
-              return completedStatuses.has(
-                order.status
-              );
-            }
-          ).length;
-
-        document.getElementById(
-          "totalCount"
-        ).textContent =
-          String(
-            filteredOrders.length
-          );
-
-        document.getElementById(
-          "pendingCount"
-        ).textContent =
-          String(
-            pendingCount
-          );
-
-        document.getElementById(
-          "activeCount"
-        ).textContent =
-          String(
-            activeCount
-          );
-
-        document.getElementById(
-          "completedCount"
-        ).textContent =
-          String(
-            completedCount
-          );
-
-        if (
-          filteredOrders.length === 0
-        ) {
-          showStatus(
-            "error",
-            translate(
-              "loadEmpty"
-            )
-          );
-
-          return;
-        }
-
-        showStatus(
-          "success",
-          translate(
-            "loadSuccess"
-          )
-        );
-      } catch (error) {
-        console.error(
-          "Admin dashboard load failed:",
-          error
-        );
-
+      showStatus("success",translate("loading"));
+      try{
+        const {data,error}=await client.rpc("get_platform_operations_summary_with_token",{p_token:token});
+        if(error)throw error;
+        document.getElementById("totalCount").textContent=String(data.total||0);
+        document.getElementById("pendingCount").textContent=String((data.pending_review||0)+(data.pending_quote_confirmation||0)+(data.pending_assignment||0));
+        document.getElementById("activeCount").textContent=String((data.active||0)+(data.pending_final_acceptance||0)+(data.disputed||0));
+        document.getElementById("completedCount").textContent=String(data.closed||0);
+        showStatus("success","平台真实数据已连接。点击下方模块继续处理。");
+      }catch(error){
+        console.error("Admin dashboard load failed:",error);
         resetCounts();
-
-        showStatus(
-          "error",
-          error?.message ||
-          translate(
-            "loadError"
-          )
-        );
+        showStatus("error","平台访问凭证无效或已经过期。");
       }
     }
 
