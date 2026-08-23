@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v16-secure-platform-list";
+const CACHE_NAME = "echocity-v17-secure-quote-workflow";
 const APP_FILES = [
   "./",
   "./index.html",
