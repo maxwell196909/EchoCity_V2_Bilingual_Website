@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v25-worker-credit";
+const CACHE_NAME = "echocity-v26-worker-api-fix";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -22,6 +22,7 @@ const APP_FILES = [
   "./assets/worker-milestone-submission.html",
   "./assets/admin-dashboard.html",
   "./assets/admin-operations-overview.html",
+  "./assets/admin-worker-management.html",
   "./assets/admin-service-quote.html",
   "./assets/admin-order-archive.html",
   "./assets/admin-service-assignment.html",
