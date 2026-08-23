@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v26-settlement-closeout";
+const CACHE_NAME = "echocity-v27-unified-workbenches";
 const APP_FILES = [
   "./",
   "./index.html",
