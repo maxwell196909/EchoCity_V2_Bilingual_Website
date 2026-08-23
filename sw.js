@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v21-archive-timeline";
+const CACHE_NAME = "echocity-v22-customer-progress";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -12,6 +12,7 @@ const APP_FILES = [
   "./js/echocity-services.js",
   "./assets/customer-dashboard.html",
   "./assets/customer-my-requests.html",
+  "./assets/customer-order-progress.html",
   "./assets/service-request.html",
   "./assets/service-request-confirmation.html",
   "./assets/service-quote-confirmation.html",
