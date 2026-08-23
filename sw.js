@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v34-warranty-after-sales";
+const CACHE_NAME = "echocity-v35-customer-warranty";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -30,6 +30,7 @@ const APP_FILES = [
   "./assets/admin-prestart-center.html",
   "./assets/admin-quality-center.html",
   "./assets/admin-warranty-center.html",
+  "./assets/customer-warranty.html",
   "./assets/admin-service-quote.html",
   "./assets/admin-order-archive.html",
   "./assets/admin-service-assignment.html",
