@@ -2207,6 +2207,11 @@ async function saveAssignment() {
     return;
   }
 
+  if (["accepted", "arrived", "in_progress"].includes(currentRequest.status)) {
+    await reissueWorkerLink();
+    return;
+  }
+
   if (!validateAssignment()) {
     return;
   }
