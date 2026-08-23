@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v30-worker-qualification";
+const CACHE_NAME = "echocity-v31-plan-governance";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -26,6 +26,7 @@ const APP_FILES = [
   "./assets/admin-settlement-ledger.html",
   "./assets/admin-incident-center.html",
   "./assets/admin-dispatch-center.html",
+  "./assets/admin-plan-center.html",
   "./assets/admin-service-quote.html",
   "./assets/admin-order-archive.html",
   "./assets/admin-service-assignment.html",
