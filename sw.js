@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v21-reissue-on-save";
+const CACHE_NAME = "echocity-v22-milestone-submit";
 const APP_FILES = [
   "./",
   "./index.html",
