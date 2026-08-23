@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v27-unified-workbenches";
+const CACHE_NAME = "echocity-v29-secure-request-submission";
 const APP_FILES = [
   "./",
   "./index.html",
