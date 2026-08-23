@@ -41,7 +41,7 @@ begin
   select * into r from public.service_requests where request_no=v_request_no;
   return jsonb_build_object(
     'warranty',jsonb_build_object('request_no',w.request_no,'service_type',r.service_type,'status',case when w.status='active' and w.warranty_end_at<=now() then 'expired' else w.status end,'start_at',w.warranty_start_at,'end_at',w.warranty_end_at,'scope',w.coverage_scope,'exclusions',w.exclusions,'response_hours',w.response_hours),
-    'cases',coalesce((select jsonb_agg(jsonb_build_object('case_no',c.case_no,'issue',c.issue_description,'evidence',c.customer_evidence,'severity',c.severity,'status',c.status,'due_at',c.due_at,'platform_note',c.platform_note,'reinspection_result',c.reinspection_result,'opened_at',c.opened_at,'closed_at',c.closed_at) order by c.opened_at desc) from public.after_sales_cases c where c.warranty_id=w.id),'[]'::jsonb)
+    'cases',coalesce((select jsonb_agg(jsonb_build_object('case_no',c.case_no,'issue',c.issue_description,'evidence',c.customer_evidence,'severity',c.severity,'status',c.status,'due_at',c.due_at,'platform_note',c.platform_note,'reinspection_result',c.reinspection_result,'customer_reinspection_result',c.customer_reinspection_result,'customer_reinspection_note',c.customer_reinspection_note,'customer_reinspection_confirmed_at',c.customer_reinspection_confirmed_at,'reinspection_round',c.reinspection_round,'opened_at',c.opened_at,'closed_at',c.closed_at) order by c.opened_at desc) from public.after_sales_cases c where c.warranty_id=w.id),'[]'::jsonb)
   );
 end;$$;
 
