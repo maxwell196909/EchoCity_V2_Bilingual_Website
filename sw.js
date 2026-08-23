@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v41-horizontal-interconnection";
+const CACHE_NAME = "echocity-v42-three-role-app";
 const APP_FILES = [
   "./",
   "./index.html",
