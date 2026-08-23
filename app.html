@@ -79,6 +79,7 @@
       buttons.forEach(item=>item.classList.toggle("active",item===button));
       loading.classList.remove("hidden");
       const target=new URL(button.dataset.src,location.href);
+      target.searchParams.set("app_v","43");
       if(button.dataset.page==="admin"){
         const token=localStorage.getItem("echocity-platform-token")||sessionStorage.getItem("echocity-platform-token");
         if(token)target.hash="platform_token="+encodeURIComponent(token);
