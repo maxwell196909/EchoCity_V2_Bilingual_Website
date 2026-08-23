@@ -1159,15 +1159,11 @@
           );
         }
 
-        const { data, error } =
-          await client
-            .from("service_requests")
-            .select("*")
-            .eq(
-              "request_no",
-              requestNo
-            )
-            .maybeSingle();
+        const customerPhone = localStorage.getItem("echocity-customer-phone") || "";
+        const { data, error } = await client.rpc(
+          "get_customer_quote_with_phone",
+          { p_request_no: requestNo, p_customer_phone: customerPhone }
+        );
 
         if (error) {
           throw error;
@@ -1226,7 +1222,7 @@
       }
 
       const accepted =
-        newStatus === "confirmed";
+        newStatus === "quote_confirmed";
 
       const confirmText =
         accepted
@@ -1265,23 +1261,15 @@
           );
         }
 
-        const updatedAt =
-          new Date().toISOString();
-
-        const { data, error } =
-          await client
-            .from("service_requests")
-            .update({
-              status: newStatus,
-              quote_confirmed: accepted,
-              updated_at: updatedAt
-            })
-            .eq(
-              "request_no",
-              requestNo
-            )
-            .select("*")
-            .single();
+        const customerPhone = localStorage.getItem("echocity-customer-phone") || "";
+        const { data, error } = await client.rpc(
+          "submit_customer_quote_decision",
+          {
+            p_request_no: requestNo,
+            p_customer_phone: customerPhone,
+            p_accept: accepted
+          }
+        );
 
         if (error) {
           throw error;
@@ -1316,7 +1304,7 @@
       "click",
       () => {
         submitDecision(
-          "confirmed"
+          "quote_confirmed"
         );
       }
     );
