@@ -1528,7 +1528,7 @@
 
       if (
         !client ||
-        typeof client.from !==
+        typeof client.rpc !==
           "function"
       ) {
         throw new Error(
@@ -1536,85 +1536,42 @@
         );
       }
 
+      const requestNo =
+        new URLSearchParams(
+          window.location.search
+        ).get("request_no") || "";
+
+      if (!requestNo) {
+        throw new Error(
+          currentLanguage === "zh"
+            ? "链接缺少订单号，请从客户订单页面进入。"
+            : "The request number is missing from this link."
+        );
+      }
+
       const {
         data: requestData,
         error: requestError
-      } = await client
-        .from(
-          "service_requests"
-        )
-        .select("*")
-        .eq(
-          "customer_phone",
-          customerPhone
-        )
-        .in(
-          "status",
-          [
-            "awaiting_final_acceptance",
-            "completed",
-            "conditionally_completed",
-            "final_rework",
-            "disputed"
-          ]
-        )
-        .order(
-          "updated_at",
-          {
-            ascending: false
-          }
-        )
-        .limit(1)
-        .maybeSingle();
+      } = await client.rpc(
+        "get_customer_final_acceptance",
+        {
+          p_request_no: requestNo,
+          p_customer_phone: customerPhone
+        }
+      );
 
       if (requestError) {
         throw requestError;
       }
 
       currentRequest =
-        requestData || null;
+        requestData?.request || null;
 
-      workRecords = [];
-
-      if (
-        currentRequest?.request_no
-      ) {
-        const {
-          data: recordData,
-          error: recordError
-        } = await client
-          .from(
-            "work_records"
-          )
-          .select("*")
-          .eq(
-            "request_no",
-            currentRequest.request_no
-          )
-          .order(
-            "work_date",
-            {
-              ascending: true
-            }
-          )
-          .order(
-            "created_at",
-            {
-              ascending: true
-            }
-          );
-
-        if (recordError) {
-          throw recordError;
-        }
-
-        workRecords =
-          Array.isArray(
-            recordData
-          )
-            ? recordData
-            : [];
-      }
+      workRecords = Array.isArray(
+        requestData?.work_records
+      )
+        ? requestData.work_records
+        : [];
     }
 
     function renderWorkRecords() {
@@ -2112,7 +2069,7 @@
 
       if (
         !client ||
-        typeof client.from !==
+        typeof client.rpc !==
           "function"
       ) {
         showMessage(
@@ -2240,36 +2197,40 @@
       );
 
       try {
-        const { error } =
-          await client
-            .from(
-              "service_requests"
-            )
-            .update({
-              status:
-                finalStatus,
+        const customerPhone =
+          normalizePhone(
+            document.getElementById(
+              "customerPhoneInput"
+            ).value
+          );
 
-              final_acceptance_status:
+        const { data, error } =
+          await client.rpc(
+            "submit_customer_final_acceptance",
+            {
+              p_request_no:
+                currentRequest.request_no,
+              p_customer_phone:
+                customerPhone,
+              p_final_result:
                 finalResult,
-
-              final_acceptance_data:
-                acceptanceData,
-
-              updated_at:
-                submittedAt
-            })
-            .eq(
-              "request_no",
-              currentRequest
-                .request_no
-            );
+              p_service_completed:
+                serviceCompleted === "yes",
+              p_final_rating:
+                finalRating,
+              p_final_comments:
+                finalComments,
+              p_outstanding_details:
+                outstandingDetails || null
+            }
+          );
 
         if (error) {
           throw error;
         }
 
         currentRequest.status =
-          finalStatus;
+          data?.status || finalStatus;
 
         currentRequest
           .final_acceptance_status =
@@ -2285,13 +2246,6 @@
           ),
           "success"
         );
-
-        const customerPhone =
-          normalizePhone(
-            document.getElementById(
-              "customerPhoneInput"
-            ).value
-          );
 
         localStorage.setItem(
           "echocity-customer-phone",
