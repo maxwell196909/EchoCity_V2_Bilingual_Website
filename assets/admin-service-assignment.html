@@ -1051,6 +1051,12 @@
         id="statusMessage"
       ></div>
 
+      <div id="workerLinkBox" class="status-message success" style="display:none">
+        <strong>工人专用任务链接</strong>
+        <input id="workerTaskLink" class="input" type="text" readonly style="margin-top:10px">
+        <button class="secondary-button" type="button" onclick="copyWorkerTaskLink()" style="margin-top:10px">复制链接</button>
+      </div>
+
     </section>
 
     <section
@@ -1373,26 +1379,32 @@ const translations = {
       applyLanguage();
     }
 
-    function loadCurrentRequest() {
-      try {
-        const storedRequest =
-          localStorage.getItem(
-            "echocity-last-request"
-          );
-
-        currentRequest =
-          storedRequest
-            ? JSON.parse(storedRequest)
-            : null;
-
-      } catch (error) {
-        console.error(
-          "Failed to load current request:",
-          error
-        );
-
-        currentRequest = null;
+    function getPlatformToken() {
+      const params = new URLSearchParams(location.search);
+      const incoming = params.get("platform_token");
+      if (incoming) {
+        sessionStorage.setItem("echocity-platform-token", incoming);
+        params.delete("platform_token");
+        history.replaceState(null, "", `${location.pathname}?${params.toString()}`);
       }
+      return incoming || sessionStorage.getItem("echocity-platform-token") || "";
+    }
+
+    async function loadCurrentRequest() {
+      const requestNo = new URLSearchParams(location.search).get("request_no") || "";
+      const token = getPlatformToken();
+      if (!requestNo || !token || !window.echoCitySupabase) return null;
+      const { data, error } = await window.echoCitySupabase.rpc("get_platform_request_with_token", {
+        p_request_no: requestNo, p_token: token
+      });
+      if (error) throw error;
+      return data;
+    }
+
+    async function copyWorkerTaskLink() {
+      const input = document.getElementById("workerTaskLink");
+      await navigator.clipboard.writeText(input.value);
+      showStatus("success", currentLanguage === "zh" ? "工人链接已复制。" : "Worker link copied.");
     }
 
     function getServiceName(serviceType) {
@@ -2238,67 +2250,26 @@ async function saveAssignment() {
       );
     }
 
-    const updatedAt =
-      new Date().toISOString();
-
-    const { data, error } =
-      await client
-        .from("service_requests")
-        .update({
-          assigned_worker:
-            workerName.trim(),
-
-          assigned_worker_phone:
-            workerPhone.trim(),
-
-          start_time:
-            assignmentData.meetingTime || null,
-
-          assigned_start_time:
-            assignmentData.meetingDate && assignmentData.meetingTime
-              ? new Date(
-                  assignmentData.meetingDate +
-                  "T" +
-                  assignmentData.meetingTime +
-                  ":00+08:00"
-                ).toISOString()
-              : null,
-
-          worker_pay:
-            Number(firstWorker?.pay || 0),
-
-          worker_task_scope:
-            assignmentData.notes ||
-            currentRequest.worker_task_scope ||
-            null,
-
-          prework_agreement: {
-            ...(currentRequest.prework_agreement || {}),
-            site_manager:
-              assignmentData.siteManager,
-            site_manager_phone:
-              assignmentData.siteManagerPhone,
-            assignment_notes:
-              assignmentData.notes
-          },
-
-          current_actor: "worker",
-          next_action: "accept_task",
-          status: "assigned",
-          updated_at: updatedAt
-        })
-        .eq(
-          "request_no",
-          requestNo
-        )
-        .select("*")
-        .single();
+    const { data, error } = await client.rpc(
+      "save_platform_assignment_with_token",
+      {
+        p_request_no: requestNo, p_platform_token: getPlatformToken(),
+        p_worker_name: workerName.trim(), p_worker_phone: workerPhone.trim(),
+        p_meeting_date: assignmentData.meetingDate || null,
+        p_meeting_time: assignmentData.meetingTime || null,
+        p_worker_pay: Number(firstWorker?.pay || 0),
+        p_task_scope: assignmentData.notes || currentRequest.worker_task_scope || "",
+        p_site_manager: assignmentData.siteManager || "",
+        p_site_manager_phone: assignmentData.siteManagerPhone || "",
+        p_assignment_notes: assignmentData.notes || ""
+      }
+    );
 
     if (error) {
       throw error;
     }
 
-    currentRequest = data;
+    currentRequest = { ...currentRequest, ...data };
 
     localStorage.setItem(
       "echocity-last-request",
@@ -2315,13 +2286,13 @@ async function saveAssignment() {
       data
     );
 
+    const workerLink = `${location.origin}${location.pathname.replace("admin-service-assignment.html", "task-link.html")}?request=${encodeURIComponent(requestNo)}&role=worker#token=${encodeURIComponent(data.worker_token)}`;
+    document.getElementById("workerTaskLink").value = workerLink;
+    document.getElementById("workerLinkBox").style.display = "block";
+
     saveButton.textContent =
       translate("saveAssignmentButton");
 
-    setTimeout(() => {
-      window.location.href =
-        "admin-service-requests.html";
-    }, 1200);
   } catch (error) {
     console.error(
       "Failed to save service assignment:",
@@ -2371,14 +2342,20 @@ async function saveAssignment() {
 
     document.addEventListener(
       "DOMContentLoaded",
-      () => {
-        loadCurrentRequest();
-        setDefaultValues();
+      async () => {
         applyLanguage();
+        try {
+          currentRequest = await loadCurrentRequest();
+          setDefaultValues();
+          renderRequest();
+        } catch (error) {
+          console.error("Failed to load assignment request:", error);
+          currentRequest = null;
+          renderRequest();
+        }
       }
     );
   </script>
 
 </body>
 </html>
-
