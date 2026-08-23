@@ -815,7 +815,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/echocity-store.js"></script>
 <script src="../js/echocity-supabase.js"></script>
-<script src="../js/echocity-services.js?v=2"></script>
+<script src="../js/echocity-services.js?v=3"></script>
 
   <script>    const translations = {
       zh: {
@@ -1345,7 +1345,7 @@
       try {
         const requestData = createRequestData();
 
-        await saveRequestData(requestData);
+        const savedRequest = await saveRequestData(requestData);
 
         localStorage.setItem(
           "echocity-last-request",
@@ -1361,7 +1361,7 @@
           translate("submitButton");
 
         setTimeout(() => {
-          window.location.href = "admin-service-quote.html";
+          window.location.href = `customer-my-requests.html?request_no=${encodeURIComponent(savedRequest.request_no || requestData.id || "")}`;
         }, 1300);
 
       } catch (error) {
