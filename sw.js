@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v44-secure-role-entry";
+const CACHE_NAME = "echocity-v45-platform-token-navigation";
 const APP_FILES = [
   "./",
   "./index.html",
