@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v31-assignment-open-links";
+const CACHE_NAME = "echocity-v20-archive-safety";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -16,7 +16,6 @@ const APP_FILES = [
   "./assets/service-request-confirmation.html",
   "./assets/service-quote-confirmation.html",
   "./assets/task-link.html",
-  "./assets/admin-milestone-review.html",
   "./assets/worker-dashboard.html",
   "./assets/worker-tasks.html",
   "./assets/worker-milestone-submission.html",
@@ -27,8 +26,6 @@ const APP_FILES = [
   "./assets/customer-milestone-evaluation.html",
   "./assets/customer-milestone-paper.html",
   "./assets/customer-final-acceptance.html"
-  ,"./assets/admin-settlement.html"
-  ,"./assets/worker-settlement.html"
 ];
 
 self.addEventListener("install", (event) => {
