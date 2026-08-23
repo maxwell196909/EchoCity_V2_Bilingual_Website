@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v43-three-role-cache-fix";
+const CACHE_NAME = "echocity-v44-secure-role-entry";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -11,6 +11,7 @@ const APP_FILES = [
   "./js/echocity-store.js",
   "./js/echocity-services.js",
   "./assets/customer-dashboard.html",
+  "./assets/customer-role-home.html",
   "./assets/customer-my-requests.html",
   "./assets/customer-order-progress.html",
   "./assets/service-request.html",
@@ -18,6 +19,7 @@ const APP_FILES = [
   "./assets/service-quote-confirmation.html",
   "./assets/task-link.html",
   "./assets/worker-dashboard.html",
+  "./assets/worker-role-home.html",
   "./assets/worker-tasks.html",
   "./assets/worker-milestone-submission.html",
   "./assets/admin-dashboard.html",
