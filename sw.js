@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v25-secure-final-acceptance";
+const CACHE_NAME = "echocity-v26-settlement-closeout";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -27,6 +27,8 @@ const APP_FILES = [
   "./assets/customer-milestone-evaluation.html",
   "./assets/customer-milestone-paper.html",
   "./assets/customer-final-acceptance.html"
+  ,"./assets/admin-settlement.html"
+  ,"./assets/worker-settlement.html"
 ];
 
 self.addEventListener("install", (event) => {
