@@ -1056,6 +1056,11 @@
         <input id="workerTaskLink" class="input" type="text" readonly style="margin-top:10px">
         <button class="secondary-button" type="button" onclick="copyWorkerTaskLink()" style="margin-top:10px">复制链接</button>
       </div>
+      <div id="customerPlanLinkBox" class="status-message success" style="display:none">
+        <strong>客户确认施工方案链接</strong>
+        <input id="customerPlanLink" class="input" type="text" readonly style="margin-top:10px">
+        <button class="secondary-button" type="button" onclick="copyCustomerPlanLink()" style="margin-top:10px">复制链接</button>
+      </div>
 
     </section>
 
@@ -1405,6 +1410,11 @@ const translations = {
       const input = document.getElementById("workerTaskLink");
       await navigator.clipboard.writeText(input.value);
       showStatus("success", currentLanguage === "zh" ? "工人链接已复制。" : "Worker link copied.");
+    }
+    async function copyCustomerPlanLink() {
+      const input = document.getElementById("customerPlanLink");
+      await navigator.clipboard.writeText(input.value);
+      showStatus("success", currentLanguage === "zh" ? "客户确认链接已复制。" : "Customer confirmation link copied.");
     }
 
     function getServiceName(serviceType) {
@@ -2269,6 +2279,13 @@ async function saveAssignment() {
       throw error;
     }
 
+    const planResult = await client.rpc("prepare_assignment_plan_with_token", {
+      p_request_no: requestNo,
+      p_platform_token: getPlatformToken()
+    });
+    if (planResult.error) throw planResult.error;
+    data.customer_token = planResult.data.customer_token;
+
     currentRequest = { ...currentRequest, ...data };
 
     localStorage.setItem(
@@ -2289,6 +2306,9 @@ async function saveAssignment() {
     const workerLink = `${location.origin}${location.pathname.replace("admin-service-assignment.html", "task-link.html")}?request=${encodeURIComponent(requestNo)}&role=worker#token=${encodeURIComponent(data.worker_token)}`;
     document.getElementById("workerTaskLink").value = workerLink;
     document.getElementById("workerLinkBox").style.display = "block";
+    const customerLink = `${location.origin}${location.pathname.replace("admin-service-assignment.html", "task-link.html")}?request=${encodeURIComponent(requestNo)}&role=customer#token=${encodeURIComponent(data.customer_token)}`;
+    document.getElementById("customerPlanLink").value = customerLink;
+    document.getElementById("customerPlanLinkBox").style.display = "block";
 
     saveButton.textContent =
       translate("saveAssignmentButton");
