@@ -1349,7 +1349,21 @@
 
         localStorage.setItem(
           "echocity-last-request",
-          JSON.stringify(requestData)
+          JSON.stringify({
+            ...requestData,
+            id: savedRequest.request_no,
+            requestNo: savedRequest.request_no
+          })
+        );
+
+        localStorage.setItem(
+          "echocity-customer-request-no",
+          savedRequest.request_no
+        );
+
+        localStorage.setItem(
+          "echocity-customer-phone",
+          requestData.customerPhone
         );
 
         showStatus(
