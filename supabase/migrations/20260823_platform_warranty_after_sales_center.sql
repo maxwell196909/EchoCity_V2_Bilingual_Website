@@ -84,7 +84,7 @@ begin
     'cases',coalesce((select jsonb_agg(jsonb_build_object(
       'id',c.id,'case_no',c.case_no,'request_no',c.request_no,'issue',c.issue_description,'evidence',c.customer_evidence,
       'severity',c.severity,'status',c.status,'worker_phone',c.responsible_worker_phone,'due_at',c.due_at,
-      'platform_note',c.platform_note,'reinspection_result',c.reinspection_result,'opened_at',c.opened_at,'closed_at',c.closed_at
+      'platform_note',c.platform_note,'reinspection_result',c.reinspection_result,'customer_reinspection_result',c.customer_reinspection_result,'customer_reinspection_note',c.customer_reinspection_note,'customer_reinspection_confirmed_at',c.customer_reinspection_confirmed_at,'reinspection_round',c.reinspection_round,'opened_at',c.opened_at,'closed_at',c.closed_at
     ) order by case when c.status not in ('closed','rejected') then 0 else 1 end,c.opened_at desc) from public.after_sales_cases c),'[]'::jsonb)
   );
 end;$$;
