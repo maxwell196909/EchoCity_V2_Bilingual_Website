@@ -23,11 +23,32 @@
   <script>
     const $=id=>document.getElementById(id);
     const esc=v=>String(v??'—').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    function token(){const p=new URLSearchParams(location.search),x=p.get('platform_token');if(x){sessionStorage.setItem('echocity-platform-token',x);p.delete('platform_token');history.replaceState(null,'',location.pathname)}return x||sessionStorage.getItem('echocity-platform-token')||''}
-    function orderHref(requestNo){return `admin-order-360.html?request_no=${encodeURIComponent(requestNo)}`}
+    function token(){
+      const p=new URLSearchParams(location.search),h=new URLSearchParams(location.hash.replace(/^#/,''));
+      const x=p.get('platform_token')||h.get('platform_token');
+      if(x){
+        localStorage.setItem('echocity-platform-token',x);
+        sessionStorage.setItem('echocity-platform-token',x);
+      }
+      return x||localStorage.getItem('echocity-platform-token')||sessionStorage.getItem('echocity-platform-token')||'';
+    }
+    function carryPlatformToken(platformToken){
+      document.querySelectorAll('a[href]').forEach(a=>{
+        const u=new URL(a.getAttribute('href'),location.href);
+        if(u.origin!==location.origin||!u.pathname.endsWith('.html'))return;
+        u.searchParams.set('platform_token',platformToken);
+        a.href=u.href;
+      });
+    }
+    function orderHref(requestNo,platformToken){
+      const p=new URLSearchParams({request_no:requestNo,platform_token:platformToken});
+      return `admin-order-360.html?${p.toString()}`;
+    }
     async function load(){
       try{
         const platformToken=token();
+        if(!platformToken)throw new Error('链接缺少平台访问凭证');
+        carryPlatformToken(platformToken);
         const [summaryResult,alertsResult]=await Promise.all([
           window.echoCitySupabase.rpc('get_platform_operations_summary_with_token',{p_token:platformToken}),
           window.echoCitySupabase.rpc('get_platform_overdue_alerts_with_token',{p_token:platformToken})
@@ -36,9 +57,9 @@
         const d=summaryResult.data,items=[['订单总量',d.total],['待审核',d.pending_review],['待客户确认报价',d.pending_quote_confirmation],['待派工',d.pending_assignment],['服务进行中',d.active],['待最终验收',d.pending_final_acceptance],['返工或争议',d.disputed],['已完成闭环',d.closed]];
         $('metrics').innerHTML=items.map(x=>`<div class="metric"><div class="number">${esc(x[1])}</div><div class="label">${esc(x[0])}</div></div>`).join('');
         const alerts=alertsResult.data?.alerts||[];$('alert-count').textContent=alerts.length;
-        $('alerts').innerHTML=alerts.length?alerts.map(x=>`<div class="row alert-row"><a class="order-link" href="${orderHref(x.request_no)}">${esc(x.request_no)}</a><span>${esc(x.status)}</span><span class="overdue">已等待 ${esc(x.hours_waiting)} 小时</span></div>`).join(''):'<div class="empty">暂无超时订单，当前流程运行正常。</div>';
+        $('alerts').innerHTML=alerts.length?alerts.map(x=>`<div class="row alert-row"><a class="order-link" href="${orderHref(x.request_no,platformToken)}">${esc(x.request_no)}</a><span>${esc(x.status)}</span><span class="overdue">已等待 ${esc(x.hours_waiting)} 小时</span></div>`).join(''):'<div class="empty">暂无超时订单，当前流程运行正常。</div>';
         const recent=d.recent||[];
-        $('recent').innerHTML=recent.length?recent.map(x=>`<div class="row"><a class="order-link" href="${orderHref(x.request_no)}">${esc(x.request_no)}</a><span>${esc(x.status)}</span><span>${esc(new Date(x.updated_at).toLocaleString('zh-CN'))}</span></div>`).join(''):'<div class="empty">暂无订单数据。</div>';
+        $('recent').innerHTML=recent.length?recent.map(x=>`<div class="row"><a class="order-link" href="${orderHref(x.request_no,platformToken)}">${esc(x.request_no)}</a><span>${esc(x.status)}</span><span>${esc(new Date(x.updated_at).toLocaleString('zh-CN'))}</span></div>`).join(''):'<div class="empty">暂无订单数据。</div>';
         $('message').hidden=true;$('content').hidden=false;
       }catch(e){console.error(e);$('message').textContent='运营数据读取失败或平台链接已经失效。';$('message').className='card error'}
     }
