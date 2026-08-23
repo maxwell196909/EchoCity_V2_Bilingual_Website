@@ -18,6 +18,8 @@
       saving: "正在上传并保存施工记录……",
       saved: "施工记录已保存，客户和平台现在可以看到。",
       failed: "提交失败，请稍后重试或联系平台。"
+      ,milestone: "提交阶段成果", milestoneSummary: "阶段成果说明（必填）",
+      milestoneSubmit: "提交阶段验收", milestoneSaved: "阶段成果已提交，等待客户验收。"
     },
     en: {
       title: "Construction progress record",
@@ -34,6 +36,8 @@
       saving: "Uploading and saving work record...",
       saved: "Work record saved. The customer and platform can now see it.",
       failed: "Submission failed. Try again or contact the platform."
+      ,milestone: "Submit milestone", milestoneSummary: "Milestone summary (required)",
+      milestoneSubmit: "Submit for stage review", milestoneSaved: "Milestone submitted for customer review."
     }
   };
 
@@ -83,6 +87,10 @@
     const button = el("button", { id: "wrSave", className: "primary", type: "button", disabled: "disabled" });
     button.textContent = t.save;
     const status = el("div", { id: "wrStatus", className: "wr-status" });
+    const milestoneSummary = el("textarea", { id: "wrMilestoneSummary", maxlength: "2000" });
+    const milestoneButton = el("button", { id: "wrMilestoneSubmit", className: "primary", type: "button" });
+    milestoneButton.textContent = t.milestoneSubmit;
+    const milestoneStatus = el("div", { id: "wrMilestoneStatus", className: "wr-status" });
 
     card.append(
       el("h2", { className: "section-title", text: t.title }),
@@ -92,9 +100,12 @@
       el("label", { className: "wr-field", text: t.hours }, [hours]),
       el("div", { className: "wr-field", text: t.photo }),
       el("label", { className: "wr-picker" }, [el("span", { text: t.choose }), photo]),
-      fileName, button, status
+      fileName, button, status,
+      el("h2", { className: "section-title", text: t.milestone }),
+      el("label", { className: "wr-field", text: t.milestoneSummary }, [milestoneSummary]),
+      milestoneButton, milestoneStatus
     );
-    return { card, progress, materials, issues, hours, photo, fileName, button, status };
+    return { card, progress, materials, issues, hours, photo, fileName, button, status, milestoneSummary, milestoneButton, milestoneStatus };
   }
 
   async function initialize() {
@@ -191,6 +202,15 @@
       } finally {
         refresh();
       }
+    });
+    ui.milestoneButton.addEventListener("click", async () => {
+      const t = copy[language()];
+      const summary = ui.milestoneSummary.value.trim();
+      if (summary.length < 2) { ui.milestoneStatus.textContent = t.required; return; }
+      ui.milestoneButton.disabled = true;
+      const saved = await client.rpc("submit_milestone_with_token", { p_request_no: requestNo, p_token: token, p_summary: summary });
+      if (saved.error) { ui.milestoneStatus.textContent = t.failed; ui.milestoneStatus.className = "wr-status wr-danger"; ui.milestoneButton.disabled = false; return; }
+      ui.milestoneStatus.textContent = t.milestoneSaved; ui.milestoneStatus.className = "wr-status wr-success";
     });
     refresh();
   }
