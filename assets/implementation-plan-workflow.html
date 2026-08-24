@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>施工方案协同 | EchoCity</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/echocity-supabase.js"></script>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial,"Microsoft YaHei",sans-serif;background:#eef4fb;color:#172033}
 main{width:min(920px,calc(100% - 24px));margin:auto;padding:22px 0 50px}
@@ -55,7 +57,29 @@ const $=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,
 const bi=(zh,en)=>lang==="zh"?zh:en;
 function msg(text,type="info"){$("message").textContent=text;$("message").className="message show "+type}
 function detail(label,value,full=false){return `<div class="detail ${full?"full":""}"><div class="label">${esc(label)}</div><div class="value">${esc(value||bi("未填写","Not provided"))}</div></div>`}
-async function call(action,extra={}){const response=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action,request_no:requestNo,token,...extra})});const data=await response.json();if(!response.ok)throw new Error(data.error||bi("操作失败","Operation failed"));return data}
+async function directGet(){
+ const client=window.echoCitySupabase;if(!client)throw new Error(bi("Supabase 连接不可用","Supabase connection unavailable"));
+ for(const candidate of ["customer","worker","platform"]){
+  const{data,error}=await client.rpc("read_task_with_token",{p_request_no:requestNo,p_token:token,p_role:candidate});
+  if(!error){const plans=Array.isArray(data?.plans)?data.plans:[];return{role:candidate,order:data,plan:plans[0]||null}}
+ }
+ throw new Error(bi("专用链接无效或已经过期","The dedicated link is invalid or expired"));
+}
+async function directConfirm(){
+ const client=window.echoCitySupabase;if(!client)throw new Error(bi("Supabase 连接不可用","Supabase connection unavailable"));
+ const{data,error}=await client.rpc("confirm_assignment_plan_with_token",{p_request_no:requestNo,p_token:token});
+ if(error)throw error;return data;
+}
+async function call(action,extra={}){
+ try{
+  const response=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action,request_no:requestNo,token,...extra})});
+  const data=await response.json().catch(()=>({}));
+  if(response.ok)return data;
+ }catch(error){console.warn("Plan Edge Function unavailable; using secure RPC fallback.",error)}
+ if(action==="get")return directGet();
+ if(action==="confirm_plan")return directConfirm();
+ throw new Error(bi("该操作接口尚未部署","This action endpoint is not deployed"));
+}
 function statusText(v){const m={submitted:bi("等待平台审批","Pending platform review"),approved:bi("等待客户确认","Pending customer confirmation"),customer_confirmed:bi("客户已确认","Customer confirmed"),revision_requested:bi("平台要求修改","Revision requested")};return m[v]||bi("尚未提交","Not submitted")}
 function render(){
  $("lang").textContent=lang==="zh"?"EN":"中文";document.documentElement.lang=lang==="zh"?"zh-CN":"en";
