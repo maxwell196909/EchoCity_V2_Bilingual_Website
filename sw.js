@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v45-platform-token-navigation";
+const CACHE_NAME = "echocity-v46-platform-flow";
 const APP_FILES = [
   "./",
   "./index.html",
