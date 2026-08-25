@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v46-platform-flow";
+const CACHE_NAME = "echocity-v47-secure-worker-horizontal-flow";
 const APP_FILES = [
   "./",
   "./index.html",
