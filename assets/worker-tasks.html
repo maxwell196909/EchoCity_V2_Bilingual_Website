@@ -820,6 +820,7 @@
     let loadedTasks = [];
 
     const workerLinkParams = new URLSearchParams(window.location.search);
+    const workerLinkSecret = new URLSearchParams(window.location.hash.slice(1));
     const workerRequestNo = String(
       workerLinkParams.get("request_no") ||
       workerLinkParams.get("request") ||
@@ -829,6 +830,7 @@
       workerLinkParams.get("worker_token") ||
       workerLinkParams.get("task_token") ||
       workerLinkParams.get("token") ||
+      workerLinkSecret.get("token") ||
       ""
     ).trim();
 
@@ -3306,5 +3308,4 @@
   </script>
 </body>
 </html>
-
 
