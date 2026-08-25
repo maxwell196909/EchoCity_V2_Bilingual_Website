@@ -819,6 +819,57 @@
 
     let loadedTasks = [];
 
+    const workerLinkParams = new URLSearchParams(window.location.search);
+    const workerRequestNo = String(
+      workerLinkParams.get("request_no") ||
+      workerLinkParams.get("request") ||
+      ""
+    ).trim().toUpperCase();
+    const workerTaskToken = String(
+      workerLinkParams.get("worker_token") ||
+      workerLinkParams.get("task_token") ||
+      workerLinkParams.get("token") ||
+      ""
+    ).trim();
+
+    function hasValidWorkerLink() {
+      return /^REQ-[A-Z0-9-]{4,80}$/.test(workerRequestNo) &&
+        workerTaskToken.length >= 32 &&
+        workerTaskToken.length <= 128;
+    }
+
+    async function loadDedicatedWorkerTask(showSuccess = true) {
+      if (!hasValidWorkerLink()) {
+        throw new Error(bi(
+          "服务方专用链接无效或缺少访问凭证，请使用平台最新发送的任务链接。",
+          "The worker link is invalid or missing its access token. Use the latest task link from the platform."
+        ));
+      }
+
+      const client = getSupabaseClient();
+      const { data, error } = await client.rpc("read_task_with_token", {
+        p_request_no: workerRequestNo,
+        p_token: workerTaskToken,
+        p_role: "worker"
+      });
+
+      if (error) throw error;
+      if (!data) throw new Error(bi("任务不存在或链接已经失效。", "The task was not found or the link has expired."));
+
+      const plans = Array.isArray(data.plans) ? data.plans : [];
+      loadedTasks = [{
+        ...data,
+        implementation_plan: plans[0] || null
+      }];
+
+      document.getElementById("taskSection").classList.remove("hidden");
+      renderTasks();
+      handleWorkspaceMode();
+
+      if (showSuccess) showMessage(translate("loadSuccess"), "success");
+      return loadedTasks[0];
+    }
+
     function translate(key) {
       return (
         translations[currentLanguage]?.[key] ||
@@ -1057,6 +1108,28 @@
     }
 
     async function searchWorkerTasks() {
+      if (!hasValidWorkerLink()) {
+        showMessage(
+          bi(
+            "为保护订单数据，服务方任务必须通过平台发送的专用链接打开。",
+            "To protect order data, worker tasks must be opened from the dedicated platform link."
+          ),
+          "error"
+        );
+        return;
+      }
+
+      try {
+        showMessage(translate("searching"), "info");
+        await loadDedicatedWorkerTask(true);
+      } catch (error) {
+        console.error("Dedicated worker task load failed:", error);
+        loadedTasks = [];
+        document.getElementById("taskSection").classList.add("hidden");
+        showMessage(error?.message || translate("loadFailed"), "error");
+      }
+      return;
+
       const phone =
         normalizePhone(
           document.getElementById(
@@ -1428,7 +1501,8 @@
       return [
         {
           label: bi("客户已确认报价及工作", "Customer approved quote and work"),
-          pass: task.quote_confirmed === true
+          pass: task.quote_confirmed === true ||
+            !["draft", "submitted", "reviewed", "quoted"].includes(task.status)
         },
         {
           label: bi("施工方案已由平台审批", "Implementation plan approved by platform"),
@@ -1635,6 +1709,36 @@
       newStatus,
       successMessage
     ) {
+      try {
+        if (!hasValidWorkerLink() || requestNo !== workerRequestNo) {
+          throw new Error(bi("服务方专用链接无效。", "The worker link is invalid."));
+        }
+
+        const action = newStatus === "accepted"
+          ? "accept"
+          : newStatus === "arrived"
+            ? "arrive"
+            : null;
+
+        if (!action) throw new Error("INVALID_WORKER_ACTION");
+
+        const client = getSupabaseClient();
+        const { error } = await client.rpc("transition_worker_task_with_token", {
+          p_request_no: requestNo,
+          p_token: workerTaskToken,
+          p_action: action
+        });
+
+        if (error) throw error;
+        await loadDedicatedWorkerTask(false);
+        showMessage(translate(successMessage), "success");
+        return true;
+      } catch (error) {
+        console.error("Secure worker transition failed:", error);
+        showMessage(error?.message || translate("statusUpdateFailed"), "error");
+        return false;
+      }
+
       try {
         const client =
           getSupabaseClient();
@@ -1844,6 +1948,34 @@
           bi("请完成两项确认并至少上传一张开工前照片。", "Complete both confirmations and upload at least one photo."),
           "error"
         );
+        return;
+      }
+
+      try {
+        const upload = await uploadSecureWorkerPhoto(
+          "prestart",
+          requestNo,
+          photoFiles[0]
+        );
+        const client = getSupabaseClient();
+        const { error } = await client.rpc("start_task_with_token", {
+          p_request_no: requestNo,
+          p_token: workerTaskToken,
+          p_site_conditions_confirmed: true,
+          p_scope_confirmed: true,
+          p_storage_path: upload.path,
+          p_file_name: photoFiles[0].name,
+          p_file_size: photoFiles[0].size,
+          p_mime_type: photoFiles[0].type
+        });
+
+        if (error) throw error;
+        await loadDedicatedWorkerTask(false);
+        showMessage(translate("workStarted"), "success");
+        return;
+      } catch (error) {
+        console.error("Secure pre-start confirmation failed:", error);
+        showMessage(error?.message || translate("statusUpdateFailed"), "error");
         return;
       }
 
@@ -2369,6 +2501,44 @@
       return uploadedUrls;
     }
 
+    async function uploadSecureWorkerPhoto(kind, requestNo, file) {
+      if (!hasValidWorkerLink() || requestNo !== workerRequestNo) {
+        throw new Error(bi("服务方专用链接无效。", "The worker link is invalid."));
+      }
+      if (!file || file.size < 1 || file.size > 10 * 1024 * 1024) {
+        throw new Error(bi("请选择一张不超过10MB的现场照片。", "Choose one site photo no larger than 10MB."));
+      }
+
+      const client = getSupabaseClient();
+      const slug = kind === "prestart"
+        ? "worker-prestart-upload"
+        : "worker-process-upload";
+      showMessage(translate("uploadingMedia"), "info");
+
+      const { data: signed, error: signError } = await client.functions.invoke(slug, {
+        body: {
+          requestNo,
+          token: workerTaskToken,
+          fileName: file.name,
+          mimeType: file.type,
+          fileSize: file.size
+        }
+      });
+      if (signError) throw signError;
+      if (!signed?.path || !signed?.uploadToken) {
+        throw new Error(signed?.error || "SIGNED_UPLOAD_FAILED");
+      }
+
+      const { error: uploadError } = await client.storage
+        .from(signed.bucket || "work-evidence")
+        .uploadToSignedUrl(signed.path, signed.uploadToken, file, {
+          contentType: file.type,
+          upsert: false
+        });
+      if (uploadError) throw uploadError;
+      return signed;
+    }
+
     async function saveWorkRecord(
       requestNo
     ) {
@@ -2472,6 +2642,44 @@
             startTime,
             endTime
           ) || 0;
+      }
+
+      try {
+        if (photoFiles.length === 0) {
+          throw new Error(bi(
+            "保存施工记录时请至少选择一张过程照片。",
+            "Select at least one progress photo before saving the work record."
+          ));
+        }
+
+        const upload = await uploadSecureWorkerPhoto(
+          "process",
+          requestNo,
+          photoFiles[0]
+        );
+        const client = getSupabaseClient();
+        const { error } = await client.rpc("submit_work_record_with_token", {
+          p_request_no: requestNo,
+          p_token: workerTaskToken,
+          p_work_progress: workProgress,
+          p_materials_used: materialsUsed || null,
+          p_issues_found: issuesFound || null,
+          p_work_hours: workHours || null,
+          p_storage_path: upload.path,
+          p_file_name: photoFiles[0].name,
+          p_file_size: photoFiles[0].size,
+          p_mime_type: photoFiles[0].type
+        });
+
+        if (error) throw error;
+        await loadDedicatedWorkerTask(false);
+        showMessage(translate("recordSaved"), "success");
+        closeTaskPanel(requestNo);
+        return;
+      } catch (error) {
+        console.error("Secure work record save failed:", error);
+        showMessage(error?.message || translate("recordSaveFailed"), "error");
+        return;
       }
 
       try {
@@ -2835,6 +3043,32 @@
         return;
       }
 
+      try {
+        const milestoneSummary = [
+          completionSummary,
+          acceptanceItems ? `${bi("验收重点", "Acceptance focus")}：${acceptanceItems}` : "",
+          outstandingIssues ? `${bi("遗留问题", "Outstanding issues")}：${outstandingIssues}` : ""
+        ].filter(Boolean).join("\n");
+        const client = getSupabaseClient();
+        const { error } = await client.rpc("submit_milestone_with_token", {
+          p_request_no: requestNo,
+          p_token: workerTaskToken,
+          p_summary: milestoneSummary
+        });
+
+        if (error) throw error;
+        await loadDedicatedWorkerTask(false);
+        showMessage(
+          bi("阶段成果已提交，等待客户检查和平台审核。", "The milestone was submitted for customer and platform review."),
+          "success"
+        );
+        return;
+      } catch (error) {
+        console.error("Secure milestone submission failed:", error);
+        showMessage(error?.message || translate("completionFailed"), "error");
+        return;
+      }
+
 
       try {
         const client =
@@ -3017,8 +3251,33 @@
 
     document.addEventListener(
       "DOMContentLoaded",
-      function () {
+      async function () {
         applyLanguage();
+
+        const searchRow = document.querySelector(".search-row");
+        const searchDescription = document.getElementById("searchDescription");
+
+        if (hasValidWorkerLink()) {
+          if (searchRow) searchRow.classList.add("hidden");
+          if (searchDescription) {
+            searchDescription.textContent = bi(
+              `正在通过服务方专用链接读取任务 ${workerRequestNo}。`,
+              `Loading task ${workerRequestNo} from the dedicated worker link.`
+            );
+          }
+          await searchWorkerTasks();
+          return;
+        }
+
+        if (searchRow) searchRow.classList.add("hidden");
+        showMessage(
+          bi(
+            "该页面现在仅接受平台发送的服务方专用任务链接，请回到平台重新发送链接。",
+            "This page now requires a dedicated worker task link from the platform."
+          ),
+          "error"
+        );
+        return;
 
         const params =
           new URLSearchParams(
