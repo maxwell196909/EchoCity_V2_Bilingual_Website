@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v48-single-source-customer-intake";
+const CACHE_NAME = "echocity-v49-safe-prestart-plan-gate";
 const APP_FILES = [
   "./",
   "./index.html",
