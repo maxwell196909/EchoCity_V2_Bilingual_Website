@@ -1054,6 +1054,9 @@
         in_progress:
           "statusWorking",
 
+        milestone_rework:
+          "statusRework",
+
         completed:
           "statusCompleted",
 
@@ -1341,7 +1344,7 @@
         mode === "start"
           ? loadedTasks.find((item) => item.status === "arrived")
           : loadedTasks.find((item) =>
-              ["working", "in_progress"].includes(item.status)
+              ["working", "in_progress", "milestone_rework"].includes(item.status)
             );
 
       if (!task) {
@@ -1431,7 +1434,9 @@
         task.status ===
           "working" ||
         task.status ===
-          "in_progress"
+          "in_progress" ||
+        task.status ===
+          "milestone_rework"
       ) {
         return `
           <button
