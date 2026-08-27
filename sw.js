@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v52-milestone-rework-loop";
+const CACHE_NAME = "echocity-v53-secure-final-settlement";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -22,6 +22,7 @@ const APP_FILES = [
   "./assets/worker-role-home.html",
   "./assets/worker-tasks.html",
   "./assets/worker-milestone-submission.html",
+  "./assets/worker-settlement.html",
   "./assets/admin-dashboard.html",
   "./assets/admin-operations-overview.html",
   "./assets/admin-worker-management.html",
