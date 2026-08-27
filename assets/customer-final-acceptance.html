@@ -1250,6 +1250,10 @@
 
     let currentRequest = null;
     let workRecords = [];
+    const acceptanceRequestNo =
+      new URLSearchParams(window.location.search).get("request_no") || "";
+    const acceptanceToken =
+      new URLSearchParams(window.location.hash.slice(1)).get("token") || "";
 
     function translate(key) {
       return (
@@ -1520,9 +1524,7 @@
       `;
     }
 
-    async function loadCurrentOrder(
-      customerPhone
-    ) {
+    async function loadCurrentOrder() {
       const client =
         window.echoCitySupabase;
 
@@ -1536,16 +1538,13 @@
         );
       }
 
-      const requestNo =
-        new URLSearchParams(
-          window.location.search
-        ).get("request_no") || "";
+      const requestNo = acceptanceRequestNo;
 
-      if (!requestNo) {
+      if (!requestNo || acceptanceToken.length < 32) {
         throw new Error(
           currentLanguage === "zh"
-            ? "链接缺少订单号，请从客户订单页面进入。"
-            : "The request number is missing from this link."
+            ? "客户验收链接无效，请从客户专用任务链接重新进入。"
+            : "This final-acceptance link is invalid. Reopen it from the dedicated customer task link."
         );
       }
 
@@ -1553,10 +1552,10 @@
         data: requestData,
         error: requestError
       } = await client.rpc(
-        "get_customer_final_acceptance",
+        "get_customer_final_acceptance_with_token",
         {
           p_request_no: requestNo,
-          p_customer_phone: customerPhone
+          p_token: acceptanceToken
         }
       );
 
@@ -1811,21 +1810,13 @@
     }
 
     async function searchFinalAcceptance() {
-      const phone =
-        normalizePhone(
-          document.getElementById(
-            "customerPhoneInput"
-          ).value
-        );
-
-      if (!phone) {
+      if (!acceptanceRequestNo || acceptanceToken.length < 32) {
         showMessage(
-          translate(
-            "phonePlaceholder"
-          ),
+          currentLanguage === "zh"
+            ? "客户验收链接无效，请联系平台重新发送。"
+            : "This final-acceptance link is invalid. Ask the platform to resend it.",
           "error"
         );
-
         return;
       }
 
@@ -1841,9 +1832,7 @@
       ).disabled = true;
 
       try {
-        await loadCurrentOrder(
-          phone
-        );
+        await loadCurrentOrder();
 
         if (!currentRequest) {
           document.getElementById(
@@ -2115,12 +2104,8 @@
         request_no:
           currentRequest.request_no,
 
-        customer_phone:
-          normalizePhone(
-            document.getElementById(
-              "customerPhoneInput"
-            ).value
-          ),
+        customer_verified_by:
+          "dedicated_link",
 
         submitted_at:
           submittedAt,
@@ -2197,21 +2182,14 @@
       );
 
       try {
-        const customerPhone =
-          normalizePhone(
-            document.getElementById(
-              "customerPhoneInput"
-            ).value
-          );
-
         const { data, error } =
           await client.rpc(
-            "submit_customer_final_acceptance",
+            "submit_customer_final_acceptance_with_token",
             {
               p_request_no:
                 currentRequest.request_no,
-              p_customer_phone:
-                customerPhone,
+              p_token:
+                acceptanceToken,
               p_final_result:
                 finalResult,
               p_service_completed:
@@ -2245,11 +2223,6 @@
             "saveSuccess"
           ),
           "success"
-        );
-
-        localStorage.setItem(
-          "echocity-customer-phone",
-          customerPhone
         );
 
         submitButton.textContent =
@@ -2356,6 +2329,13 @@
       );
 
     applyLanguage();
+    const secureSearchRow = document.querySelector(".search-row");
+    if (secureSearchRow) secureSearchRow.classList.add("hidden");
+    document.getElementById("searchDescription").textContent =
+      currentLanguage === "zh"
+        ? "正在通过客户专用链接安全读取最终验收资料。"
+        : "Loading final-acceptance records through the dedicated customer link.";
+    searchFinalAcceptance();
   </script>
 </body>
 </html>
