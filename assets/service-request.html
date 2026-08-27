@@ -815,7 +815,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/echocity-store.js"></script>
 <script src="../js/echocity-supabase.js"></script>
-<script src="../js/echocity-services.js?v=3"></script>
+<script src="../js/echocity-services.js?v=4"></script>
 
   <script>    const translations = {
       zh: {
@@ -1254,6 +1254,11 @@
         estimatedHours:
           document.getElementById("estimatedHours").value,
 
+        estimatedDuration:
+          document.getElementById("estimatedHours").value === "unknown"
+            ? ""
+            : document.getElementById("estimatedHours").value + "小时",
+
         serviceAddress:
           document
             .getElementById("serviceAddress")
@@ -1291,38 +1296,17 @@
 
     async function saveRequestData(requestData) {
       if (
-        window.EchoCityServices &&
+        !window.EchoCityServices ||
         typeof window.EchoCityServices
-          .createServiceRequest === "function"
+          .createServiceRequest !== "function"
       ) {
-        return await window.EchoCityServices
-          .createServiceRequest(requestData);
-      }
-
-      if (
-        window.EchoCityStore &&
-        typeof window.EchoCityStore
-          .addServiceRequest === "function"
-      ) {
-        return window.EchoCityStore
-          .addServiceRequest(requestData);
-      }
-
-      const existingRequests =
-        JSON.parse(
-          localStorage.getItem(
-            "echocity-service-requests"
-          ) || "[]"
+        throw new Error(
+          "Secure service request API is unavailable."
         );
+      }
 
-      existingRequests.unshift(requestData);
-
-      localStorage.setItem(
-        "echocity-service-requests",
-        JSON.stringify(existingRequests)
-      );
-
-      return requestData;
+      return await window.EchoCityServices
+        .createServiceRequest(requestData);
     }
 
     async function submitServiceRequest() {
