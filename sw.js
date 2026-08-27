@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v51-plan-to-prestart-handoff";
+const CACHE_NAME = "echocity-v52-milestone-rework-loop";
 const APP_FILES = [
   "./",
   "./index.html",
