@@ -2,103 +2,290 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>施工方案协同 | EchoCity</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#173a63">
+<title>七章施工方案协同 | EchoCity</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../js/echocity-supabase.js"></script>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial,"Microsoft YaHei",sans-serif;background:#eef4fb;color:#172033}
-main{width:min(920px,calc(100% - 24px));margin:auto;padding:22px 0 50px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-size:21px;font-weight:900}
-button,a{font:inherit}.btn{border:0;border-radius:11px;padding:12px 18px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}
-.primary{background:#2563eb;color:white}.success{background:#15803d;color:white}.warning{background:#a16207;color:white}.secondary{background:white;color:#172033;border:1px solid #d8dee9}
-.card{background:white;border:1px solid #d8dee9;border-radius:18px;padding:20px;margin-top:16px;box-shadow:0 12px 28px #1f293714}
-.badge{display:inline-block;border-radius:999px;background:#eff6ff;color:#1e40af;padding:6px 11px;font-weight:800}
+main{width:min(960px,calc(100% - 24px));margin:auto;padding:18px 0 50px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px}.brand{font-size:21px;font-weight:900}
+button,a{font:inherit}.btn{border:0;border-radius:11px;padding:12px 18px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block;text-align:center}
+.primary{background:#2563eb;color:#fff}.success{background:#15803d;color:#fff}.warning{background:#a16207;color:#fff}.secondary{background:#fff;color:#172033;border:1px solid #d8dee9}
+.card{background:#fff;border:1px solid #d8dee9;border-radius:18px;padding:20px;margin-top:15px;box-shadow:0 12px 28px #1f293714}
+.hero{background:linear-gradient(135deg,#173a63,#0e7490);color:#fff}.hero p{line-height:1.65;margin-bottom:0}
+.badge{display:inline-block;border-radius:999px;background:#eff6ff;color:#1e40af;padding:6px 11px;font-weight:800}.hero .badge{background:#ffffff22;color:#fff}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.full{grid-column:1/-1}
-.detail{background:#f8fafc;border-radius:11px;padding:12px}.label{font-size:12px;color:#667085;font-weight:700}.value{margin-top:6px;white-space:pre-wrap;line-height:1.6}
-label{display:grid;gap:7px;font-weight:800}input,textarea{width:100%;border:1px solid #d8dee9;border-radius:11px;padding:12px;font:inherit}textarea{min-height:90px;resize:vertical}
-.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.message{display:none;border-radius:11px;padding:13px;margin-top:14px}.show{display:block}.error{background:#fef2f2;color:#b91c1c}.ok{background:#ecfdf3;color:#15803d}.info{background:#eff6ff;color:#1e40af}
-.hidden{display:none!important}@media(max-width:650px){.grid{grid-template-columns:1fr}.full{grid-column:1}.actions{flex-direction:column}.btn{width:100%;text-align:center}}
+.detail,.section-view{background:#f8fafc;border-radius:11px;padding:13px}.label{font-size:12px;color:#667085;font-weight:700}.value{margin-top:6px;white-space:pre-wrap;line-height:1.6;word-break:break-word}
+.progress{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:14px}.step{padding:9px 5px;border-radius:9px;background:#fee2e2;color:#991b1b;text-align:center;font-size:12px;font-weight:800}.step.ok{background:#dcfce7;color:#166534}
+label{display:grid;gap:7px;font-weight:800;margin-top:13px}textarea{width:100%;border:1px solid #cbd5e1;border-radius:11px;padding:12px;font:inherit;min-height:104px;resize:vertical;background:#fff}
+.help{font-size:12px;color:#64748b;font-weight:400;line-height:1.45}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.message{display:none;border-radius:11px;padding:13px;margin-top:14px;white-space:pre-wrap}.show{display:block}.error{background:#fef2f2;color:#b91c1c}.okmsg{background:#ecfdf3;color:#15803d}.info{background:#eff6ff;color:#1e40af}
+.hidden{display:none!important}.notice{padding:13px;border-radius:11px;background:#fff7ed;color:#9a3412;line-height:1.6;margin-top:13px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.full{grid-column:1}.actions{flex-direction:column}.btn{width:100%}.progress{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 <main>
-<header class="top"><button class="btn secondary" onclick="history.back()">← 返回</button><div class="brand">EchoCity</div><button id="lang" class="btn secondary">EN</button></header>
-<section class="card"><span id="roleBadge" class="badge">正在验证专用链接…</span><h1 id="title">施工方案协同</h1><p id="intro">工人提交、平台审批、客户确认，共用同一订单。</p><div id="message" class="message"></div></section>
-<section id="orderCard" class="card hidden"><h2 id="orderTitle">订单信息</h2><div id="orderDetails" class="grid"></div></section>
-<section id="planCard" class="card hidden"><h2 id="planTitle">施工方案</h2><div id="planState" class="badge"></div><div id="planDetails" class="grid"></div></section>
+<header class="top">
+  <button class="btn secondary" type="button" onclick="history.back()">← 返回</button>
+  <div class="brand">EchoCity</div>
+  <button id="lang" class="btn secondary" type="button">EN</button>
+</header>
+
+<section class="card hero">
+  <span id="roleBadge" class="badge">正在验证专用链接…</span>
+  <h1 id="title">七章施工方案协同</h1>
+  <p id="intro">服务方填写、平台审核、客户确认；三方共用同一订单和同一方案版本。</p>
+  <div id="message" class="message"></div>
+</section>
+
+<section id="orderCard" class="card hidden">
+  <h2 id="orderTitle">订单信息</h2>
+  <div id="orderDetails" class="grid"></div>
+</section>
+
+<section id="planCard" class="card hidden">
+  <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+    <h2 id="planTitle" style="margin:0">当前施工方案</h2>
+    <span id="planState" class="badge"></span>
+  </div>
+  <div id="sectionProgress" class="progress"></div>
+  <div id="planDetails" class="grid"></div>
+</section>
+
 <section id="workerPanel" class="card hidden">
-<h2>填写并提交施工方案</h2>
-<div class="grid">
-<label class="full">任务范围<textarea id="scope"></textarea></label>
-<label class="full">施工方法与步骤<textarea id="method"></textarea></label>
-<label class="full">质量标准<textarea id="quality"></textarea></label>
-<label class="full">安全与现场保护措施<textarea id="safety"></textarea></label>
-<label>人员与工具<input id="resources"></label>
-<label>预计工期<input id="duration"></label>
-</div><div class="actions"><button class="btn primary" onclick="submitPlan()">提交平台审批</button></div>
+  <h2 id="workerTitle">填写七章施工方案</h2>
+  <div class="notice" id="workerNotice">每章必须填写实际施工内容，模板提示不能代替方案。提交后由平台审核，平台批准后再由客户确认。</div>
+  <label><span id="manLabel">1. 人员</span><span class="help" id="manHelp">负责人、工种、人数、资格证书、班组安排</span><textarea id="man" maxlength="5000"></textarea></label>
+  <label><span id="machineLabel">2. 机械设备</span><span class="help" id="machineHelp">设备名称、数量、规格、检验状态、使用要求</span><textarea id="machine" maxlength="5000"></textarea></label>
+  <label><span id="materialLabel">3. 材料</span><span class="help" id="materialHelp">材料名称、规格型号、数量、质量证明、进场验收</span><textarea id="material" maxlength="5000"></textarea></label>
+  <label><span id="methodLabel">4. 施工方法</span><span class="help" id="methodHelp">工艺步骤、技术要求、工序衔接、隐蔽工程、验收标准</span><textarea id="method" maxlength="5000"></textarea></label>
+  <label><span id="environmentLabel">5. 环境与安全</span><span class="help" id="environmentHelp">作业环境、防护、消防、噪声粉尘、居民影响、天气条件</span><textarea id="environment" maxlength="5000"></textarea></label>
+  <label><span id="scheduleLabel">6. 进度计划</span><span class="help" id="scheduleHelp">开始与结束时间、关键节点、责任人、前置条件</span><textarea id="schedule" maxlength="5000"></textarea></label>
+  <label><span id="qualityLabel">7. 质量控制</span><span class="help" id="qualityHelp">质量控制点、验收标准、停检点、见证点、证据要求</span><textarea id="quality" maxlength="5000"></textarea></label>
+  <div class="actions"><button id="submitButton" class="btn primary" type="button">提交七章方案供平台审核</button></div>
 </section>
+
 <section id="platformPanel" class="card hidden">
-<h2>平台审批</h2><label>审批意见<textarea id="reviewNote"></textarea></label>
-<div class="actions"><button class="btn success" onclick="reviewPlan('approve_plan')">批准方案</button><button class="btn warning" onclick="reviewPlan('request_revision')">退回修改</button></div>
+  <h2 id="platformTitle">平台审核</h2>
+  <p id="platformIntro">请逐章核对完整性、专业性、可实施性和安全条件。平台批准属于人工责任，不由AI替代。</p>
+  <label><span id="reviewLabel">审核意见</span><textarea id="reviewNote" maxlength="2000"></textarea></label>
+  <div class="actions">
+    <button id="approveButton" class="btn success" type="button">批准七章方案</button>
+    <button id="revisionButton" class="btn warning" type="button">退回服务方修改</button>
+  </div>
 </section>
+
 <section id="customerPanel" class="card hidden">
-<h2>客户确认</h2><p>请确认任务范围、方法、质量标准、安全措施和预计工期。确认后工人才能上传开工照片并开工。</p>
-<label><span><input id="customerCheck" type="checkbox" style="width:auto"> 我已阅读并确认该施工方案</span></label>
-<div class="actions"><button class="btn success" onclick="confirmPlan()">确认施工方案</button></div>
+  <h2 id="customerTitle">客户确认</h2>
+  <p id="customerIntro">请确认施工范围、人员设备材料、施工方法、安全、进度和质量要求。确认后服务方才能上传开工照片。</p>
+  <label style="display:flex;grid-template-columns:auto 1fr;align-items:flex-start">
+    <input id="customerCheck" type="checkbox" style="width:20px;height:20px;margin-top:2px">
+    <span id="customerCheckText">我已阅读并确认完整七章施工方案</span>
+  </label>
+  <div class="actions"><button id="confirmButton" class="btn success" type="button">确认施工方案</button></div>
 </section>
-<section id="donePanel" class="card hidden"><h2>本角色操作已完成</h2><p id="doneText"></p><div class="actions"><a class="btn primary" href="./worker-tasks.html">返回任务页面</a></div></section>
+
+<section id="donePanel" class="card hidden">
+  <h2 id="doneTitle">当前操作已完成</h2>
+  <p id="doneText"></p>
+  <div class="actions"><a id="nextLink" class="btn primary" href="./worker-tasks.html">返回任务页面</a></div>
+</section>
 </main>
+
 <script>
-const API="https://dpljvspwcfglxfesxdmf.supabase.co/functions/v1/implementation-plan-workflow";
-const params=new URLSearchParams(location.search),requestNo=params.get("request_no")||"",token=params.get("token")||"";
+const params=new URLSearchParams(location.search);
+const requestNo=(params.get("request_no")||"").trim().toUpperCase();
+let token=(params.get("token")||params.get("platform_token")||"").trim();
+if(params.get("platform_token")){
+  localStorage.setItem("echocity-platform-token",token);
+  sessionStorage.setItem("echocity-platform-token",token);
+}
+if(!token){
+  token=localStorage.getItem("echocity-platform-token")||sessionStorage.getItem("echocity-platform-token")||"";
+}
 let role="",order=null,plan=null,lang=localStorage.getItem("echocity-language")||"zh";
-const $=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const codes=["man","machine","material","method","environment","schedule","quality"];
+const names={man:["人员","People"],machine:["机械设备","Equipment"],material:["材料","Materials"],method:["施工方法","Method"],environment:["环境与安全","Environment & safety"],schedule:["进度计划","Schedule"],quality:["质量控制","Quality control"]};
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const bi=(zh,en)=>lang==="zh"?zh:en;
 function msg(text,type="info"){$("message").textContent=text;$("message").className="message show "+type}
 function detail(label,value,full=false){return `<div class="detail ${full?"full":""}"><div class="label">${esc(label)}</div><div class="value">${esc(value||bi("未填写","Not provided"))}</div></div>`}
-async function directGet(){
- const client=window.echoCitySupabase;if(!client)throw new Error(bi("Supabase 连接不可用","Supabase connection unavailable"));
- for(const candidate of ["customer","worker","platform"]){
-  const{data,error}=await client.rpc("read_task_with_token",{p_request_no:requestNo,p_token:token,p_role:candidate});
-  if(!error){const plans=Array.isArray(data?.plans)?data.plans:[];return{role:candidate,order:data,plan:plans[0]||null}}
- }
- throw new Error(bi("专用链接无效或已经过期","The dedicated link is invalid or expired"));
+function sectionDetail(section){const content=section?.content||{};return String(content.detail||"").trim()}
+function sectionMap(){const result={};for(const s of plan?.sections||[])result[s.code]=s;return result}
+function friendly(error){
+  const value=String(error?.message||error||"");
+  const map={
+    PLAN_LINK_EXPIRED_OR_INVALID:bi("专用链接无效或已经过期。","The dedicated link is invalid or expired."),
+    WORKER_PLAN_LINK_EXPIRED_OR_INVALID:bi("服务方专用链接无效或已经过期。","The worker link is invalid or expired."),
+    PLATFORM_PLAN_LINK_EXPIRED_OR_INVALID:bi("平台访问凭证无效或已经过期。","The platform credential is invalid or expired."),
+    PLAN_ALREADY_AWAITING_REVIEW:bi("方案已经提交，正在等待平台审核。","The plan is already awaiting platform review."),
+    SEVEN_COMPLETE_PLAN_SECTIONS_REQUIRED:bi("七章内容尚未全部完成，不能批准或确认。","All seven sections must be completed before approval or confirmation."),
+    APPROVED_PLAN_NOT_FOUND:bi("尚无可供客户确认的平台批准方案。","No platform-approved plan is available for confirmation.")
+  };
+  for(const [key,text] of Object.entries(map))if(value.includes(key))return text;
+  return value;
 }
-async function directConfirm(){
- const client=window.echoCitySupabase;if(!client)throw new Error(bi("Supabase 连接不可用","Supabase connection unavailable"));
- const{data,error}=await client.rpc("confirm_assignment_plan_with_token",{p_request_no:requestNo,p_token:token});
- if(error)throw error;return data;
+async function rpc(name,args){
+  const client=window.echoCitySupabase;
+  if(!client)throw new Error(bi("Supabase连接不可用。","Supabase connection unavailable."));
+  const {data,error}=await client.rpc(name,args);
+  if(error)throw error;
+  return data;
 }
-async function call(action,extra={}){
- try{
-  const response=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action,request_no:requestNo,token,...extra})});
-  const data=await response.json().catch(()=>({}));
-  if(response.ok)return data;
- }catch(error){console.warn("Plan Edge Function unavailable; using secure RPC fallback.",error)}
- if(action==="get")return directGet();
- if(action==="confirm_plan")return directConfirm();
- throw new Error(bi("该操作接口尚未部署","This action endpoint is not deployed"));
+async function loadData(){return rpc("read_implementation_plan_with_token",{p_request_no:requestNo,p_token:token})}
+function statusText(v){
+  const m={
+    submitted:bi("等待平台审核","Pending platform review"),
+    under_review:bi("平台审核中","Under platform review"),
+    approved:bi("等待客户确认","Pending customer confirmation"),
+    customer_confirmed:bi("客户已确认","Customer confirmed"),
+    revision_requested:bi("平台要求修改","Revision requested")
+  };
+  return m[v]||bi("尚未提交","Not submitted");
 }
-function statusText(v){const m={submitted:bi("等待平台审批","Pending platform review"),approved:bi("等待客户确认","Pending customer confirmation"),customer_confirmed:bi("客户已确认","Customer confirmed"),revision_requested:bi("平台要求修改","Revision requested")};return m[v]||bi("尚未提交","Not submitted")}
+function applyLanguage(){
+  $("lang").textContent=lang==="zh"?"EN":"中文";
+  document.documentElement.lang=lang==="zh"?"zh-CN":"en";
+  $("title").textContent=bi("七章施工方案协同","Seven-section plan workflow");
+  $("intro").textContent=bi("服务方填写、平台审核、客户确认；三方共用同一订单和同一方案版本。","Worker submission, platform review, and customer confirmation use one order and one plan version.");
+  $("orderTitle").textContent=bi("订单信息","Order");
+  $("planTitle").textContent=bi("当前施工方案","Current plan");
+  $("workerTitle").textContent=bi("填写七章施工方案","Complete the seven-section plan");
+  $("workerNotice").textContent=bi("每章必须填写实际施工内容，模板提示不能代替方案。提交后由平台审核，平台批准后再由客户确认。","Each section must contain actual work details. Template prompts are not a plan. Platform review and customer confirmation follow submission.");
+  $("platformTitle").textContent=bi("平台审核","Platform review");
+  $("platformIntro").textContent=bi("请逐章核对完整性、专业性、可实施性和安全条件。平台批准属于人工责任，不由AI替代。","Review every section for completeness, professional quality, feasibility, and safety. Approval remains a human responsibility.");
+  $("reviewLabel").textContent=bi("审核意见","Review note");
+  $("approveButton").textContent=bi("批准七章方案","Approve seven-section plan");
+  $("revisionButton").textContent=bi("退回服务方修改","Return for revision");
+  $("customerTitle").textContent=bi("客户确认","Customer confirmation");
+  $("customerIntro").textContent=bi("请确认施工范围、人员设备材料、施工方法、安全、进度和质量要求。确认后服务方才能上传开工照片。","Confirm the scope, resources, method, safety, schedule, and quality requirements. The worker can upload the pre-start photo only after confirmation.");
+  $("customerCheckText").textContent=bi("我已阅读并确认完整七章施工方案","I have reviewed and confirm the complete seven-section plan");
+  $("confirmButton").textContent=bi("确认施工方案","Confirm plan");
+  $("doneTitle").textContent=bi("当前操作已完成","Current action complete");
+  $("submitButton").textContent=bi("提交七章方案供平台审核","Submit seven-section plan");
+  const labels={
+    man:["1. 人员","1. People"],machine:["2. 机械设备","2. Equipment"],material:["3. 材料","3. Materials"],
+    method:["4. 施工方法","4. Method"],environment:["5. 环境与安全","5. Environment & safety"],
+    schedule:["6. 进度计划","6. Schedule"],quality:["7. 质量控制","7. Quality control"]
+  };
+  for(const code of codes)$(code+"Label").textContent=bi(labels[code][0],labels[code][1]);
+}
 function render(){
- $("lang").textContent=lang==="zh"?"EN":"中文";document.documentElement.lang=lang==="zh"?"zh-CN":"en";
- const roles={worker:bi("工人专用链接","Worker link"),platform:bi("平台专用链接","Platform link"),customer:bi("客户专用链接","Customer link")};
- $("roleBadge").textContent=roles[role]||role;$("orderCard").classList.remove("hidden");
- $("orderDetails").innerHTML=detail(bi("订单号","Request"),order.request_no)+detail(bi("状态","Status"),order.status)+detail(bi("服务地址","Address"),order.address)+detail(bi("计划日期","Date"),order.service_date)+detail(bi("客户需求","Customer request"),order.description,true)+detail(bi("平台任务范围","Platform scope"),order.worker_task_scope,true)+detail(bi("验收要求","Acceptance requirements"),order.customer_acceptance_items,true);
- $("planCard").classList.remove("hidden");$("planState").textContent=statusText(plan?.status);
- const c=plan?.content||{};$("planDetails").innerHTML=plan?detail(bi("版本","Version"),"V"+plan.version)+detail(bi("提交时间","Submitted"),plan.submitted_at)+detail(bi("任务范围","Scope"),c.scope,true)+detail(bi("施工方法","Method"),c.method,true)+detail(bi("质量标准","Quality"),c.quality_requirements,true)+detail(bi("安全措施","Safety"),c.safety,true)+detail(bi("人员与工具","Resources"),c.resources)+detail(bi("预计工期","Duration"),c.duration)+detail(bi("平台意见","Review note"),plan.review_note,true):detail(bi("状态","Status"),bi("等待工人提交施工方案","Waiting for worker submission"),true);
- ["workerPanel","platformPanel","customerPanel","donePanel"].forEach(id=>$(id).classList.add("hidden"));
- if(role==="worker"&&(!plan||plan.status==="revision_requested")){ $("workerPanel").classList.remove("hidden");$("scope").value=c.scope||order.worker_task_scope||"";$("method").value=c.method||"";$("quality").value=c.quality_requirements||order.customer_acceptance_items||"";$("safety").value=c.safety||"";$("resources").value=c.resources||"";$("duration").value=c.duration||order.duration||""}
- else if(role==="platform"&&plan?.status==="submitted")$("platformPanel").classList.remove("hidden");
- else if(role==="customer"&&plan?.status==="approved")$("customerPanel").classList.remove("hidden");
- else{$("donePanel").classList.remove("hidden");$("doneText").textContent=role==="worker"?bi("方案已提交，请等待平台审批和客户确认。","Plan submitted. Await review and confirmation."):role==="platform"?bi("当前没有待平台审批的方案。","No plan currently awaits platform review."):bi("当前没有待客户确认的方案。","No plan currently awaits customer confirmation.")}
+  applyLanguage();
+  const roles={worker:bi("服务方专用链接","Worker link"),platform:bi("平台工作台","Platform workspace"),customer:bi("客户专用链接","Customer link")};
+  $("roleBadge").textContent=roles[role]||role;
+  $("orderCard").classList.remove("hidden");
+  $("orderDetails").innerHTML=
+    detail(bi("订单号","Request"),order.request_no)+
+    detail(bi("状态","Status"),order.status)+
+    detail(bi("服务类型","Service"),order.service_type)+
+    detail(bi("服务地址","Address"),order.address)+
+    detail(bi("客户需求","Customer request"),order.description,true)+
+    detail(bi("平台任务范围","Platform scope"),order.worker_task_scope,true)+
+    detail(bi("验收要求","Acceptance requirements"),order.customer_acceptance_items,true);
+
+  $("planCard").classList.remove("hidden");
+  $("planState").textContent=plan?statusText(plan.status):bi("等待服务方提交","Awaiting worker submission");
+  const map=sectionMap();
+  $("sectionProgress").innerHTML=codes.map(code=>{
+    const complete=sectionDetail(map[code]).length>1&&["completed","approved"].includes(map[code]?.status);
+    return `<div class="step ${complete?"ok":""}">${complete?"✓":"✕"} ${esc(bi(names[code][0],names[code][1]))}</div>`;
+  }).join("");
+  $("planDetails").innerHTML=plan
+    ? detail(bi("版本","Version"),"V"+plan.version)+
+      detail(bi("方案状态","Plan status"),statusText(plan.status))+
+      codes.map(code=>detail(bi(names[code][0],names[code][1]),sectionDetail(map[code]),true)).join("")+
+      detail(bi("平台审核意见","Platform note"),plan.approval_note||plan.review_note,true)
+    : detail(bi("状态","Status"),bi("尚无施工方案。","No plan has been submitted."),true);
+
+  ["workerPanel","platformPanel","customerPanel","donePanel"].forEach(id=>$(id).classList.add("hidden"));
+  const completeCount=codes.filter(code=>sectionDetail(map[code]).length>1&&["completed","approved"].includes(map[code]?.status)).length;
+  const workerCanSubmit=role==="worker"&&(
+    !plan||plan.status==="revision_requested"||
+    (["approved","customer_confirmed"].includes(plan.status)&&!plan.prestart_ready&&completeCount<7)
+  );
+
+  if(workerCanSubmit){
+    $("workerPanel").classList.remove("hidden");
+    for(const code of codes){
+      const existing=sectionDetail(map[code]);
+      if(existing)$(code).value=existing;
+    }
+  }else if(role==="platform"&&plan?.status==="submitted"){
+    $("platformPanel").classList.remove("hidden");
+  }else if(role==="customer"&&plan?.status==="approved"&&plan?.platform_approval_status==="approved"){
+    $("customerPanel").classList.remove("hidden");
+  }else{
+    $("donePanel").classList.remove("hidden");
+    if(role==="worker"){
+      $("doneText").textContent=plan?.prestart_ready
+        ? bi("平台和客户均已确认。请返回任务页面完成现场检查并上传开工照片。","Platform and customer confirmation are complete. Return to the task page for pre-start checks and photo upload.")
+        : bi("方案已提交，请等待平台审核和客户确认。","The plan has been submitted. Await platform review and customer confirmation.");
+      $("nextLink").href=`task-link.html?request_no=${encodeURIComponent(requestNo)}&role=worker&token=${encodeURIComponent(token)}`;
+      $("nextLink").textContent=bi("返回任务并继续","Return to task");
+    }else if(role==="platform"){
+      $("doneText").textContent=bi("当前没有待平台审核的方案。","No plan currently awaits platform review.");
+      $("nextLink").href="admin-plan-center.html";
+      $("nextLink").textContent=bi("返回方案中心","Return to plan center");
+    }else{
+      $("doneText").textContent=plan?.prestart_ready
+        ? bi("方案已确认，服务方可以进行开工前检查。","The plan is confirmed; the worker may complete pre-start checks.")
+        : bi("当前没有待客户确认的方案。","No plan currently awaits customer confirmation.");
+      $("nextLink").href=`task-link.html?request_no=${encodeURIComponent(requestNo)}&role=customer&token=${encodeURIComponent(token)}`;
+      $("nextLink").textContent=bi("返回订单","Return to order");
+    }
+  }
 }
-async function load(){if(!requestNo||!token){msg(bi("专用链接不完整。","The dedicated link is incomplete."),"error");return}try{const data=await call("get");role=data.role;order=data.order;plan=data.plan;render();msg(bi("数据已从云端加载。","Cloud data loaded."),"ok")}catch(e){msg(e.message,"error")}}
-async function submitPlan(){try{const content={scope:$("scope").value.trim(),method:$("method").value.trim(),quality_requirements:$("quality").value.trim(),safety:$("safety").value.trim(),resources:$("resources").value.trim(),duration:$("duration").value.trim()};await call("submit_plan",{content});msg(bi("方案已提交平台审批。","Plan submitted for review."),"ok");await load()}catch(e){msg(e.message,"error")}}
-async function reviewPlan(action){try{await call(action,{review_note:$("reviewNote").value.trim()});msg(action==="approve_plan"?bi("平台已批准，等待客户确认。","Approved; awaiting customer confirmation."):bi("已退回工人修改。","Returned for revision."),"ok");await load()}catch(e){msg(e.message,"error")}}
-async function confirmPlan(){if(!$("customerCheck").checked){msg(bi("请先勾选确认。","Please check the confirmation box."),"error");return}try{await call("confirm_plan");msg(bi("客户已确认，工人现在可以完成开工前检查。","Confirmed. The worker may complete pre-start checks."),"ok");await load()}catch(e){msg(e.message,"error")}}
-$("lang").onclick=()=>{lang=lang==="zh"?"en":"zh";localStorage.setItem("echocity-language",lang);if(order)render()};load();
+async function load(){
+  if(!requestNo||!token){msg(bi("链接缺少订单号或访问凭证。","The link is missing the request number or credential."),"error");return}
+  try{
+    const data=await loadData();
+    role=data.role;order=data.order;plan=data.plan;
+    render();
+    msg(bi("已加载同一订单的最新方案数据。","Latest plan data loaded from the shared order."),"okmsg");
+  }catch(error){msg(friendly(error),"error")}
+}
+async function submitPlan(){
+  const sections={};
+  for(const code of codes){
+    sections[code]=$(code).value.trim();
+    if(sections[code].length<2){msg(bi("请完整填写七个章节后再提交。","Complete all seven sections before submitting."),"error");$(code).focus();return}
+  }
+  $("submitButton").disabled=true;
+  try{
+    await rpc("submit_implementation_plan_with_token",{p_request_no:requestNo,p_token:token,p_sections:sections});
+    msg(bi("七章方案已提交平台审核。","The seven-section plan was submitted for platform review."),"okmsg");
+    await load();
+  }catch(error){msg(friendly(error),"error")}finally{$("submitButton").disabled=false}
+}
+async function review(decision){
+  const button=decision==="approve"?$("approveButton"):$("revisionButton");
+  button.disabled=true;
+  try{
+    await rpc("review_implementation_plan_with_token",{p_request_no:requestNo,p_token:token,p_decision:decision,p_note:$("reviewNote").value.trim()});
+    msg(decision==="approve"?bi("平台已批准，等待客户确认。","Approved; awaiting customer confirmation."):bi("已退回服务方修改。","Returned to the worker for revision."),"okmsg");
+    await load();
+  }catch(error){msg(friendly(error),"error")}finally{button.disabled=false}
+}
+async function confirmPlan(){
+  if(!$("customerCheck").checked){msg(bi("请先勾选确认。","Please check the confirmation box."),"error");return}
+  $("confirmButton").disabled=true;
+  try{
+    const result=await rpc("confirm_assignment_plan_with_token",{p_request_no:requestNo,p_token:token});
+    msg(result?.prestart_ready?bi("客户已确认，七章方案门禁通过。服务方可上传开工照片。","Confirmed. The seven-section gate passed; the worker may upload the pre-start photo."):bi("客户已确认，但仍有开工条件待补。","Confirmed, but some pre-start conditions are still pending."),"okmsg");
+    await load();
+  }catch(error){msg(friendly(error),"error")}finally{$("confirmButton").disabled=false}
+}
+$("lang").onclick=()=>{lang=lang==="zh"?"en":"zh";localStorage.setItem("echocity-language",lang);if(order)render();else applyLanguage()};
+$("submitButton").onclick=submitPlan;
+$("approveButton").onclick=()=>review("approve");
+$("revisionButton").onclick=()=>review("revision");
+$("confirmButton").onclick=confirmPlan;
+applyLanguage();
+load();
 </script>
 </body>
 </html>
