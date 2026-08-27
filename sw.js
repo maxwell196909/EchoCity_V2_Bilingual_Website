@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v49-safe-prestart-plan-gate";
+const CACHE_NAME = "echocity-v50-seven-section-plan-workflow";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -29,6 +29,7 @@ const APP_FILES = [
   "./assets/admin-incident-center.html",
   "./assets/admin-dispatch-center.html",
   "./assets/admin-plan-center.html",
+  "./assets/implementation-plan-workflow.html",
   "./assets/admin-prestart-center.html",
   "./assets/admin-quality-center.html",
   "./assets/admin-warranty-center.html",
