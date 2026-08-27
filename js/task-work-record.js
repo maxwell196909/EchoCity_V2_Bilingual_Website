@@ -15,6 +15,7 @@
       save: "保存施工记录",
       required: "请填写本次完成的工作。",
       large: "照片不能超过10MB。",
+      reworkPhoto: "整改记录必须上传一张新的现场照片。",
       saving: "正在上传并保存施工记录……",
       saved: "施工记录已保存，客户和平台现在可以看到。",
       failed: "提交失败，请稍后重试或联系平台。"
@@ -33,6 +34,7 @@
       save: "Save work record",
       required: "Describe the work completed.",
       large: "The photo must not exceed 10 MB.",
+      reworkPhoto: "A new on-site photo is required for remediation.",
       saving: "Uploading and saving work record...",
       saved: "Work record saved. The customer and platform can now see it.",
       failed: "Submission failed. Try again or contact the platform."
@@ -120,7 +122,8 @@
     const result = await client.rpc("read_task_with_token", {
       p_request_no: requestNo, p_token: token, p_role: "worker"
     });
-    if (result.error || !["in_progress", "working"].includes(result.data?.status)) return;
+    if (result.error || !["in_progress", "working", "milestone_rework"].includes(result.data?.status)) return;
+    const isRework = result.data?.status === "milestone_rework";
 
     const oldCard = document.getElementById("workerActionCard");
     if (oldCard) oldCard.classList.add("hidden");
@@ -139,6 +142,11 @@
       const t = copy[language()];
       const workProgress = ui.progress.value.trim();
       const file = ui.photo.files[0] || null;
+      if (isRework && !file) {
+        ui.status.textContent = t.reworkPhoto;
+        ui.status.className = "wr-status wr-danger";
+        return;
+      }
       if (workProgress.length < 2) {
         ui.status.textContent = t.required;
         ui.status.className = "wr-status wr-danger";
