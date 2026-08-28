@@ -59,6 +59,7 @@ declare
   v_request public.service_requests%rowtype;
   v_settlement public.order_settlements%rowtype;
   v_currency text:=upper(trim(coalesce(p_currency,'CNY')));
+  v_next_id bigint;
 begin
   if not exists(
     select 1 from private.platform_dashboard_tokens t
@@ -79,8 +80,10 @@ begin
     raise exception 'SETTLEMENT_ALREADY_EXISTS';
   end if;
 
-  insert into public.order_settlements(request_no,total_amount,worker_amount,platform_fee,currency,status,updated_at)
-  values(v_no,round(p_total_amount,2),round(p_worker_amount,2),round(p_platform_fee,2),v_currency,'awaiting_payment',now())
+  perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtext('echocity_order_settlements_id'));
+  select coalesce(max(s.id),0)+1 into v_next_id from public.order_settlements s;
+  insert into public.order_settlements(id,request_no,total_amount,worker_amount,platform_fee,currency,status,updated_at)
+  values(v_next_id,v_no,round(p_total_amount,2),round(p_worker_amount,2),round(p_platform_fee,2),v_currency,'awaiting_payment',now())
   returning * into v_settlement;
 
   update public.service_requests set status='awaiting_payment',current_actor='platform',next_action='confirm_payment',updated_at=now()
