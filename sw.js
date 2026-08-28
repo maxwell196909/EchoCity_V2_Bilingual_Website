@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v53-secure-final-settlement";
+const CACHE_NAME = "echocity-v54-settlement-creation-handoff";
 const APP_FILES = [
   "./",
   "./index.html",
