@@ -1104,123 +1104,38 @@
 
       try {
         const { data, error } =
-          await client
-            .from(
-              "service_requests"
-            )
-            .select(
-              "request_no,status,assigned_worker_phone"
-            )
-            .eq(
-              "assigned_worker_phone",
-              phone
-            );
+          await client.rpc(
+            "get_worker_task_summary",
+            {
+              p_worker_phone: phone
+            }
+          );
 
         if (error) {
           throw error;
         }
 
-        const tasks =
-          Array.isArray(data)
-            ? data
-            : [];
+        const summary = data || {};
+        const totalCount = Number(summary.total || 0);
+        const pendingCount = Number(summary.pending || 0);
+        const activeCount = Number(summary.active || 0);
+        const completedCount = Number(summary.completed || 0);
 
-        const pendingStatuses =
-          new Set([
-            "assigned",
-            "accepted",
-            "arrived",
-            "agreement_submitted"
-          ]);
-
-        const activeStatuses =
-          new Set([
-            "working",
-            "in_progress",
-            "milestone_submitted",
-            "milestone_approved",
-            "waiting_final_acceptance",
-            "awaiting_final_acceptance",
-            "final_rework",
-            "disputed"
-          ]);
-
-        const completedStatuses =
-          new Set([
-            "completed",
-            "conditionally_completed"
-          ]);
-
-        const pendingCount =
-          tasks.filter(
-            function (task) {
-              return pendingStatuses.has(
-                task.status
-              );
-            }
-          ).length;
-
-        const activeCount =
-          tasks.filter(
-            function (task) {
-              return activeStatuses.has(
-                task.status
-              );
-            }
-          ).length;
-
-        const completedCount =
-          tasks.filter(
-            function (task) {
-              return completedStatuses.has(
-                task.status
-              );
-            }
-          ).length;
-
-        document.getElementById(
-          "totalCount"
-        ).textContent =
-          String(
-            tasks.length
-          );
-
-        document.getElementById(
-          "pendingCount"
-        ).textContent =
-          String(
-            pendingCount
-          );
-
-        document.getElementById(
-          "activeCount"
-        ).textContent =
-          String(
-            activeCount
-          );
-
-        document.getElementById(
-          "completedCount"
-        ).textContent =
-          String(
-            completedCount
-          );
+        document.getElementById("totalCount").textContent = String(totalCount);
+        document.getElementById("pendingCount").textContent = String(pendingCount);
+        document.getElementById("activeCount").textContent = String(activeCount);
+        document.getElementById("completedCount").textContent = String(completedCount);
 
         localStorage.setItem(
           "echocity-worker-phone",
           phone
         );
 
-        if (
-          tasks.length === 0
-        ) {
+        if (totalCount === 0) {
           showStatus(
             "error",
-            translate(
-              "loadEmpty"
-            )
+            translate("loadEmpty")
           );
-
           return;
         }
 
