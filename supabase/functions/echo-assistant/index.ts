@@ -26,6 +26,44 @@ function authorized(req: Request) {
   }
 }
 
+function fallbackReply(message: string, language: "zh" | "en") {
+  const text = message.toLowerCase();
+  let module = "none";
+  let moduleLabel = "";
+  let nextAction = "";
+
+  if (/维修资金|维修基金|repair fund|投标|标书|技术方案|工程咨询|服务需求|申请/.test(text)) {
+    module = "customer";
+    moduleLabel = language === "zh" ? "客户服务" : "Customer services";
+    nextAction = language === "zh" ? "进入客户服务目录并提交需求" : "Open the customer catalog and submit a request";
+  } else if (/任务|接单|到达|开工|施工|里程碑|完工|worker|my task/.test(text)) {
+    module = "worker";
+    moduleLabel = language === "zh" ? "服务人员工作台" : "Worker dashboard";
+    nextAction = language === "zh" ? "查询并处理我的任务" : "Find and manage my tasks";
+  } else if (/平台|审核|报价|派工|验收|结算|admin|dispatch|quote/.test(text)) {
+    module = "admin";
+    moduleLabel = language === "zh" ? "平台管理工作台" : "Platform dashboard";
+    nextAction = language === "zh" ? "进入平台审核、报价与派工" : "Open platform review, quoting, and dispatch";
+  }
+
+  const answer = language === "zh"
+    ? (module === "none"
+      ? "我已收到你的问题。请再说明你是要提交服务需求、查询工作任务，还是进行平台审核与派工？"
+      : `我已识别你的需求，建议进入“${moduleLabel}”。你可以先打开对应模块，按页面提示继续。`)
+    : (module === "none"
+      ? "I received your question. Are you submitting a service request, finding a work task, or managing platform review and dispatch?"
+      : `I identified your need. Open “${moduleLabel}” and continue with the page guidance.`);
+
+  return {
+    answer,
+    module,
+    moduleLabel,
+    nextAction,
+    degraded: true,
+    diagnostic_code: "AI_CREDIT_FALLBACK"
+  };
+}
+
 Deno.serve(async (req: Request) => {
   const headers = cors(req.headers.get("origin"));
   if (req.method === "OPTIONS") return new Response("ok", { headers });
@@ -83,6 +121,9 @@ module must be customer, worker, admin, or none. Recommend a module only when re
         code: upstreamCode,
         request_id: requestId
       });
+      if (openai.status === 429 && upstreamCode === "credit_balance_exhausted") {
+        return Response.json(fallbackReply(message, language), { status: 200, headers });
+      }
       return Response.json({
         error: "AI service unavailable",
         diagnostic_code: "OPENAI_UPSTREAM_ERROR",
