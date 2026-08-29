@@ -470,7 +470,7 @@
 
           <a
             class="card-link"
-            href="worker-tasks.html?mode=tasks"
+            href="#" data-requires-worker-link="true"
             data-i18n="tasksButton"
           >
             查看任务
@@ -496,7 +496,7 @@
 
           <a
             class="card-link"
-            href="worker-tasks.html?mode=start"
+            href="#" data-requires-worker-link="true"
             data-i18n="startButton"
           >
             开始任务
@@ -522,7 +522,7 @@
 
           <a
             class="card-link"
-            href="worker-tasks.html?mode=records"
+            href="#" data-requires-worker-link="true"
             data-i18n="recordButton"
           >
             填写记录
@@ -548,7 +548,7 @@
 
           <a
             class="card-link"
-            href="worker-tasks.html?mode=milestones"
+            href="#" data-requires-worker-link="true"
             data-i18n="milestoneButton"
           >
             提交节点
@@ -574,7 +574,7 @@
 
           <a
             class="card-link"
-            href="worker-tasks.html?mode=progress"
+            href="#" data-requires-worker-link="true"
             data-i18n="progressButton"
           >
             查看进度
@@ -600,7 +600,7 @@
 
           <a
             class="card-link"
-            href="worker-tasks.html?mode=reminders"
+            href="#" data-requires-worker-link="true"
             data-i18n="echoButton"
           >
             查看提醒
@@ -1196,6 +1196,17 @@
           link.addEventListener(
             "click",
             function (event) {
+              if (link.dataset.requiresWorkerLink === "true") {
+                event.preventDefault();
+                showStatus(
+                  "error",
+                  currentLanguage === "zh"
+                    ? "具体任务操作需要使用平台派工时发送的专属任务链接。请联系平台重新发送。"
+                    : "Use the dedicated task link sent by the platform when the assignment was created."
+                );
+                return;
+              }
+
               const phone =
                 normalizePhone(
                   document.getElementById(
