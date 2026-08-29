@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v56-worker-summary-rpc";
+const CACHE_NAME = "echocity-v57-secure-worker-link-flow";
 const APP_FILES = [
   "./",
   "./index.html",
