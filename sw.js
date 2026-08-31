@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v68-cn-phone-auth";
+const CACHE_NAME = "echocity-v69-email-test-login";
 const APP_FILES = [
   "./",
   "./index.html",
