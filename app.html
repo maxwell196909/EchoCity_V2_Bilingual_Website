@@ -22,15 +22,15 @@
     .loading{position:absolute;inset:0;display:grid;place-items:center;color:#475569;background:#f4f7fb;z-index:1}
     .loading.hidden{display:none}
     iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff;z-index:2}
-    .nav{padding:8px 10px max(8px,env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;border-top:1px solid #dbe3ee;background:#fff;box-shadow:0 -8px 24px #0f172a12;z-index:3}
-    .nav-button{min-height:54px;padding:6px 4px;border:0;border-radius:13px;color:#64748b;background:transparent;font-weight:800;cursor:pointer}
+    .nav{padding:8px 8px max(8px,env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;border-top:1px solid #dbe3ee;background:#fff;box-shadow:0 -8px 24px #0f172a12;z-index:3}
+    .nav-button{min-height:54px;padding:6px 2px;border:0;border-radius:13px;color:#64748b;background:transparent;font-weight:800;cursor:pointer;font-size:12px}
     .nav-button span{display:block;margin-bottom:3px;font-size:20px}
     .nav-button.active{color:#1d4ed8;background:#eff6ff}
     @media(min-width:900px){
       .app{grid-template-columns:184px 1fr;grid-template-rows:auto 1fr}
       .topbar{grid-column:1/-1}
       .nav{grid-column:1;grid-row:2;padding:16px 12px;display:flex;flex-direction:column;justify-content:flex-start;border-top:0;border-right:1px solid #dbe3ee;box-shadow:5px 0 18px #0f172a0d}
-      .nav-button{min-height:58px;padding:8px 12px;text-align:left}
+      .nav-button{min-height:58px;padding:8px 12px;text-align:left;font-size:14px}
       .nav-button span{display:inline-block;width:30px;margin:0 8px 0 0;text-align:center}
       .stage{grid-column:2;grid-row:2}
     }
@@ -52,9 +52,10 @@
     </section>
 
     <nav class="nav" aria-label="EchoCity 主导航">
-      <button class="nav-button active" type="button" data-page="home" data-src="index.html"><span>🏠</span><b data-zh="首页" data-en="Home">首页</b></button>
+      <button class="nav-button active" type="button" data-page="video" data-src="assets/video-feed.html"><span>▶</span><b data-zh="视频" data-en="Video">视频</b></button>
+      <button class="nav-button" type="button" data-page="home" data-src="index.html"><span>🏠</span><b data-zh="城市" data-en="City">城市</b></button>
       <button class="nav-button" type="button" data-page="customer" data-src="assets/customer-role-home.html"><span>🙋</span><b data-zh="客户" data-en="Customer">客户</b></button>
-      <button class="nav-button" type="button" data-page="worker" data-src="assets/worker-role-home.html"><span>🧰</span><b data-zh="服务人员" data-en="Worker">服务人员</b></button>
+      <button class="nav-button" type="button" data-page="worker" data-src="assets/worker-role-home.html"><span>🧰</span><b data-zh="服务" data-en="Worker">服务</b></button>
       <button class="nav-button" type="button" data-page="admin" data-src="assets/admin-dashboard.html"><span>📋</span><b data-zh="平台" data-en="Platform">平台</b></button>
     </nav>
   </main>
@@ -79,7 +80,7 @@
       buttons.forEach(item=>item.classList.toggle("active",item===button));
       loading.classList.remove("hidden");
       const target=new URL(button.dataset.src,location.href);
-      target.searchParams.set("app_v","44");
+      target.searchParams.set("app_v","45");
       if(button.dataset.page==="admin"){
         const token=localStorage.getItem("echocity-platform-token")||sessionStorage.getItem("echocity-platform-token");
         if(token)target.hash="platform_token="+encodeURIComponent(token);
@@ -104,7 +105,7 @@
 
     capturePlatformToken();
     applyLanguage();
-    const savedPage=localStorage.getItem("echocity-client-page")||"home";
+    const savedPage=localStorage.getItem("echocity-client-page")||"video";
     openPage(buttons.find(item=>item.dataset.page===savedPage)||buttons[0],false);
 
     if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"));}
