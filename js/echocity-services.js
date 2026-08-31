@@ -1,52 +1,30 @@
 (function (window) {
   "use strict";
 
-  const SERVICE_VERSION = "1.0.0";
+  const SERVICE_VERSION = "1.1.0";
 
   function getStore() {
-    const store =
-      window.EchoCityStore ||
-      window.EchoStore;
-
-    if (!store) {
-      throw new Error(
-        "EchoCity Store is not available."
-      );
-    }
-
+    const store = window.EchoCityStore || window.EchoStore;
+    if (!store) throw new Error("EchoCity Store is not available.");
     return store;
   }
-function getCollectionApi(collectionName) {
-  const store = getStore();
 
-  if (
-    store[collectionName] &&
-    typeof store[collectionName].create ===
-      "function"
-  ) {
-    return store[collectionName];
+  function getCollectionApi(collectionName) {
+    const store = getStore();
+    if (store[collectionName] && typeof store[collectionName].create === "function") {
+      return store[collectionName];
+    }
+    if (
+      store.collections &&
+      store.collections[collectionName] &&
+      typeof store.collections[collectionName].create === "function"
+    ) {
+      return store.collections[collectionName];
+    }
+    return null;
   }
 
-  if (
-    store.collections &&
-    store.collections[collectionName] &&
-    typeof store.collections[
-      collectionName
-    ].create === "function"
-  ) {
-    return store.collections[
-      collectionName
-    ];
-  }
-
-  return null;
-}
-  function createServiceResult(
-    success,
-    data,
-    messageKey,
-    errorCode
-  ) {
+  function createServiceResult(success, data, messageKey, errorCode) {
     return {
       success: Boolean(success),
       data: data || null,
@@ -55,281 +33,137 @@ function getCollectionApi(collectionName) {
       createdAt: new Date().toISOString()
     };
   }
-function normalizeText(value) {
-  return typeof value === "string"
-    ? value.trim()
-    : "";
-}
 
-function prepareDreamInput(input) {
-  const source =
-    input && typeof input === "object"
-      ? input
-      : {};
-
-  return {
-    title: normalizeText(source.title),
-    description: normalizeText(
-      source.description
-    ),
-    category:
-      normalizeText(source.category) ||
-      "general",
-
-    creatorId:
-      normalizeText(source.creatorId),
-
-    visibility:
-      normalizeText(source.visibility) ||
-      "public",
-
-    status:
-      normalizeText(source.status) ||
-      "published",
-
-    sourceDevice:
-      normalizeText(source.sourceDevice) ||
-      "responsive"
-  };
-}
-
-function validateDreamInput(dream) {
-  const errors = [];
-
-  if (!dream.title) {
-    errors.push("dream.titleRequired");
+  function normalizeText(value) {
+    return typeof value === "string" ? value.trim() : "";
   }
 
-  if (dream.title.length > 120) {
-    errors.push("dream.titleTooLong");
-  }
-
-  if (!dream.description) {
-    errors.push("dream.descriptionRequired");
-  }
-
-  if (dream.description.length > 2000) {
-    errors.push(
-      "dream.descriptionTooLong"
-    );
-  }
-
-  return {
-    valid: errors.length === 0,
-    errors: errors
-  };
-}
-  const EchoServices = {
-  version: SERVICE_VERSION,
-
-  Dream: {
-    prepare: function (input) {
-      const dream =
-        prepareDreamInput(input);
-
-      return createServiceResult(
-        true,
-        dream,
-        "dream.prepared",
-        ""
-      );
-    },
-
-    validate: function (input) {
-      const dream =
-        prepareDreamInput(input);
-
-      const validation =
-        validateDreamInput(dream);
-
-      return createServiceResult(
-        validation.valid,
-        {
-          dream: dream,
-          errors: validation.errors
-        },
-        validation.valid
-          ? "dream.valid"
-          : "dream.invalid",
-        validation.valid
-          ? ""
-          : "DREAM_VALIDATION_FAILED"
-      );
-    }
-  },
-publish: function (input) {
-  const validation =
-    this.validate(input);
-
-  if (!validation.success) {
-    return validation;
-  }
-
-  const dreamApi =
-    getCollectionApi("dreams");
-
-  if (!dreamApi) {
-    return createServiceResult(
-      false,
-      {
-        dream:
-          validation.data.dream
-      },
-      "dream.storeUnavailable",
-      "DREAM_STORE_NOT_AVAILABLE"
-    );
-  }
-
-  try {
-    const dreamData = {
-      ...validation.data.dream,
-
-      createdAt:
-        new Date().toISOString(),
-
-      updatedAt:
-        new Date().toISOString(),
-
-      progress: 0,
-
-      sourceType: "resident"
+  function prepareDreamInput(input) {
+    const source = input && typeof input === "object" ? input : {};
+    return {
+      title: normalizeText(source.title),
+      description: normalizeText(source.description),
+      category: normalizeText(source.category) || "general",
+      creatorId: normalizeText(source.creatorId),
+      visibility: normalizeText(source.visibility) || "public",
+      status: normalizeText(source.status) || "published",
+      sourceDevice: normalizeText(source.sourceDevice) || "responsive"
     };
-
-    const savedDream =
-      dreamApi.create(dreamData);
-
-    return createServiceResult(
-      true,
-      {
-        dream: savedDream
-      },
-      "dream.published",
-      ""
-    );
-  } catch (error) {
-    console.error(
-      "Dream publishing failed:",
-      error
-    );
-
-    return createServiceResult(
-      false,
-      {
-        dream:
-          validation.data.dream
-      },
-      "dream.publishFailed",
-      "DREAM_PUBLISH_FAILED"
-    );
   }
-},
-  system: {
-      isReady: function () {
-        return Boolean(
-          window.EchoCityStore ||
-          window.EchoStore
+
+  function validateDreamInput(dream) {
+    const errors = [];
+    if (!dream.title) errors.push("dream.titleRequired");
+    if (dream.title.length > 120) errors.push("dream.titleTooLong");
+    if (!dream.description) errors.push("dream.descriptionRequired");
+    if (dream.description.length > 2000) errors.push("dream.descriptionTooLong");
+    return { valid: errors.length === 0, errors };
+  }
+
+  const EchoServices = {
+    version: SERVICE_VERSION,
+    Dream: {
+      prepare(input) {
+        return createServiceResult(true, prepareDreamInput(input), "dream.prepared", "");
+      },
+      validate(input) {
+        const dream = prepareDreamInput(input);
+        const validation = validateDreamInput(dream);
+        return createServiceResult(
+          validation.valid,
+          { dream, errors: validation.errors },
+          validation.valid ? "dream.valid" : "dream.invalid",
+          validation.valid ? "" : "DREAM_VALIDATION_FAILED"
         );
       },
-
-      getStatus: function () {
+      publish(input) {
+        const validation = this.validate(input);
+        if (!validation.success) return validation;
+        const dreamApi = getCollectionApi("dreams");
+        if (!dreamApi) {
+          return createServiceResult(false, { dream: validation.data.dream }, "dream.storeUnavailable", "DREAM_STORE_NOT_AVAILABLE");
+        }
+        try {
+          const now = new Date().toISOString();
+          const savedDream = dreamApi.create({
+            ...validation.data.dream,
+            createdAt: now,
+            updatedAt: now,
+            progress: 0,
+            sourceType: "resident"
+          });
+          return createServiceResult(true, { dream: savedDream }, "dream.published", "");
+        } catch (error) {
+          console.error("Dream publishing failed:", error);
+          return createServiceResult(false, { dream: validation.data.dream }, "dream.publishFailed", "DREAM_PUBLISH_FAILED");
+        }
+      }
+    },
+    system: {
+      isReady() {
+        return Boolean(window.EchoCityStore || window.EchoStore);
+      },
+      getStatus() {
         const ready = this.isReady();
-
         return createServiceResult(
           ready,
-          {
-            serviceVersion: SERVICE_VERSION,
-            storeConnected: ready
-          },
-          ready
-            ? "system.ready"
-            : "system.storeUnavailable",
-          ready
-            ? ""
-            : "STORE_NOT_AVAILABLE"
+          { serviceVersion: SERVICE_VERSION, storeConnected: ready },
+          ready ? "system.ready" : "system.storeUnavailable",
+          ready ? "" : "STORE_NOT_AVAILABLE"
         );
       }
     }
   };
 
+  function getAttributionContext(input) {
+    const params = new URLSearchParams(window.location.search || "");
+    const rawSource = normalizeText(input?.sourceContentType || input?.source || params.get("source"));
+    const source = rawSource === "video" || rawSource === "live" ? rawSource : "web";
+    const videoId = normalizeText(input?.sourceVideoId || input?.videoId || params.get("video_id"));
+    const liveRoomId = normalizeText(input?.sourceLiveRoomId || input?.liveRoomId || params.get("live_room_id"));
+    const metadata = {
+      service_type_hint: normalizeText(params.get("service_type")),
+      service_name_hint: normalizeText(params.get("service_name")),
+      intent: normalizeText(params.get("intent")),
+      landing_path: window.location.pathname,
+      captured_at: new Date().toISOString()
+    };
+    return {
+      sourceContentType: source,
+      sourceVideoId: source === "video" && videoId ? videoId : null,
+      sourceLiveRoomId: source === "live" && liveRoomId ? liveRoomId : null,
+      sourceMetadata: metadata
+    };
+  }
+
   window.EchoServices = EchoServices;
 
-window.EchoCityServices = {
-  async createServiceRequest(input) {
-    const supabaseClient = window.echoCitySupabase;
+  window.EchoCityServices = {
+    version: SERVICE_VERSION,
 
-    if (!supabaseClient) {
-      throw new Error("Supabase connection is not available.");
-    }
+    async createServiceRequest(input) {
+      const supabaseClient = window.echoCitySupabase;
+      if (!supabaseClient) throw new Error("Supabase connection is not available.");
 
-    const requestNo =
-      input.requestNo ||
-      input.requestId ||
-      input.id ||
-      `REQ-${Date.now()}`;
+      const payload = {
+        service_type: input.serviceType || input.type || "other",
+        description: input.description || input.request || input.details || input.content || "",
+        service_date: input.serviceDate || input.date || null,
+        start_time: input.startTime || input.serviceTime || input.time || null,
+        workers: Number(input.workers || input.workerCount || input.people || 1),
+        duration: input.duration || input.estimatedDuration || "",
+        postal_code: input.postalCode || input.zipCode || input.zip || "",
+        address: input.address || input.serviceAddress || "",
+        customer_name: input.customerName || input.name || "",
+        customer_phone: input.customerPhone || input.phone || ""
+      };
 
-    const payload = {
-      request_no: String(requestNo),
-      service_type:
-        input.serviceType ||
-        input.type ||
-        "other",
+      if (!Number.isFinite(payload.workers) || payload.workers < 1) payload.workers = 1;
+      if (String(input.workerCount || "") === "5plus") payload.workers = 5;
 
-      description:
-        input.description ||
-        input.request ||
-        input.details ||
-        input.content ||
-        "",
+      const source = getAttributionContext(input);
 
-      service_date:
-        input.serviceDate ||
-        input.date ||
-        null,
-
-      start_time:
-        input.startTime ||
-        input.time ||
-        null,
-
-      workers: Number(
-        input.workers ||
-        input.workerCount ||
-        input.people ||
-        1
-      ),
-
-      duration:
-        input.duration ||
-        input.estimatedDuration ||
-        "",
-
-      postal_code:
-        input.postalCode ||
-        input.zipCode ||
-        input.zip ||
-        "",
-
-      address:
-        input.address ||
-        input.serviceAddress ||
-        "",
-
-      customer_name:
-        input.customerName ||
-        input.name ||
-        "",
-
-      customer_phone:
-        input.customerPhone ||
-        input.phone ||
-        "",
-
-      status: "submitted"
-    };
-
-    const { data, error } = await supabaseClient.rpc(
-      "submit_customer_service_request",
-      {
+      const { data, error } = await supabaseClient.rpc("submit_customer_service_request_v2", {
         p_service_type: payload.service_type,
         p_description: payload.description,
         p_service_date: payload.service_date,
@@ -339,17 +173,20 @@ window.EchoCityServices = {
         p_postal_code: payload.postal_code,
         p_address: payload.address,
         p_customer_name: payload.customer_name,
-        p_customer_phone: payload.customer_phone
+        p_customer_phone: payload.customer_phone,
+        p_source_content_type: source.sourceContentType,
+        p_source_video_id: source.sourceVideoId,
+        p_source_live_room_id: source.sourceLiveRoomId,
+        p_source_metadata: source.sourceMetadata
+      });
+
+      if (error) {
+        console.error("Supabase request insert failed:", error);
+        throw error;
       }
-    );
 
-    if (error) {
-      console.error("Supabase request insert failed:", error);
-      throw error;
+      console.log("Service request saved to Supabase:", data);
+      return data;
     }
-
-    console.log("Service request saved to Supabase:", data);
-    return data;
-  }
-};
+  };
 })(window);
