@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v57-secure-worker-link-flow";
+const CACHE_NAME = "echocity-v58-live-v4";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -10,6 +10,13 @@ const APP_FILES = [
   "./js/echocity-supabase.js",
   "./js/echocity-store.js",
   "./js/echocity-services.js",
+  "./assets/video-feed-v4.html",
+  "./assets/discover.html",
+  "./assets/creator-profile.html",
+  "./assets/live-center.html",
+  "./assets/live-room.html",
+  "./assets/report-content.html",
+  "./assets/me.html",
   "./assets/customer-dashboard.html",
   "./assets/customer-role-home.html",
   "./assets/customer-my-requests.html",
@@ -49,43 +56,25 @@ const APP_FILES = [
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(APP_FILES);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_FILES))
   );
-
   self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
-      );
-    })
+    caches.keys().then((cacheNames) => Promise.all(
+      cacheNames.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name))
+    ))
   );
-
   self.clients.claim();
 });
 
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") {
-    return;
-  }
-
+  if (event.request.method !== "GET") return;
   if (event.request.mode === "navigate") {
-    event.respondWith(
-      fetch(event.request).catch(() => caches.match("./index.html"))
-    );
+    event.respondWith(fetch(event.request).catch(() => caches.match("./index.html")));
     return;
   }
-
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request);
-    })
-  );
+  event.respondWith(caches.match(event.request).then((cachedResponse) => cachedResponse || fetch(event.request)));
 });
