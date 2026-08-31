@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v66-live-conversion-tracking";
+const CACHE_NAME = "echocity-v67-video-auth";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -11,6 +11,7 @@ const APP_FILES = [
   "./js/echocity-store.js",
   "./js/echocity-services.js",
   "./assets/video-feed-v4.html",
+  "./assets/video-auth.html",
   "./assets/discover.html",
   "./assets/creator-profile.html",
   "./assets/live-center.html",
