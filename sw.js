@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v70-resumable-video-upload";
+const CACHE_NAME = "echocity-v71-network-first";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -59,22 +59,46 @@ const APP_FILES = [
 ];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_FILES)));
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(async (cache) => {
+      await Promise.allSettled(APP_FILES.map((url) => cache.add(url)));
+    })
+  );
   self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(caches.keys().then((cacheNames) => Promise.all(
-    cacheNames.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name))
-  )));
+  event.waitUntil(
+    caches.keys().then((cacheNames) => Promise.all(
+      cacheNames.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name))
+    ))
+  );
   self.clients.claim();
 });
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
-  if (event.request.mode === "navigate") {
-    event.respondWith(fetch(event.request).catch(() => caches.match("./index.html")));
-    return;
-  }
-  event.respondWith(caches.match(event.request).then((cachedResponse) => cachedResponse || fetch(event.request)));
+
+  const request = event.request;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+
+  event.respondWith((async () => {
+    try {
+      const networkResponse = await fetch(request, { cache: "no-store" });
+      if (networkResponse && networkResponse.ok) {
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(request, networkResponse.clone()).catch(() => {});
+      }
+      return networkResponse;
+    } catch (error) {
+      const cached = await caches.match(request);
+      if (cached) return cached;
+      if (request.mode === "navigate") {
+        const appShell = await caches.match("./app.html") || await caches.match("./index.html");
+        if (appShell) return appShell;
+      }
+      throw error;
+    }
+  })());
 });
