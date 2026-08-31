@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v63-unified-request-feed-fix";
+const CACHE_NAME = "echocity-v64-video-view-tracking";
 const APP_FILES = [
   "./",
   "./index.html",
