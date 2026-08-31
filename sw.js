@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v59-content-attribution";
+const CACHE_NAME = "echocity-v60-content-business";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -17,6 +17,7 @@ const APP_FILES = [
   "./assets/live-room.html",
   "./assets/report-content.html",
   "./assets/me.html",
+  "./assets/admin-content-business.html",
   "./assets/customer-dashboard.html",
   "./assets/customer-role-home.html",
   "./assets/customer-my-requests.html",
