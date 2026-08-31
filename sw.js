@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v62-worker-supply-pool";
+const CACHE_NAME = "echocity-v63-unified-request-feed-fix";
 const APP_FILES = [
   "./",
   "./index.html",
