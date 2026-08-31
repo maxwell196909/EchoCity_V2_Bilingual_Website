@@ -18,4 +18,9 @@ for (const file of files) {
   await cp(file, `www/${file}`, { recursive: true });
 }
 
-console.log("EchoCity web files prepared in www/.");
+// Android APK must launch directly into the EchoCity short-video app shell.
+// Keep the public website's index.html unchanged, but use app.html as the
+// packaged Capacitor entry point.
+await cp("app.html", "www/index.html");
+
+console.log("EchoCity Android web bundle prepared in www/ with video app shell as index.html.");
