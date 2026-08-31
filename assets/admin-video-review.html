@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <title>视频审核 | EchoCity</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/echocity-supabase.js"></script>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:Arial,"Microsoft YaHei",sans-serif;background:#f4f7fb;color:#0f172a}
+    header{position:sticky;top:0;z-index:10;padding:max(12px,env(safe-area-inset-top)) 16px 12px;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    header h1{font-size:18px;margin:0}.actions{display:flex;gap:8px}button{font:inherit}
+    .btn{border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}.btn-light{background:#fff;color:#0f172a}.btn-ok{background:#16a34a;color:#fff}.btn-no{background:#dc2626;color:#fff}.btn-hide{background:#475569;color:#fff}
+    main{max-width:980px;margin:0 auto;padding:16px}.notice{padding:13px 14px;border-radius:12px;background:#fff;border:1px solid #dbe3ee;margin-bottom:14px;color:#475569}
+    .list{display:grid;gap:14px}.card{background:#fff;border:1px solid #dbe3ee;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px #0f172a0c}
+    .media{background:#020617;aspect-ratio:16/9;display:grid;place-items:center}.media video{width:100%;height:100%;object-fit:contain;background:#000}
+    .body{padding:14px}.title{font-size:18px;font-weight:900;margin-bottom:8px}.meta{font-size:13px;color:#64748b;margin-bottom:10px}.desc{line-height:1.6;white-space:pre-wrap;margin-bottom:12px}.review{display:flex;gap:8px;flex-wrap:wrap}.reason{width:100%;min-height:72px;padding:10px;border:1px solid #cbd5e1;border-radius:10px;resize:vertical}
+    .empty{padding:46px 20px;text-align:center;background:#fff;border:1px dashed #cbd5e1;border-radius:16px;color:#64748b}
+    .error{color:#b91c1c;background:#fef2f2;border-color:#fecaca}
+  </style>
+</head>
+<body>
+<header>
+  <h1>EchoCity 视频审核</h1>
+  <div class="actions"><button id="refreshBtn" class="btn btn-light">刷新</button></div>
+</header>
+<main>
+  <div id="notice" class="notice">正在读取待审核视频……</div>
+  <div id="list" class="list"></div>
+</main>
+<script>
+  const db=window.echoCitySupabase;
+  const notice=document.getElementById('notice');
+  const list=document.getElementById('list');
+
+  function getToken(){
+    const q=new URLSearchParams(location.search);
+    const h=new URLSearchParams(location.hash.replace(/^#/,''));
+    const token=q.get('platform_token')||h.get('platform_token')||localStorage.getItem('echocity-platform-token')||sessionStorage.getItem('echocity-platform-token');
+    if(token){localStorage.setItem('echocity-platform-token',token);sessionStorage.setItem('echocity-platform-token',token)}
+    return token;
+  }
+
+  function escapeHtml(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+
+  async function loadVideos(){
+    const token=getToken();
+    if(!token){notice.className='notice error';notice.textContent='缺少平台访问凭证。请从平台入口打开本页。';list.innerHTML='';return}
+    notice.className='notice';notice.textContent='正在读取待审核视频……';
+    const {data,error}=await db.rpc('list_reviewing_videos_with_platform_token',{p_token:token});
+    if(error){notice.className='notice error';notice.textContent='读取失败：'+error.message;list.innerHTML='';return}
+    const rows=Array.isArray(data)?data:[];
+    notice.textContent=`待审核 ${rows.length} 条`;
+    if(!rows.length){list.innerHTML='<div class="empty">当前没有待审核视频。</div>';return}
+    list.innerHTML=rows.map(v=>`
+      <article class="card" data-id="${escapeHtml(v.id)}">
+        <div class="media"><video controls playsinline preload="metadata" src="${escapeHtml(v.video_url)}"></video></div>
+        <div class="body">
+          <div class="title">${escapeHtml(v.title||'未命名视频')}</div>
+          <div class="meta">${escapeHtml(v.city||'')} ${escapeHtml(v.location_text||'')} · ${escapeHtml(new Date(v.created_at).toLocaleString())}</div>
+          <div class="desc">${escapeHtml(v.description||'')}</div>
+          <textarea class="reason" placeholder="审核意见（驳回/隐藏时建议填写）"></textarea>
+          <div class="review">
+            <button class="btn btn-ok" data-action="approve">审核通过</button>
+            <button class="btn btn-no" data-action="reject">驳回</button>
+            <button class="btn btn-hide" data-action="hide">隐藏</button>
+          </div>
+        </div>
+      </article>`).join('');
+  }
+
+  async function review(card,decision){
+    const token=getToken(); if(!token)return;
+    const videoId=card.dataset.id;
+    const reason=card.querySelector('.reason').value.trim()||null;
+    card.querySelectorAll('button').forEach(b=>b.disabled=true);
+    const {error}=await db.rpc('review_video_with_platform_token',{p_token:token,p_video_id:videoId,p_decision:decision,p_reason:reason});
+    if(error){alert('审核提交失败：'+error.message);card.querySelectorAll('button').forEach(b=>b.disabled=false);return}
+    card.remove();
+    const left=list.querySelectorAll('.card').length;
+    notice.textContent=`待审核 ${left} 条`;
+    if(!left)list.innerHTML='<div class="empty">当前没有待审核视频。</div>';
+  }
+
+  list.addEventListener('click',e=>{
+    const btn=e.target.closest('[data-action]'); if(!btn)return;
+    const card=btn.closest('.card'); review(card,btn.dataset.action);
+  });
+  document.getElementById('refreshBtn').addEventListener('click',loadVideos);
+  loadVideos();
+</script>
+</body>
+</html>
