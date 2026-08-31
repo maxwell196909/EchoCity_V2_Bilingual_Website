@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v60-content-business";
+const CACHE_NAME = "echocity-v61-worker-onboarding";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -18,6 +18,7 @@ const APP_FILES = [
   "./assets/report-content.html",
   "./assets/me.html",
   "./assets/admin-content-business.html",
+  "./assets/admin-demand-supply.html",
   "./assets/customer-dashboard.html",
   "./assets/customer-role-home.html",
   "./assets/customer-my-requests.html",
@@ -28,6 +29,7 @@ const APP_FILES = [
   "./assets/task-link.html",
   "./assets/worker-dashboard.html",
   "./assets/worker-role-home.html",
+  "./assets/worker-onboarding.html",
   "./assets/worker-tasks.html",
   "./assets/worker-milestone-submission.html",
   "./assets/worker-settlement.html",
