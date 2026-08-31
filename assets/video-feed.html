@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#05070a">
+  <title>EchoCity 视频</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/echocity-supabase.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05070a;color:#fff;font-family:Arial,"Microsoft YaHei",sans-serif}
+    button{font:inherit}
+    .shell{height:100%;position:relative;background:#05070a}
+    .top-tabs{position:fixed;top:max(12px,env(safe-area-inset-top));left:0;right:0;z-index:30;display:flex;justify-content:center;gap:26px;pointer-events:none;text-shadow:0 1px 4px #000}
+    .tab{font-weight:800;font-size:16px;opacity:.68;pointer-events:auto;cursor:pointer}
+    .tab.active{opacity:1}.tab.active:after{content:"";display:block;width:20px;height:3px;margin:6px auto 0;border-radius:3px;background:#fff}
+    .feed{height:100%;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior-y:contain;scrollbar-width:none}
+    .feed::-webkit-scrollbar{display:none}
+    .card{height:100%;position:relative;scroll-snap-align:start;background:#111;overflow:hidden}
+    .media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#111}
+    .shade{position:absolute;inset:0;background:linear-gradient(180deg,#0004 0%,transparent 28%,transparent 56%,#000c 100%);pointer-events:none}
+    .meta{position:absolute;left:14px;right:86px;bottom:max(24px,env(safe-area-inset-bottom));z-index:5;text-shadow:0 1px 4px #000}
+    .author{font-weight:900;font-size:17px;margin-bottom:9px}.title{font-size:15px;font-weight:700;line-height:1.45;margin-bottom:5px}.desc{font-size:14px;line-height:1.45;opacity:.92;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.city{margin-top:8px;font-size:12px;opacity:.82}
+    .actions{position:absolute;right:10px;bottom:max(130px,calc(env(safe-area-inset-bottom) + 100px));z-index:6;display:flex;flex-direction:column;align-items:center;gap:15px}
+    .action{width:58px;border:0;color:#fff;background:transparent;padding:0;cursor:pointer;text-shadow:0 1px 4px #000;font-weight:800}
+    .bubble{width:48px;height:48px;margin:0 auto 4px;display:grid;place-items:center;border-radius:50%;font-size:23px;background:#0007;backdrop-filter:blur(5px)}
+    .action small{display:block;font-size:11px}.avatar{width:50px;height:50px;border-radius:50%;border:2px solid #fff;object-fit:cover;background:#334155}.avatar-fallback{display:grid;place-items:center;font-weight:900;background:#2563eb}
+    .cta{position:absolute;left:14px;right:76px;bottom:max(90px,calc(env(safe-area-inset-bottom) + 62px));z-index:8;display:flex;gap:8px}
+    .cta button{min-height:40px;padding:0 14px;border-radius:999px;border:1px solid #ffffff55;color:#fff;background:#111b;font-weight:900;cursor:pointer;backdrop-filter:blur(8px)}
+    .cta .primary{background:#2563eb;border-color:#2563eb}
+    .state{height:100%;display:grid;place-items:center;padding:28px;text-align:center;background:radial-gradient(circle at top,#19315e,#090d14 58%)}
+    .state-box{max-width:430px}.state h1{font-size:28px;margin:0 0 12px}.state p{line-height:1.65;color:#cbd5e1;margin:0 0 18px}.state button{min-height:46px;padding:0 18px;border:0;border-radius:12px;background:#2563eb;color:#fff;font-weight:900;cursor:pointer}
+    .toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:80;max-width:84%;padding:10px 14px;border-radius:999px;background:#111e;color:#fff;font-size:13px;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1}
+    @media(min-width:760px){.card{max-width:520px;margin:auto}.feed{background:#000}.top-tabs{max-width:520px;margin:auto}.actions{right:calc((100% - 520px)/2 + 10px)}.meta{left:calc((100% - 520px)/2 + 14px);right:calc((100% - 520px)/2 + 86px)}.cta{left:calc((100% - 520px)/2 + 14px);right:calc((100% - 520px)/2 + 76px)}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="top-tabs" aria-label="视频流筛选">
+      <span class="tab" data-feed="local">同城</span>
+      <span class="tab" data-feed="following">关注</span>
+      <span class="tab active" data-feed="recommend">推荐</span>
+    </div>
+    <section id="feed" class="feed" aria-live="polite"></section>
+    <div id="toast" class="toast"></div>
+  </main>
+
+  <script>
+    const db=window.echoCitySupabase;
+    const feed=document.getElementById('feed');
+    const toast=document.getElementById('toast');
+    let activeFeed='recommend';
+    let sessionUser=null;
+    let impressionSession=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random());
+    let impressionTimers=new Map();
+
+    function say(message){toast.textContent=message;toast.classList.add('show');clearTimeout(say.t);say.t=setTimeout(()=>toast.classList.remove('show'),1800)}
+    function escapeHtml(v=''){return String(v).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]))}
+    function initials(name){const s=(name||'E').trim();return escapeHtml(s.slice(0,1).toUpperCase())}
+    async function getUser(){const {data}=await db.auth.getUser();sessionUser=data?.user||null;return sessionUser}
+
+    async function loadFeed(){
+      feed.innerHTML='<div class="state"><div class="state-box"><h1>EchoCity Video</h1><p>正在加载视频内容……</p></div></div>';
+      let query=db.from('videos').select('id,author_id,title,description,video_url,cover_url,duration_seconds,city,location_text,published_at,created_at').eq('status','published').eq('visibility','public').order('published_at',{ascending:false,nullsFirst:false}).order('created_at',{ascending:false}).limit(30);
+      const {data:videos,error}=await query;
+      if(error){console.error(error);return showState('视频读取失败','内容服务暂时无法读取。请检查网络或稍后刷新。')}
+      if(!videos?.length)return showState('EchoCity 视频已经就绪','数据库和短视频架构已经接通。目前还没有已审核发布的视频。下一步上传第一条视频后，这里就会像抖音一样上下滑动播放。','发布第一条视频');
+
+      const authorIds=[...new Set(videos.map(v=>v.author_id).filter(Boolean))];
+      const videoIds=videos.map(v=>v.id);
+      const [profilesRes,linksRes]=await Promise.all([
+        authorIds.length?db.from('profiles').select('id,display_name,avatar_url').in('id',authorIds):Promise.resolve({data:[]}),
+        db.from('video_service_links').select('video_id,service_type,service_name,action_type').in('video_id',videoIds).eq('active',true)
+      ]);
+      const profiles=new Map((profilesRes.data||[]).map(p=>[p.id,p]));
+      const links=new Map();(linksRes.data||[]).forEach(l=>{if(!links.has(l.video_id))links.set(l.video_id,l)});
+      feed.innerHTML=videos.map((v,i)=>cardHtml(v,profiles.get(v.author_id),links.get(v.id),i)).join('');
+      bindCards();
+      observeCards();
+    }
+
+    function showState(title,text,buttonText){
+      feed.innerHTML=`<div class="state"><div class="state-box"><h1>${escapeHtml(title)}</h1><p>${escapeHtml(text)}</p>${buttonText?`<button type="button" onclick="openPublish()">${escapeHtml(buttonText)}</button>`:''}</div></div>`;
+    }
+
+    function cardHtml(v,p,link,i){
+      const name=p?.display_name||'EchoCity 创作者';
+      const avatar=p?.avatar_url?`<img class="avatar" src="${escapeHtml(p.avatar_url)}" alt="${escapeHtml(name)}">`:`<div class="avatar avatar-fallback">${initials(name)}</div>`;
+      const serviceName=link?.service_name||link?.service_type||'同类服务';
+      return `<article class="card" data-id="${v.id}" data-author="${v.author_id||''}" data-duration="${Number(v.duration_seconds||0)}" data-index="${i}">
+        <video class="media" src="${escapeHtml(v.video_url)}" ${v.cover_url?`poster="${escapeHtml(v.cover_url)}"`:''} playsinline webkit-playsinline preload="metadata" loop></video>
+        <div class="shade"></div>
+        <div class="actions">
+          <button class="action author-action" type="button">${avatar}<small>作者</small></button>
+          <button class="action like-action" type="button"><span class="bubble">♡</span><small>点赞</small></button>
+          <button class="action comment-action" type="button"><span class="bubble">💬</span><small>评论</small></button>
+          <button class="action favorite-action" type="button"><span class="bubble">☆</span><small>收藏</small></button>
+          <button class="action share-action" type="button"><span class="bubble">↗</span><small>分享</small></button>
+        </div>
+        <div class="cta">
+          <button class="ai-action" type="button">问 AI</button>
+          <button class="primary service-action" type="button" data-service="${escapeHtml(link?.service_type||'general')}" data-service-name="${escapeHtml(serviceName)}">我要${escapeHtml(serviceName)}</button>
+        </div>
+        <div class="meta"><div class="author">@${escapeHtml(name)}</div><div class="title">${escapeHtml(v.title||'EchoCity 视频')}</div>${v.description?`<div class="desc">${escapeHtml(v.description)}</div>`:''}${v.city||v.location_text?`<div class="city">📍 ${escapeHtml(v.location_text||v.city)}</div>`:''}</div>
+      </article>`;
+    }
+
+    function bindCards(){
+      document.querySelectorAll('.card').forEach(card=>{
+        const video=card.querySelector('video');
+        video.addEventListener('click',()=>video.paused?video.play().catch(()=>{}):video.pause());
+        card.querySelector('.like-action').addEventListener('click',()=>toggleInteraction(card,'like'));
+        card.querySelector('.favorite-action').addEventListener('click',()=>toggleInteraction(card,'favorite'));
+        card.querySelector('.share-action').addEventListener('click',()=>shareVideo(card));
+        card.querySelector('.comment-action').addEventListener('click',()=>say('评论面板将在下一步接入'));
+        card.querySelector('.author-action').addEventListener('click',()=>say('创作者主页将在下一步接入'));
+        card.querySelector('.ai-action').addEventListener('click',()=>openAI(card));
+        card.querySelector('.service-action').addEventListener('click',e=>openService(card,e.currentTarget));
+      });
+    }
+
+    async function toggleInteraction(card,action){
+      if(!sessionUser){say('登录后即可使用该功能');return}
+      const videoId=card.dataset.id;
+      const {data}=await db.from('video_interactions').select('id').eq('video_id',videoId).eq('user_id',sessionUser.id).eq('action',action).maybeSingle();
+      if(data?.id){await db.from('video_interactions').delete().eq('id',data.id);say(action==='like'?'已取消点赞':'已取消收藏')}
+      else{const {error}=await db.from('video_interactions').insert({video_id:videoId,user_id:sessionUser.id,action});if(error){console.error(error);say('操作失败');return}say(action==='like'?'已点赞':'已收藏')}
+    }
+
+    async function shareVideo(card){
+      const url=new URL(location.href);url.searchParams.set('video',card.dataset.id);
+      if(navigator.share){try{await navigator.share({title:'EchoCity 视频',url:url.href});return}catch(e){}}
+      try{await navigator.clipboard.writeText(url.href);say('链接已复制')}catch(e){say('可使用浏览器分享此页面')}
+    }
+
+    async function recordConversion(card,type,extra={}){
+      if(!sessionUser)return;
+      await db.from('video_conversions').insert({video_id:card.dataset.id,user_id:sessionUser.id,conversion_type:type,metadata:extra});
+    }
+
+    function openAI(card){recordConversion(card,'ai_consult');const target=new URL('customer-role-home.html',location.href);target.searchParams.set('source','video');target.searchParams.set('video_id',card.dataset.id);target.searchParams.set('intent','ai_consult');location.href=target.href}
+    function openService(card,button){recordConversion(card,'service_click',{service_type:button.dataset.service});const target=new URL('customer-role-home.html',location.href);target.searchParams.set('source','video');target.searchParams.set('video_id',card.dataset.id);target.searchParams.set('service_type',button.dataset.service);target.searchParams.set('service_name',button.dataset.serviceName);location.href=target.href}
+    function openPublish(){location.href='video-publish.html'}
+
+    function observeCards(){
+      const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
+        const card=entry.target;const video=card.querySelector('video');
+        if(entry.isIntersecting&&entry.intersectionRatio>.72){document.querySelectorAll('.card video').forEach(v=>{if(v!==video)v.pause()});video.play().catch(()=>{});startImpression(card)}else{video.pause();endImpression(card)}
+      }),{threshold:[0,.72,1]});
+      document.querySelectorAll('.card').forEach(card=>observer.observe(card));
+    }
+
+    function startImpression(card){
+      if(impressionTimers.has(card.dataset.id))return;
+      impressionTimers.set(card.dataset.id,{started:Date.now(),startTime:card.querySelector('video').currentTime||0});
+    }
+    async function endImpression(card){
+      const item=impressionTimers.get(card.dataset.id);if(!item)return;impressionTimers.delete(card.dataset.id);
+      if(!sessionUser)return;
+      const video=card.querySelector('video');const watchMs=Math.max(0,Date.now()-item.started);if(watchMs<500)return;
+      const durationMs=Math.round((video.duration||Number(card.dataset.duration)||0)*1000);
+      await db.from('feed_impressions').insert({user_id:sessionUser.id,video_id:card.dataset.id,feed_type:activeFeed,session_id:impressionSession,position:Number(card.dataset.index||0),watch_ms:watchMs,video_duration_ms:durationMs||null,completed:durationMs?watchMs>=durationMs*.9:false});
+    }
+
+    document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===tab));activeFeed=tab.dataset.feed;if(activeFeed!=='recommend')say(activeFeed==='local'?'同城流下一阶段开放':'关注流下一阶段开放')}));
+    window.addEventListener('beforeunload',()=>document.querySelectorAll('.card').forEach(endImpression));
+    getUser().finally(loadFeed);
+  </script>
+</body>
+</html>
