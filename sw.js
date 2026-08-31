@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v58-live-v4";
+const CACHE_NAME = "echocity-v59-content-attribution";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -55,18 +55,14 @@ const APP_FILES = [
 ];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_FILES))
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_FILES)));
   self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => Promise.all(
-      cacheNames.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name))
-    ))
-  );
+  event.waitUntil(caches.keys().then((cacheNames) => Promise.all(
+    cacheNames.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name))
+  )));
   self.clients.claim();
 });
 
