@@ -13,10 +13,36 @@ window.echoCitySupabase = window.supabase.createClient(
   ECHOCITY_SUPABASE_KEY
 );
 
-// Keep authentication inside the short-video experience. The feed may also
-// be opened directly during testing, so it needs its own clear login entry.
 document.addEventListener("DOMContentLoaded", async () => {
-  if (!/\/assets\/video-feed-v4\.html$/.test(window.location.pathname)) return;
+  const path = window.location.pathname;
+
+  // Temporary test-mode UX while mainland SMS enterprise qualification is pending.
+  // Keep phone login visible as the production direction, but prevent repeated 503 hook errors.
+  if (/\/assets\/video-auth\.html$/.test(path)) {
+    const sendOtp = document.getElementById("sendOtp");
+    const phoneBox = document.getElementById("phoneBox");
+    const emailBox = document.getElementById("emailBox");
+    const status = document.getElementById("status");
+    if (sendOtp) {
+      sendOtp.disabled = true;
+      sendOtp.textContent = "手机号登录开通中";
+      sendOtp.style.opacity = ".55";
+      sendOtp.style.cursor = "not-allowed";
+    }
+    if (phoneBox && emailBox) {
+      phoneBox.style.display = "none";
+      emailBox.classList.add("showBlock");
+    }
+    if (status) {
+      status.textContent = "测试阶段请先使用邮箱登录。中国大陆手机号验证码将在企业短信资质和运营商报备完成后恢复。";
+      status.className = "status show";
+    }
+    return;
+  }
+
+  // Keep authentication inside the short-video experience. The feed may also
+  // be opened directly during testing, so it needs its own clear login entry.
+  if (!/\/assets\/video-feed-v4\.html$/.test(path)) return;
   if (document.getElementById("echocityVideoAuthEntry")) return;
 
   const button = document.createElement("button");
