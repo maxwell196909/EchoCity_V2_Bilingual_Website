@@ -1,7 +1,7 @@
 (function (window) {
   "use strict";
 
-  const SERVICE_VERSION = "1.1.0";
+  const SERVICE_VERSION = "1.2.0";
 
   function getStore() {
     const store = window.EchoCityStore || window.EchoStore;
@@ -121,7 +121,9 @@
     const source = rawSource === "video" || rawSource === "live" ? rawSource : "web";
     const videoId = normalizeText(input?.sourceVideoId || input?.videoId || params.get("video_id"));
     const liveRoomId = normalizeText(input?.sourceLiveRoomId || input?.liveRoomId || params.get("live_room_id"));
+    const city = normalizeText(input?.city || input?.serviceCity || params.get("city"));
     const metadata = {
+      city,
       service_type_hint: normalizeText(params.get("service_type")),
       service_name_hint: normalizeText(params.get("service_name")),
       intent: normalizeText(params.get("intent")),
@@ -134,6 +136,25 @@
       sourceLiveRoomId: source === "live" && liveRoomId ? liveRoomId : null,
       sourceMetadata: metadata
     };
+  }
+
+  async function enrichCityFromProfile(supabaseClient, source) {
+    if (normalizeText(source?.sourceMetadata?.city)) return source;
+    try {
+      const { data: userData } = await supabaseClient.auth.getUser();
+      const userId = userData?.user?.id;
+      if (!userId) return source;
+      const { data: profile } = await supabaseClient
+        .from("profiles")
+        .select("city")
+        .eq("id", userId)
+        .maybeSingle();
+      const city = normalizeText(profile?.city);
+      if (city) source.sourceMetadata.city = city;
+    } catch (error) {
+      console.warn("City attribution enrichment skipped:", error);
+    }
+    return source;
   }
 
   window.EchoServices = EchoServices;
@@ -161,7 +182,7 @@
       if (!Number.isFinite(payload.workers) || payload.workers < 1) payload.workers = 1;
       if (String(input.workerCount || "") === "5plus") payload.workers = 5;
 
-      const source = getAttributionContext(input);
+      const source = await enrichCityFromProfile(supabaseClient, getAttributionContext(input));
 
       const { data, error } = await supabaseClient.rpc("submit_customer_service_request_v2", {
         p_service_type: payload.service_type,
