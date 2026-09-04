@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v75-network-first";
+const CACHE_NAME = "echocity-v76-network-first";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -14,6 +14,7 @@ const APP_FILES = [
   "./assets/video-auth.html",
   "./assets/video-publish.html",
   "./assets/video-publish-v3.html",
+  "./assets/video-review-status.html",
   "./assets/publish-center.html",
   "./assets/post-publish.html",
   "./assets/social-feed.html",
