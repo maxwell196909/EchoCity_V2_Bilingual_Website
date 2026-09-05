@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v79-network-first";
+const CACHE_NAME = "echocity-v80-network-first";
 const APP_FILES = [
   "./",
   "./index.html",
