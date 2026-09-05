@@ -97,6 +97,55 @@ window.echoCitySupabase = window.supabase.createClient(
 document.addEventListener("DOMContentLoaded", async () => {
   const path = window.location.pathname;
 
+  // Complete the dedicated worker flow: once the platform confirms payment,
+  // surface the receipt-confirmation entry directly on the normal worker task page.
+  if (/\/assets\/worker-tasks\.html$/.test(path)) {
+    const q = new URLSearchParams(window.location.search);
+    const h = new URLSearchParams(window.location.hash.slice(1));
+    const requestNo = String(q.get("request_no") || q.get("request") || "").trim().toUpperCase();
+    const workerToken = String(
+      q.get("worker_token") || q.get("task_token") || q.get("token") || h.get("token") || ""
+    ).trim();
+
+    if (/^REQ-[A-Z0-9-]{4,80}$/.test(requestNo) && workerToken.length >= 32 && workerToken.length <= 128) {
+      try {
+        const { data: settlement, error } = await window.echoCitySupabase.rpc(
+          "get_order_settlement_with_token",
+          { p_request_no: requestNo, p_role: "worker", p_token: workerToken }
+        );
+
+        if (!error && settlement?.status === "payment_confirmed") {
+          const addReceiptButton = () => {
+            if (document.getElementById("echocityWorkerSettlementEntry")) return true;
+            const actions = document.querySelector(".task-actions");
+            if (!actions) return false;
+
+            const button = document.createElement("button");
+            button.id = "echocityWorkerSettlementEntry";
+            button.type = "button";
+            button.className = "success-button";
+            button.textContent = "确认收款";
+            button.onclick = () => {
+              window.location.href = `worker-settlement.html?request=${encodeURIComponent(requestNo)}#token=${encodeURIComponent(workerToken)}`;
+            };
+            actions.appendChild(button);
+            return true;
+          };
+
+          if (!addReceiptButton()) {
+            const observer = new MutationObserver(() => {
+              if (addReceiptButton()) observer.disconnect();
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+            window.setTimeout(() => observer.disconnect(), 15000);
+          }
+        }
+      } catch (error) {
+        console.warn("Worker settlement entry check failed:", error);
+      }
+    }
+  }
+
   // Temporary test-mode UX while mainland SMS enterprise qualification is pending.
   if (/\/assets\/video-auth\.html$/.test(path)) {
     const sendOtp = document.getElementById("sendOtp");
