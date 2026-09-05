@@ -15,7 +15,8 @@ window.echoCitySupabase = window.supabase.createClient(
 
 // Security bridge for the legacy customer quote page. The page keeps its old
 // RPC names, but sensitive quote reads/writes are transparently routed through
-// the dedicated customer-token workflow.
+// the dedicated customer-token workflow. The same customer token is also kept
+// as the secure order token for downstream progress/acceptance pages.
 (() => {
   const client = window.echoCitySupabase;
   const path = window.location.pathname;
@@ -29,8 +30,11 @@ window.echoCitySupabase = window.supabase.createClient(
 
   if (incomingToken) {
     sessionStorage.setItem(`echocity-customer-quote-token:${requestNo}`, incomingToken);
+    sessionStorage.setItem(`echocity-customer-token:${requestNo}`, incomingToken);
   }
-  const customerToken = incomingToken || sessionStorage.getItem(`echocity-customer-quote-token:${requestNo}`) || "";
+  const customerToken = incomingToken ||
+    sessionStorage.getItem(`echocity-customer-token:${requestNo}`) ||
+    sessionStorage.getItem(`echocity-customer-quote-token:${requestNo}`) || "";
 
   client.rpc = function secureQuoteRpc(name, args = {}, options) {
     if (name === "get_customer_quote_with_phone") {
@@ -54,6 +58,41 @@ window.echoCitySupabase = window.supabase.createClient(
       }, options);
     }
 
+    return originalRpc(name, args, options);
+  };
+})();
+
+// Security bridge for the legacy customer order-progress page. Full address,
+// worker, quote, event and inspection history now require the same customer
+// order token rather than request number + phone number.
+(() => {
+  const client = window.echoCitySupabase;
+  const path = window.location.pathname;
+  if (!/\/assets\/customer-order-progress\.html$/.test(path) || typeof client?.rpc !== "function") return;
+
+  const originalRpc = client.rpc.bind(client);
+  const q = new URLSearchParams(window.location.search);
+  const h = new URLSearchParams(window.location.hash.slice(1));
+  const requestNo = String(q.get("request_no") || q.get("request") || q.get("id") || "").trim().toUpperCase();
+  const incomingToken = String(h.get("token") || q.get("customer_token") || "").trim();
+
+  if (incomingToken && requestNo) {
+    sessionStorage.setItem(`echocity-customer-token:${requestNo}`, incomingToken);
+  }
+  const customerToken = incomingToken || sessionStorage.getItem(`echocity-customer-token:${requestNo}`) || "";
+
+  client.rpc = function secureProgressRpc(name, args = {}, options) {
+    if (name === "get_customer_progress_timeline") {
+      const no = String(requestNo || args.p_request_no || "").trim().toUpperCase();
+      const token = incomingToken || sessionStorage.getItem(`echocity-customer-token:${no}`) || customerToken;
+      if (!token || token.length !== 64) {
+        return Promise.resolve({ data: null, error: new Error("请使用平台发送的客户安全订单链接查看完整进度。") });
+      }
+      return originalRpc("get_customer_progress_timeline_with_token", {
+        p_request_no: no,
+        p_token: token
+      }, options);
+    }
     return originalRpc(name, args, options);
   };
 })();
@@ -142,8 +181,8 @@ window.echoCitySupabase = window.supabase.createClient(
 document.addEventListener("DOMContentLoaded", async () => {
   const path = window.location.pathname;
 
-  // Platform quote handoff: issue a short-lived customer quote link after a
-  // formal quote is ready, without weakening the customer portal to phone-only access.
+  // Platform quote handoff: issue a customer secure order link after a formal
+  // quote is ready. The customer token is reusable by downstream order pages.
   if (/\/assets\/admin-service-quote\.html$/.test(path)) {
     const q = new URLSearchParams(window.location.search);
     const h = new URLSearchParams(window.location.hash.slice(1));
@@ -159,7 +198,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const button = document.createElement("button");
       button.id = "echocityCustomerQuoteLinkButton";
       button.type = "button";
-      button.textContent = "生成客户报价专链";
+      button.textContent = "生成客户订单专链";
       button.className = "secondary-button";
       Object.assign(button.style, {
         position: "fixed",
@@ -183,13 +222,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             p_platform_token: platformToken,
             p_request_no: requestNo
           });
-          if (error || !data?.customer_token) throw error || new Error("CUSTOMER_QUOTE_LINK_FAILED");
+          if (error || !data?.customer_token) throw error || new Error("CUSTOMER_ORDER_LINK_FAILED");
           const link = `${window.location.origin}${window.location.pathname.replace(/admin-service-quote\.html$/, "service-quote-confirmation.html")}?request_no=${encodeURIComponent(requestNo)}#token=${encodeURIComponent(data.customer_token)}`;
           try {
             await navigator.clipboard.writeText(link);
-            alert(`客户报价专链已生成并复制。\n\n订单：${requestNo}\n有效期：7天\n\n请把链接发送给客户。`);
+            alert(`客户订单专链已生成并复制。\n\n订单：${requestNo}\n有效期：7天\n\n请把链接发送给客户。客户打开后，同一安全身份可继续查看订单进度。`);
           } catch {
-            window.prompt("客户报价专链已生成，请复制并发送给客户：", link);
+            window.prompt("客户订单专链已生成，请复制并发送给客户：", link);
           }
         } catch (error) {
           alert("生成失败：请先保存正式报价，并确认平台访问链接有效。\n" + (error?.message || ""));
