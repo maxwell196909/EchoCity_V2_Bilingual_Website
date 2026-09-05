@@ -13,6 +13,51 @@ window.echoCitySupabase = window.supabase.createClient(
   ECHOCITY_SUPABASE_KEY
 );
 
+// Security bridge for the legacy customer quote page. The page keeps its old
+// RPC names, but sensitive quote reads/writes are transparently routed through
+// the dedicated customer-token workflow.
+(() => {
+  const client = window.echoCitySupabase;
+  const path = window.location.pathname;
+  if (!/\/assets\/service-quote-confirmation\.html$/.test(path) || typeof client?.rpc !== "function") return;
+
+  const originalRpc = client.rpc.bind(client);
+  const q = new URLSearchParams(window.location.search);
+  const h = new URLSearchParams(window.location.hash.slice(1));
+  const requestNo = String(q.get("request_no") || q.get("requestNo") || q.get("id") || "").trim().toUpperCase();
+  const incomingToken = String(h.get("token") || q.get("customer_token") || "").trim();
+
+  if (incomingToken) {
+    sessionStorage.setItem(`echocity-customer-quote-token:${requestNo}`, incomingToken);
+  }
+  const customerToken = incomingToken || sessionStorage.getItem(`echocity-customer-quote-token:${requestNo}`) || "";
+
+  client.rpc = function secureQuoteRpc(name, args = {}, options) {
+    if (name === "get_customer_quote_with_phone") {
+      if (!customerToken || customerToken.length !== 64) {
+        return Promise.resolve({ data: null, error: new Error("请使用平台发送的客户专用报价链接打开。") });
+      }
+      return originalRpc("get_customer_quote_with_token", {
+        p_request_no: requestNo || args.p_request_no,
+        p_token: customerToken
+      }, options);
+    }
+
+    if (name === "submit_customer_quote_decision") {
+      if (!customerToken || customerToken.length !== 64) {
+        return Promise.resolve({ data: null, error: new Error("客户专用报价链接无效或已过期。") });
+      }
+      return originalRpc("submit_customer_quote_decision_with_token", {
+        p_request_no: requestNo || args.p_request_no,
+        p_token: customerToken,
+        p_accept: args.p_accept === true
+      }, options);
+    }
+
+    return originalRpc(name, args, options);
+  };
+})();
+
 // Mobile/iPad video publishing: replace large uploads to echocity-videos
 // with Supabase Storage resumable TUS uploads. Small files and covers keep
 // using the normal SDK upload path.
@@ -96,6 +141,65 @@ window.echoCitySupabase = window.supabase.createClient(
 
 document.addEventListener("DOMContentLoaded", async () => {
   const path = window.location.pathname;
+
+  // Platform quote handoff: issue a short-lived customer quote link after a
+  // formal quote is ready, without weakening the customer portal to phone-only access.
+  if (/\/assets\/admin-service-quote\.html$/.test(path)) {
+    const q = new URLSearchParams(window.location.search);
+    const h = new URLSearchParams(window.location.hash.slice(1));
+    const requestNo = String(q.get("request_no") || q.get("request") || q.get("id") || "").trim().toUpperCase();
+    const incomingPlatformToken = String(q.get("platform_token") || h.get("platform_token") || "").trim();
+    if (incomingPlatformToken) {
+      sessionStorage.setItem("echocity-platform-token", incomingPlatformToken);
+      localStorage.setItem("echocity-platform-token", incomingPlatformToken);
+    }
+    const platformToken = incomingPlatformToken || sessionStorage.getItem("echocity-platform-token") || localStorage.getItem("echocity-platform-token") || "";
+
+    if (/^REQ-[A-Z0-9-]{4,80}$/.test(requestNo) && platformToken.length >= 64 && platformToken.length <= 128) {
+      const button = document.createElement("button");
+      button.id = "echocityCustomerQuoteLinkButton";
+      button.type = "button";
+      button.textContent = "生成客户报价专链";
+      button.className = "secondary-button";
+      Object.assign(button.style, {
+        position: "fixed",
+        right: "14px",
+        bottom: "max(18px, env(safe-area-inset-bottom))",
+        zIndex: "80",
+        minHeight: "48px",
+        padding: "0 16px",
+        borderRadius: "14px",
+        boxShadow: "0 8px 24px rgba(0,0,0,.16)",
+        background: "#fff"
+      });
+      document.body.appendChild(button);
+
+      button.onclick = async () => {
+        button.disabled = true;
+        const oldText = button.textContent;
+        button.textContent = "正在生成……";
+        try {
+          const { data, error } = await window.echoCitySupabase.rpc("issue_customer_quote_link_with_token", {
+            p_platform_token: platformToken,
+            p_request_no: requestNo
+          });
+          if (error || !data?.customer_token) throw error || new Error("CUSTOMER_QUOTE_LINK_FAILED");
+          const link = `${window.location.origin}${window.location.pathname.replace(/admin-service-quote\.html$/, "service-quote-confirmation.html")}?request_no=${encodeURIComponent(requestNo)}#token=${encodeURIComponent(data.customer_token)}`;
+          try {
+            await navigator.clipboard.writeText(link);
+            alert(`客户报价专链已生成并复制。\n\n订单：${requestNo}\n有效期：7天\n\n请把链接发送给客户。`);
+          } catch {
+            window.prompt("客户报价专链已生成，请复制并发送给客户：", link);
+          }
+        } catch (error) {
+          alert("生成失败：请先保存正式报价，并确认平台访问链接有效。\n" + (error?.message || ""));
+        } finally {
+          button.disabled = false;
+          button.textContent = oldText;
+        }
+      };
+    }
+  }
 
   // Complete the dedicated worker flow: once the platform confirms payment,
   // surface the receipt-confirmation entry directly on the normal worker task page.
