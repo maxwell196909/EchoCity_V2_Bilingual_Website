@@ -165,7 +165,7 @@
         position: absolute;
         left: 14px;
         right: 82px;
-        bottom: max(24px, env(safe-area-inset-bottom));
+        bottom: max(78px, calc(env(safe-area-inset-bottom) + 66px));
         z-index: 6;
         text-shadow: 0 1px 4px #000;
       }
@@ -215,7 +215,7 @@
         position: absolute;
         left: 14px;
         right: 78px;
-        bottom: max(88px, calc(env(safe-area-inset-bottom) + 58px));
+        bottom: max(142px, calc(env(safe-area-inset-bottom) + 116px));
         z-index: 8;
         display: flex;
         gap: 8px;
@@ -267,6 +267,8 @@
       .toast.show {
         opacity: 1;
       }
+      .bottom-nav {position:fixed;left:0;right:0;bottom:0;z-index:40;min-height:calc(58px + env(safe-area-inset-bottom));padding:7px 8px env(safe-area-inset-bottom);display:grid;grid-template-columns:repeat(5,1fr);align-items:center;background:rgba(5,7,10,.94);border-top:1px solid #ffffff1f;backdrop-filter:blur(18px)}
+      .bottom-nav a{color:#cbd5e1;text-decoration:none;text-align:center;font-size:11px;font-weight:800}.bottom-nav a strong{display:block;margin-bottom:3px;color:#fff;font-size:20px;line-height:1}.bottom-nav .city-service{color:#7dd3fc}.bottom-nav .city-service strong{color:#38bdf8}.bottom-nav .publish strong{width:42px;height:29px;margin:0 auto 2px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(90deg,#22d3ee,#2563eb)}
       @media (min-width: 760px) {
         .card {
           max-width: 520px;
@@ -304,6 +306,13 @@
       </div>
       <section id="feed" class="feed"></section>
       <div id="toast" class="toast"></div>
+      <nav class="bottom-nav" aria-label="主要功能">
+        <a href="video-feed-v4.html"><strong>⌂</strong>首页</a>
+        <a class="city-service" href="city-service-home.html"><strong>城市</strong>城市服务</a>
+        <a class="publish" href="video-publish-v3.html"><strong>＋</strong>发布</a>
+        <a href="messages-home.html"><strong>◉</strong>消息</a>
+        <a href="my-home.html"><strong>●</strong>我的</a>
+      </nav>
     </main>
     <script>
       const db = window.echoCitySupabase,
