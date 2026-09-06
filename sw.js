@@ -1,4 +1,4 @@
-const CACHE_NAME = "echocity-v85-video-login-flow";
+const CACHE_NAME = "echocity-v86-city-service";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -11,6 +11,7 @@ const APP_FILES = [
   "./js/echocity-store.js",
   "./js/echocity-services.js",
   "./assets/video-feed-v4.html",
+  "./assets/city-service-home.html",
   "./assets/video-auth.html",
   "./assets/video-publish.html",
   "./assets/video-publish-v3.html",
