@@ -465,6 +465,7 @@
         </label>
 
         <div class="quick-services">
+          <button class="quick-service" type="button" data-service="city_issue" onclick="selectService(this)"><span data-i18n="cityIssue">城市问题</span></button>
           <button
             class="quick-service"
             type="button"
@@ -473,6 +474,8 @@
           >
             <span data-i18n="workers">需要人手</span>
           </button>
+
+          <button class="quick-service" type="button" data-service="consulting" onclick="selectService(this)"><span data-i18n="consulting">工程咨询</span></button>
 
           <button
             class="quick-service"
@@ -827,14 +830,20 @@
 
         serviceType: "你需要哪一类服务？",
         workers: "需要人手",
+        cityIssue: "城市问题",
         repair: "维修或清洁",
         support: "生活帮助",
+        consulting: "工程咨询",
+        serviceGuidance_city_issue:
+          "城市问题：请上传现场照片，写明准确位置、问题现状、影响范围和希望的处理方式。",
         serviceGuidance_workers:
           "人手服务：请填写人数、工作内容、工具、楼梯、重物及安全要求。",
         serviceGuidance_repair:
           "维修或清洁：请说明区域、故障或清洁内容、材料、质量标准及完成要求。",
         serviceGuidance_support:
           "生活帮助：请说明服务对象、具体事项、时间、陪同方式及其他特殊要求。",
+        serviceGuidance_consulting:
+          "工程咨询：请说明项目地点、项目阶段、专业范围、计划成果和完成期限。",
 
         requestLabel: "请告诉我具体需要什么",
         requestPlaceholder:
@@ -908,14 +917,20 @@
 
         serviceType: "What kind of service do you need?",
         workers: "Need Workers",
+        cityIssue: "City Issue",
         repair: "Repair or Cleaning",
         support: "Daily Support",
+        consulting: "Engineering Advice",
+        serviceGuidance_city_issue:
+          "City issue: add site photos and describe the exact location, current condition, impact, and expected outcome.",
         serviceGuidance_workers:
           "Workers: specify headcount, tasks, tools, stairs, heavy items, and safety requirements.",
         serviceGuidance_repair:
           "Repair or cleaning: specify the area, issue or cleaning tasks, materials, quality standards, and completion requirements.",
         serviceGuidance_support:
           "Daily support: specify who needs help, the tasks, timing, accompaniment, and any special requirements.",
+        serviceGuidance_consulting:
+          "Engineering advice: describe the project location, phase, discipline, deliverables, and deadline.",
 
         requestLabel: "Tell us what you need",
         requestPlaceholder:
@@ -1455,6 +1470,9 @@
       () => {
         setMinimumDate();
         applyLanguage();
+        const requestedService = new URLSearchParams(window.location.search).get("service_type");
+        const requestedButton = requestedService && document.querySelector(`.quick-service[data-service="${CSS.escape(requestedService)}"]`);
+        if (requestedButton) selectService(requestedButton);
       }
     );
   const echoChat =
