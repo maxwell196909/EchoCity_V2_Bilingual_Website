@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0f2747">
+  <title>城市服务 | EchoCity</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#f4f7f8;color:#102033;font-family:Arial,"Microsoft YaHei",sans-serif}.wrap{max-width:760px;margin:auto;padding:calc(18px + env(safe-area-inset-top)) 14px calc(82px + env(safe-area-inset-bottom))}.top{display:flex;align-items:center;justify-content:space-between}.back,.orders{border:0;border-radius:999px;background:#fff;color:#102033;padding:10px 14px;font-weight:900;text-decoration:none}.hero{margin-top:18px;padding:24px 20px;border-radius:24px;background:linear-gradient(135deg,#0f2747,#116b68);color:#fff;box-shadow:0 18px 45px #0f274733}.hero small{color:#9ee7da;font-weight:900}.hero h1{margin:8px 0;font-size:32px}.hero p{margin:0;color:#d8f4ef;line-height:1.6}.primary{display:block;margin-top:18px;border-radius:14px;padding:14px;text-align:center;background:#f6bd60;color:#142033;text-decoration:none;font-weight:900}.section-title{margin:24px 4px 12px;font-size:18px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.card{min-height:132px;padding:17px;border:1px solid #e5ecef;border-radius:18px;background:#fff;color:#102033;text-decoration:none;box-shadow:0 8px 24px #0f27470a}.icon{font-size:25px}.card h2{margin:10px 0 5px;font-size:17px}.card p{margin:0;color:#64748b;font-size:13px;line-height:1.5}.flow{margin-top:12px;padding:18px;border-radius:18px;background:#fff;line-height:1.8;color:#475569}.flow strong{color:#102033}.bottom{position:fixed;left:0;right:0;bottom:0;z-index:20;min-height:calc(58px + env(safe-area-inset-bottom));padding:7px 8px env(safe-area-inset-bottom);display:grid;grid-template-columns:repeat(5,1fr);align-items:center;background:#fff;border-top:1px solid #e5e7eb}.bottom a{text-align:center;text-decoration:none;color:#64748b;font-size:11px;font-weight:800}.bottom strong{display:block;color:#102033;font-size:20px}.bottom .active,.bottom .active strong{color:#0f766e}.bottom .publish strong{width:42px;height:29px;margin:auto;border-radius:9px;background:linear-gradient(90deg,#22d3ee,#2563eb);color:#fff}.source{display:none;margin-top:12px;padding:10px 12px;border-radius:12px;background:#e6fffa;color:#115e59;font-size:13px;font-weight:800}@media(max-width:390px){.grid{grid-template-columns:1fr}.hero h1{font-size:28px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="top"><a class="back" href="video-feed-v4.html">← 返回视频</a><a class="orders" href="customer-my-requests.html">处理进度</a></header>
+    <section class="hero"><small>ECHOCITY · 城市服务</small><h1>从发现问题，到完成服务</h1><p>拍下问题、标注位置、提交需求。平台核实后进入报价、派工、施工、验收与评价。</p><div id="source" class="source"></div><a id="report" class="primary" href="service-request.html">＋ 拍照上报城市问题</a></section>
+    <h2 class="section-title">需要什么服务？</h2>
+    <section class="grid">
+      <a class="card" data-service="city_issue" href="service-request.html"><div class="icon">📍</div><h2>我发现问题</h2><p>道路、盲道、井盖、路灯、垃圾与公共设施问题</p></a>
+      <a class="card" data-service="repair" href="service-request.html"><div class="icon">🛠</div><h2>我要找服务</h2><p>维修、保洁、设备检查和社区便民服务</p></a>
+      <a class="card" href="customer-service-catalog.html?q=住宅专项维修资金"><div class="icon">🏢</div><h2>专项维修资金</h2><p>查勘、预算、表决、申报、施工与验收</p></a>
+      <a class="card" data-service="consulting" href="service-request.html"><div class="icon">📐</div><h2>工程专业服务</h2><p>项目管理、监理、招标、技术方案与咨询</p></a>
+      <a class="card" href="customer-service-catalog.html"><div class="icon">👷</div><h2>服务人员与能力</h2><p>按服务类型选择经过平台管理的专业人员</p></a>
+      <a class="card" href="customer-my-requests.html"><div class="icon">✓</div><h2>处理进度</h2><p>查询报价、派工、施工、验收和售后</p></a>
+    </section>
+    <h2 class="section-title">服务如何完成？</h2><div class="flow"><strong>提交问题</strong> → 平台核实 → 报价确认 → 派工到场 → 施工留证 → 客户验收 → 评价与售后</div>
+  </main>
+  <nav class="bottom" aria-label="主要功能"><a href="video-feed-v4.html"><strong>⌂</strong>首页</a><a class="active" href="city-service-home.html"><strong>城市</strong>城市服务</a><a class="publish" href="video-publish-v3.html"><strong>＋</strong>发布</a><a href="messages-home.html"><strong>◉</strong>消息</a><a href="my-home.html"><strong>●</strong>我的</a></nav>
+  <script>
+    const params=new URLSearchParams(location.search),source=params.get("source"),videoId=params.get("video_id"),service=params.get("service_type"),name=params.get("service_name");
+    function tracked(path,type){const url=new URL(path,location.href);if(source)url.searchParams.set("source",source);if(videoId)url.searchParams.set("video_id",videoId);if(type||service)url.searchParams.set("service_type",type||service);if(name)url.searchParams.set("service_name",name);return url.href}
+    if(source==="video"&&videoId){const box=document.getElementById("source");box.style.display="block";box.textContent="已保留当前视频来源，提交后可统计内容带来的服务转化。"}
+    document.getElementById("report").href=tracked("service-request.html","city_issue");document.querySelectorAll("[data-service]").forEach(a=>a.href=tracked(a.getAttribute("href"),a.dataset.service));
+  </script>
+</body>
+</html>
