@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f2747" />
+  <title>战略研究数据库 | EchoCity</title>
+  <style>
+    *{box-sizing:border-box}
+    :root{
+      --bg:#071321;--panel:#0d1c2d;--panel2:#10243a;--line:#24415f;
+      --text:#eef6ff;--muted:#9db2c7;--cyan:#67e8d0;--gold:#f6bd60;
+      --green:#50c878;--red:#ff7b7b
+    }
+    body{
+      margin:0;min-height:100vh;font-family:Arial,"Microsoft YaHei",sans-serif;
+      background:
+        radial-gradient(circle at 15% 10%,rgba(103,232,208,.10),transparent 28%),
+        radial-gradient(circle at 88% 0%,rgba(246,189,96,.10),transparent 24%),
+        linear-gradient(180deg,#071321,#091827 52%,#071321);
+      color:var(--text)
+    }
+    button,input,select{font:inherit}
+    a{color:var(--cyan)}
+    .page{width:min(1440px,calc(100% - 28px));margin:0 auto;padding:22px 0 48px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff;font-size:22px;font-weight:900}
+    .mark{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#16845b,#0a5a91);border:1px solid rgba(255,255,255,.28)}
+    .back{padding:10px 14px;border-radius:12px;text-decoration:none;color:#fff;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+    .hero{padding:24px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(135deg,rgba(13,28,45,.96),rgba(15,38,55,.90));box-shadow:0 18px 50px rgba(0,0,0,.22)}
+    .eyebrow{font-size:13px;font-weight:900;color:var(--cyan);letter-spacing:.12em;text-transform:uppercase}
+    h1{margin:10px 0 8px;font-size:clamp(30px,5vw,50px)}
+    .hero p{margin:0;color:var(--muted);line-height:1.7}
+    .token-row{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:18px}
+    .input,.select{min-height:48px;border:1px solid var(--line);border-radius:12px;background:#091827;color:#fff;padding:0 13px;outline:none}
+    .input:focus,.select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(103,232,208,.10)}
+    .primary,.secondary{min-height:48px;border-radius:12px;padding:0 18px;font-weight:900;cursor:pointer}
+    .primary{border:0;background:linear-gradient(135deg,#1d9a78,#16735c);color:#fff}
+    .secondary{border:1px solid var(--line);background:#10243a;color:#fff}
+    .status{margin-top:12px;padding:11px 13px;border-radius:12px;display:none}
+    .status.show{display:block}
+    .status.ok{background:rgba(80,200,120,.12);border:1px solid rgba(80,200,120,.35);color:#bff1cc}
+    .status.err{background:rgba(255,123,123,.12);border:1px solid rgba(255,123,123,.35);color:#ffc4c4}
+    .stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:18px 0}
+    .stat{padding:18px;border:1px solid var(--line);border-radius:18px;background:rgba(13,28,45,.88)}
+    .stat-label{font-size:13px;color:var(--muted);margin-bottom:8px}
+    .stat-value{font-size:30px;font-weight:900}
+    .layout{display:grid;grid-template-columns:320px 1fr;gap:16px}
+    .panel{border:1px solid var(--line);border-radius:18px;background:rgba(13,28,45,.90);padding:16px}
+    .panel h2{font-size:18px;margin:0 0 12px}
+    .list{display:grid;gap:8px}
+    .rank{display:flex;justify-content:space-between;gap:10px;padding:10px;border-radius:10px;background:#0a1928;border:1px solid rgba(36,65,95,.75)}
+    .rank span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .rank strong{color:var(--gold)}
+    .filters{display:grid;grid-template-columns:2fr .8fr 1.2fr auto auto;gap:10px;margin-bottom:12px}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
+    table{width:100%;border-collapse:collapse;min-width:1100px;background:#091827}
+    th,td{padding:11px 12px;border-bottom:1px solid #1d354d;text-align:left;vertical-align:top}
+    th{position:sticky;top:0;background:#11283e;color:#dbe9f6;font-size:13px;z-index:1}
+    td{font-size:13px;color:#dce8f2;line-height:1.5}
+    .muted{color:var(--muted)}
+    .badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#14314b;border:1px solid #2c5577;font-size:12px}
+    .pager{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
+    .pager-actions{display:flex;gap:8px}
+    .small{min-height:38px;padding:0 12px}
+    .recent{margin-top:16px}
+    .recent-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .recent-item{padding:12px;border:1px solid var(--line);border-radius:12px;background:#0a1928}
+    .recent-item strong{display:block;margin-bottom:5px}
+    .recent-item div{color:var(--muted);font-size:12px;line-height:1.5}
+    @media(max-width:980px){
+      .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .layout{grid-template-columns:1fr}
+      .filters{grid-template-columns:1fr 1fr}
+      .filters .wide{grid-column:1/-1}
+      .recent-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:600px){
+      .page{width:min(100% - 16px,1440px);padding-top:10px}
+      .stats{grid-template-columns:1fr 1fr}
+      .token-row{grid-template-columns:1fr}
+      .filters{grid-template-columns:1fr}
+      .filters .wide{grid-column:auto}
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <a class="brand" href="../index.html"><span class="mark">E</span><span>EchoCity</span></a>
+      <a class="back" href="admin-dashboard.html">返回平台管理</a>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">Strategic Research Database</div>
+      <h1>战略研究数据库</h1>
+      <p>实时读取 EchoCity Supabase 中的园区企业、事实与关系网络。当前版本先提供受控只读查询、筛选、分页与 CSV 导出。</p>
+      <div class="token-row">
+        <input id="tokenInput" class="input" type="password" autocomplete="off" placeholder="首次进入请输入平台访问凭证；以后自动复用" />
+        <button id="connectButton" class="primary" type="button">连接研究数据库</button>
+      </div>
+      <div id="status" class="status"></div>
+    </section>
+
+    <section class="stats">
+      <article class="stat"><div class="stat-label">园区企业 / 租户</div><div id="tenantsCount" class="stat-value">—</div></article>
+      <article class="stat"><div class="stat-label">研究事实</div><div id="factsCount" class="stat-value">—</div></article>
+      <article class="stat"><div class="stat-label">关系网络边</div><div id="edgesCount" class="stat-value">—</div></article>
+      <article class="stat"><div class="stat-label">国家 / 地区代码</div><div id="countriesCount" class="stat-value">—</div></article>
+      <article class="stat"><div class="stat-label">园区数量</div><div id="parksCount" class="stat-value">—</div></article>
+    </section>
+
+    <section class="layout">
+      <aside class="panel">
+        <h2>园区企业数量 Top 12</h2>
+        <div id="topParks" class="list"><div class="muted">连接后显示</div></div>
+        <h2 style="margin-top:18px">国家分布</h2>
+        <div id="countryBreakdown" class="list"><div class="muted">连接后显示</div></div>
+      </aside>
+
+      <section class="panel">
+        <h2>园区企业检索</h2>
+        <div class="filters">
+          <input id="queryInput" class="input wide" placeholder="企业、母公司、园区、产品、产能关键词" />
+          <input id="countryInput" class="input" maxlength="2" placeholder="国家代码 BD" />
+          <input id="parkInput" class="input" placeholder="园区名称" />
+          <button id="searchButton" class="primary" type="button">查询</button>
+          <button id="exportButton" class="secondary" type="button">导出 CSV</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>国家</th>
+                <th>园区</th>
+                <th>企业 / 工厂</th>
+                <th>母公司</th>
+                <th>状态</th>
+                <th>产品</th>
+                <th>产能 / 投资</th>
+                <th>来源</th>
+                <th>置信度</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody">
+              <tr><td colspan="9" class="muted">连接后查询数据。</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pager">
+          <div id="resultMeta" class="muted">—</div>
+          <div class="pager-actions">
+            <button id="prevButton" class="secondary small" type="button">上一页</button>
+            <button id="nextButton" class="secondary small" type="button">下一页</button>
+          </div>
+        </div>
+
+        <div class="recent">
+          <h2>最近新增</h2>
+          <div id="recentGrid" class="recent-grid"><div class="muted">连接后显示</div></div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/echocity-supabase.js"></script>
+  <script>
+    const PAGE_SIZE = 100;
+    let offset = 0;
+    let total = 0;
+    let currentRows = [];
+
+    const qs = new URLSearchParams(window.location.search);
+    const hash = new URLSearchParams(window.location.hash.slice(1));
+    const incomingToken = String(qs.get("platform_token") || hash.get("platform_token") || hash.get("token") || "").trim();
+    if (incomingToken) {
+      localStorage.setItem("echocity-platform-token", incomingToken);
+      sessionStorage.setItem("echocity-platform-token", incomingToken);
+      history.replaceState(null, "", window.location.pathname);
+    }
+
+    function getToken() {
+      const typed = document.getElementById("tokenInput").value.trim();
+      if (typed.length >= 64 && typed.length <= 128) {
+        localStorage.setItem("echocity-platform-token", typed);
+        sessionStorage.setItem("echocity-platform-token", typed);
+        document.getElementById("tokenInput").value = "";
+        return typed;
+      }
+      return localStorage.getItem("echocity-platform-token") ||
+        sessionStorage.getItem("echocity-platform-token") || "";
+    }
+
+    function status(type, message) {
+      const box = document.getElementById("status");
+      box.className = "status show " + type;
+      box.textContent = message;
+    }
+
+    function text(value) {
+      return value == null ? "" : String(value);
+    }
+
+    function esc(value) {
+      return text(value).replace(/[&<>"']/g, ch => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[ch]));
+    }
+
+    function arrayText(value) {
+      return Array.isArray(value) ? value.join(" · ") : text(value);
+    }
+
+    async function loadSummary() {
+      const token = getToken();
+      if (!token) {
+        status("err", "请输入现有 EchoCity 平台访问凭证。");
+        return false;
+      }
+      status("ok", "正在读取研究数据库……");
+      const { data, error } = await window.echoCitySupabase.rpc(
+        "get_research_dashboard_summary_with_token",
+        { p_token: token }
+      );
+      if (error) {
+        console.error(error);
+        status("err", "研究数据库访问失败：平台凭证无效或已过期。");
+        return false;
+      }
+
+      document.getElementById("tenantsCount").textContent = Number(data.tenants || 0).toLocaleString();
+      document.getElementById("factsCount").textContent = Number(data.facts || 0).toLocaleString();
+      document.getElementById("edgesCount").textContent = Number(data.edges || 0).toLocaleString();
+      document.getElementById("countriesCount").textContent = Number(data.countries || 0).toLocaleString();
+      document.getElementById("parksCount").textContent = Number(data.parks || 0).toLocaleString();
+
+      const parks = Array.isArray(data.top_parks) ? data.top_parks : [];
+      document.getElementById("topParks").innerHTML = parks.length ? parks.map(x =>
+        '<div class="rank"><span title="' + esc(x.park_name) + '">' + esc(x.park_name) +
+        '</span><strong>' + Number(x.count || 0).toLocaleString() + '</strong></div>'
+      ).join("") : '<div class="muted">暂无数据</div>';
+
+      const countries = Array.isArray(data.countries_breakdown) ? data.countries_breakdown : [];
+      document.getElementById("countryBreakdown").innerHTML = countries.length ? countries.map(x =>
+        '<div class="rank"><span>' + esc(x.country_code || "—") +
+        '</span><strong>' + Number(x.count || 0).toLocaleString() + '</strong></div>'
+      ).join("") : '<div class="muted">暂无数据</div>';
+
+      const recent = Array.isArray(data.recent_tenants) ? data.recent_tenants : [];
+      document.getElementById("recentGrid").innerHTML = recent.length ? recent.map(x =>
+        '<article class="recent-item"><strong>' + esc(x.tenant_name) + '</strong><div>' +
+        esc(x.country_code || "—") + ' · ' + esc(x.park_name || "—") + '</div><div>' +
+        esc(arrayText(x.products) || x.capacity_text || "") + '</div></article>'
+      ).join("") : '<div class="muted">暂无最近新增</div>';
+
+      status("ok", "研究数据库已连接。");
+      return true;
+    }
+
+    async function runSearch(reset = false) {
+      const token = getToken();
+      if (!token) {
+        status("err", "请先连接研究数据库。");
+        return;
+      }
+      if (reset) offset = 0;
+      const p_query = document.getElementById("queryInput").value.trim() || null;
+      const p_country_code = document.getElementById("countryInput").value.trim().toUpperCase() || null;
+      const p_park_name = document.getElementById("parkInput").value.trim() || null;
+
+      const { data, error } = await window.echoCitySupabase.rpc(
+        "search_research_tenants_with_token",
+        { p_token: token, p_query, p_country_code, p_park_name, p_limit: PAGE_SIZE, p_offset: offset }
+      );
+      if (error) {
+        console.error(error);
+        status("err", "查询失败，请检查平台访问凭证。");
+        return;
+      }
+
+      total = Number(data.total || 0);
+      currentRows = Array.isArray(data.rows) ? data.rows : [];
+      renderRows();
+    }
+
+    function renderRows() {
+      const body = document.getElementById("resultsBody");
+      if (!currentRows.length) {
+        body.innerHTML = '<tr><td colspan="9" class="muted">没有符合条件的记录。</td></tr>';
+      } else {
+        body.innerHTML = currentRows.map(x => {
+          const source = x.source_url
+            ? '<a href="' + esc(x.source_url) + '" target="_blank" rel="noopener">' + esc(x.source_publisher || "来源") + '</a>'
+            : esc(x.source_publisher || "");
+          return '<tr>' +
+            '<td><span class="badge">' + esc(x.country_code || "—") + '</span></td>' +
+            '<td>' + esc(x.park_name || "") + '</td>' +
+            '<td><strong>' + esc(x.tenant_name || "") + '</strong></td>' +
+            '<td>' + esc(x.parent_company || "") + '</td>' +
+            '<td>' + esc(x.tenant_status || "") + '</td>' +
+            '<td>' + esc(arrayText(x.products)) + '</td>' +
+            '<td>' + esc(x.capacity_text || "") + '</td>' +
+            '<td>' + source + '</td>' +
+            '<td>' + esc(x.confidence == null ? "" : x.confidence) + '</td>' +
+          '</tr>';
+        }).join("");
+      }
+
+      const start = total ? offset + 1 : 0;
+      const end = Math.min(offset + currentRows.length, total);
+      document.getElementById("resultMeta").textContent =
+        '共 ' + total.toLocaleString() + ' 条；当前 ' + start.toLocaleString() + '–' + end.toLocaleString();
+      document.getElementById("prevButton").disabled = offset <= 0;
+      document.getElementById("nextButton").disabled = offset + PAGE_SIZE >= total;
+    }
+
+    function csvCell(value) {
+      const s = text(value).replace(/"/g, '""');
+      return '"' + s + '"';
+    }
+
+    function exportCsv() {
+      if (!currentRows.length) {
+        status("err", "当前页没有可导出的记录。");
+        return;
+      }
+      const headers = ["country_code","park_name","tenant_name","parent_company","tenant_status","products","capacity_text","sales_markets","source_publisher","source_url","validation_status","confidence","notes"];
+      const lines = [headers.map(csvCell).join(",")];
+      for (const row of currentRows) {
+        lines.push(headers.map(key => csvCell(Array.isArray(row[key]) ? row[key].join(" | ") : row[key])).join(","));
+      }
+      const blob = new Blob(["\uFEFF" + lines.join("\n")], {type:"text/csv;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "echocity-research-tenants-" + new Date().toISOString().slice(0,10) + ".csv";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById("connectButton").addEventListener("click", async () => {
+      if (await loadSummary()) await runSearch(true);
+    });
+    document.getElementById("searchButton").addEventListener("click", () => runSearch(true));
+    document.getElementById("exportButton").addEventListener("click", exportCsv);
+    document.getElementById("prevButton").addEventListener("click", () => {
+      offset = Math.max(0, offset - PAGE_SIZE);
+      runSearch(false);
+    });
+    document.getElementById("nextButton").addEventListener("click", () => {
+      if (offset + PAGE_SIZE < total) {
+        offset += PAGE_SIZE;
+        runSearch(false);
+      }
+    });
+    ["queryInput","countryInput","parkInput"].forEach(id => {
+      document.getElementById(id).addEventListener("keydown", event => {
+        if (event.key === "Enter") runSearch(true);
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const token = getToken();
+      if (token && await loadSummary()) {
+        await runSearch(true);
+      } else if (!token) {
+        status("err", "请输入 EchoCity 平台访问凭证后连接。");
+      }
+    });
+  </script>
+</body>
+</html>
