@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#081522">
+<title>区域分类数据库 | EchoCity Research</title>
+<style>
+*{box-sizing:border-box}
+:root{--bg:#071321;--panel:#0d1c2d;--panel2:#10243a;--line:#24415f;--text:#eef6ff;--muted:#9db2c7;--cyan:#67e8d0;--gold:#f6bd60;--green:#48c78e}
+body{margin:0;background:linear-gradient(180deg,#071321,#091827 56%,#071321);color:var(--text);font-family:Arial,"Microsoft YaHei",sans-serif}
+a{color:inherit;text-decoration:none}button,input,select{font:inherit}
+.page{width:min(1520px,calc(100% - 24px));margin:auto;padding:18px 0 44px}
+.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.brand{font-weight:900;font-size:21px;display:flex;align-items:center;gap:10px}.mark{width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#15845b,#0a5a91);display:grid;place-items:center}
+.nav{display:flex;gap:8px;flex-wrap:wrap}.nav a{padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#0d1c2d}
+.hero,.panel{background:rgba(13,28,45,.94);border:1px solid var(--line);border-radius:18px}
+.hero{padding:22px}.hero h1{font-size:clamp(30px,5vw,48px);margin:7px 0}.hero p{margin:0;color:var(--muted);line-height:1.7}
+.token{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:15px}
+input,select{min-height:46px;padding:0 12px;border:1px solid var(--line);background:#091827;color:#fff;border-radius:11px;outline:none}
+button{min-height:46px;padding:0 15px;border-radius:11px;font-weight:900;cursor:pointer}
+.primary{background:#16845b;color:#fff;border:0}.secondary{background:#10243a;border:1px solid var(--line);color:#fff}
+.status{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:#10243a;color:#d4e6f6}.status.show{display:block}
+.matrix{display:grid;grid-template-columns:280px 1fr;gap:14px;margin-top:14px}
+.panel{padding:14px}.panel h2{font-size:18px;margin:0 0 12px}
+.region-list{display:grid;gap:8px}.region-btn{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;background:#091827;color:#fff;border:1px solid #1d354d;padding:11px 12px;border-radius:11px}
+.region-btn.active{border-color:var(--cyan);background:#113044}.region-btn strong{color:var(--gold)}
+.domain-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.domain-card{border:1px solid #1d354d;border-radius:12px;padding:12px;background:#091827;cursor:pointer;min-height:88px}
+.domain-card.active{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(103,232,208,.08)}.domain-card .name{font-weight:900}.domain-card .count{font-size:25px;font-weight:900;color:var(--gold);margin-top:7px}.domain-card .code{font-size:11px;color:var(--muted)}
+.filters{display:grid;grid-template-columns:1.6fr .6fr 1fr 1fr auto auto;gap:8px;margin:14px 0 10px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;min-width:1350px;background:#091827}th,td{padding:10px 11px;border-bottom:1px solid #1d354d;text-align:left;vertical-align:top}th{font-size:12px;background:#11283e;position:sticky;top:0;z-index:1}td{font-size:12.5px;line-height:1.5}
+.badge{display:inline-block;padding:3px 7px;border-radius:999px;border:1px solid #2c5577;background:#14314b}.muted{color:var(--muted)}
+.pager{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}.pager-actions{display:flex;gap:8px}
+@media(max-width:1000px){.matrix{grid-template-columns:1fr}.domain-grid{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr 1fr}.wide{grid-column:1/-1}}
+@media(max-width:620px){.page{width:calc(100% - 14px)}.token,.filters,.domain-grid{grid-template-columns:1fr}.wide{grid-column:auto}}
+</style>
+</head>
+<body>
+<main class="page">
+<header class="top">
+  <a class="brand" href="../index.html"><span class="mark">E</span><span>EchoCity Research</span></a>
+  <nav class="nav">
+    <a href="research-dashboard.html">研究总览</a>
+    <a href="admin-dashboard.html">平台管理</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div style="color:var(--cyan);font-size:13px;font-weight:900">REGION × DOMAIN</div>
+  <h1>区域 × 分类数据库</h1>
+  <p>按区域读取，再按分类下钻到具体园区、企业、工厂和项目。这里显示的是主资产库，不把普通关系边直接计入项目数量。</p>
+  <div class="token">
+    <input id="tokenInput" type="password" placeholder="首次请输入 EchoCity 平台访问凭证">
+    <button id="connectButton" class="primary">连接数据库</button>
+  </div>
+  <div id="status" class="status"></div>
+</section>
+
+<section class="matrix">
+  <aside class="panel">
+    <h2>区域</h2>
+    <div id="regionList" class="region-list"><div class="muted">连接后显示</div></div>
+  </aside>
+  <section class="panel">
+    <h2 id="domainTitle">分类</h2>
+    <div id="domainGrid" class="domain-grid"><div class="muted">先选择区域</div></div>
+  </section>
+</section>
+
+<section class="panel" style="margin-top:14px">
+  <h2 id="detailTitle">具体资产</h2>
+  <div class="filters">
+    <input id="queryInput" class="wide" placeholder="项目、企业、园区、产品、资产类型关键词">
+    <input id="countryInput" maxlength="2" placeholder="国家代码">
+    <select id="regionInput"><option value="">全部区域</option></select>
+    <select id="domainInput"><option value="">全部分类</option></select>
+    <button id="searchButton" class="primary">读取</button>
+    <button id="exportButton" class="secondary">导出CSV</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>区域</th><th>分类</th><th>国家</th><th>名称</th><th>资产类型</th><th>上级园区/资产</th><th>状态</th><th>产品/描述</th><th>产能</th><th>来源</th><th>置信度</th>
+      </tr></thead>
+      <tbody id="rows"><tr><td colspan="11" class="muted">连接后读取数据。</td></tr></tbody>
+    </table>
+  </div>
+  <div class="pager">
+    <div id="meta" class="muted">—</div>
+    <div class="pager-actions">
+      <button id="prev" class="secondary">上一页</button>
+      <button id="next" class="secondary">下一页</button>
+    </div>
+  </div>
+</section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/echocity-supabase.js"></script>
+<script>
+const PAGE=100;
+let matrixData=null, offset=0, total=0, currentRows=[];
+let selectedRegion="", selectedDomain="";
+
+const regionNames={
+  "SEA_东南亚":"东南亚","SAS_南亚":"南亚","CA_中亚":"中亚","WA_西亚":"西亚",
+  "AF_非洲":"非洲","EU_欧洲":"欧洲","SA_南美":"南美","NA_北美":"北美",
+  "OC_大洋洲":"大洋洲","UNASSIGNED_未归区":"未归区"
+};
+
+function token(){
+  const v=document.getElementById("tokenInput").value.trim();
+  if(v.length>=64&&v.length<=128){
+    localStorage.setItem("echocity-platform-token",v);
+    sessionStorage.setItem("echocity-platform-token",v);
+    document.getElementById("tokenInput").value="";
+    return v;
+  }
+  return localStorage.getItem("echocity-platform-token")||sessionStorage.getItem("echocity-platform-token")||"";
+}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function arr(v){return Array.isArray(v)?v.join(" · "):String(v??"")}
+function setStatus(s){const e=document.getElementById("status");e.className="status show";e.textContent=s}
+
+async function loadMatrix(){
+  const t=token(); if(!t){setStatus("请输入平台访问凭证。");return false}
+  setStatus("正在读取区域分类数据……");
+  const {data,error}=await window.echoCitySupabase.rpc("get_research_region_domain_matrix_with_token",{p_token:t});
+  if(error){console.error(error);setStatus("访问失败：平台凭证无效或已过期。");return false}
+  matrixData=data; renderRegions(); fillSelectors(); setStatus("区域分类数据库已连接。"); return true;
+}
+function fillSelectors(){
+  const r=document.getElementById("regionInput");
+  r.innerHTML='<option value="">全部区域</option>'+matrixData.regions.map(x=>'<option value="'+esc(x.region_l1)+'">'+esc(regionNames[x.region_l1]||x.region_l1)+'</option>').join("");
+  const d=document.getElementById("domainInput");
+  d.innerHTML='<option value="">全部分类</option>'+matrixData.domains.map(x=>'<option value="'+esc(x.domain_l1)+'">'+esc(x.domain_l1)+'</option>').join("");
+}
+function renderRegions(){
+  const box=document.getElementById("regionList");
+  box.innerHTML=matrixData.regions.map(x=>'<button class="region-btn '+(x.region_l1===selectedRegion?'active':'')+'" data-region="'+esc(x.region_l1)+'"><span>'+esc(regionNames[x.region_l1]||x.region_l1)+'</span><strong>'+Number(x.count||0).toLocaleString()+'</strong></button>').join("");
+  box.querySelectorAll("button").forEach(b=>b.onclick=()=>selectRegion(b.dataset.region));
+  if(!selectedRegion&&matrixData.regions.length){selectRegion(matrixData.regions[0].region_l1)}
+}
+function selectRegion(r){
+  selectedRegion=r; selectedDomain="";
+  document.getElementById("regionInput").value=r;
+  renderRegions(); renderDomains();
+}
+function renderDomains(){
+  const reg=matrixData.regions.find(x=>x.region_l1===selectedRegion);
+  document.getElementById("domainTitle").textContent=(regionNames[selectedRegion]||selectedRegion)+" · 分类";
+  const counts={}; (reg?.domains||[]).forEach(x=>counts[x.domain_l1]=x.count);
+  const box=document.getElementById("domainGrid");
+  box.innerHTML=matrixData.domains.map(d=>{
+    const n=counts[d.domain_l1]||0;
+    return '<div class="domain-card '+(d.domain_l1===selectedDomain?'active':'')+'" data-domain="'+esc(d.domain_l1)+'"><div class="code">'+esc(d.domain_code)+'</div><div class="name">'+esc(d.domain_name)+'</div><div class="count">'+Number(n).toLocaleString()+'</div></div>'
+  }).join("");
+  box.querySelectorAll(".domain-card").forEach(c=>c.onclick=()=>selectDomain(c.dataset.domain));
+}
+function selectDomain(d){
+  selectedDomain=d;
+  document.getElementById("domainInput").value=d;
+  renderDomains(); offset=0; runSearch();
+}
+async function runSearch(){
+  const t=token(); if(!t){setStatus("请先连接数据库。");return}
+  selectedRegion=document.getElementById("regionInput").value;
+  selectedDomain=document.getElementById("domainInput").value;
+  const {data,error}=await window.echoCitySupabase.rpc("search_research_assets_by_region_domain_with_token",{
+    p_token:t,p_region_l1:selectedRegion||null,p_domain_l1:selectedDomain||null,
+    p_country_code:document.getElementById("countryInput").value.trim().toUpperCase()||null,
+    p_query:document.getElementById("queryInput").value.trim()||null,
+    p_limit:PAGE,p_offset:offset
+  });
+  if(error){console.error(error);setStatus("读取失败。");return}
+  total=Number(data.total||0); currentRows=Array.isArray(data.rows)?data.rows:[]; renderRows();
+}
+function renderRows(){
+  document.getElementById("detailTitle").textContent=
+    (selectedRegion?(regionNames[selectedRegion]||selectedRegion):"全部区域")+" → "+(selectedDomain||"全部分类")+" · 具体资产";
+  const tbody=document.getElementById("rows");
+  if(!currentRows.length){tbody.innerHTML='<tr><td colspan="11" class="muted">当前筛选没有记录。</td></tr>'}
+  else tbody.innerHTML=currentRows.map(x=>{
+    const desc=arr(x.products)||x.description||"";
+    const src=x.source_url?'<a href="'+esc(x.source_url)+'" target="_blank" rel="noopener">'+esc(x.source_publisher||"来源")+'</a>':esc(x.source_publisher||"");
+    return '<tr><td>'+esc(regionNames[x.region_l1]||x.region_l1||"")+'</td><td>'+esc(x.domain_l1||"未分类")+'</td><td><span class="badge">'+esc(x.country_code||"—")+'</span></td><td><strong>'+esc(x.canonical_name)+'</strong></td><td>'+esc(x.asset_type||x.record_kind||"")+'</td><td>'+esc(x.parent_asset_name||"")+'</td><td>'+esc(x.status||"")+'</td><td>'+esc(desc)+'</td><td>'+esc(x.capacity_text||"")+'</td><td>'+src+'</td><td>'+esc(x.confidence??"")+'</td></tr>'
+  }).join("");
+  const start=total?offset+1:0,end=Math.min(offset+currentRows.length,total);
+  document.getElementById("meta").textContent="共 "+total.toLocaleString()+" 条；当前 "+start.toLocaleString()+"–"+end.toLocaleString();
+  document.getElementById("prev").disabled=offset<=0;
+  document.getElementById("next").disabled=offset+PAGE>=total;
+}
+function csv(v){return '"'+String(v??"").replace(/"/g,'""')+'"'}
+function exportCsv(){
+  if(!currentRows.length){setStatus("当前没有可导出记录。");return}
+  const h=["region_l1","domain_l1","country_code","canonical_name","asset_type","record_kind","parent_asset_name","status","products","capacity_text","source_publisher","source_url","validation_status","confidence"];
+  const lines=[h.map(csv).join(",")];
+  currentRows.forEach(r=>lines.push(h.map(k=>csv(Array.isArray(r[k])?r[k].join(" | "):r[k])).join(",")));
+  const blob=new Blob(["\uFEFF"+lines.join("\n")],{type:"text/csv;charset=utf-8"});
+  const u=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=u;a.download="echocity-"+(selectedRegion||"all")+"-"+(selectedDomain||"all")+"-"+new Date().toISOString().slice(0,10)+".csv";
+  document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);
+}
+document.getElementById("connectButton").onclick=async()=>{if(await loadMatrix()){offset=0;await runSearch()}};
+document.getElementById("searchButton").onclick=()=>{offset=0;runSearch()};
+document.getElementById("exportButton").onclick=exportCsv;
+document.getElementById("prev").onclick=()=>{offset=Math.max(0,offset-PAGE);runSearch()};
+document.getElementById("next").onclick=()=>{if(offset+PAGE<total){offset+=PAGE;runSearch()}};
+document.getElementById("regionInput").onchange=e=>{selectedRegion=e.target.value;selectedDomain="";document.getElementById("domainInput").value="";renderRegions();renderDomains();offset=0;runSearch()};
+document.getElementById("domainInput").onchange=e=>{selectedDomain=e.target.value;renderDomains();offset=0;runSearch()};
+["queryInput","countryInput"].forEach(id=>document.getElementById(id).addEventListener("keydown",e=>{if(e.key==="Enter"){offset=0;runSearch()}}));
+document.addEventListener("DOMContentLoaded",async()=>{if(token()){if(await loadMatrix()){await runSearch()}}else setStatus("请输入 EchoCity 平台访问凭证后连接。")});
+</script>
+</body>
+</html>
